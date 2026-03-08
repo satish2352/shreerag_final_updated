@@ -1,7 +1,5 @@
-
 @extends('admin.layouts.master')
 @section('content')
-    
     <div class="data-table-area mg-tb-15">
         <div class="container-fluid">
             <div class="row">
@@ -41,11 +39,24 @@
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
                                 <div class="table-responsive">
-                                    <table id="table" data-toggle="table" data-pagination="true" data-search="true"
+                                    <form method="GET" action="{{ url()->current() }}">
+                                        <div class="d-flex justify-content-end mb-3">
+                                            <div class="col-md-4">
+                                                <input type="text" name="search" value="{{ request('search') }}"
+                                                    class="form-control" placeholder="Search Project / Product / PO">
+                                            </div>
+                                            <div class="col-md-2 ">
+                                                <button class="btn btn-primary filterbg">Search</button>
+                                                <a href="{{ url()->current() }}" class="btn btn-secondary">Reset</a>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <table class="table table-bordered table-striped">
+                                        {{-- <table id="table" data-toggle="table" data-pagination="true" data-search="true"
                                         data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="false"
                                         data-key-events="true" data-show-toggle="true" data-resizable="true"
                                         data-cookie="true" data-cookie-id-table="saveId" data-show-export="true"
-                                        data-click-to-select="true" data-toolbar="#toolbar">
+                                        data-click-to-select="true" data-toolbar="#toolbar"> --}}
                                         <thead>
                                             <tr>
                                                 <th data-field="id">Sr.No.</th>
@@ -62,9 +73,9 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($data_output as $data)
+                                            @forelse ($data_output as $data)
                                                 <tr>
-                                                    <td>{{ $loop->iteration }}</td>
+                                                    <td>{{ $data_output->firstItem() + $loop->index }}</td>
                                                     <td> {{ $data->created_at ? $data->created_at->format('d-m-Y') : 'N/A' }}
                                                     </td>
                                                     <td>{{ ucwords($data->project_name) }}</td>
@@ -80,9 +91,27 @@
                                                             alt="bill of material">Click to download</a>
                                                     </td>
                                                 </tr>
-                                            @endforeach
+                                            @empty
+                                                <tr>
+                                                    <td colspan="9" class="text-center">
+                                                        No Record Found
+                                                    </td>
+                                                </tr>
+                                            @endforelse
                                         </tbody>
                                     </table>
+                                    <div class="row mt-3">
+                                        <div class="col-md-6">
+                                            <p>
+                                                Showing {{ $data_output->firstItem() }} to {{ $data_output->lastItem() }}
+                                                of {{ $data_output->total() }} rows
+                                            </p>
+                                        </div>
+
+                                        <div class="col-md-6 d-flex justify-content-end mt-3">
+                                            {{ $data_output->onEachSide(1)->links() }}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -91,4 +120,4 @@
             </div>
         </div>
     </div>
-   @endsection
+@endsection

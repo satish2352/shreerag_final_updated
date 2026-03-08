@@ -4,6 +4,7 @@ namespace App\Http\Services\Organizations\Business;
 
 use App\Http\Repository\Organizations\Business\BusinessRepository;
 use Exception;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Config;
 use App\Models\{
     Business
@@ -25,7 +26,9 @@ class BusinessServices
         try {
             return $this->repo->getAll();
         } catch (\Exception $e) {
-            return $e;
+            Log::error('Business list error: ' . $e->getMessage());
+
+            return Business::paginate(10); // return empty paginator safely
         }
     }
     public function addAll($request)

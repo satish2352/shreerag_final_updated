@@ -13,11 +13,25 @@
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
                                 <div class="table-responsive">
-                                    <table id="table" data-toggle="table" data-pagination="true" data-search="true"
+                                    <form method="GET" action="{{ url()->current() }}">
+                                        <div class="d-flex justify-content-end mb-3">
+                                            <div class="col-md-4">
+                                                <input type="text" name="search" value="{{ request('search') }}"
+                                                    class="form-control"
+                                                    placeholder="Search Name / Email / Location / IP Address">
+                                            </div>
+                                            <div class="col-md-2 ">
+                                                <button class="btn btn-primary filterbg">Search</button>
+                                                <a href="{{ url()->current() }}" class="btn btn-secondary">Reset</a>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <table class="table table-bordered table-striped">
+                                        {{-- <table id="table" data-toggle="table" data-pagination="true" data-search="true"
                                         data-show-columns="true" data-show-pagination-switch="true"
                                         data-show-refresh="false" data-key-events="true" data-show-toggle="true"
                                         data-resizable="true" data-cookie="true" data-cookie-id-table="saveId"
-                                        data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar">
+                                        data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar"> --}}
 
                                         <thead>
                                             <tr>
@@ -31,9 +45,9 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($register_user as $item)
+                                            @forelse ($register_user as $item)
                                                 <tr>
-                                                    <td>{{ $loop->iteration }}</td>
+                                                    <td>{{ $register_user->firstItem() + $loop->index }}</td>
                                                     <td>
                                                         {{ $item->updated_at ? $item->updated_at->format('d-m-Y h:i:s A') : 'N/A' }}
                                                     </td>
@@ -53,11 +67,28 @@
                                                         </div>
                                                     </td> --}}
                                                 </tr>
-                                            @endforeach
-
+                                            @empty
+                                                <tr>
+                                                    <td colspan="9" class="text-center">
+                                                        No Record Found
+                                                    </td>
+                                                </tr>
+                                            @endforelse
                                         </tbody>
-
                                     </table>
+                                    <div class="row mt-3">
+                                        <div class="col-md-6">
+                                            <p>
+                                                Showing {{ $register_user->firstItem() }} to
+                                                {{ $register_user->lastItem() }}
+                                                of {{ $register_user->total() }} rows
+                                            </p>
+                                        </div>
+
+                                        <div class="col-md-6 d-flex justify-content-end mt-3">
+                                            {{ $register_user->onEachSide(1)->links() }}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -66,17 +97,17 @@
             </div>
         </div>
     </div>
-  @push('scripts')
-    <script>
-        $('.show-btn').click(function(e) {
-            alert('hii');
-            $("#show_id").val($(this).attr("data-id"));
-            $("#showform").submit();
-        })
-    </script>
-    <form method="POST" action="{{ url('/show-login-history') }}" id="showform">
-        @csrf
-        <input type="hidden" name="show_id" id="show_id" value="">
-    </form>
-     @endpush
+    @push('scripts')
+        <script>
+            $('.show-btn').click(function(e) {
+                alert('hii');
+                $("#show_id").val($(this).attr("data-id"));
+                $("#showform").submit();
+            })
+        </script>
+        <form method="POST" action="{{ url('/show-login-history') }}" id="showform">
+            @csrf
+            <input type="hidden" name="show_id" id="show_id" value="">
+        </form>
+    @endpush
 @endsection

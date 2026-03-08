@@ -83,15 +83,10 @@ class AllListController extends Controller
     public function getAllStoreDeptSentForPurchaseMaterials(Request $request)
     {
         try {
+
             $data_output = $this->service->getAllStoreDeptSentForPurchaseMaterials();
 
-            if ($data_output->isEmpty()) {
-                return view('organizations.business.list.list-material-list-from-store-to-purchase', [
-                    'data_output' => [],
-                    'message' => 'No data found'
-                ]);
-            }
-
+            // Mark records as viewed
             $ids = $data_output->pluck('business_id')->filter()->unique()->values();
 
             if ($ids->isNotEmpty()) {
@@ -100,9 +95,19 @@ class AllListController extends Controller
                     ->update(['is_view' => 1]);
             }
 
-            return view('organizations.business.list.list-material-list-from-store-to-purchase', compact('data_output'));
+            return view(
+                'organizations.business.list.list-material-list-from-store-to-purchase',
+                compact('data_output')
+            );
         } catch (\Exception $e) {
-            return $e;
+
+            return view(
+                'organizations.business.list.list-material-list-from-store-to-purchase',
+                [
+                    'data_output' => collect(), // safe empty collection
+                    'message' => $e->getMessage()
+                ]
+            );
         }
     }
     public function getAllListPurchaseOrder(Request $request)
@@ -434,7 +439,7 @@ class AllListController extends Controller
             $data_output = $this->service->getAllListSubmitedPurchaeOrderByVendorOwnerside();
 
             if ($data_output->isEmpty()) {
-                return view('organizations.business.design.list-design-upload', [
+                return view('organizations.business.list.list-owner-all-po-sent-to-vendor', [
                     'data_output' => [],
                     'message' => 'No data found'
                 ]);
@@ -456,9 +461,14 @@ class AllListController extends Controller
     public function getOwnerReceivedGatePass()
     {
         try {
-            $all_gatepass = $this->service->getOwnerReceivedGatePass() ?? collect();
 
-            $bdIds = $all_gatepass->pluck('business_details_id')->filter()->unique()->values();
+            $all_gatepass = $this->service->getOwnerReceivedGatePass();
+
+            $bdIds = collect($all_gatepass->items())
+                ->pluck('business_details_id')
+                ->filter()
+                ->unique()
+                ->values();
 
             if ($bdIds->isNotEmpty()) {
                 AdminView::where('is_view', 0)
@@ -466,14 +476,16 @@ class AllListController extends Controller
                     ->update(['is_view' => 1]);
             }
 
-            return view('organizations.business.list.list-owner-gatepass', compact('all_gatepass'));
+            return view(
+                'organizations.business.list.list-owner-gatepass',
+                compact('all_gatepass')
+            );
         } catch (\Exception $e) {
+
             Log::error($e->getMessage());
             return back()->withErrors('Something went wrong! Please try again.');
         }
     }
-
-
     public function getOwnerGRN()
     {
         try {

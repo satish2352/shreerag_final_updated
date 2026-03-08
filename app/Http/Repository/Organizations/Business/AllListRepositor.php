@@ -3,6 +3,7 @@
 namespace App\Http\Repository\Organizations\Business;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use App\Models\{
@@ -21,7 +22,10 @@ class AllListRepositor
   public function getAllListForwardedToDesign()
   {
     try {
+
       $array_to_be_check = [config('constants.DESIGN_DEPARTMENT.LIST_NEW_REQUIREMENTS_RECEIVED_FOR_DESIGN')];
+      $search = trim(request('search'));
+      $perPage = Config::get('AllFileValidation.PAGINATION');
 
       $data_output = BusinessApplicationProcesses::leftJoin('businesses', function ($join) {
         $join->on('business_application_processes.business_id', '=', 'businesses.id');
@@ -31,16 +35,41 @@ class AllListRepositor
         })
         ->where('businesses_details.is_active', true)
         ->where('businesses_details.is_deleted', 0)
-        ->whereIn('business_application_processes.design_status_id', $array_to_be_check)
+        ->whereIn('business_application_processes.design_status_id', $array_to_be_check);
+      if (!empty($search)) {
+        $data_output->where(function ($q) use ($search) {
+
+          $q->where('businesses.project_name', 'LIKE', "%{$search}%")
+            ->orWhere('businesses.customer_po_number', 'LIKE', "%{$search}%")
+            ->orWhere('businesses.title', 'LIKE', "%{$search}%")
+            ->orWhere('businesses_details.product_name', 'LIKE', "%{$search}%");
+        });
+      }
+      $data_output = $data_output->select(
+        'businesses.id',
+        'businesses.project_name',
+        'businesses.title',
+        'businesses.business_pdf',
+        'businesses.customer_po_number',
+        'businesses.remarks',
+        'businesses_details.id as business_details_id',
+        'businesses_details.product_name',
+        'businesses_details.description',
+        'businesses_details.quantity',
+        'businesses_details.rate',
+        'businesses_details.total_amount',
+        'businesses.created_at',
+        'businesses.updated_at'
+      )
         ->groupBy(
           'businesses.id',
           'businesses.project_name',
           'businesses.customer_po_number',
           'businesses.title',
           'businesses.business_pdf',
+          'businesses.remarks',
           'businesses_details.id',
           'businesses_details.product_name',
-          'businesses.remarks',
           'businesses_details.description',
           'businesses_details.quantity',
           'businesses_details.rate',
@@ -48,25 +77,11 @@ class AllListRepositor
           'businesses.created_at',
           'businesses.updated_at'
         )
-        ->select(
-          'businesses.id',
-          'businesses.project_name',
-          'businesses_details.id',
-          'businesses.title',
-          'businesses.business_pdf',
-          'businesses.customer_po_number',
-          'businesses.remarks',
-          'businesses_details.product_name',
-          'businesses_details.description',
-          'businesses_details.quantity',
-          'businesses_details.rate',
-          'businesses_details.total_amount',
-          'businesses.created_at',
-          'businesses.updated_at',
-        )
-        ->orderBy('updated_at', 'desc')
-        ->distinct()
-        ->get();
+        ->orderBy('businesses.updated_at', 'desc')
+        // ->distinct()
+        ->paginate($perPage)
+        ->withQueryString();
+
 
       return $data_output;
     } catch (\Exception $e) {
@@ -180,12 +195,87 @@ class AllListRepositor
       return $e;
     }
   }
+  // public function getAllStoreDeptSentForPurchaseMaterials()
+  // {
+  //   try {
+  //     $array_to_be_check = [config('constants.STORE_DEPARTMENT.LIST_REQUEST_NOTE_SENT_FROM_STORE_DEPT_FOR_PURCHASE')];
+  //     $array_to_be_check_business = [config('constants.HIGHER_AUTHORITY.LIST_REQUEST_NOTE_RECIEVED_FROM_STORE_DEPT_FOR_PURCHASE')];
+  //     $array_not_to_be_check = ['0'];
+  //     $search = trim(request('search'));
+  //     $perPage = Config::get('AllFileValidation.PAGINATION');
+  //     $query = BusinessApplicationProcesses::leftJoin('production', function ($join) {
+  //       $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
+  //     })
+  //       ->leftJoin('designs', function ($join) {
+  //         $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
+  //       })
+  //       ->leftJoin('businesses', function ($join) {
+  //         $join->on('business_application_processes.business_id', '=', 'businesses.id');
+  //       })
+  //       ->leftJoin('design_revision_for_prod', function ($join) {
+  //         $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
+  //       })
+  //       ->leftJoin('purchase_orders', function ($join) {
+  //         $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
+  //       })
+  //       ->leftJoin('businesses_details', function ($join) {
+  //         $join->on('production.business_details_id', '=', 'businesses_details.id');
+  //       })
+  //       ->leftJoin('requisition as req2', function ($join) {  // Second requisition join with alias `req2`
+  //         $join->on('business_application_processes.business_details_id', '=', 'req2.business_details_id');
+  //       })
+  //       ->whereIn('business_application_processes.store_status_id', $array_to_be_check)
+  //       ->whereIn('business_application_processes.business_status_id', $array_to_be_check_business)
+  //       ->where('business_application_processes.purchase_order_id', '0')
+  //       ->where('businesses.is_active', true)
+  //       ->where('businesses.is_deleted', 0)
+  //       ->distinct('business_application_processes.business_details_id');
+  //       ->when($search, function ($query) use ($search) {
+  //         $query->where(function ($q) use ($search) {
+  //           $q->where('businesses.project_name', 'LIKE', "%{$search}%")
+  //             ->orWhere('businesses_details.product_name', 'LIKE', "%{$search}%")
+  //             ->orWhere('businesses.grand_total_amount', 'LIKE', "%{$search}%");
+  //         });
+  //       })
+  //       ->select(
+  //         'businesses.id',
+  //         'businesses.project_name',
+  //         'businesses.customer_po_number',
+  //         'businesses.title',
+  //         'businesses.remarks',
+  //         'businesses.is_active',
+  //         'businesses.created_at',
+  //         'production.business_id',
+  //         'production.id as productionId',
+  //         'design_revision_for_prod.reject_reason_prod',
+  //         'design_revision_for_prod.id as design_revision_for_prod_id',
+  //         'designs.bom_image',
+  //         'designs.design_image',
+  //         'businesses_details.product_name',
+  //         'businesses_details.description',
+  //         'businesses_details.quantity',
+  //         'businesses_details.rate',
+  //         'production.updated_at',
+  //         'req2.bom_file',  // Use alias `req2`
+  //         'req2.updated_at'
+  //       )->orderBy('req2.updated_at', 'desc')->paginate($perPage)
+  //       ->withQueryString();
+
+  //     return $data_output;
+  //   } catch (\Exception $e) {
+  //     return $e;
+  //   }
+  // }
+
   public function getAllStoreDeptSentForPurchaseMaterials()
   {
     try {
+
       $array_to_be_check = [config('constants.STORE_DEPARTMENT.LIST_REQUEST_NOTE_SENT_FROM_STORE_DEPT_FOR_PURCHASE')];
       $array_to_be_check_business = [config('constants.HIGHER_AUTHORITY.LIST_REQUEST_NOTE_RECIEVED_FROM_STORE_DEPT_FOR_PURCHASE')];
-      $array_not_to_be_check = ['0'];
+
+      $search = trim(request('search'));
+      $perPage = Config::get('AllFileValidation.PAGINATION');
 
       $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
         $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
@@ -205,15 +295,25 @@ class AllListRepositor
         ->leftJoin('businesses_details', function ($join) {
           $join->on('production.business_details_id', '=', 'businesses_details.id');
         })
-        ->leftJoin('requisition as req2', function ($join) {  // Second requisition join with alias `req2`
+        ->leftJoin('requisition as req2', function ($join) {
           $join->on('business_application_processes.business_details_id', '=', 'req2.business_details_id');
         })
+
         ->whereIn('business_application_processes.store_status_id', $array_to_be_check)
         ->whereIn('business_application_processes.business_status_id', $array_to_be_check_business)
         ->where('business_application_processes.purchase_order_id', '0')
         ->where('businesses.is_active', true)
         ->where('businesses.is_deleted', 0)
+
         ->distinct('business_application_processes.business_details_id')
+
+        ->when($search, function ($query) use ($search) {
+          $query->where(function ($q) use ($search) {
+            $q->where('businesses.project_name', 'LIKE', "%{$search}%")
+              ->orWhere('businesses_details.product_name', 'LIKE', "%{$search}%")
+              ->orWhere('businesses.grand_total_amount', 'LIKE', "%{$search}%");
+          });
+        })
 
         ->select(
           'businesses.id',
@@ -234,17 +334,18 @@ class AllListRepositor
           'businesses_details.quantity',
           'businesses_details.rate',
           'production.updated_at',
-          'req2.bom_file',  // Use alias `req2`
+          'req2.bom_file',
           'req2.updated_at'
-        )->orderBy('req2.updated_at', 'desc')->get();
+        )
+        ->orderBy('req2.updated_at', 'desc')
+        ->paginate($perPage)
+        ->withQueryString();
 
       return $data_output;
     } catch (\Exception $e) {
       return $e;
     }
   }
-
-
 
 
 
@@ -847,6 +948,7 @@ class AllListRepositor
 
       $accepted = config('constants.HIGHER_AUTHORITY.OWNER_BOM_ESTIMATION_ACCEPTED');
       $received = config('constants.HIGHER_AUTHORITY.ESTIMATION_DEPT_THROUGH_RECEIVED_BOM');
+
       $data_output = BusinessApplicationProcesses::leftJoin('businesses', function ($join) {
         $join->on('business_application_processes.business_id', '=', 'businesses.id');
       })
@@ -1109,7 +1211,9 @@ class AllListRepositor
         // config('constants.PRODUCTION_DEPARTMENT.LIST_DESIGN_RECIVED_FROM_PRODUCTION_DEPT_REVISED'),
 
       ];
-      $data_output = EstimationModel::leftJoin('businesses', function ($join) {
+      $search = trim(request('search'));
+      $perPage = Config::get('AllFileValidation.PAGINATION');
+      $query = EstimationModel::leftJoin('businesses', function ($join) {
         $join->on('estimation.business_id', '=', 'businesses.id');
       })
         ->leftJoin('business_application_processes', function ($join) {
@@ -1122,7 +1226,25 @@ class AllListRepositor
         ->whereIn('business_application_processes.estimation_send_to_production', $array_to_be_check)
         ->where('businesses.is_active', true)
         ->where('businesses.is_deleted', 0)
-        ->distinct('businesses.id')
+        ->distinct('businesses.id');
+      if (!empty($search)) {
+        $query->where(function ($q) use ($search) {
+          $q->where('businesses.project_name', 'LIKE', "%{$search}%")
+            ->orWhere('businesses.customer_po_number', 'LIKE', "%{$search}%")
+            ->orWhere('businesses.title', 'LIKE', "%{$search}%")
+            ->orWhere('businesses.remarks', 'LIKE', "%{$search}%");
+        });
+      }
+      $data_output = $query->select(
+        'businesses.id',
+        'businesses.project_name',
+        'businesses.customer_po_number',
+        'businesses.remarks',
+        'businesses.is_active',
+        'estimation.business_id',
+        'businesses.updated_at',
+        'businesses.created_at'
+      )
         ->groupBy(
           'businesses.id',
           'businesses.project_name',
@@ -1134,26 +1256,10 @@ class AllListRepositor
           'businesses.updated_at',
           'businesses.created_at'
         )
+        ->orderBy('businesses.updated_at', 'desc')
+        ->paginate($perPage)
+        ->withQueryString();   // ✅ keeps search while changing pages
 
-        ->select(
-          'businesses.id',
-          'businesses.project_name',
-          'businesses.customer_po_number',
-          // 'businesses.product_name',
-          // 'businesses.title',
-          // 'businesses.descriptions',
-          // 'businesses.quantity',
-          'businesses.remarks',
-          'businesses.is_active',
-          // 'designs.id',
-          // 'designs.design_image',
-          // 'designs.bom_image',
-          // 'designs.business_id',
-          'estimation.business_id',
-          'businesses.updated_at',
-          'businesses.updated_at',
-          'businesses.created_at'
-        )->orderBy('businesses.updated_at', 'desc')->get();
 
 
 
@@ -1172,6 +1278,7 @@ class AllListRepositor
         config('constants.ESTIMATION_DEPARTMENT.LIST_DESIGN_RECEIVED_FOR_ESTIMATION'),
       ];
       $send_estimation = config('constants.ESTIMATION_DEPARTMENT.LIST_DESIGN_RECEIVED_FOR_ESTIMATION');
+
       $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
         $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
       })
@@ -1236,7 +1343,8 @@ class AllListRepositor
 
       $array_to_be_check = [config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY_SENT_TO_VENDOR')];
       $array_to_be_check_owner = [config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY_SENT_TO_VENDOR')];
-
+      $search = trim(request('search'));
+      $perPage = Config::get('AllFileValidation.PAGINATION');
       $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
         $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
       })
@@ -1266,6 +1374,16 @@ class AllListRepositor
         ->where('businesses.is_active', true)
         ->where('businesses.is_deleted', 0)
         // ->distinct('business_application_processes.id')
+        ->when($search, function ($query) use ($search) {
+          $query->where(function ($q) use ($search) {
+
+            $q->where('businesses_details.product_name', 'LIKE', "%{$search}%")
+              ->orWhere('vendors.vendor_name', 'LIKE', "%{$search}%")
+              ->orWhere('vendors.vendor_company_name', 'LIKE', "%{$search}%")
+              ->orWhere('vendors.contact_no', 'LIKE', "%{$search}%")
+              ->orWhere('purchase_orders.purchase_orders_id', 'LIKE', "%{$search}%");
+          });
+        })
         ->select(
           'purchase_orders.purchase_orders_id as purchase_order_id',
           'businesses_details.id',
@@ -1286,8 +1404,8 @@ class AllListRepositor
           'vendors.contact_no',
           'vendors.gst_no',
           'purchase_orders.updated_at'
-        )->distinct()->orderBy('purchase_orders.updated_at', 'desc')->get();
-
+        )->distinct()->orderBy('purchase_orders.updated_at', 'desc')->paginate($perPage)
+        ->withQueryString();
 
       return $data_output;
     } catch (\Exception $e) {
@@ -1297,22 +1415,73 @@ class AllListRepositor
   public function getOwnerReceivedGatePass()
   {
     try {
-      $data_output = Gatepass::where('po_tracking_status', 4001)->orderBy('updated_at', 'desc')->get();
-      return $data_output;
+
+      $search = trim(request('search'));
+      $perPage = Config::get('AllFileValidation.PAGINATION');
+
+      $query = Gatepass::leftJoin('purchase_orders', function ($join) {
+        $join->on('gatepass.purchase_orders_id', '=', 'purchase_orders.purchase_orders_id');
+      })
+        ->leftJoin('vendors', function ($join) {
+          $join->on('purchase_orders.vendor_id', '=', 'vendors.id');
+        })
+        ->where('gatepass.po_tracking_status', 4001);
+
+      if ($search) {
+        $query->where(function ($q) use ($search) {
+          $q->where('vendors.vendor_name', 'LIKE', "%{$search}%")
+            ->orWhere('purchase_orders.purchase_orders_id', 'LIKE', "%{$search}%")
+            ->orWhere('gatepass.gatepass_name', 'LIKE', "%{$search}%");
+        });
+      }
+
+      return $query
+        ->select(
+          'gatepass.*',
+          'vendors.vendor_name'
+        )
+        ->orderBy('gatepass.updated_at', 'desc')
+        ->paginate($perPage)
+        ->withQueryString();
     } catch (\Exception $e) {
 
-      return $e;
+      Log::error($e->getMessage());
+
+      return Gatepass::where('id', 0)->paginate($perPage);
     }
   }
-
   public function getOwnerGRN()
   {
     try {
-      $data_output = Gatepass::where('po_tracking_status', 4001)->where('is_checked_by_quality', false)->orderBy('updated_at', 'desc')->get();
 
-      return $data_output;
+      $search = trim(request('search'));
+      $perPage = Config::get('AllFileValidation.PAGINATION');
+
+      $query = Gatepass::leftJoin('purchase_orders', 'gatepass.purchase_orders_id', '=', 'purchase_orders.purchase_orders_id')
+        ->leftJoin('businesses_details', 'purchase_orders.business_details_id', '=', 'businesses_details.id')
+        ->leftJoin('businesses', 'businesses_details.business_id', '=', 'businesses.id')
+        ->where('gatepass.po_tracking_status', 4001)
+        ->where('gatepass.is_checked_by_quality', false);
+
+      if ($search) {
+        $query->where(function ($q) use ($search) {
+          $q->where('purchase_orders.purchase_orders_id', 'LIKE', "%{$search}%")
+            ->orWhere('gatepass.gatepass_name', 'LIKE', "%{$search}%")
+            ->orWhere('businesses.project_name', 'LIKE', "%{$search}%");
+        });
+      }
+
+      return $query->select(
+        'gatepass.*',
+        'businesses.project_name'
+      )
+        ->orderBy('gatepass.updated_at', 'desc')
+        ->paginate($perPage)
+        ->withQueryString();
     } catch (\Exception $e) {
-      return $e;
+
+      Log::error($e->getMessage());
+      return Gatepass::where('id', 0)->paginate(10);
     }
   }
 
@@ -1322,8 +1491,10 @@ class AllListRepositor
 
       $array_to_be_check = [config('constants.QUALITY_DEPARTMENT.PO_CHECKED_OK_GRN_GENRATED_SENT_TO_STORE')];
       // $array_to_be_check_new = ['0'];
+      $search = trim(request('search'));
+      $perPage = Config::get('AllFileValidation.PAGINATION');
 
-      $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
+      $query = BusinessApplicationProcesses::leftJoin('production', function ($join) {
         $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
       })
         ->leftJoin('designs', function ($join) {
@@ -1345,24 +1516,35 @@ class AllListRepositor
         // ->whereIn('purchase_orders.store_receipt_no', $array_to_be_check_new)
         ->where('businesses.is_active', true)
         ->where('businesses.is_deleted', 0)
-        ->distinct('businesses.id')
-        ->select(
-          // 'businesses.id',
-          'businesses_details.id',
-          'businesses_details.product_name',
-          'businesses.title',
-          'businesses.project_name',
-          'businesses_details.description',
-          'businesses.remarks',
-          'businesses.is_active',
-          'production.business_id',
-          'production.id as productionId',
-          'design_revision_for_prod.reject_reason_prod',
-          'design_revision_for_prod.id as design_revision_for_prod_id',
-          'designs.bom_image',
-          'designs.design_image',
-          'purchase_orders.updated_at'
-        )->orderBy('purchase_orders.updated_at', 'desc')->get();
+        ->distinct('businesses.id');
+      if ($search) {
+        $query->where(function ($q) use ($search) {
+          $q->where('businesses.project_name', 'LIKE', "%{$search}%")
+            ->orWhere('businesses_details.product_name', 'LIKE', "%{$search}%")
+            ->orWhere('businesses_details.description', 'LIKE', "%{$search}%");
+        });
+      }
+
+      $data_output = $query->select(
+
+        // 'businesses.id',
+        'businesses_details.id',
+        'businesses_details.product_name',
+        'businesses.title',
+        'businesses.project_name',
+        'businesses_details.description',
+        'businesses.remarks',
+        'businesses.is_active',
+        'production.business_id',
+        'production.id as productionId',
+        'design_revision_for_prod.reject_reason_prod',
+        'design_revision_for_prod.id as design_revision_for_prod_id',
+        'designs.bom_image',
+        'designs.design_image',
+        'purchase_orders.updated_at'
+      )->orderBy('purchase_orders.updated_at', 'desc')->paginate($perPage)
+        ->withQueryString();
+
 
       // return $data_output;
       return $data_output;
@@ -1470,6 +1652,8 @@ class AllListRepositor
     try {
 
       $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_COMPLETED_FROM_PRODUCTION_ACCORDING_TO_DESIGN')];
+      $search  = trim(request('search'));
+      $perPage = Config::get('AllFileValidation.PAGINATION');
       $data_output = CustomerProductQuantityTracking::leftJoin('tbl_logistics', function ($join) {
         $join->on('tbl_customer_product_quantity_tracking.id', '=', 'tbl_logistics.quantity_tracking_id');
       })
@@ -1486,6 +1670,15 @@ class AllListRepositor
         ->where('businesses.is_active', true)
         ->where('businesses.is_deleted', 0)
         ->distinct('businesses.id')
+
+        ->when($search, function ($query) use ($search) {
+          $query->where(function ($q) use ($search) {
+
+            $q->where('businesses.project_name', 'LIKE', "%{$search}%")
+              ->orWhere('businesses_details.product_name', 'LIKE', "%{$search}%")
+              ->orWhere('businesses_details.quantity', 'LIKE', "%{$search}%");
+          });
+        })
         ->groupBy(
           'businesses.id',
           'businesses.project_name',
@@ -1509,12 +1702,17 @@ class AllListRepositor
           'tbl_customer_product_quantity_tracking.completed_quantity',
           'tbl_customer_product_quantity_tracking.updated_at'
 
-        )->orderBy('tbl_customer_product_quantity_tracking.updated_at', 'desc')->get();
+        )->orderBy('tbl_customer_product_quantity_tracking.updated_at', 'desc')->paginate($perPage)
+        ->withQueryString();
+
 
       return $data_output;
     } catch (\Exception $e) {
 
-      return $e;
+      Log::error($e->getMessage());
+
+      return CustomerProductQuantityTracking::where('id', 0)
+        ->paginate(10);
     }
   }
 
@@ -1522,6 +1720,8 @@ class AllListRepositor
   {
     try {
       $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_COMPLETED_FROM_PRODUCTION_ACCORDING_TO_DESIGN')];
+      $search  = trim(request('search'));
+      $perPage = Config::get('AllFileValidation.PAGINATION');
       $data_output = CustomerProductQuantityTracking::leftJoin('tbl_logistics', function ($join) {
         $join->on('tbl_customer_product_quantity_tracking.id', '=', 'tbl_logistics.quantity_tracking_id');
       })
@@ -1538,6 +1738,14 @@ class AllListRepositor
         ->where('businesses.is_active', true)
         ->where('businesses.is_deleted', 0)
         ->distinct('businesses.id')
+        ->when($search, function ($query) use ($search) {
+          $query->where(function ($q) use ($search) {
+
+            $q->where('businesses.project_name', 'LIKE', "%{$search}%")
+              ->orWhere('businesses_details.product_name', 'LIKE', "%{$search}%")
+              ->orWhere('businesses_details.quantity', 'LIKE', "%{$search}%");
+          });
+        })
         ->groupBy(
           'tbl_customer_product_quantity_tracking.id',
           'tbl_customer_product_quantity_tracking.business_id',
@@ -1566,12 +1774,16 @@ class AllListRepositor
           'tbl_customer_product_quantity_tracking.completed_quantity',
           'tbl_customer_product_quantity_tracking.updated_at'
 
-        )->orderBy('tbl_customer_product_quantity_tracking.updated_at', 'desc')->get();
+        )->orderBy('tbl_customer_product_quantity_tracking.updated_at', 'desc')->paginate($perPage)
+        ->withQueryString();
 
       return $data_output;
     } catch (\Exception $e) {
 
-      return $e;
+      Log::error($e->getMessage());
+
+      return CustomerProductQuantityTracking::where('id', 0)
+        ->paginate(10);
     }
   }
 
@@ -1742,6 +1954,8 @@ class AllListRepositor
       $array_to_be_check = [config('constants.DISPATCH_DEPARTMENT.LIST_DISPATCH_COMPLETED_FROM_DISPATCH_DEPARTMENT')];
       $array_to_be_quantity_tracking = [config('constants.DISPATCH_DEPARTMENT.SUBMITTED_COMPLETED_QUANLTITY_DISPATCH_DEPT')];
       $array_to_be_check_new = ['0'];
+      $search  = trim(request('search'));
+      $perPage = Config::get('AllFileValidation.PAGINATION');
       $data_output = CustomerProductQuantityTracking::leftJoin('tbl_logistics', function ($join) {
         $join->on('tbl_customer_product_quantity_tracking.id', '=', 'tbl_logistics.quantity_tracking_id');
       })
@@ -1769,6 +1983,15 @@ class AllListRepositor
         ->where('businesses.is_active', true)
         ->where('businesses.is_deleted', 0)
         ->distinct('businesses_details.id')
+        ->when($search, function ($query) use ($search) {
+          $query->where(function ($q) use ($search) {
+
+            $q->where('businesses.project_name', 'LIKE', "%{$search}%")
+              ->orWhere('businesses_details.product_name', 'LIKE', "%{$search}%")
+              ->orWhere('tbl_transport_name.name', 'LIKE', "%{$search}%")
+              ->orWhere('tbl_vehicle_type.name', 'LIKE', "%{$search}%");
+          });
+        })
         ->groupBy(
           'tbl_customer_product_quantity_tracking.id',
           'tbl_customer_product_quantity_tracking.business_id',
@@ -1811,46 +2034,77 @@ class AllListRepositor
           'tbl_dispatch.updated_at'
         )
         ->orderBy('tbl_dispatch.updated_at', 'desc')
-        ->get();
+        ->paginate($perPage)
+        ->withQueryString();
 
       return $data_output;
     } catch (\Exception $e) {
-      return $e;
+
+      Log::error($e->getMessage());
+
+      return CustomerProductQuantityTracking::where('id', 0)
+        ->paginate(10);
     }
   }
 
 
   public function listLoginHistory()
   {
-    // Hard delete records older than 15 days
-    LoginHistory::where('created_at', '<', Carbon::now()->subDays(15))
-      ->delete();
+    try {
 
-    // Fetch only last 15 days data
-    $data_users = LoginHistory::leftJoin('users', function ($join) {
-      $join->on('login_history.user_id', '=', 'users.id');
-    })
-      ->where('users.is_active', 1)
-      ->where('users.is_deleted', 0)
-      ->where('login_history.created_at', '>=', Carbon::now()->subDays(15))
-      ->orderBy('login_history.id', 'desc')
-      ->select(
-        'users.u_email',
-        'users.f_name',
-        'users.m_name',
-        'users.l_name',
-        'users.number',
-        'users.id',
-        'users.is_active',
-        'login_history.latitude',
-        'login_history.longitude',
-        'login_history.location_address',
-        'login_history.ip_address',
-        'login_history.updated_at'
-      )
-      ->get();
+      $search  = trim(request('search'));
+      $perPage = Config::get('AllFileValidation.PAGINATION');
 
-    return $data_users;
+      // Delete records older than 15 days
+      LoginHistory::where('created_at', '<', Carbon::now()->subDays(15))->delete();
+
+      $query = LoginHistory::leftJoin('users', function ($join) {
+        $join->on('login_history.user_id', '=', 'users.id');
+      })
+        ->where('users.is_active', 1)
+        ->where('users.is_deleted', 0)
+        ->where('login_history.created_at', '>=', Carbon::now()->subDays(15));
+
+      /* 🔎 SEARCH */
+      if ($search) {
+        $query->where(function ($q) use ($search) {
+
+          $q->where('users.f_name', 'LIKE', "%{$search}%")
+            ->orWhere('users.m_name', 'LIKE', "%{$search}%")
+            ->orWhere('users.l_name', 'LIKE', "%{$search}%")
+            ->orWhere('users.u_email', 'LIKE', "%{$search}%")
+            ->orWhere('users.number', 'LIKE', "%{$search}%")
+            ->orWhere('login_history.ip_address', 'LIKE', "%{$search}%")
+            ->orWhere('login_history.location_address', 'LIKE', "%{$search}%");
+        });
+      }
+
+      $data_users = $query
+        ->select(
+          'users.u_email',
+          'users.f_name',
+          'users.m_name',
+          'users.l_name',
+          'users.number',
+          'users.id',
+          'users.is_active',
+          'login_history.latitude',
+          'login_history.longitude',
+          'login_history.location_address',
+          'login_history.ip_address',
+          'login_history.updated_at'
+        )
+        ->orderBy('login_history.id', 'desc')
+        ->paginate($perPage)
+        ->withQueryString();
+
+      return $data_users;
+    } catch (\Exception $e) {
+
+      Log::error($e->getMessage());
+
+      return LoginHistory::where('id', 0)->paginate(10);
+    }
   }
 
   // 	public function showLoginHistory($id)

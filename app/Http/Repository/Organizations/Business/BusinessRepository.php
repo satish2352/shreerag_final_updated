@@ -2,6 +2,8 @@
 
 namespace App\Http\Repository\Organizations\Business;
 
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\{
     Business,
@@ -34,12 +36,32 @@ class BusinessRepository
     public function getAll()
     {
         try {
-            $data_output = Business::orderBy('businesses.updated_at', 'desc')
-                ->where('is_deleted', 0)
-                ->get();
-            return $data_output;
+
+            $search = trim(request('search'));
+            $perPage = Config::get('AllFileValidation.PAGINATION');
+
+            $query = Business::where('is_deleted', 0)
+                ->orderBy('updated_at', 'desc');
+
+            if (!empty($search)) {
+                $query->where(function ($q) use ($search) {
+
+                    $q->where('project_name', 'LIKE', "%{$search}%")
+                        ->orWhere('customer_po_number', 'LIKE', "%{$search}%")
+                        ->orWhere('title', 'LIKE', "%{$search}%")
+
+                        ->orWhereExists(function ($sub) use ($search) {
+                            $sub->select(DB::raw(1))
+                                ->from('businesses_details')
+                                ->whereColumn('businesses_details.business_id', 'businesses.id')
+                                ->where('businesses_details.product_name', 'LIKE', "%{$search}%");
+                        });
+                });
+            }
+
+            return $query->paginate($perPage)->withQueryString();
         } catch (\Exception $e) {
-            return $e;
+            throw $e;
         }
     }
     public function addAll($request)
