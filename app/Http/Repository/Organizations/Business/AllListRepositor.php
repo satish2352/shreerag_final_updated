@@ -410,12 +410,16 @@ class AllListRepositor
           'businesses_details.description',
           'businesses.remarks',
           'businesses.is_active',
+          // 'production.business_id',
+          // 'estimation.total_estimation_amount',
+          // // 'design_revision_for_prod.reject_reason_prod',
+          // // 'designs.bom_image',
+          // // 'designs.design_image',
+          // 'businesses_details.updated_at'
           'production.business_id',
           'estimation.total_estimation_amount',
-          // 'design_revision_for_prod.reject_reason_prod',
-          // 'designs.bom_image',
-          // 'designs.design_image',
-          'businesses_details.updated_at'
+          'businesses_details.updated_at',
+          'purchase_orders.updated_at as po_updated_at'
         )
         ->distinct()->orderBy('purchase_orders.updated_at', 'desc')->paginate($perPage)
         ->withQueryString();
