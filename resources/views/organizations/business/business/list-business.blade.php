@@ -45,7 +45,8 @@
                                         <div class="d-flex justify-content-end mb-3">
                                             <div class="col-md-4">
                                                 <input type="text" name="search" value="{{ request('search') }}"
-                                                    class="form-control" placeholder="Search Project / Product / PO">
+                                                    class="form-control"
+                                                    placeholder="Search Project Name / Product Name  / PO No.">
                                             </div>
                                             <div class="col-md-2 ">
                                                 <button class="btn btn-primary filterbg">Search</button>

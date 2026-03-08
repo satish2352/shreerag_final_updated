@@ -361,7 +361,8 @@ class AllListRepositor
       // $array_to_be_check = [config('constants.PUCHASE_DEPARTMENT.PO_NEW_SENT_TO_HIGHER_AUTH_FOR_APPROVAL')];
       $array_to_be_check = [config('constants.PUCHASE_DEPARTMENT.PO_NEW_SENT_TO_HIGHER_AUTH_FOR_APPROVAL')];
       $array_not_to_be_check = [config('constants.HIGHER_AUTHORITY.LIST_PO_TO_BE_APPROVE_FROM_PURCHASE')];
-
+      $search = trim(request('search'));
+      $perPage = Config::get('AllFileValidation.PAGINATION');
       $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
         $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
       })
@@ -393,6 +394,13 @@ class AllListRepositor
         ->whereNull('purchase_orders.store_receipt_no')
         ->where('businesses.is_active', true)
         ->where('businesses.is_deleted', 0)
+        ->when($search, function ($query) use ($search) {
+          $query->where(function ($q) use ($search) {
+            $q->where('businesses.project_name', 'LIKE', "%{$search}%")
+              ->orWhere('businesses_details.product_name', 'LIKE', "%{$search}%")
+              ->orWhere('businesses.grand_total_amount', 'LIKE', "%{$search}%");
+          });
+        })
         ->select(
           'business_application_processes.purchase_order_id',
           'businesses_details.id',
@@ -409,12 +417,13 @@ class AllListRepositor
           // 'designs.design_image',
           'businesses_details.updated_at'
         )
-        ->distinct()->orderBy('purchase_orders.updated_at', 'desc')->get();
+        ->distinct()->orderBy('purchase_orders.updated_at', 'desc')->paginate($perPage)
+        ->withQueryString();
 
       return $data_output;
     } catch (\Exception $e) {
-
-      return $e;
+      Log::error($e->getMessage());
+      return collect();
     }
   }
   public function getAllListApprovedPurchaseOrderOwnerlogin()
