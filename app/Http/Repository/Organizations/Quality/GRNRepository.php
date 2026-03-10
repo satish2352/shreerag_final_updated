@@ -2,6 +2,7 @@
 
 namespace App\Http\Repository\Organizations\Quality;
 
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use App\Models\{
     GRNModel,
@@ -23,11 +24,23 @@ class GRNRepository
     public function getAll()
     {
         try {
-            // $data_output = Gatepass::where('is_checked_by_quality',false)->get();
+
+            $perPage = Config::get('AllFileValidation.PAGINATION');
+            $search = request()->search;
+
             $data_output = Gatepass::leftJoin('purchase_orders', function ($join) {
                 $join->on('gatepass.purchase_orders_id', '=', 'purchase_orders.purchase_orders_id');
             })
                 ->where('gatepass.po_tracking_status', 4001)
+
+                ->when($search, function ($query) use ($search) {
+                    $query->where(function ($q) use ($search) {
+                        $q->where('gatepass.gatepass_name', 'like', "%{$search}%")
+                            ->orWhere('gatepass.remark', 'like', "%{$search}%")
+                            ->orWhere('purchase_orders.purchase_orders_id', 'like', "%{$search}%");
+                    });
+                })
+
                 ->select(
                     'gatepass.id',
                     'purchase_orders.business_details_id',
@@ -39,10 +52,13 @@ class GRNRepository
                     'gatepass.is_active'
                 )
                 ->orderBy('gatepass.updated_at', 'desc')
-                ->get();
+                ->paginate($perPage)
+                ->withQueryString();
+
             return $data_output;
         } catch (\Exception $e) {
-            return $e;
+            Log::error($e->getMessage());
+            throw $e;
         }
     }
 

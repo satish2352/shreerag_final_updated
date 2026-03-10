@@ -2,6 +2,7 @@
 
 namespace App\Http\Repository\Organizations\Designers;
 
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use App\Models\{
@@ -21,6 +22,8 @@ class DesignsRepository
     { //checked
         try {
             $array_to_be_check = [config('constants.DESIGN_DEPARTMENT.LIST_NEW_REQUIREMENTS_RECEIVED_FOR_DESIGN')];
+            $search = trim(request('search'));
+            $perPage = Config::get('AllFileValidation.PAGINATION');
             $data_output = DesignModel::leftJoin('businesses', function ($join) {
                 $join->on('designs.business_id', '=', 'businesses.id');
             })
@@ -31,6 +34,12 @@ class DesignsRepository
                 ->where('businesses.is_active', true)
                 ->where('businesses.is_deleted', 0)
                 ->distinct('businesses.id')
+                ->when($search, function ($query) use ($search) {
+                    $query->where(function ($q) use ($search) {
+                        $q->where('businesses.project_name', 'LIKE', "%{$search}%")
+                            ->orWhere('businesses.grand_total_amount', 'LIKE', "%{$search}%");
+                    });
+                })
                 ->select(
                     'businesses.id',
                     'businesses.project_name',
@@ -44,7 +53,8 @@ class DesignsRepository
                     'businesses.updated_at'
                 )
                 ->orderBy('businesses.updated_at', 'desc')
-                ->get();
+                ->paginate($perPage)
+                ->withQueryString();
             return $data_output;
         } catch (\Exception $e) {
             return $e;
@@ -218,6 +228,8 @@ class DesignsRepository
             $array_to_be_check = [
                 config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_ESTIMATION_DEPT_FIRST_TIME')
             ];
+            $search = trim(request('search'));
+            $perPage = Config::get('AllFileValidation.PAGINATION');
             $data_output = EstimationModel::leftJoin('businesses', function ($join) {
                 $join->on('estimation.business_id', '=', 'businesses.id');
             })
@@ -230,6 +242,12 @@ class DesignsRepository
                 ->whereIn('business_application_processes.design_status_id', $array_to_be_check)
                 ->where('businesses.is_active', true)
                 ->where('businesses.is_deleted', 0)
+                ->when($search, function ($query) use ($search) {
+                    $query->where(function ($q) use ($search) {
+                        $q->where('businesses.project_name', 'LIKE', "%{$search}%")
+                            ->orWhere('businesses.customer_po_number', 'LIKE', "%{$search}%");
+                    });
+                })
                 ->select(
                     'businesses.id',
                     'businesses.project_name',
@@ -258,7 +276,8 @@ class DesignsRepository
                     'designs.business_id'
                 )
                 ->orderBy('updated_at', 'desc')
-                ->get();
+                ->paginate($perPage)
+                ->withQueryString();
 
             return $data_output;
         } catch (\Exception $e) {

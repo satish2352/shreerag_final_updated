@@ -177,15 +177,15 @@
                                                             <th style="width: 60px;">Sr. No.</th>
                                                             <th style="width: 400px;">Description</th>
                                                             <th style="width: 100px;">Part No.</th>
-                                                            <th style="width: 100px;">PO Quantity</th>
+                                                            <th style="width: 100px;">PO Qty</th>
                                                             <th style="width: 70px;">Unit</th>
                                                             {{-- <th style="width: 100px;">HSN</th> --}}
                                                             <th style="width: 70px;">Rate</th>
-                                                            <th style="width: 80px;">Discount</th>
-                                                            <th style="width: 100px;">Actual Quantity</th>
-                                                            <th style="width: 100px;">Accepted Quantity</th>
-                                                            <th style="width: 100px;">Rejected Quantity</th>
-                                                            <th style="width: 100px;">Balance Quantity</th>
+                                                            <th style="width: 80px;">Dis</th>
+                                                            <th style="width: 100px;">Actual Qty</th>
+                                                            <th style="width: 100px;">Acce Qty</th>
+                                                            <th style="width: 100px;">Rej Qty</th>
+                                                            <th style="width: 100px;">Bal Qty</th>
                                                             {{-- <th>Action</th> --}}
                                                         </tr>
                                                         @foreach ($purchase_order_details_data as $index => $item)

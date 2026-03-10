@@ -4,6 +4,7 @@ namespace App\Http\Repository\Organizations\Estimation;
 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Config;
 use App\Models\{
     BusinessApplicationProcesses,
     EstimationModel
@@ -343,7 +344,8 @@ class AllListRepository
     {
         try {
             $array_to_be_check = config('constants.ESTIMATION_DEPARTMENT.UPDATED_ACCEPTED_BOM_SEND_TO_PRODUCTION');
-
+            $search = trim(request('search'));
+            $perPage = Config::get('AllFileValidation.PAGINATION');
             $data_output = BusinessApplicationProcesses::leftJoin('businesses', function ($join) {
                 $join->on('business_application_processes.business_id', '=', 'businesses.id');
             })
@@ -362,6 +364,13 @@ class AllListRepository
                 ->where('business_application_processes.estimation_send_to_production', $array_to_be_check)
                 ->where('businesses.is_active', true)
                 ->where('businesses.is_deleted', 0)
+                ->when($search, function ($query) use ($search) {
+                    $query->where(function ($q) use ($search) {
+                        $q->where('businesses.project_name', 'LIKE', "%{$search}%")
+                            ->orWhere('businesses_details.product_name', 'LIKE', "%{$search}%")
+                            ->orWhere('businesses.customer_po_number', 'LIKE', "%{$search}%");
+                    });
+                })
                 ->select(
                     'businesses.id',
                     'businesses.project_name',
@@ -390,8 +399,8 @@ class AllListRepository
                     'estimation.total_estimation_amount'
                 )
                 ->orderBy('estimation.updated_at', 'desc')
-                ->get();
-
+                ->paginate($perPage)
+                ->withQueryString();
             return $data_output;
         } catch (\Exception $e) {
             return $e;

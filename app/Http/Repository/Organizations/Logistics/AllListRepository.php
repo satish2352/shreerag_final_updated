@@ -3,6 +3,7 @@
 namespace App\Http\Repository\Organizations\Logistics;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Config;
 use App\Models\{
   Logistics,
   CustomerProductQuantityTracking
@@ -17,6 +18,8 @@ class AllListRepository
       $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_COMPLETED_FROM_PRODUCTION_ACCORDING_TO_DESIGN')];
       $array_to_be_check_new = [NULL];
       $array_to_be_quantity_tracking = [config('constants.LOGISTICS_DEPARTMENT.INPROCESS_COMPLETED_QUANLTITY_RECEIVED_FROM_PRODUCTION')];
+      $search = trim(request('search'));
+      $perPage = Config::get('AllFileValidation.PAGINATION');
       $data_output = CustomerProductQuantityTracking::leftJoin('tbl_logistics', function ($join) {
         $join->on('tbl_customer_product_quantity_tracking.id', '=', 'tbl_logistics.quantity_tracking_id');
       })
@@ -37,6 +40,12 @@ class AllListRepository
         ->where('businesses.is_active', true)
         ->where('businesses.is_deleted', 0)
         ->distinct('businesses_details.id')
+        ->when($search, function ($query) use ($search) {
+          $query->where(function ($q) use ($search) {
+            $q->where('businesses.project_name', 'LIKE', "%{$search}%")
+              ->orWhere('businesses_details.product_name', 'LIKE', "%{$search}%");
+          });
+        })
         ->select(
           'tbl_customer_product_quantity_tracking.id',
           'tbl_customer_product_quantity_tracking.business_details_id',
@@ -72,7 +81,8 @@ class AllListRepository
 
         )
         ->orderBy('tbl_customer_product_quantity_tracking.updated_at', 'desc')
-        ->get();
+        ->paginate($perPage)
+        ->withQueryString();
 
       return $data_output;
     } catch (\Exception $e) {
@@ -150,7 +160,8 @@ class AllListRepository
     try {
 
       $array_to_be_quantity_tracking = [config('constants.LOGISTICS_DEPARTMENT.UPDATED_COMPLETED_QUANLTITY_LOGISTICS_DEPT_SEND_TO_FIANANCE_DEPT')];
-
+      $search = trim(request('search'));
+      $perPage = Config::get('AllFileValidation.PAGINATION');
       $data_output = Logistics::leftJoin('tbl_customer_product_quantity_tracking', function ($join) {
         $join->on('tbl_logistics.quantity_tracking_id', '=', 'tbl_customer_product_quantity_tracking.id');
       })
@@ -169,6 +180,12 @@ class AllListRepository
         ->where('tbl_customer_product_quantity_tracking.logistics_list_status', 'Send_Fianance')
         ->where('businesses.is_active', true)
         ->where('businesses.is_deleted', 0)
+        ->when($search, function ($query) use ($search) {
+          $query->where(function ($q) use ($search) {
+            $q->where('businesses.project_name', 'LIKE', "%{$search}%")
+              ->orWhere('businesses_details.product_name', 'LIKE', "%{$search}%");
+          });
+        })
         ->select(
           'tbl_customer_product_quantity_tracking.id',
           'tbl_customer_product_quantity_tracking.business_details_id',
@@ -202,7 +219,8 @@ class AllListRepository
 
         )
         ->orderBy('tbl_logistics.updated_at', 'desc')
-        ->get();
+        ->paginate($perPage)
+        ->withQueryString();
       return $data_output;
     } catch (\Exception $e) {
       return $e;

@@ -110,16 +110,42 @@ class AllListController extends Controller
             );
         }
     }
+    // public function getAllListPurchaseOrder(Request $request)
+    // {
+    //     try {
+    //         $data_output = $this->service->getAllListPurchaseOrder();
+
+    //         if ($data_output->isEmpty()) {
+    //             return view('organizations.business.list.list-purchase-order-need-to-check', [
+    //                 'data_output' => [],
+    //                 'message' => 'No data found'
+    //             ]);
+    //         }
+
+    //         $poIds = $data_output->pluck('id')->filter()->unique()->values();
+
+    //         if ($poIds->isNotEmpty()) {
+    //             AdminView::where('is_view', 0)
+    //                 ->whereIn('id', $poIds)
+    //                 ->update(['is_view' => 1]);
+    //         }
+
+    //         return view('organizations.business.list.list-purchase-order-need-to-check', compact('data_output'));
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
     public function getAllListPurchaseOrder(Request $request)
     {
         try {
+
             $data_output = $this->service->getAllListPurchaseOrder();
 
-            if ($data_output->isEmpty()) {
-                return view('organizations.business.list.list-purchase-order-need-to-check', [
-                    'data_output' => [],
-                    'message' => 'No data found'
-                ]);
+            if ($data_output->count() == 0) {
+                return view(
+                    'organizations.business.list.list-purchase-order-need-to-check',
+                    compact('data_output')
+                );
             }
 
             $poIds = $data_output->pluck('id')->filter()->unique()->values();
@@ -130,12 +156,14 @@ class AllListController extends Controller
                     ->update(['is_view' => 1]);
             }
 
-            return view('organizations.business.list.list-purchase-order-need-to-check', compact('data_output'));
+            return view(
+                'organizations.business.list.list-purchase-order-need-to-check',
+                compact('data_output')
+            );
         } catch (\Exception $e) {
-            return $e;
+            dd($e->getMessage());
         }
     }
-
     public function getAllListApprovedPurchaseOrderOwnerlogin(Request $request)
     {
         try {

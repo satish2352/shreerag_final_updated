@@ -167,7 +167,7 @@
 
                                                 <th data-field="id">Sr.No.</th>
                                                 <!-- <th data-field="received_updated_at" data-editable="false">Received Date
-                                                                                                                                                                                    </th> -->
+                                                                                                                                                                                                                            </th> -->
                                                 <th data-field="issue_updated_at" data-editable="false">Transaction Date
                                                 </th>
                                                 <th data-field="description" data-editable="false">Entry No/Particulars</th>
@@ -265,7 +265,8 @@
                                 } else if (item.issue_qty > 0) {
 
                                     if (item.product_name === 'Delivery Challan No.') {
-                                        particulars = `DELIVERY CHALLAN ISSUE | ${item.part_name}`;
+                                        particulars =
+                                            `DELIVERY CHALLAN ISSUE |  ${item.part_name}| ${item.vendor_name}`;
                                     } else {
                                         particulars =
                                             `FOR PRODUCTION ISSUE ${item.product_name} ${item.part_name}`;

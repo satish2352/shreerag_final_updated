@@ -7,7 +7,7 @@
                     <div class="sparkline13-list">
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
-                                <h1>GRN  <span class="table-project-n">Genration</span></h1>
+                                <h1>GRN <span class="table-project-n">Genration</span></h1>
                                 <div class="form-group-inner login-btn-inner row">
                                     <div class="col-lg-2">
                                         <div class="login-horizental cancel-wp pull-left">
@@ -39,11 +39,24 @@
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
                                 <div class="table-responsive">
-                                    <table id="table" data-toggle="table" data-pagination="true" data-search="true"
+                                    <form method="GET" action="{{ url()->current() }}">
+                                        <div class="d-flex justify-content-end mb-3">
+                                            <div class="col-md-4">
+                                                <input type="text" name="search" value="{{ request('search') }}"
+                                                    class="form-control" placeholder="Search PO. No. / Gatepass Name">
+                                            </div>
+                                            <div class="col-md-2 ">
+                                                <button class="btn btn-primary filterbg">Search</button>
+                                                <a href="{{ url()->current() }}" class="btn btn-secondary">Reset</a>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <table class="table table-bordered table-striped">
+                                        {{-- <table id="table" data-toggle="table" data-pagination="true" data-search="true"
                                         data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="false"
                                         data-key-events="true" data-show-toggle="true" data-resizable="true"
                                         data-cookie="true" data-cookie-id-table="saveId" data-show-export="true"
-                                        data-click-to-select="true" data-toolbar="#toolbar">
+                                        data-click-to-select="true" data-toolbar="#toolbar"> --}}
                                         <thead>
                                             <tr>
                                                 <th data-field="id">ID</th>
@@ -56,26 +69,48 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($all_gatepass as $data)
+                                            @forelse ($all_gatepass as $data)
                                                 <tr>
-                                                    <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ $data->purchase_orders_id}}</td>
+                                                    <td> {{ ($all_gatepass->currentPage() - 1) * $all_gatepass->perPage() + $loop->iteration }}
+                                                    </td>
+                                                    <td>{{ $data->purchase_orders_id }}</td>
                                                     <td>{{ ucwords($data->gatepass_name) }}</td>
                                                     <td>{{ ucwords($data->gatepass_date) }}</td>
                                                     <td>{{ ucwords($data->gatepass_time) }}</td>
                                                     <td>{{ ucwords($data->remark) }}</td>
                                                     <td>
                                                         <div style="display: flex; align-items: center;">
-                                                            <a href="{{ route('add-grn', [base64_encode($data->purchase_orders_id), base64_encode($data->id)]) }}"><button
+                                                            <a
+                                                                href="{{ route('add-grn', [base64_encode($data->purchase_orders_id), base64_encode($data->id)]) }}"><button
                                                                     data-toggle="tooltip" title="Edit"
-                                                                    class="btn btn-sm btn-bg-colour"><i class="fas fa-pen-square"
+                                                                    class="btn btn-sm btn-bg-colour"><i
+                                                                        class="fas fa-pen-square"
                                                                         aria-hidden="true"></i></button></a>
                                                         </div>
                                                     </td>
                                                 </tr>
-                                            @endforeach
+                                            @empty
+                                                <tr>
+                                                    <td colspan="11" class="text-center">
+                                                        No Record Found
+                                                    </td>
+                                                </tr>
+                                            @endforelse
                                         </tbody>
                                     </table>
+                                    <div class="row mt-3">
+                                        <div class="col-md-6">
+                                            <p>
+                                                Showing {{ $all_gatepass->firstItem() }} to
+                                                {{ $all_gatepass->lastItem() }}
+                                                of {{ $all_gatepass->total() }} rows
+                                            </p>
+                                        </div>
+
+                                        <div class="col-md-6 d-flex justify-content-end mt-3">
+                                            {{ $all_gatepass->onEachSide(1)->links() }}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -84,4 +119,4 @@
             </div>
         </div>
     </div>
-   @endsection
+@endsection

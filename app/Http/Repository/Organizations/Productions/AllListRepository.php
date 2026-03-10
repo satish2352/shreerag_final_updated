@@ -4,6 +4,7 @@ namespace App\Http\Repository\Organizations\Productions;
 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Config;
 use App\Models\{
     BusinessApplicationProcesses,
     CustomerProductQuantityTracking,
@@ -52,7 +53,8 @@ class AllListRepository
             // $decoded_business_id = base64_decode($business_id);
 
             $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.LIST_ESTIMATION_RECEIVED_FOR_PRODUCTION')];
-
+            $search = trim(request('search'));
+            $perPage = Config::get('AllFileValidation.PAGINATION');
             $data_output = BusinessApplicationProcesses::leftJoin('estimation', function ($join) {
                 $join->on('business_application_processes.business_details_id', '=', 'estimation.business_details_id');
             })
@@ -75,6 +77,12 @@ class AllListRepository
                 ->where('businesses_details.is_active', true)
                 ->where('businesses_details.is_deleted', 0)
                 ->distinct('businesses_details.id')
+                ->when($search, function ($query) use ($search) {
+                    $query->where(function ($q) use ($search) {
+                        $q->where('businesses.project_name', 'LIKE', "%{$search}%")
+                            ->orWhere('businesses_details.product_name', 'LIKE', "%{$search}%");
+                    });
+                })
                 ->select(
                     'estimation.business_details_id',
                     'businesses.project_name',
@@ -93,7 +101,8 @@ class AllListRepository
                     'business_application_processes.design_status_id',
                     'estimation.updated_at'
                 )->orderBy('estimation.updated_at', 'desc')
-                ->get();
+                ->paginate($perPage)
+                ->withQueryString();
 
             return $data_output;
         } catch (\Exception $e) {
@@ -373,7 +382,8 @@ class AllListRepository
             $array_to_be_check = [
                 config('constants.PRODUCTION_DEPARTMENT.LIST_BOM_PART_MATERIAL_RECIVED_FROM_STORE_DEPT_FOR_PRODUCTION')
             ];
-
+            $search = trim(request('search'));
+            $perPage = Config::get('AllFileValidation.PAGINATION');
             $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
                 $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
             })
@@ -396,6 +406,12 @@ class AllListRepository
                 ->where('businesses.is_active', true)
                 ->where('businesses.is_deleted', 0)
                 ->distinct('businesses.id')
+                ->when($search, function ($query) use ($search) {
+                    $query->where(function ($q) use ($search) {
+                        $q->where('businesses.project_name', 'LIKE', "%{$search}%")
+                            ->orWhere('businesses_details.product_name', 'LIKE', "%{$search}%");
+                    });
+                })
                 ->groupBy(
                     'businesses.project_name',
                     'businesses.customer_po_number',
@@ -417,7 +433,8 @@ class AllListRepository
                     DB::raw('MAX(production.updated_at) as last_updated_at') // Use MAX aggregate function
                 )
                 ->orderBy('last_updated_at', 'desc')
-                ->get();
+                ->paginate($perPage)
+                ->withQueryString();
 
             return $data_output;
         } catch (\Exception $e) {
@@ -494,7 +511,8 @@ class AllListRepository
         try {
             $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_COMPLETED_FROM_PRODUCTION_ACCORDING_TO_DESIGN')];
             $array_to_be_quantity_tracking = [config('constants.PRODUCTION_DEPARTMENT.INPROCESS_COMPLETED_QUANLTITY_SEND_TO_LOGISTICS')];
-
+            $search = trim(request('search'));
+            $perPage = Config::get('AllFileValidation.PAGINATION');
             $data_output = DB::table('business_application_processes')
                 ->leftJoin('production', 'business_application_processes.business_details_id', '=', 'production.business_details_id')
                 ->leftJoin('businesses', 'business_application_processes.business_id', '=', 'businesses.id')
@@ -504,6 +522,12 @@ class AllListRepository
                 ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
                 ->where('businesses.is_active', true)
                 ->where('businesses.is_deleted', 0)
+                ->when($search, function ($query) use ($search) {
+                    $query->where(function ($q) use ($search) {
+                        $q->where('businesses.project_name', 'LIKE', "%{$search}%")
+                            ->orWhere('businesses_details.product_name', 'LIKE', "%{$search}%");
+                    });
+                })
                 ->select(
                     'tbl_customer_product_quantity_tracking.id',
                     'businesses.project_name',
@@ -527,7 +551,9 @@ class AllListRepository
                     DB::raw('tbl_customer_product_quantity_tracking.completed_quantity AS completed_quantity')
                 )
                 ->orderBy('tbl_customer_product_quantity_tracking.updated_at', 'desc')
-                ->get();
+                ->paginate($perPage)
+                ->withQueryString();
+
 
             return $data_output;
         } catch (\Exception $e) {
@@ -582,6 +608,9 @@ class AllListRepository
     public function getAllCompletedProductionSendToLogistics()
     {
         try {
+            $search = trim(request('search'));
+            $perPage = Config::get('AllFileValidation.PAGINATION');
+
             $subQuery = CustomerProductQuantityTracking::select(
                 'business_id',
                 'business_details_id',
@@ -601,7 +630,12 @@ class AllListRepository
 
                 ->where('businesses.is_active', true)
                 ->where('businesses.is_deleted', 0)
-
+                ->when($search, function ($query) use ($search) {
+                    $query->where(function ($q) use ($search) {
+                        $q->where('businesses.project_name', 'LIKE', "%{$search}%")
+                            ->orWhere('businesses_details.product_name', 'LIKE', "%{$search}%");
+                    });
+                })
                 ->select(
                     't.business_details_id as product_id',
                     'businesses.project_name',
@@ -613,7 +647,8 @@ class AllListRepository
                     't.last_updated'
                 )
                 ->orderBy('t.last_updated', 'desc')
-                ->get();
+                ->paginate($perPage)
+                ->withQueryString();
 
             return $data_output;
         } catch (\Exception $e) {

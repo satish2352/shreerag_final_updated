@@ -6,11 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Services\Organizations\Quality\GRNServices;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Config;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Exception;
 use App\Models\{
     PurchaseOrdersModel,
@@ -234,6 +232,8 @@ class GRNController extends Controller
 
             $array_to_be_check = [config('constants.QUALITY_DEPARTMENT.PO_CHECKED_OK_GRN_GENRATED_SENT_TO_STORE')];
             // $array_to_be_check_new = ['0'];
+            $search = trim(request('search'));
+            $perPage = Config::get('AllFileValidation.PAGINATION');
 
             $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
                 $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
@@ -258,6 +258,11 @@ class GRNController extends Controller
                 ->where('businesses.is_active', true)
 
                 ->distinct('businesses.id')
+                ->when($search, function ($query) use ($search) {
+                    $query->where(function ($q) use ($search) {
+                        $q->where('businesses_details.product_name', 'LIKE', "%{$search}%");
+                    });
+                })
                 ->select(
                     'businesses_details.id',
                     'businesses_details.product_name',
@@ -274,7 +279,9 @@ class GRNController extends Controller
                     'businesses.updated_at',
 
                 )->orderBy('businesses.updated_at', 'desc')
-                ->get();
+                ->paginate($perPage)
+                ->withQueryString();
+
 
             if ($data_output->isNotEmpty()) {
 

@@ -3038,9 +3038,7 @@ class ReportRepository
             if ($partId) {
                 $received->where('tbl_part_item.id', $partId);
             }
-            if ($partId) {
-                $received->where('tbl_part_item.id', $partId);
-            }
+
             if ($request->filled('from_date')) {
                 $received->whereDate('tbl_grn_po_quantity_tracking.updated_at', '>=', $request->from_date);
             }
@@ -3099,9 +3097,7 @@ class ReportRepository
                 $issued->where('tbl_part_item.id', $partId);
             }
 
-            if ($partId) {
-                $issued->where('tbl_part_item.id', $partId);
-            }
+
             if ($request->filled('from_date')) {
                 $issued->whereDate('production_details.updated_at', '>=', $request->from_date);
             }
@@ -3119,13 +3115,14 @@ class ReportRepository
             $delivery = DB::table('tbl_delivery_chalan_item_details')
                 ->leftJoin('tbl_part_item', 'tbl_part_item.id', '=', 'tbl_delivery_chalan_item_details.part_item_id')
                 ->leftJoin('tbl_delivery_chalan', 'tbl_delivery_chalan.id', '=', 'tbl_delivery_chalan_item_details.delivery_chalan_id')
+                ->leftJoin('vendors', 'vendors.id', '=', 'tbl_delivery_chalan.vendor_id')
                 ->selectRaw("
         tbl_delivery_chalan_item_details.updated_at as date,
         tbl_part_item.description as part_name,
         0 as received_qty,
         tbl_delivery_chalan_item_details.quantity as issue_qty,
         '' as grn_no,
-        '' as vendor_name,
+        vendors.vendor_company_name as vendor_name,
         'Delivery Challan No.' as product_name
     ")
                 ->where('tbl_delivery_chalan_item_details.is_deleted', 0)

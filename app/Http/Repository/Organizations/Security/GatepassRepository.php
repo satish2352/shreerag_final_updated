@@ -2,6 +2,8 @@
 
 namespace App\Http\Repository\Organizations\Security;
 
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
 use App\Models\{
     BusinessApplicationProcesses,
     AdminView,
@@ -12,38 +14,75 @@ use App\Models\{
 
 class GatepassRepository
 {
+    // public function getAll()
+    // {
+
+    //     try {
+
+    //         $data_output = Gatepass::leftJoin('purchase_orders', function ($join) {
+
+    //             $join->on('gatepass.purchase_orders_id', '=', 'purchase_orders.purchase_orders_id');
+    //         })
+
+    //             ->select(
+
+    //                 'gatepass.*',
+    //                 'purchase_orders.id as purchase_id',
+    //                 'purchase_orders.quality_status_id', // Replace with the fields you need from purchase_orders
+
+    //             )
+    //             ->where('gatepass.is_deleted', 0)
+    //             ->orderBy('gatepass.updated_at', 'asc') // Sorting by gatepass table's updated_at
+
+    //             ->get();
+
+
+
+    //         return $data_output;
+    //     } catch (\Exception $e) {
+
+    //         return $e;
+    //     }
+    // }
     public function getAll()
-
     {
-
         try {
 
-            $data_output = Gatepass::leftJoin('purchase_orders', function ($join) {
+            $perPage = Config::get('AllFileValidation.PAGINATION');
+            $search = request()->search;
 
+            $data_output = Gatepass::leftJoin('purchase_orders', function ($join) {
                 $join->on('gatepass.purchase_orders_id', '=', 'purchase_orders.purchase_orders_id');
             })
 
                 ->select(
-
                     'gatepass.*',
                     'purchase_orders.id as purchase_id',
-                    'purchase_orders.quality_status_id', // Replace with the fields you need from purchase_orders
-
+                    'purchase_orders.quality_status_id'
                 )
+
                 ->where('gatepass.is_deleted', 0)
-                ->orderBy('gatepass.updated_at', 'asc') // Sorting by gatepass table's updated_at
 
-                ->get();
+                ->when($search, function ($query) use ($search) {
+                    $query->where(function ($q) use ($search) {
+                        $q->where('gatepass.gatepass_name', 'like', "%{$search}%")
+                            ->orWhere('gatepass.remark', 'like', "%{$search}%")
+                            ->orWhere('purchase_orders.purchase_orders_id', 'like', "%{$search}%");
+                    });
+                })
 
+                ->orderBy('gatepass.updated_at', 'asc')
 
+                ->paginate($perPage)
+                ->withQueryString();
 
             return $data_output;
         } catch (\Exception $e) {
 
-            return $e;
+            Log::error($e->getMessage());
+            throw $e;
         }
     }
-
     public function addAll($request)
     {
         try {

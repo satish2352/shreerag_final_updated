@@ -2,6 +2,7 @@
 
 namespace App\Http\Repository\Organizations\Dispatch;
 
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use App\Models\{
@@ -18,7 +19,6 @@ class AllListRepository
             $array_to_be_check = [config('constants.DISPATCH_DEPARTMENT.LIST_RECEIVED_FROM_FINANCE_ACCORDING_TO_LOGISTICS')];
             $array_to_be_quantity_tracking = [config('constants.DISPATCH_DEPARTMENT.RECEIVED_COMPLETED_QUANLTITY_FROM_FIANANCE_DEPT_TO_DISPATCH_DEPT')];
 
-            $array_to_be_check_new = [NULL];
             $data_output = CustomerProductQuantityTracking::leftJoin('tbl_logistics', function ($join) {
                 $join->on('tbl_customer_product_quantity_tracking.id', '=', 'tbl_logistics.quantity_tracking_id');
             })
@@ -101,7 +101,9 @@ class AllListRepository
             $array_to_be_quantity_tracking = [config('constants.DISPATCH_DEPARTMENT.SUBMITTED_COMPLETED_QUANLTITY_DISPATCH_DEPT')];
 
             $array_to_be_check_new = ['0'];
-
+            $array_to_be_check_new = [NULL];
+            $search = trim(request('search'));
+            $perPage = Config::get('AllFileValidation.PAGINATION');
 
             $data_output = Logistics::leftJoin('tbl_customer_product_quantity_tracking', function ($join) {
                 $join->on('tbl_logistics.quantity_tracking_id', '=', 'tbl_customer_product_quantity_tracking.id');
@@ -128,6 +130,13 @@ class AllListRepository
                 // ->whereIn('bap1.dispatch_status_id',$array_to_be_check)
                 ->where('businesses.is_active', true)
                 ->where('businesses.is_deleted', 0)
+                ->when($search, function ($query) use ($search) {
+                    $query->where(function ($q) use ($search) {
+                        $q->where('businesses.project_name', 'LIKE', "%{$search}%")
+                            ->orWhere('businesses.customer_po_number', 'LIKE', "%{$search}%")
+                            ->orWhere('businesses_details.product_name', 'LIKE', "%{$search}%");
+                    });
+                })
                 ->select(
                     'tbl_customer_product_quantity_tracking.id',
                     'businesses.project_name',
@@ -159,7 +168,8 @@ class AllListRepository
 
                 )
                 ->orderBy('tbl_dispatch.updated_at', 'desc')
-                ->get();
+                ->paginate($perPage)
+                ->withQueryString();
 
 
             return $data_output;
@@ -173,7 +183,8 @@ class AllListRepository
         try {
             $array_to_be_check = [config('constants.DISPATCH_DEPARTMENT.LIST_DISPATCH_COMPLETED_FROM_DISPATCH_DEPARTMENT')];
             $array_to_be_quantity_tracking = [config('constants.DISPATCH_DEPARTMENT.SUBMITTED_COMPLETED_QUANLTITY_DISPATCH_DEPT')];
-
+            $search = trim(request('search'));
+            $perPage = Config::get('AllFileValidation.PAGINATION');
             $data_output = Logistics::leftJoin('tbl_customer_product_quantity_tracking as tcqt1', function ($join) {
                 $join->on('tbl_logistics.quantity_tracking_id', '=', 'tcqt1.id');
             })
@@ -205,6 +216,13 @@ class AllListRepository
                 // ->whereIn('bap1.dispatch_status_id', $array_to_be_check)
                 ->where('businesses.is_active', true)
                 ->where('businesses.is_deleted', 0)
+                ->when($search, function ($query) use ($search) {
+                    $query->where(function ($q) use ($search) {
+                        $q->where('businesses.project_name', 'LIKE', "%{$search}%")
+                            ->orWhere('businesses.customer_po_number', 'LIKE', "%{$search}%")
+                            ->orWhere('businesses_details.product_name', 'LIKE', "%{$search}%");
+                    });
+                })
                 ->select(
                     'businesses_details.id as business_details_id',
                     'businesses.project_name',
@@ -235,7 +253,8 @@ class AllListRepository
 
                 ->havingRaw('SUM(tcqt1.completed_quantity) = businesses_details.quantity')
                 ->orderBy('last_updated_at', 'desc') // Use the alias instead of tbl_dispatch.last_updated_at
-                ->get();
+                ->paginate($perPage)
+                ->withQueryString();
 
             /**
              * ✅ Update dispatch_status_id = 1154
@@ -252,11 +271,14 @@ class AllListRepository
                         'updated_at' => now()
                     ]);
             }
-
-            $data_output = $data_output->map(function ($data) {
-                $data->last_updated_at = Carbon::parse($data->last_updated_at);
+            $data_output->getCollection()->transform(function ($data) {
+                $data->last_updated_at = $data->last_updated_at ? Carbon::parse($data->last_updated_at) : null;
                 return $data;
             });
+            // $data_output = $data_output->map(function ($data) {
+            //     $data->last_updated_at = Carbon::parse($data->last_updated_at);
+            //     return $data;
+            // });
 
             DB::commit();
 
