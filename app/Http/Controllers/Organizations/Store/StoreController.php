@@ -184,31 +184,59 @@ class StoreController extends Controller
     }
     public function updateProductMaterialWiseAddNewReq(Request $request)
     {
-        $rules = [];
-
-        $messages = [];
-
-        $validation = Validator::make($request->all(), $rules, $messages);
-
-        if ($validation->fails()) {
-            return redirect()->back()->withInput()->withErrors($validation);
-        }
-
         try {
+
             $updateData = $this->service->updateProductMaterialWiseAddNewReq($request);
 
-            if ($updateData['status'] == 'success') {
+            if ($updateData['status'] === 'error') {
 
-                // return redirect('storedept/list-accepted-design-from-prod')->with(['status' => 'success', 'msg' => $updateData['message']]);
                 return redirect()->back()
-                    ->with(['status' => 'success', 'msg' => $updateData['message']]);
-            } else {
-                return redirect()->back()->withInput()->with(['status' => 'error', 'msg' => $updateData['message']]);
+                    ->withInput()
+                    ->with([
+                        'status' => 'error',
+                        'msg' => $updateData['message'] ?? implode(', ', $updateData['errors'] ?? [])
+                    ]);
             }
+
+            return redirect()->back()->with([
+                'status' => 'success',
+                'msg' => $updateData['message']
+            ]);
         } catch (\Exception $e) {
-            return redirect()->back()->withInput()->with(['status' => 'error', 'msg' => $e->getMessage()]);
+
+            return redirect()->back()->withInput()->with([
+                'status' => 'error',
+                'msg' => $e->getMessage()
+            ]);
         }
     }
+    // public function updateProductMaterialWiseAddNewReq(Request $request)
+    // {
+    //     $rules = [];
+
+    //     $messages = [];
+
+    //     $validation = Validator::make($request->all(), $rules, $messages);
+
+    //     if ($validation->fails()) {
+    //         return redirect()->back()->withInput()->withErrors($validation);
+    //     }
+
+    //     try {
+    //         $updateData = $this->service->updateProductMaterialWiseAddNewReq($request);
+
+    //         if ($updateData['status'] == 'success') {
+
+    //             // return redirect('storedept/list-accepted-design-from-prod')->with(['status' => 'success', 'msg' => $updateData['message']]);
+    //             return redirect()->back()
+    //                 ->with(['status' => 'success', 'msg' => $updateData['message']]);
+    //         } else {
+    //             return redirect()->back()->withInput()->with(['status' => 'error', 'msg' => $updateData['message']]);
+    //         }
+    //     } catch (\Exception $e) {
+    //         return redirect()->back()->withInput()->with(['status' => 'error', 'msg' => $e->getMessage()]);
+    //     }
+    // }
     public function getPartItemRate(Request $request)
     {
         $partItem = PartItem::find($request->part_item_id);

@@ -165,7 +165,7 @@
                                                                     class="form-control" readonly
                                                                     value="{{ $index + 1 }}">
                                                             </td>
-                                                            
+
                                                             {{-- <td>
                                                                 <div class="custom-dropdown">
                                                                     <input type="hidden"
@@ -255,10 +255,46 @@
                                                                 </div>
                                                             </td> --}}
                                                             <!-- <td>
+                                                                                                                                                                <div class="custom-dropdown">
+                                                                                                                                                                    <input type="hidden"
+                                                                                                                                                                        name="addmore[{{ $index }}][part_item_id]"
+                                                                                                                                                                        class="part_no" value="{{ $item->part_item_id }}">
+
+                                                                                                                                                                    @php
+                                                                                                                                                                        $selected = $dataOutputPartItem->firstWhere(
+                                                                                                                                                                            'id',
+                                                                                                                                                                            $item->part_item_id,
+                                                                                                                                                                        );
+                                                                                                                                                                    @endphp
+                                                                                                                                                                  
+
+                                                                                                                                                                     <input type="text"
+                                                                                                                                                                        class="dropdown-input form-control"
+                                                                                                                                                                        value="{{ $selected ? $selected->description : '' }}"
+                                                                                                                                                                        readonly>
+
+                                                                                                                                                                    <div class="dropdown-options dropdown-height"
+                                                                                                                                                                        style="display:none; width: 750px !important;">
+                                                                                                                                                                        <input type="text"
+                                                                                                                                                                            class="search-box form-control"
+                                                                                                                                                                            placeholder="Search...">
+                                                                                                                                                                        <div class="options-list">
+                                                                                                                                                                            @foreach ($dataOutputPartItem as $data)
+    <div class="option"
+                                                                                                                                                                                    data-id="{{ $data->id }}">
+                                                                                                                                                                                    {{ $data->description }}</div>
+    @endforeach
+                                                                                                                                                                        </div>
+                                                                                                                                                                    </div>
+                                                                                                                                                                </div>
+                                                                                                                                                            </td> -->
+
+                                                            <td>
                                                                 <div class="custom-dropdown">
                                                                     <input type="hidden"
                                                                         name="addmore[{{ $index }}][part_item_id]"
                                                                         class="part_no" value="{{ $item->part_item_id }}">
+
 
                                                                     @php
                                                                         $selected = $dataOutputPartItem->firstWhere(
@@ -266,15 +302,15 @@
                                                                             $item->part_item_id,
                                                                         );
                                                                     @endphp
-                                                                  
 
-                                                                     <input type="text"
+                                                                    <input type="text"
                                                                         class="dropdown-input form-control"
                                                                         value="{{ $selected ? $selected->description : '' }}"
-                                                                        readonly> 
+                                                                        title="{{ $selected ? $selected->description : '' }}"
+                                                                        readonly>
 
                                                                     <div class="dropdown-options dropdown-height"
-                                                                        style="display:none; width: 750px !important;">
+                                                                        style="display:none; width: 750px;">
                                                                         <input type="text"
                                                                             class="search-box form-control"
                                                                             placeholder="Search...">
@@ -287,35 +323,7 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </td> -->
-
-                                                            <td>
-  <div class="custom-dropdown">
-    <input type="hidden"
-      name="addmore[{{ $index }}][part_item_id]"
-      class="part_no"
-      value="{{ $item->part_item_id }}">
-
-    @php
-      $selected = $dataOutputPartItem->firstWhere('id', $item->part_item_id);
-    @endphp
-
-    <input type="text"
-      class="dropdown-input form-control"
-      value="{{ $selected ? $selected->description : '' }}"
-      title="{{ $selected ? $selected->description : '' }}"
-      readonly>
-
-    <div class="dropdown-options dropdown-height" style="display:none; width: 750px;">
-      <input type="text" class="search-box form-control" placeholder="Search...">
-      <div class="options-list">
-        @foreach ($dataOutputPartItem as $data)
-          <div class="option" data-id="{{ $data->id }}">{{ $data->description }}</div>
-        @endforeach
-      </div>
-    </div>
-  </div>
-</td>
+                                                            </td>
 
 
                                                             {{-- <td>
@@ -680,12 +688,16 @@
                         $(this).toggle(text.includes(searchTerm));
                     });
                 });
-                purchaseOrderTable.on("click", ".remove-row", function() {
+                $(document).on("click", ".remove-row", function() {
+
                     if ($(this).closest('tr').index() === 0) {
                         Swal.fire('Error', 'First row cannot be deleted', 'warning');
                         return;
                     }
+
                     $(this).closest('tr').remove();
+                    calculateGrandTotal();
+
                 });
                 // Select option
                 // $(document).on('click', '.custom-dropdown .option', function () {
@@ -702,12 +714,13 @@
                     let qty = parseFloat($row.find('.quantity').val()) || 0;
                     let total = rate * qty;
                     $row.find('.total_amount').val(total.toFixed(2)); // store in hidden input
-                    calculateGrandTotal(); // 👈 ADD THIS
+                    calculateGrandTotal(); //  ADD THIS
                 }
 
                 $("#purchase_order_table").on('input', '.basic_rate, .quantity', function() {
                     let $row = $(this).closest('tr');
-                    updateTotalAmount($row);
+                    // updateTotalAmount($row);
+                    calculateGrandTotal();
                 });
 
 
@@ -762,50 +775,91 @@
         <script>
             $(document).ready(function() {
 
-            // 🔁 Calculate all row totals on page load
-$('#purchase_order_table tbody tr').each(function () {
-    let rate = parseFloat($(this).find('.basic_rate').val()) || 0;
-    let qty  = parseFloat($(this).find('.quantity').val()) || 0;
-    let total = rate * qty;
+                // 🔁 Calculate all row totals on page load
+                // $('#purchase_order_table tbody tr').each(function() {
+                //     let rate = parseFloat($(this).find('.basic_rate').val()) || 0;
+                //     let qty = parseFloat($(this).find('.quantity').val()) || 0;
+                //     let total = rate * qty;
 
-    $(this).find('.total_amount').val(total.toFixed(2));
-});
+                //     $(this).find('.total_amount').val(total.toFixed(2));
+                // });
 
-// 🔢 Then calculate grand total
-calculateGrandTotal();
+                // 🔢 Then calculate grand total
+                // calculateGrandTotal();
+                // 🔁 Calculate all row totals on page load
+                $('#purchase_order_table tbody tr').each(function() {
+                    let rate = parseFloat($(this).find('.basic_rate').val()) || 0;
+                    let qty = parseFloat($(this).find('.quantity').val()) || 0;
+                    let total = rate * qty;
 
-                // Initialize form validation
-                $("#addProductForm").validate({
-                    submitHandler: function(form) {
-                        // Perform stock validation for each row
-                        var isValid = true;
-                        $('#purchase_order_table tbody tr').each(function() {
-                            // var partItemId = $(this).find('select[name*="[part_item_id]"]').val();
-                            // var quantity = $(this).find('input[name*="[quantity]"]').val();
-                            var partItemId = $(this).find('input.part_no').val();
-                            var quantity = $(this).find('.quantity').val();
-
-                            // Add your stock validation logic here
-                            // If stock is insufficient, set isValid to false
-                        });
-                        if (isValid) {
-                            form.submit();
-                        } else {
-                            alert('Please ensure all items have sufficient stock.');
-                        }
-                    }
+                    $(this).find('.total_amount').val(total.toFixed(2));
                 });
 
-                $('#addProductForm').on('submit', function(e) {
+                calculateGrandTotal();
+                // Initialize form validation
+                // $("#addProductForm").validate({
+                //     submitHandler: function(form) {
+                //         // Perform stock validation for each row
+                //         var isValid = true;
+                //         $('#purchase_order_table tbody tr').each(function() {
+                //             // var partItemId = $(this).find('select[name*="[part_item_id]"]').val();
+                //             // var quantity = $(this).find('input[name*="[quantity]"]').val();
+                //             var partItemId = $(this).find('input.part_no').val();
+                //             var quantity = $(this).find('.quantity').val();
+
+                //             // Add your stock validation logic here
+                //             // If stock is insufficient, set isValid to false
+                //         });
+                //         if (isValid) {
+                //             form.submit();
+                //         } else {
+                //             alert('Please ensure all items have sufficient stock.');
+                //         }
+                //     }
+                // });
+
+                // $('#addProductForm').on('submit', function(e) {
+                //     let total = parseFloat($('#grand_total').val()) || 0;
+                //     let estimation = parseFloat($('#total_estimation_amount').val()) || 0;
+
+                //     if (total > estimation) {
+                //         e.preventDefault();
+                //         Swal.fire('Error', 'Total amount exceeds estimation amount', 'error');
+                //     }
+                // });
+                submitHandler: function(form) {
+
                     let total = parseFloat($('#grand_total').val()) || 0;
                     let estimation = parseFloat($('#total_estimation_amount').val()) || 0;
 
+                    // 🚨 Check estimation first
                     if (total > estimation) {
-                        e.preventDefault();
-                        Swal.fire('Error', 'Total amount exceeds estimation amount', 'error');
-                    }
-                });
 
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Estimation Exceeded',
+                            text: 'Total material amount exceeds estimation amount'
+                        });
+
+                        return false; // stop form submit
+                    }
+
+                    // ✅ If estimation OK → show confirmation
+                    Swal.fire({
+                        icon: 'question',
+                        title: 'Are you sure?',
+                        text: 'You want to send this material to the Production Department?',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes',
+                        cancelButtonText: 'No',
+                    }).then(function(result) {
+
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+
+                    });
+                }
             });
         </script>
 
@@ -974,15 +1028,15 @@ calculateGrandTotal();
                 </td>
             </tr>`;
                     purchaseOrderTable.find("tbody").append(newRow);
-
+                    calculateGrandTotal();
                     const addedRow = purchaseOrderTable.find("tbody tr").last();
                     initializeValidation(addedRow);
                 });
 
                 // Remove row functionality
-                purchaseOrderTable.on("click", ".remove-row", function() {
-                    $(this).closest('tr').remove();
-                });
+                // purchaseOrderTable.on("click", ".remove-row", function() {
+                //     $(this).closest('tr').remove();
+                // });
 
                 // Trigger stock check on quantity input change
                 purchaseOrderTable.on('input', '.quantity', function() {
@@ -1093,6 +1147,55 @@ calculateGrandTotal();
             });
         </script>
         <script>
+            // function calculateGrandTotal() {
+            //     let grandTotal = 0;
+
+            //     $('.total_amount').each(function() {
+            //         let val = parseFloat($(this).val()) || 0;
+            //         grandTotal += val;
+            //     });
+
+            //     $('#grand_total').val(grandTotal.toFixed(2));
+
+            //     let estimation = parseFloat($('#total_estimation_amount').val()) || 0;
+
+            //     if (grandTotal > estimation) {
+
+            //         $("#saveBtn").prop("disabled", true);
+
+            //         Swal.fire({
+            //             icon: 'error',
+            //             title: 'Estimation Exceeded',
+            //             text: 'Total material amount exceeds estimation amount',
+            //         });
+
+            //     } else {
+
+            //         $("#saveBtn").prop("disabled", false);
+            //     }
+            // }
+            function calculateGrandTotal() {
+
+                let grandTotal = 0;
+
+                $('#purchase_order_table tbody tr').each(function() {
+
+                    let rate = parseFloat($(this).find('.basic_rate').val()) || 0;
+                    let qty = parseFloat($(this).find('.quantity').val()) || 0;
+
+                    let rowTotal = rate * qty;
+
+                    $(this).find('.total_amount').val(rowTotal.toFixed(2));
+
+                    grandTotal += rowTotal;
+
+                });
+
+                $('#grand_total').val(grandTotal.toFixed(2));
+
+            }
+        </script>
+        {{-- <script>
             function calculateGrandTotal() {
                 let grandTotal = 0;
 
@@ -1103,6 +1206,43 @@ calculateGrandTotal();
 
                 $('#grand_total').val(grandTotal.toFixed(2));
             }
+        </script> --}}
+        <script>
+            $(document).on('keyup change', '.quantity', function() {
+
+                // let estimationAmount = parseFloat($('#estimation_amount').val()) || 0;
+                let estimationAmount = parseFloat($('#total_estimation_amount').val()) || 0;
+                let totalUsedAmount = 0;
+
+                $('#purchase_order_table tbody tr').each(function() {
+
+                    let qty = parseFloat($(this).find('.quantity').val()) || 0;
+                    let rate = parseFloat($(this).find('.basic_rate').val()) || 0;
+
+                    let rowTotal = qty * rate;
+                    totalUsedAmount += rowTotal;
+
+                });
+
+                if (totalUsedAmount > estimationAmount) {
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Estimation Limit Exceeded',
+                        text: 'Total material amount exceeds estimation amount!',
+                    });
+
+                    $(this).val('');
+
+                    return false;
+                }
+
+            });
+
+            // FIX FOR PAGE REFRESH
+            $(window).on('load', function() {
+                calculateGrandTotal();
+            });
         </script>
     @endpush
 @endsection
