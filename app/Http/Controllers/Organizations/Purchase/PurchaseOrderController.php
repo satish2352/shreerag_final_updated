@@ -794,8 +794,12 @@ class PurchaseOrderController extends Controller
             // Send email with the merged PDF as an attachment
             $vendorName = $purchaseOrder->vendor_name;
             Mail::send([], [], function ($message) use ($purchaseOrder, $finalPdfPath, $vendorName) {
+                $ccEmails = config('mail.cc');
+                if (!empty($ccEmails)) {
+                    $message->cc(explode(',', $ccEmails));
+                }
+
                 $message->to($purchaseOrder->vendor_email)
-                    ->cc('purchase@shreeragengg.com')
                     ->subject('Purchase Order Notification')
                     ->attach($finalPdfPath)
                     ->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
