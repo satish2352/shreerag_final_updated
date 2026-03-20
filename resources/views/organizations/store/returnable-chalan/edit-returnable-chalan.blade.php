@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 @section('content')
-      <div class="container-fluid">
+    <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="sparkline12-list">
@@ -49,7 +49,8 @@
                                                                 <div class="col-lg-4 col-md-4 col-sm-4">
                                                                     <div class="form-group">
                                                                         <label for="business_id">PO Number
-                                                                            (Optional)</label>
+                                                                            (Optional)
+                                                                        </label>
                                                                         <select class="form-control" id="business_id"
                                                                             name="business_id">
                                                                             <option value="" default>Select PO Number
@@ -218,9 +219,9 @@
                                                                                 class="text-danger">*</span></label>
                                                                         <div class="cal-icon">
                                                                             <input class="form-control datetimepicker"
-                                                                                type="text" name="vehicle_number"
-                                                                                id="vehicle_number"
-                                                                                value="{{ $editDataNew->vehicle_number }}">
+                                                                                type="text" name="lr_number"
+                                                                                id="lr_number"
+                                                                                value="{{ $editDataNew->lr_number }}">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -407,336 +408,336 @@
         @csrf
         <input type="hidden" name="delete_id" id="delete_id" value="">
     </form>
-     @push('scripts')  
-    <script>
-        $(document).ready(function() {
-            $('.editdatetimepicker').datepicker({
-                format: 'yyyy-mm-dd',
-                autoclose: true,
-                todayHighlight: true
+    @push('scripts')
+        <script>
+            $(document).ready(function() {
+                $('.editdatetimepicker').datepicker({
+                    format: 'yyyy-mm-dd',
+                    autoclose: true,
+                    todayHighlight: true
+                });
             });
-        });
-    </script>
-    <script>
-        $(document).ready(function() {
+        </script>
+        <script>
+            $(document).ready(function() {
 
-               $('.select2').select2({
-                        width: '100%',
-                        placeholder: "Select Vendor",
-                        allowClear: true
-                    });
-            const poDropdown = $('#business_id');
-            let preselectedPoId = poDropdown.val(); // Get the preselected PO ID (if any)
+                $('.select2').select2({
+                    width: '100%',
+                    placeholder: "Select Vendor",
+                    allowClear: true
+                });
+                const poDropdown = $('#business_id');
+                let preselectedPoId = poDropdown.val(); // Get the preselected PO ID (if any)
 
-            $('#vendor_id').change(function() {
-                const vendorId = $(this).val();
+                $('#vendor_id').change(function() {
+                    const vendorId = $(this).val();
 
-                if (vendorId) {
-                    const url = '{{ route('get-po-numbers', ':vendorId') }}'.replace(':vendorId',
-                    vendorId);
+                    if (vendorId) {
+                        const url = '{{ route('get-po-numbers', ':vendorId') }}'.replace(':vendorId',
+                            vendorId);
 
-                    // Clear the dropdown immediately before fetching new data
-                    poDropdown.empty().append('<option value="">Select PO Number</option>');
+                        // Clear the dropdown immediately before fetching new data
+                        poDropdown.empty().append('<option value="">Select PO Number</option>');
 
-                    $.ajax({
-                        url: url,
-                        type: 'GET',
-                        success: function(response) {
-                            if (response.status === 'success') {
-                                response.data.forEach(function(po) {
-                                    // Check if the current PO is preselected and mark it as selected
-                                    const isSelected = preselectedPoId == po.id ?
-                                        'selected' : '';
-                                    console.log(isSelected, "isSelectedisSelected");
+                        $.ajax({
+                            url: url,
+                            type: 'GET',
+                            success: function(response) {
+                                if (response.status === 'success') {
+                                    response.data.forEach(function(po) {
+                                        // Check if the current PO is preselected and mark it as selected
+                                        const isSelected = preselectedPoId == po.id ?
+                                            'selected' : '';
+                                        console.log(isSelected, "isSelectedisSelected");
 
-                                    poDropdown.append(
-                                        `<option value="${po.id}" ${isSelected}>${po.purchase_orders_id}</option>`
+                                        poDropdown.append(
+                                            `<option value="${po.id}" ${isSelected}>${po.purchase_orders_id}</option>`
                                         );
-                                });
-                            } else {
-                                alert(response.message || 'Failed to load PO numbers');
+                                    });
+                                } else {
+                                    alert(response.message || 'Failed to load PO numbers');
+                                }
+                            },
+                            error: function() {
+                                alert('An error occurred while fetching PO numbers.');
                             }
-                        },
-                        error: function() {
-                            alert('An error occurred while fetching PO numbers.');
-                        }
-                    });
-                } else {
-                    // Clear the dropdown if no vendor is selected
-                    poDropdown.empty().append('<option value="">Select PO Number</option>');
-                }
-            });
-
-            // Trigger change event to populate dropdown on page load if a vendor is preselected
-            const preselectedVendorId = $('#vendor_id').val();
-            if (preselectedVendorId) {
-                $('#vendor_id').trigger('change');
-            }
-        });
-    </script>
-
-    <script>
-        $(document).ready(function() {
-
-            /* -----------------------------------------
-               1. Custom Dropdown with Search
-            ----------------------------------------- */
-            $(document).on('click', '.dropdown-input', function() {
-                $('.dropdown-options').hide(); // close other dropdowns
-                $(this).siblings('.dropdown-options').toggle();
-                $(this).siblings('.dropdown-options').find('.search-box').val('').trigger(
-                'keyup'); // reset search
-            });
-
-            $(document).on('keyup', '.search-box', function() {
-                var searchValue = $(this).val().toLowerCase();
-                var optionsList = $(this).siblings('.options-list').find('.option');
-                optionsList.each(function() {
-                    var text = $(this).text().toLowerCase();
-                    $(this).toggle(text.indexOf(searchValue) > -1);
-                });
-            });
-
-            $(document).on('click', '.option', function() {
-                var selectedText = $(this).text();
-                var selectedId = $(this).data('id');
-                var dropdown = $(this).closest('.custom-dropdown');
-                var currentRow = $(this).closest('tr');
-
-                // Set value to hidden input & visible input
-                dropdown.find('.part_no').val(selectedId);
-                dropdown.find('.dropdown-input').val(selectedText);
-                dropdown.find('.dropdown-options').hide();
-
-                // Fetch HSN after selection
-                fetchHSN(selectedId, currentRow);
-            });
-
-            $(document).on('click', function(e) {
-                if (!$(e.target).closest('.custom-dropdown').length) {
-                    $('.dropdown-options').hide();
-                }
-            });
-
-            /* -----------------------------------------
-               2. Normal <select> dropdown change event
-            ----------------------------------------- */
-            $(document).on('change', '.part_item_id', function() {
-                var partNoId = $(this).val();
-                var currentRow = $(this).closest('tr');
-
-                // Store in hidden input (for stock check)
-                currentRow.find('.part_no').val(partNoId);
-
-                fetchHSN(partNoId, currentRow);
-            });
-
-            /* -----------------------------------------
-               3. Fetch HSN Function
-            ----------------------------------------- */
-            function fetchHSN(partNoId, row) {
-                if (!partNoId) return;
-
-                $.ajax({
-                    url: '{{ route('get-hsn-for-part') }}',
-                    type: 'GET',
-                    data: {
-                        part_no_id: partNoId
-                    },
-                    success: function(response) {
-                        if (response.part && response.part.length > 0) {
-                            var hsnName = response.part[0].name;
-                            var hsnId = response.part[0].id;
-                            row.find('.hsn_name').val(hsnName);
-                            row.find('.hsn_id').val(hsnId);
-                        } else {
-                            row.find('.hsn_name').val('');
-                            row.find('.hsn_id').val('');
-                            Swal.fire("HSN not found for selected part.");
-                        }
-                    },
-                    error: function() {
-                        Swal.fire("Error fetching HSN. Please try again.");
-                    }
-                });
-            }
-
-            // Initialize jQuery Validation
-            var validator = $("#editDesignsForm").validate({
-                ignore: [], // Validate hidden inputs as well
-                rules: {
-                    vendor_id: {
-                        required: true
-                    },
-                    // transport_id: {
-                    //     required: true
-                    // },
-                    vehicle_id: {
-                        required: true
-                    },
-                    tax_type: {
-                        required: true
-                    },
-                    tax_id: {
-                        required: true
-                    },
-                    plant_id: {
-                        required: true
-                    },
-                    // vehicle_number: {
-                    //     required: true
-                    // },
-                    po_date: {
-                        required: true,
-                    },
-                    'addmore[0][part_item_id]': {
-                        required: true,
-                        maxlength: 100
-                    },
-                    'addmore[0][unit_id]': {
-                        required: true,
-                        maxlength: 255
-                    },
-                    'addmore[0][process_id]': {
-                        required: true,
-                        maxlength: 255
-                    },
-                    'addmore[0][size]': {
-                        required: true,
-                        maxlength: 255
-                    },
-                    'addmore[0][quantity]': {
-                        required: true,
-                        digits: true,
-                        min: 1
-                    },
-                    'addmore[0][amount]': {
-                        required: true,
-                    }
-                },
-                messages: {
-                    vendor_id: {
-                        required: "Select vendor name."
-                    },
-                    // transport_id: {
-                    //     required: "Select transport name."
-                    // },
-                    vehicle_id: {
-                        required: "Select vehicle type."
-                    },
-                    tax_type: {
-                        required: "Select tax type"
-                    },
-                    tax_id: {
-                        required: "Select tax name."
-                    },
-                    // vehicle_number: {
-                    //     required: "Enter vehicle number."
-                    // },
-                    plant_id: {
-                        required: "Enter plant name."
-                    },
-                    po_date: {
-                        required: "Please select Delivery Chalan Date.",
-                        date: "Please select a valid date."
-                    },
-                    'addmore[0][part_item_id]': {
-                        required: "Please enter the Product Name.",
-                        maxlength: "Product Name must be at most 100 characters long."
-                    },
-                    'addmore[0][unit_id]': {
-                        required: "Please enter the unit.",
-                        maxlength: "unit_id must be at most 255 characters long."
-                    },
-                    'addmore[0][process_id]': {
-                        required: "Please select the process."
-                    },
-                    'addmore[0][size]': {
-                        required: "Please enter the size."
-                    },
-                    'addmore[0][quantity]': {
-                        required: "Please enter the Quantity.",
-                        digits: "Please enter only digits for Quantity.",
-                        min: "Quantity must be at least 1."
-                    },
-                    'addmore[0][amount]': {
-                        required: "Please Enter the Amount"
-                    },
-                },
-                errorPlacement: function(error, element) {
-                    error.addClass('text-danger');
-                    if (element.closest('.form-group').length) {
-                        element.closest('.form-group').append(error);
-                    } else if (element.closest('td').length) {
-                        element.closest('td').append(error);
+                        });
                     } else {
-                        error.insertAfter(element);
+                        // Clear the dropdown if no vendor is selected
+                        poDropdown.empty().append('<option value="">Select PO Number</option>');
                     }
+                });
+
+                // Trigger change event to populate dropdown on page load if a vendor is preselected
+                const preselectedVendorId = $('#vendor_id').val();
+                if (preselectedVendorId) {
+                    $('#vendor_id').trigger('change');
                 }
             });
-            /* -----------------------------------------
-               4. Stock Check Function
-            ----------------------------------------- */
-            function checkStock($row) {
-                const quantity = $row.find('.quantity').val();
-                const partItemId = $row.find('.part_no').val();
-                const stockAvailableMessage = $row.find('.stock-available');
+        </script>
 
-                if (partItemId && quantity) {
+        <script>
+            $(document).ready(function() {
+
+                /* -----------------------------------------
+                   1. Custom Dropdown with Search
+                ----------------------------------------- */
+                $(document).on('click', '.dropdown-input', function() {
+                    $('.dropdown-options').hide(); // close other dropdowns
+                    $(this).siblings('.dropdown-options').toggle();
+                    $(this).siblings('.dropdown-options').find('.search-box').val('').trigger(
+                        'keyup'); // reset search
+                });
+
+                $(document).on('keyup', '.search-box', function() {
+                    var searchValue = $(this).val().toLowerCase();
+                    var optionsList = $(this).siblings('.options-list').find('.option');
+                    optionsList.each(function() {
+                        var text = $(this).text().toLowerCase();
+                        $(this).toggle(text.indexOf(searchValue) > -1);
+                    });
+                });
+
+                $(document).on('click', '.option', function() {
+                    var selectedText = $(this).text();
+                    var selectedId = $(this).data('id');
+                    var dropdown = $(this).closest('.custom-dropdown');
+                    var currentRow = $(this).closest('tr');
+
+                    // Set value to hidden input & visible input
+                    dropdown.find('.part_no').val(selectedId);
+                    dropdown.find('.dropdown-input').val(selectedText);
+                    dropdown.find('.dropdown-options').hide();
+
+                    // Fetch HSN after selection
+                    fetchHSN(selectedId, currentRow);
+                });
+
+                $(document).on('click', function(e) {
+                    if (!$(e.target).closest('.custom-dropdown').length) {
+                        $('.dropdown-options').hide();
+                    }
+                });
+
+                /* -----------------------------------------
+                   2. Normal <select> dropdown change event
+                ----------------------------------------- */
+                $(document).on('change', '.part_item_id', function() {
+                    var partNoId = $(this).val();
+                    var currentRow = $(this).closest('tr');
+
+                    // Store in hidden input (for stock check)
+                    currentRow.find('.part_no').val(partNoId);
+
+                    fetchHSN(partNoId, currentRow);
+                });
+
+                /* -----------------------------------------
+                   3. Fetch HSN Function
+                ----------------------------------------- */
+                function fetchHSN(partNoId, row) {
+                    if (!partNoId) return;
+
                     $.ajax({
-                        url: '{{ route('check-stock-quantity') }}',
+                        url: '{{ route('get-hsn-for-part') }}',
                         type: 'GET',
                         data: {
-                            part_item_id: partItemId,
-                            quantity: quantity
+                            part_no_id: partNoId
                         },
                         success: function(response) {
-                            if (response.status === 'error') {
-                                stockAvailableMessage
-                                    .text('Insufficient stock. Available: ' + response
-                                        .available_quantity)
-                                    .css('color', 'red');
+                            if (response.part && response.part.length > 0) {
+                                var hsnName = response.part[0].name;
+                                var hsnId = response.part[0].id;
+                                row.find('.hsn_name').val(hsnName);
+                                row.find('.hsn_id').val(hsnId);
                             } else {
-                                stockAvailableMessage
-                                    .text('Stock is sufficient')
-                                    .css('color', 'green');
+                                row.find('.hsn_name').val('');
+                                row.find('.hsn_id').val('');
+                                Swal.fire("HSN not found for selected part.");
                             }
                         },
                         error: function() {
-                            stockAvailableMessage
-                                .text('Error checking stock')
-                                .css('color', 'red');
+                            Swal.fire("Error fetching HSN. Please try again.");
                         }
                     });
-                } else {
-                    stockAvailableMessage.text('');
                 }
-            }
 
-            /* -----------------------------------------
-               5. Quantity/Rate Change
-            ----------------------------------------- */
-            $(document).on('keyup', '.quantity, .rate', function() {
-                var $row = $(this).closest('tr');
-                var quantity = parseFloat($row.find('.quantity').val()) || 0;
-                var rate = parseFloat($row.find('.rate').val()) || 0;
-                var totalAmount = (quantity * rate).toFixed(2);
+                // Initialize jQuery Validation
+                var validator = $("#editDesignsForm").validate({
+                    ignore: [], // Validate hidden inputs as well
+                    rules: {
+                        vendor_id: {
+                            required: true
+                        },
+                        // transport_id: {
+                        //     required: true
+                        // },
+                        vehicle_id: {
+                            required: true
+                        },
+                        tax_type: {
+                            required: true
+                        },
+                        tax_id: {
+                            required: true
+                        },
+                        plant_id: {
+                            required: true
+                        },
+                        // vehicle_number: {
+                        //     required: true
+                        // },
+                        po_date: {
+                            required: true,
+                        },
+                        'addmore[0][part_item_id]': {
+                            required: true,
+                            maxlength: 100
+                        },
+                        'addmore[0][unit_id]': {
+                            required: true,
+                            maxlength: 255
+                        },
+                        'addmore[0][process_id]': {
+                            required: true,
+                            maxlength: 255
+                        },
+                        'addmore[0][size]': {
+                            required: true,
+                            maxlength: 255
+                        },
+                        'addmore[0][quantity]': {
+                            required: true,
+                            digits: true,
+                            min: 1
+                        },
+                        'addmore[0][amount]': {
+                            required: true,
+                        }
+                    },
+                    messages: {
+                        vendor_id: {
+                            required: "Select vendor name."
+                        },
+                        // transport_id: {
+                        //     required: "Select transport name."
+                        // },
+                        vehicle_id: {
+                            required: "Select vehicle type."
+                        },
+                        tax_type: {
+                            required: "Select tax type"
+                        },
+                        tax_id: {
+                            required: "Select tax name."
+                        },
+                        // vehicle_number: {
+                        //     required: "Enter vehicle number."
+                        // },
+                        plant_id: {
+                            required: "Enter plant name."
+                        },
+                        po_date: {
+                            required: "Please select Delivery Chalan Date.",
+                            date: "Please select a valid date."
+                        },
+                        'addmore[0][part_item_id]': {
+                            required: "Please enter the Product Name.",
+                            maxlength: "Product Name must be at most 100 characters long."
+                        },
+                        'addmore[0][unit_id]': {
+                            required: "Please enter the unit.",
+                            maxlength: "unit_id must be at most 255 characters long."
+                        },
+                        'addmore[0][process_id]': {
+                            required: "Please select the process."
+                        },
+                        'addmore[0][size]': {
+                            required: "Please enter the size."
+                        },
+                        'addmore[0][quantity]': {
+                            required: "Please enter the Quantity.",
+                            digits: "Please enter only digits for Quantity.",
+                            min: "Quantity must be at least 1."
+                        },
+                        'addmore[0][amount]': {
+                            required: "Please Enter the Amount"
+                        },
+                    },
+                    errorPlacement: function(error, element) {
+                        error.addClass('text-danger');
+                        if (element.closest('.form-group').length) {
+                            element.closest('.form-group').append(error);
+                        } else if (element.closest('td').length) {
+                            element.closest('td').append(error);
+                        } else {
+                            error.insertAfter(element);
+                        }
+                    }
+                });
+                /* -----------------------------------------
+                   4. Stock Check Function
+                ----------------------------------------- */
+                function checkStock($row) {
+                    const quantity = $row.find('.quantity').val();
+                    const partItemId = $row.find('.part_no').val();
+                    const stockAvailableMessage = $row.find('.stock-available');
 
-                $row.find('.total_amount').val(totalAmount);
+                    if (partItemId && quantity) {
+                        $.ajax({
+                            url: '{{ route('check-stock-quantity') }}',
+                            type: 'GET',
+                            data: {
+                                part_item_id: partItemId,
+                                quantity: quantity
+                            },
+                            success: function(response) {
+                                if (response.status === 'error') {
+                                    stockAvailableMessage
+                                        .text('Insufficient stock. Available: ' + response
+                                            .available_quantity)
+                                        .css('color', 'red');
+                                } else {
+                                    stockAvailableMessage
+                                        .text('Stock is sufficient')
+                                        .css('color', 'green');
+                                }
+                            },
+                            error: function() {
+                                stockAvailableMessage
+                                    .text('Error checking stock')
+                                    .css('color', 'red');
+                            }
+                        });
+                    } else {
+                        stockAvailableMessage.text('');
+                    }
+                }
 
-                // Stock check after amount calculation
-                checkStock($row);
-            });
+                /* -----------------------------------------
+                   5. Quantity/Rate Change
+                ----------------------------------------- */
+                $(document).on('keyup', '.quantity, .rate', function() {
+                    var $row = $(this).closest('tr');
+                    var quantity = parseFloat($row.find('.quantity').val()) || 0;
+                    var rate = parseFloat($row.find('.rate').val()) || 0;
+                    var totalAmount = (quantity * rate).toFixed(2);
 
-            /* -----------------------------------------
-               6. Add More Rows Button
-            ----------------------------------------- */
-            $("#edit_addmore_form").click(function() {
-                var i_count = $('#i_id').val();
-                var i = parseInt(i_count) + 1;
-                $('#i_id').val(i);
+                    $row.find('.total_amount').val(totalAmount);
 
-                var newRow = `
+                    // Stock check after amount calculation
+                    checkStock($row);
+                });
+
+                /* -----------------------------------------
+                   6. Add More Rows Button
+                ----------------------------------------- */
+                $("#edit_addmore_form").click(function() {
+                    var i_count = $('#i_id').val();
+                    var i = parseInt(i_count) + 1;
+                    $('#i_id').val(i);
+
+                    var newRow = `
             <tr>
                 
                 <td>
@@ -795,70 +796,70 @@
                 </td>
             </tr>`;
 
-                $('#dynamicTable tbody').append(newRow);
+                    $('#dynamicTable tbody').append(newRow);
 
-                // Apply validation rules to new row
-                // Apply validation rules to new row (target actual elements)
-                $(`input[name='addmore[${i}][part_item_id]']`).rules("add", {
-                    required: true,
-                    maxlength: 100,
-                    messages: {
-                        required: "Please enter the Product Name."
-                    }
+                    // Apply validation rules to new row
+                    // Apply validation rules to new row (target actual elements)
+                    $(`input[name='addmore[${i}][part_item_id]']`).rules("add", {
+                        required: true,
+                        maxlength: 100,
+                        messages: {
+                            required: "Please enter the Product Name."
+                        }
+                    });
+
+                    $(`select[name='addmore[${i}][unit_id]']`).rules("add", {
+                        required: true,
+                        maxlength: 255,
+                        messages: {
+                            required: "Please enter the unit."
+                        }
+                    });
+
+                    $(`select[name='addmore[${i}][process_id]']`).rules("add", {
+                        required: true,
+                        maxlength: 255,
+                        messages: {
+                            required: "Please select the process."
+                        }
+                    });
+
+                    $(`input[name='addmore[${i}][size]']`).rules("add", {
+                        required: true,
+                        maxlength: 255,
+                        messages: {
+                            required: "Please enter the size."
+                        }
+                    });
+
+                    $(`input[name='addmore[${i}][quantity]']`).rules("add", {
+                        required: true,
+                        digits: true,
+                        min: 1,
+                        messages: {
+                            required: "Please enter the Quantity.",
+                            digits: "Please enter only digits.",
+                            min: "Quantity must be at least 1."
+                        }
+                    });
+
+                    $(`input[name='addmore[${i}][amount]']`).rules("add", {
+                        required: true,
+                        messages: {
+                            required: "Please Enter the Amount."
+                        }
+                    });
                 });
 
-                $(`select[name='addmore[${i}][unit_id]']`).rules("add", {
-                    required: true,
-                    maxlength: 255,
-                    messages: {
-                        required: "Please enter the unit."
-                    }
+                /* -----------------------------------------
+                   7. Remove Row
+                ----------------------------------------- */
+                $(document).on('click', '.remove_row', function() {
+                    $(this).closest('tr').remove();
                 });
 
-                $(`select[name='addmore[${i}][process_id]']`).rules("add", {
-                    required: true,
-                    maxlength: 255,
-                    messages: {
-                        required: "Please select the process."
-                    }
-                });
-
-                $(`input[name='addmore[${i}][size]']`).rules("add", {
-                    required: true,
-                    maxlength: 255,
-                    messages: {
-                        required: "Please enter the size."
-                    }
-                });
-
-                $(`input[name='addmore[${i}][quantity]']`).rules("add", {
-                    required: true,
-                    digits: true,
-                    min: 1,
-                    messages: {
-                        required: "Please enter the Quantity.",
-                        digits: "Please enter only digits.",
-                        min: "Quantity must be at least 1."
-                    }
-                });
-
-                $(`input[name='addmore[${i}][amount]']`).rules("add", {
-                    required: true,
-                    messages: {
-                        required: "Please Enter the Amount."
-                    }
-                });
             });
-
-            /* -----------------------------------------
-               7. Remove Row
-            ----------------------------------------- */
-            $(document).on('click', '.remove_row', function() {
-                $(this).closest('tr').remove();
-            });
-
-        });
-    </script>
+        </script>
     @endpush
-    
+
 @endsection

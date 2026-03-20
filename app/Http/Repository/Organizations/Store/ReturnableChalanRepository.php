@@ -233,7 +233,7 @@ class ReturnableChalanRepository
             $dataOutput->plant_id = $request->plant_id;
             // $dataOutput->vehicle_number = $request->vehicle_number;
             $dataOutput->po_date = $request->po_date;
-            $dataOutput->lr_number = $request->lr_number;
+            // $dataOutput->lr_number = $request->lr_number;
             // $lastChalan = ReturnableChalan::orderBy('dc_number', 'desc')->first();
             // $dataOutput->dc_number = $lastChalan ? $lastChalan->dc_number + 1 : 1;
             $dataOutput->remark = $request->remark;
@@ -243,6 +243,9 @@ class ReturnableChalanRepository
             }
             if ($request->has('vehicle_number')) {
                 $dataOutput->vehicle_number = $request->vehicle_number;
+            }
+            if ($request->has('lr_number')) {
+                $dataOutput->lr_number = $request->lr_number;
             }
             if ($request->has('business_id')) {
                 $dataOutput->business_id = $request->business_id;
