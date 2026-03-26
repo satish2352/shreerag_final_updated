@@ -255,9 +255,10 @@ class StoreRepository
         }
     }
     public function editProductMaterialWiseAddNewReq($id)
-    { //checked
+    {
         try {
             $id = base64_decode($id);
+
             $dataOutputByid = BusinessApplicationProcesses::leftJoin('production', function ($join) {
                 $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
             })
@@ -274,8 +275,7 @@ class StoreRepository
                 ->where('businesses_details.is_active', true)
                 ->where('production_details.is_deleted', 0)
                 ->select(
-                    'businesses_details.id',
-                    // 'gatepass.id',
+                    'businesses_details.id as business_details_id',
                     'production_details.id',
                     'businesses_details.product_name',
                     'businesses_details.quantity',
@@ -290,15 +290,15 @@ class StoreRepository
                     'production_details.updated_at',
                     'estimation.total_estimation_amount'
                 )
-                ->get();
-            $productDetails = $dataOutputByid->first();
-            $dataGroupedById = $dataOutputByid->groupBy('business_details_id');
+                ->paginate(30); //  pagination
+
+            // $productDetails = $dataOutputByid->first();
+            $productDetails = $dataOutputByid->items()[0] ?? null;
 
             return [
                 'productDetails' => $productDetails,
-                'dataGroupedById' => $dataGroupedById
+                'dataOutputByid' => $dataOutputByid // ✅ send paginator
             ];
-            // return  $dataOutputByid;
         } catch (\Exception $e) {
             return [
                 'status' => 'error',
@@ -306,6 +306,59 @@ class StoreRepository
             ];
         }
     }
+    // public function editProductMaterialWiseAddNewReq($id)
+    // { //checked
+    //     try {
+    //         $id = base64_decode($id);
+    //         $dataOutputByid = BusinessApplicationProcesses::leftJoin('production', function ($join) {
+    //             $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
+    //         })
+    //             ->leftJoin('businesses_details', function ($join) {
+    //                 $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+    //             })
+    //             ->leftJoin('production_details', function ($join) {
+    //                 $join->on('business_application_processes.business_details_id', '=', 'production_details.business_details_id');
+    //             })
+    //             ->leftJoin('estimation', function ($join) {
+    //                 $join->on('business_application_processes.business_details_id', '=', 'estimation.business_details_id');
+    //             })
+    //             ->where('businesses_details.id', $id)
+    //             ->where('businesses_details.is_active', true)
+    //             ->where('production_details.is_deleted', 0)
+    //             ->select(
+    //                 // 'businesses_details.id',
+    //                 'businesses_details.id as business_details_id',
+    //                 // 'gatepass.id',
+    //                 'production_details.id',
+    //                 'businesses_details.product_name',
+    //                 'businesses_details.quantity',
+    //                 'businesses_details.description',
+    //                 'production_details.part_item_id',
+    //                 'production_details.quantity',
+    //                 'production_details.unit',
+    //                 'production_details.quantity_minus_status',
+    //                 'production_details.basic_rate',
+    //                 'production_details.material_send_production',
+    //                 'business_application_processes.store_material_sent_date',
+    //                 'production_details.updated_at',
+    //                 'estimation.total_estimation_amount'
+    //             )
+    //             ->get();
+    //         $productDetails = $dataOutputByid->first();
+    //         $dataGroupedById = $dataOutputByid->groupBy('business_details_id');
+
+    //         return [
+    //             'productDetails' => $productDetails,
+    //             'dataGroupedById' => $dataGroupedById
+    //         ];
+    //         // return  $dataOutputByid;
+    //     } catch (\Exception $e) {
+    //         return [
+    //             'status' => 'error',
+    //             'msg' => $e->getMessage()
+    //         ];
+    //     }
+    // }
     public function updateProductMaterialWiseAddNewReq($request)
     {
         try {

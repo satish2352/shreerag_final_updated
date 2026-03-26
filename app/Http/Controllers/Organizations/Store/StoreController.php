@@ -93,7 +93,8 @@ class StoreController extends Controller
             $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
             return view('organizations.store.list.edit-material-bom-wise-add-new-req', [
                 'productDetails' => $editData['productDetails'],
-                'dataGroupedById' => $editData['dataGroupedById'],
+                // 'dataGroupedById' => $editData['dataGroupedById'],
+                'dataOutputByid' => $editData['dataOutputByid'],
                 'dataOutputPartItem' => $dataOutputPartItem,
                 'dataOutputUnitMaster' => $dataOutputUnitMaster,
 
