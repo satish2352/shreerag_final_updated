@@ -90,6 +90,8 @@
                                         <tr>
                                             <th data-field="id">Sr.No.</th>
                                             {{-- <th data-field="po_number" data-editable="false">PO Number</th> --}}
+                                            <th data-field="created_at" data-editable="false">Created Date</th>
+                                            <th data-field="latest_update" data-editable="false">Updated Date</th>
                                             <th data-field="project_name" data-editable="false">Project Name</th>
                                             <th data-field="customer_po_number" data-editable="false">Customer PO Number
                                             </th>
@@ -106,7 +108,7 @@
                                     </thead>
                                     <tbody id="reportBody">
                                         <tr>
-                                            <td colspan="10">Loading...</td>
+                                            <td colspan="12">Loading...</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -146,6 +148,17 @@
                         const rows = res.data.map((item, index) => `
                     <tr>
                         <td>${((res.pagination.currentPage - 1) * pageSize) + index + 1}</td>
+                    <td>${
+    item.created_update 
+    ? new Date(item.created_update).toLocaleDateString('en-GB') 
+    : '-'
+}</td>
+
+<td>${
+    item.latest_update 
+    ? new Date(item.latest_update).toLocaleDateString('en-GB') 
+    : '-'
+}</td>
                         <td>${item.project_name ?? '-'}</td>
                         <td>${item.customer_po_number ?? '-'}</td>
                         <td>${item.product_name ?? '-'}</td>
@@ -158,7 +171,7 @@
                     </tr>
                 `).join('');
 
-                        tbody.innerHTML = rows || '<tr><td colspan="10">No records found.</td></tr>';
+                        tbody.innerHTML = rows || '<tr><td colspan="12">No records found.</td></tr>';
                         totalPages = res.pagination.totalPages;
 
                         // Pagination UI

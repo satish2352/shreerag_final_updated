@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Exports;
 
+use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
@@ -36,6 +37,13 @@ class PurchaseReportExport implements FromCollection, WithHeadings, WithMapping,
 
         return [
             $index,
+            !empty($item['created_update'])
+                ? Carbon::parse($item['created_update'])->format('d/m/Y')
+                : '-',
+
+            !empty($item['latest_update'])
+                ? Carbon::parse($item['latest_update'])->format('d/m/Y')
+                : '-',
             $item['project_name']              ?? '-',
             $item['customer_po_number']        ?? '-',
             ucwords($item['product_name']      ?? '-'),
@@ -55,6 +63,8 @@ class PurchaseReportExport implements FromCollection, WithHeadings, WithMapping,
     {
         return [
             'Sr. No.',
+            'Created Date',
+            'Updated Date',
             'Project Name',
             'Customer PO Number',
             'Product Name',

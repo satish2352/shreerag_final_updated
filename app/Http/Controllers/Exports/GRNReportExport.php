@@ -9,11 +9,11 @@ use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class GRNReportExport implements 
-    FromCollection, 
-    WithHeadings, 
-    WithMapping, 
-    WithStyles, 
+class GRNReportExport implements
+    FromCollection,
+    WithHeadings,
+    WithMapping,
+    WithStyles,
     ShouldAutoSize
 {
     protected $data;

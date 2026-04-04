@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Exports;
 
+use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
@@ -36,6 +37,9 @@ class PurchasePartyReportExport implements FromCollection, WithHeadings, WithMap
 
         return [
             $index,
+            !empty($item['latest_update'])
+                ? Carbon::parse($item['latest_update'])->format('d/m/Y')
+                : '-',
             $item->purchase_order_id ?? '-',
             ucwords($item->vendor_name ?? '-'),
             ucwords($item->vendor_company_name ?? '-'),
@@ -51,6 +55,7 @@ class PurchasePartyReportExport implements FromCollection, WithHeadings, WithMap
     {
         return [
             'Sr. No.',
+            'Date',
             'Purchase Order ID',
             'Vendor Name',
             'Company Name',

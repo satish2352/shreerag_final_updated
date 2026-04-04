@@ -957,9 +957,9 @@ class ReportController extends Controller
             $data = $this->service->listVendorThroughTakenMaterial($request)['data'];
 
             if ($request->export_type == 1) {
-                $pdf = Pdf::loadView('exports.vendorThroughTakenMaterial_{$this->timeStamp()}', ['data' => $data])
+                $pdf = Pdf::loadView('exports.vendor-through-taken-material', ['data' => $data])
                     ->setPaper('a3', 'landscape');
-                return $pdf->download("vendor-through-taken-material.pdf");
+                return $pdf->download("VendorThroughTakenMaterial_{$this->timeStamp()}.pdf");
             }
 
             if ($request->export_type == 2) {
@@ -995,7 +995,7 @@ class ReportController extends Controller
     {
         try {
             $data = $this->service->listVendorThroughTakenMaterialVendorId($request, $id)['data'];
-            return view('organizations.report.vendor-material-list', compact('data'));
+            return view('organizations.report.vendor-material-list', compact('data', 'id'));
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }

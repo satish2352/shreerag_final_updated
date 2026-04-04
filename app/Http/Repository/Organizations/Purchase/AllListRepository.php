@@ -544,6 +544,7 @@ class AllListRepository
         'vendors.vendor_company_name',
         'vendors.vendor_email',
         'vendors.contact_no',
+        DB::raw('MAX(purchase_orders.created_at) as created_update'),
         DB::raw('MAX(purchase_orders.updated_at) as latest_update')
       )
       ->groupBy(

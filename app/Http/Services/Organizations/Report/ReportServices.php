@@ -15,16 +15,16 @@ class ReportServices
 
         $this->repo = new ReportRepository();
     }
-    public function getAllReceivedFromFianance()
-    {
-        try {
-            $data_output = $this->repo->getAllReceivedFromFianance();
+    // public function getAllReceivedFromFianance()
+    // {
+    //     try {
+    //         $data_output = $this->repo->getAllReceivedFromFianance();
 
-            return $data_output;
-        } catch (\Exception $e) {
-            return $e;
-        }
-    }
+    //         return $data_output;
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
     public function getCompletedProductList($request)
     {
         try {
