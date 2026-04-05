@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class GroupMaster extends Model
 {
     use HasFactory;
+    protected $guarded = ['id'];
     protected $table = 'tbl_group_master';
     protected $primaryKey = 'id';
 }

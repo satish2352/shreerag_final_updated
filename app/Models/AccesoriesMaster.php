@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class AccesoriesMaster extends Model
 {
     use HasFactory;
+    protected $guarded = ['id'];
     protected $table = 'tbl_accesories_master';
     protected $primaryKey = 'id';
 }

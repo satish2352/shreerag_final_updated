@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class FinancialYearLeaveRecord extends Model
 {
     use HasFactory;
+    protected $guarded = ['id'];
     protected $table = 'tbl_financial_year_leave_record';
     protected $primaryKey = 'id';
 }

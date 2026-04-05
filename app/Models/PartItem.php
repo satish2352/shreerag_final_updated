@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class PartItem extends Model
 {
     use HasFactory;
+    protected $guarded = ['id'];
     protected $table = 'tbl_part_item';
     protected $primaryKey = 'id';
 }

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class HREmployee extends Model
 {
     use HasFactory;
+    protected $guarded = ['id'];
 
     protected $table = 'tbl_hr_employees';
     protected $primaryKey = 'id';

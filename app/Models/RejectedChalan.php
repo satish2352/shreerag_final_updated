@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class RejectedChalan extends Model
 {
     use HasFactory;
+    protected $guarded = ['id'];
     protected $table = 'tbl_rejected_chalan';
     protected $primaryKey = 'id';
 }

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class VehicleType extends Model
 {
     use HasFactory;
+    protected $guarded = ['id'];
     protected $table = 'tbl_vehicle_type';
     protected $primaryKey = 'id';
 }

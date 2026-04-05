@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class AdminView extends Model
 {
     use HasFactory;
+    protected $guarded = ['id'];
     protected $table = 'admin_view';
     protected $primaryKey = 'id';
 

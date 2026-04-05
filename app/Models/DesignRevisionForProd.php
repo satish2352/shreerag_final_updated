@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class DesignRevisionForProd extends Model
 {
     use HasFactory;
+    protected $guarded = ['id'];
     protected $table = 'design_revision_for_prod';
     protected $primaryKey = 'id';
     public function designRevisionForProd()

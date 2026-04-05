@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class DesignModel extends Model
 {
     use HasFactory;
+    protected $guarded = ['id'];
     protected $table = 'designs';
     protected $primaryKey = 'id';
     public function business()

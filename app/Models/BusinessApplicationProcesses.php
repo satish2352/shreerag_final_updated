@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class BusinessApplicationProcesses extends Model
 {
     use HasFactory;
+    protected $guarded = ['id'];
     protected $table = 'business_application_processes';
     protected $primaryKey = 'id';
 

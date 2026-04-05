@@ -106,50 +106,34 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        @if ($data->is_approved_production == 1)
-                                                            <button data-toggle="tooltip" title="Edit"
-                                                                class="pd-setting-ed" disabled>
-                                                                <i class="fas fa-pen-square" aria-hidden="true"></i>
-                                                            </button>
-                                                            <button data-toggle="tooltip" title="Trash"
-                                                                class="pd-setting-ed" disabled>
-                                                                <i class="fa fa-trash" aria-hidden="true"></i>
-                                                            </button>
-                                                        @else
-                                                            <div>
-                                                                <a
-                                                                    href="{{ route('edit-business', base64_encode($data->id)) }}">
+                                                        <div>
+                                                            @if ($data->is_approved_production == '1')
+                                                                <button data-toggle="tooltip" title="Cannot Edit"
+                                                                    class="pd-setting-ed btn-disabled-action" disabled>
+                                                                    <i class="fas fa-pen-square" aria-hidden="true"></i>
+                                                                </button>
+                                                            @else
+                                                                <a href="{{ route('edit-business', base64_encode($data->id)) }}">
                                                                     <button data-toggle="tooltip" title="Edit"
                                                                         class="pd-setting-ed">
                                                                         <i class="fas fa-pen-square" aria-hidden="true"></i>
                                                                     </button>
                                                                 </a>
-                                                                {{-- 
-                                                                    @if ($data->dispatch_status_id == 1148)
-                                                                
-                                                                        <button type="button"
-                                                                                class="btn btn-sm btn-danger remove-row"
-                                                                                data-url="{{ route('delete-business', base64_encode($data->id)) }}"
-                                                                                title="Delete">
-                                                                            <i class="fa fa-trash"></i>
-                                                                        </button>
-                                                                    @else
-                                                                    
-                                                                        <button type="button"
-                                                                                class="btn btn-sm btn-danger"
-                                                                                title="Delete Not Allowed"
-                                                                                disabled>
-                                                                            <i class="fa fa-trash"></i>
-                                                                        </button>
-                                                                    @endif --}}
+                                                            @endif
+
+                                                            @if ($data->is_approved_production == '1' || $data->is_sent_to_estimation > 0)
+                                                                <button data-toggle="tooltip" title="Cannot Delete — Already Forwarded"
+                                                                    class="pd-setting-ed btn-disabled-action" disabled>
+                                                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                                                </button>
+                                                            @else
                                                                 <button data-toggle="tooltip" title="Trash"
                                                                     class="pd-setting-ed delete-button"
                                                                     data-url="{{ route('delete-business', base64_encode($data->id)) }}">
                                                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                                                 </button>
-
-                                                            </div>
-                                                        @endif
+                                                            @endif
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             @empty
@@ -183,6 +167,18 @@
             </div>
         </div>
     </div>
+    <style>
+        .btn-disabled-action {
+            opacity: 0.4;
+            cursor: not-allowed !important;
+            color: #999 !important;
+            pointer-events: none;
+        }
+        .btn-disabled-action .fa-trash {
+            color: #cc0000 !important;
+            opacity: 0.4;
+        }
+    </style>
     @push('scripts')
         <script>
             jQuery(document).ready(function($) {

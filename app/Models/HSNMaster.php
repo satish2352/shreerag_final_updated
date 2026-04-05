@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class HSNMaster extends Model
 {
     use HasFactory;
+    protected $guarded = ['id'];
     protected $table = 'tbl_hsn';
     protected $primaryKey = 'id';
 }

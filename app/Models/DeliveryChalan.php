@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class DeliveryChalan extends Model
 {
     use HasFactory;
+    protected $guarded = ['id'];
     protected $table = 'tbl_delivery_chalan';
     protected $primaryKey = 'id';
 

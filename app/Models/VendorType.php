@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class VendorType extends Model
 {
     use HasFactory;
+    protected $guarded = ['id'];
     protected $table = 'tbl_vendor_type';
     protected $primaryKey = 'id';
 }

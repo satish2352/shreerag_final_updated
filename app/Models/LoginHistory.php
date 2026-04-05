@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class LoginHistory extends Model
 {
     use HasFactory;
+    protected $guarded = ['id'];
     protected $table = 'login_history';
     protected $primaryKey = 'id';
 }

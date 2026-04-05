@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class GRNModel extends Model
 {
     use HasFactory;
+    protected $guarded = ['id'];
     protected $table = 'grn_tbl';
     protected $primaryKey = 'id';
 }

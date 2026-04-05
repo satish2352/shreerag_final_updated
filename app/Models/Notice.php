@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Notice extends Model
 {
     use HasFactory;
+    protected $guarded = ['id'];
     protected $table = 'tbl_notice';
     protected $primaryKey = 'id';
 }

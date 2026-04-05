@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class UnitMaster extends Model
 {
     use HasFactory;
+    protected $guarded = ['id'];
     protected $table = 'tbl_unit';
     protected $primaryKey = 'id';
 }

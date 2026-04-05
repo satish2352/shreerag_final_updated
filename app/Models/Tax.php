@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Tax extends Model
 {
     use HasFactory;
+    protected $guarded = ['id'];
     protected $table = 'tbl_tax';
     protected $primaryKey = 'id';
 }

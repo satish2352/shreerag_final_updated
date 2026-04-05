@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ReturnableChalanItemDetails  extends Model
 {
     use HasFactory;
+    protected $guarded = ['id'];
     protected $table = 'tbl_returnable_chalan_item_details';
     protected $primaryKey = 'id';
 }

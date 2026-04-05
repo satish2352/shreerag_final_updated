@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class NotificationStatus extends Model
 {
     use HasFactory;
+    protected $guarded = ['id'];
     protected $table = 'tbl_notification_status';
     protected $primaryKey = 'id';
 

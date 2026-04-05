@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Requisition extends Model
 {
     use HasFactory;
+    protected $guarded = ['id'];
     protected $table = 'requisition';
     protected $primaryKey = 'id';
 

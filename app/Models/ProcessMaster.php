@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ProcessMaster extends Model
 {
     use HasFactory;
+    protected $guarded = ['id'];
     protected $table = 'tbl_process_master';
     protected $primaryKey = 'id';
 }

@@ -40,7 +40,16 @@ class BusinessRepository
             $search = trim(request('search'));
             $perPage = Config::get('AllFileValidation.PAGINATION');
 
-            $query = Business::where('is_deleted', 0)
+            $sentToEstimationStatus = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_ESTIMATION_DEPT_FIRST_TIME');
+
+            $query = Business::select('businesses.*')
+                ->selectSub(function ($sub) use ($sentToEstimationStatus) {
+                    $sub->selectRaw('COUNT(*)')
+                        ->from('business_application_processes')
+                        ->whereColumn('business_application_processes.business_id', 'businesses.id')
+                        ->where('design_status_id', '>=', $sentToEstimationStatus);
+                }, 'is_sent_to_estimation')
+                ->where('is_deleted', 0)
                 ->orderBy('updated_at', 'desc');
 
             if (!empty($search)) {

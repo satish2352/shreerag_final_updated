@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class CustomerProductQuantityTracking extends Model
 {
     use HasFactory;
+    protected $guarded = ['id'];
     protected $table = 'tbl_customer_product_quantity_tracking';
     protected $primaryKey = 'id';
 
