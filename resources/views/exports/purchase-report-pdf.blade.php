@@ -51,7 +51,7 @@
                 <th style="width: 120px;">Company</th>
                 <th style="width: 150px;">Email</th>
                 <th style="width: 80px;">Contact No.</th>
-                <th style="width: 30px;">Date</th>
+
             </tr>
         </thead>
         <tbody>
@@ -75,7 +75,7 @@
                     <td>{{ $row->vendor_company_name ?? '-' }}</td>
                     <td>{{ $row->vendor_email ?? '-' }}</td>
                     <td>{{ $row->contact_no ?? '-' }}</td>
-                    <td>{{ \Carbon\Carbon::parse($row->latest_update)->format('d-m-Y') }}</td>
+
                 </tr>
             @endforeach
         </tbody>

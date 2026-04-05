@@ -4627,63 +4627,70 @@ table td {
     left: 0px;
     transform: translate3d(-103px, 30px, 0px) !important;
 }
-label{
-    font-weight:700 !important;
+
+label {
+    font-weight: 700 !important;
     font-size: 14px !important;
 }
+
 /* ===================== */
 
- .table-responsive-scroll {
+.table-responsive-scroll {
     width: 100%;
-    overflow-x: auto;      /* Enables horizontal scroll */
+    overflow-x: auto;
+    /* Enables horizontal scroll */
     overflow-y: hidden;
-    white-space: nowrap;   /* Prevents table cells from wrapping */
+    white-space: nowrap;
+    /* Prevents table cells from wrapping */
 }
 
 .table-responsive-scroll table {
-    width: 1500px;         /* Set fixed width if needed (optional) */
+    width: 1500px;
+    /* Set fixed width if needed (optional) */
 }
 
 
-        .form-control {
-            border: 2px solid #ced4da;
-            border-radius: 4px;
-        }
+.form-control {
+    border: 2px solid #ced4da;
+    border-radius: 4px;
+}
 
-        .select2-container .select2-selection--single {
-            height: 34px !important;
-            width: 100% !important;
-        }
+.select2-container .select2-selection--single {
+    height: 39px !important;
+    width: 100% !important;
+}
 
-        .select2-container--default .select2-selection--single {
-            border: 1px solid #ccc !important;
-            border-radius: 0px !important;
-        }
+.select2-container--default .select2-selection--single {
+    border: 1px solid #ccc !important;
+    border-radius: 0px !important;
+}
 
-        #select2--container {
-            width: 300px !important;
-        }
-        .reverse-label {
-            display: flex;
-            flex-direction: row-reverse;
-            /* Reverse the order of elements */
-            flex-wrap: wrap-reverse;
-            /* Allow elements to wrap onto the next line */
-            align-items: center;
-            /* Align items vertically if needed */
-        }
+#select2--container {
+    width: 300px !important;
+}
 
-        .reverse-label span {
-            order: 2;
-            /* Place span after the label content */
-        }
+.reverse-label {
+    display: flex;
+    flex-direction: row-reverse;
+    /* Reverse the order of elements */
+    flex-wrap: wrap-reverse;
+    /* Allow elements to wrap onto the next line */
+    align-items: center;
+    /* Align items vertically if needed */
+}
 
-        .reverse-label label {
-            order: 1;
-            /* Ensure label content appears before span */
-        }
-        /* =================================blade pages css=========== */
-        /* For both password fields */
+.reverse-label span {
+    order: 2;
+    /* Place span after the label content */
+}
+
+.reverse-label label {
+    order: 1;
+    /* Ensure label content appears before span */
+}
+
+/* =================================blade pages css=========== */
+/* For both password fields */
 .form-group {
     position: relative;
 }
@@ -4696,7 +4703,7 @@ label{
 .password-toggle {
     position: absolute;
     right: 20px;
-       top: 69%;
+    top: 69%;
     transform: translateY(-48%);
     cursor: pointer;
     color: #444;
@@ -4713,32 +4720,34 @@ label{
     font-size: 16px;
 }
 
-         /* .password-toggle {
+/* .password-toggle {
             cursor: pointer;
             position: absolute;
             top: 68%;
             right: 20px;
             transform: translateY(-50%);
         } */
-           .password-toggle-disable {
-            cursor: pointer;
-            position: absolute;
-            top: 50%;
-            right: 20px;
-            transform: translateY(-50%);
-        }
-         /* .password-toggle {
+.password-toggle-disable {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+}
+
+/* .password-toggle {
             cursor: pointer;
             position: absolute;
             top: 65%;
             right: 20px;
             transform: translateY(-50%);
         } */
-          .btn-colour{
-            color: gray !important;
-        }
-        /* ==============delivery page ============= */
-        .custom-dropdown {
+.btn-colour {
+    color: gray !important;
+}
+
+/* ==============delivery page ============= */
+.custom-dropdown {
     width: 100% !important;
     position: relative !important;
 }
@@ -4753,15 +4762,19 @@ label{
 /* Dropdown panel */
 .custom-dropdown .dropdown-options {
     position: absolute;
-    top: 100%;                /* below input */
-    left: 0 !important;       /* align left */
-    width: 100% !important;   /* match input width */
+    top: 100%;
+    /* below input */
+    left: 0 !important;
+    /* align left */
+    width: 100% !important;
+    /* match input width */
     background: #fff;
     border: 1px solid #ddd;
     border-radius: 4px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
     z-index: 9999;
-    display: none;            /* initially hidden */
+    display: none;
+    /* initially hidden */
     max-height: 220px;
     overflow-y: auto;
 }
@@ -4790,18 +4803,18 @@ label{
     background: #f0f0f0;
 }
 
-        /* Fix bootstrap table overflow cutting dropdown */
-        .table-responsive {
-            overflow: visible !important;
-        }
+/* Fix bootstrap table overflow cutting dropdown */
+.table-responsive {
+    overflow: visible !important;
+}
 
-        .form-display-center {
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center;
-        }
+.form-display-center {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center;
+}
 
-       /* Makes dropdown align inside table cell */
+/* Makes dropdown align inside table cell */
 table td {
     position: relative !important;
 }
@@ -4820,6 +4833,7 @@ table td {
     min-width: 260px !important;
     max-width: 280px !important;
 }
+
 /* Serial No Column */
 .col-serial {
     width: 50px !important;
@@ -4835,18 +4849,18 @@ table td {
     max-width: 280px !important;
 }
 
- .table-responsive {
+.table-responsive {
     overflow-x: auto !important;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
 }
 
 #purchase_order_table {
-    min-width: 1800px; /* adjust as needed */
+    min-width: 1800px;
+    /* adjust as needed */
 }
 
 #purchase_order_table th,
 #purchase_order_table td {
     white-space: nowrap !important;
 }
-

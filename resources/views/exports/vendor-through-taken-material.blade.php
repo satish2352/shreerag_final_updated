@@ -53,12 +53,15 @@
                 <tr>
 
                     <td>{{ $loop->iteration }}</td>
-                    <td>{{ ucwords($row['latest_update'] ?? '-') }}</td>
+                    <td>
+                        {{ $row->latest_update ? \Carbon\Carbon::parse($row->latest_update)->format('d/m/Y') : '-' }}
+                    </td>
+
                     <td>{{ ucwords($row['vendor_name'] ?? '-') }}</td>
                     <td>{{ $row['vendor_company_name'] ?? '-' }}</td>
                     <td>{{ $row['vendor_email'] ?? '-' }}</td>
                     <td>{{ $row['contact_no'] ?? '-' }}</td>
-                          
+
                 </tr>
             @endforeach
         </tbody>
