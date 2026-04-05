@@ -2508,6 +2508,7 @@ class ReportRepository
             // 📊 Select & Group
             $query->select(
                 'tbl_grn_po_quantity_tracking.purchase_order_id',
+                'purchase_orders.purchase_orders_id',
                 'tbl_grn_po_quantity_tracking.part_no_id',
                 'tbl_grn_po_quantity_tracking.purchase_order_details_id',
                 DB::raw('MAX(tbl_grn_po_quantity_tracking.quantity) as max_quantity'),
@@ -2543,6 +2544,7 @@ class ReportRepository
             )
                 ->groupBy(
                     'tbl_grn_po_quantity_tracking.purchase_order_id',
+                    'purchase_orders.purchase_orders_id',
                     'tbl_grn_po_quantity_tracking.part_no_id',
                     'tbl_grn_po_quantity_tracking.purchase_order_details_id',
                     'tbl_part_item.id',

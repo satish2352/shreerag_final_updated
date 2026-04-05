@@ -68,8 +68,10 @@
                                             <i class="fa fa-download"></i> Export
                                         </button>
                                         <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="#" id="exportExcel">Export to Excel</a></li>
-                                            <li><a class="dropdown-item" href="#" id="exportPdf">Export to PDF</a></li>
+                                            <li><a class="dropdown-item" href="#" id="exportExcel">Export to Excel</a>
+                                            </li>
+                                            <li><a class="dropdown-item" href="#" id="exportPdf">Export to PDF</a>
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>
@@ -89,7 +91,7 @@
                                     <tr>
                                         <th>Sr. No.</th>
                                         <th>Date</th>
-                                        <th>PO ID</th>
+                                        <th>PO No.</th>
                                         <th>Part Number</th>
                                         <th>Item Name</th>
                                         <th>PO Quantity</th>
@@ -108,7 +110,7 @@
                                         <tr>
                                             <td>{{ $index + 1 }}</td>
                                             <td>{{ \Carbon\Carbon::parse($material->updated_at)->format('d-m-Y') }}</td>
-                                            <td>{{ $material->purchase_order_id }}</td>
+                                            <td>{{ $material->purchase_orders_id }}</td>
                                             <td>{{ $material->part_number }}</td>
                                             <td>{{ $material->part_description }}</td>
                                             <td>{{ number_format((float) $material->max_quantity, 2) }}</td>
@@ -127,18 +129,20 @@
                                         </tr>
                                     @endforelse
                                 </tbody>
-                                @if($data->count() > 0)
-                                <tfoot>
-                                    <tr style="font-weight: bold; background-color: #f2f2f2;">
-                                        <td colspan="5" class="text-right">Total</td>
-                                        <td>{{ number_format((float) $data->sum('max_quantity'), 2) }}</td>
-                                        <td>{{ number_format((float) $data->sum('sum_actual_quantity'), 2) }}</td>
-                                        <td>{{ number_format((float) $data->sum('tracking_accepted_quantity'), 2) }}</td>
-                                        <td>{{ number_format((float) $data->sum('tracking_rejected_quantity'), 2) }}</td>
-                                        <td>{{ number_format((float) $data->sum('remaining_quantity'), 2) }}</td>
-                                        <td colspan="3"></td>
-                                    </tr>
-                                </tfoot>
+                                @if ($data->count() > 0)
+                                    <tfoot>
+                                        <tr style="font-weight: bold; background-color: #f2f2f2;">
+                                            <td colspan="5" class="text-right">Total</td>
+                                            <td>{{ number_format((float) $data->sum('max_quantity'), 2) }}</td>
+                                            <td>{{ number_format((float) $data->sum('sum_actual_quantity'), 2) }}</td>
+                                            <td>{{ number_format((float) $data->sum('tracking_accepted_quantity'), 2) }}
+                                            </td>
+                                            <td>{{ number_format((float) $data->sum('tracking_rejected_quantity'), 2) }}
+                                            </td>
+                                            <td>{{ number_format((float) $data->sum('remaining_quantity'), 2) }}</td>
+                                            <td colspan="3"></td>
+                                        </tr>
+                                    </tfoot>
                                 @endif
                             </table>
                         </div>
@@ -151,33 +155,33 @@
 @endsection
 
 @push('scripts')
-<script>
-    var ajaxBaseUrl = "{{ route('vendor-through-taken-material-data-ajax', $id) }}";
+    <script>
+        var ajaxBaseUrl = "{{ route('vendor-through-taken-material-data-ajax', $id) }}";
 
-    function buildExportUrl(exportType) {
-        var params = new URLSearchParams();
-        params.append('export_type', exportType);
-        var from_date = document.querySelector('[name="from_date"]').value;
-        var to_date   = document.querySelector('[name="to_date"]').value;
-        var month     = document.querySelector('[name="month"]').value;
-        var year      = document.querySelector('[name="year"]').value;
-        var search    = document.querySelector('[name="search"]').value;
-        if (from_date) params.append('from_date', from_date);
-        if (to_date)   params.append('to_date', to_date);
-        if (month)     params.append('month', month);
-        if (year)      params.append('year', year);
-        if (search)    params.append('search', search);
-        return ajaxBaseUrl + '?' + params.toString();
-    }
+        function buildExportUrl(exportType) {
+            var params = new URLSearchParams();
+            params.append('export_type', exportType);
+            var from_date = document.querySelector('[name="from_date"]').value;
+            var to_date = document.querySelector('[name="to_date"]').value;
+            var month = document.querySelector('[name="month"]').value;
+            var year = document.querySelector('[name="year"]').value;
+            var search = document.querySelector('[name="search"]').value;
+            if (from_date) params.append('from_date', from_date);
+            if (to_date) params.append('to_date', to_date);
+            if (month) params.append('month', month);
+            if (year) params.append('year', year);
+            if (search) params.append('search', search);
+            return ajaxBaseUrl + '?' + params.toString();
+        }
 
-    document.getElementById('exportExcel').addEventListener('click', function (e) {
-        e.preventDefault();
-        window.location.href = buildExportUrl(2);
-    });
+        document.getElementById('exportExcel').addEventListener('click', function(e) {
+            e.preventDefault();
+            window.location.href = buildExportUrl(2);
+        });
 
-    document.getElementById('exportPdf').addEventListener('click', function (e) {
-        e.preventDefault();
-        window.location.href = buildExportUrl(1);
-    });
-</script>
+        document.getElementById('exportPdf').addEventListener('click', function(e) {
+            e.preventDefault();
+            window.location.href = buildExportUrl(1);
+        });
+    </script>
 @endpush
