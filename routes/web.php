@@ -469,7 +469,7 @@
         Route::get('/list-material-received-from-quality', [StoreAllListController::class, 'getAllListMaterialReceivedFromQuality'])->name('list-material-received-from-quality');
         Route::get('/list-material-received-from-quality-bussinesswise', [StoreAllListController::class, 'submitFinalPurchaseOrder'])->name('list-material-received-from-quality-bussinesswise');
         Route::get('/list-material-received-from-quality-po-tracking', [StoreAllListController::class, 'getAllListMaterialReceivedFromQualityPOTracking'])->name('list-material-received-from-quality-po-tracking');
-        Route::get('/list-material-received-from-quality-bussinesswise-tracking', [StoreAllListController::class, 'getAllListMaterialReceivedFromQualityPOTrackingBusinessWise'])->name('list-material-received-from-quality-bussinesswise-tracking');
+        Route::get('/list-material-received-from-quality-bussinesswise-tracking/{id}', [StoreAllListController::class, 'getAllListMaterialReceivedFromQualityPOTrackingBusinessWise'])->name('list-material-received-from-quality-bussinesswise-tracking');
         Route::get('/list-product-inprocess-received-from-production', [StoreAllListController::class, 'getAllInprocessProductProduction'])->name('list-product-inprocess-received-from-production');
 
         // Rejected Chalan

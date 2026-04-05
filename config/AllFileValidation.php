@@ -9,6 +9,9 @@ return [
     'IMAGE_MAX_WIDTH' => '600',
     'IMAGE_MAX_HEIGHT' => '600',
 
+    'BUSINESS_PDF_MAX_SIZE' => '1024',
+    'BUSINESS_PDF_MIN_SIZE' => '1',
+
     'DESIGNS_PDF_MAX_SIZE' => '6144',
     'DESIGNS_PDF_MIN_SIZE' => '1',
 

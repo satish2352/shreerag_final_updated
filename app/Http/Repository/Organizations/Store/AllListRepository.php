@@ -720,7 +720,7 @@ class AllListRepository
     //         return $e->getMessage();
     //     }
     // }
-    public function getAllListMaterialReceivedFromQualityPOTrackingBusinessWise()
+    public function getAllListMaterialReceivedFromQualityPOTrackingBusinessWise($id)
     {
         try {
 
@@ -733,7 +733,7 @@ class AllListRepository
                 ->leftJoin('purchase_order_details', 'purchase_orders.id', '=', 'purchase_order_details.purchase_id')
                 ->leftJoin('tbl_grn_po_quantity_tracking', 'purchase_orders.id', '=', 'tbl_grn_po_quantity_tracking.purchase_order_id')
                 ->leftJoin('vendors', 'purchase_orders.vendor_id', '=', 'vendors.id')
-
+                ->where('businesses_details.id', $id)
                 ->whereIn('purchase_orders.quality_status_id', $array_to_be_check)
                 ->where('businesses_details.is_deleted', 0)
 

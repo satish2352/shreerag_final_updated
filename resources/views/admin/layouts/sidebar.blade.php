@@ -713,7 +713,7 @@
                                     class="mini-click-non">Submitted PO by Vendor List</span></a>
                         </li>
                         <li
-                            class="nav-item {{ request()->is('storedept/list-material-received-from-quality-po-tracking') || request()->is('storedept/list-material-received-from-quality-bussinesswise-tracking/*') || request()->is('storedept/list-grn-details-po-tracking/*') ? 'active' : '' }}">
+                            class="nav-item {{ request()->is('storedept/list-material-received-from-quality-po-tracking') || request()->is('storedept/list-grn-details-po-tracking/*') ? 'active' : '' }}">
                             <a href="{{ route('list-material-received-from-quality-po-tracking') }}">
                                 <i class="fa fa-clipboard-list icon-wrap"></i>
                                 <span class="mini-click-non">Material Received PO Tracking</span>
@@ -1000,8 +1000,8 @@
                                     Chalan</span></a>
                         </li>
                         <li
-                            class="nav-item {{ request()->is('storedept/list-material-received-from-quality-bussinesswise-tracking') || request()->is('storedept/list-grn-details-po-tracking/*') ? 'active' : '' }}">
-                            <a href="{{ route('list-material-received-from-quality-bussinesswise-tracking') }}">
+                            class="nav-item {{ request()->is('storedept/list-material-received-from-quality-po-tracking') || request()->is('storedept/list-grn-details-po-tracking/*') ? 'active' : '' }}">
+                            <a href="{{ route('list-material-received-from-quality-po-tracking') }}">
                                 <i class="fa fa-clipboard-check icon-wrap"></i>
                                 <span class="mini-click-non">GRN List</span>
                             </a>

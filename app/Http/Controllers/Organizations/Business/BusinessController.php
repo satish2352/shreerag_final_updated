@@ -49,7 +49,7 @@ class BusinessController extends Controller
             'customer_po_number' => 'required|string|min:10|max:16|unique:businesses,customer_po_number,NULL,id,is_deleted,0',
             'po_validity' => 'required',
             'remarks' => 'required',
-            'business_pdf' => 'required|mimes:pdf|max:' . Config::get("AllFileValidation.DESIGNS_PDF_MAX_SIZE") . '|min:' . Config::get("AllFileValidation.DESIGNS_PDF_MIN_SIZE"),
+            'business_pdf' => 'required|mimes:pdf|max:' . Config::get("AllFileValidation.BUSINESS_PDF_MAX_SIZE") . '|min:' . Config::get("AllFileValidation.BUSINESS_PDF_MIN_SIZE"),
         ];
 
         $messages = [
@@ -67,8 +67,8 @@ class BusinessController extends Controller
 
             'business_pdf.required' => 'The business PDF is required.',
             'business_pdf.mimes' => 'The business PDF must be in PDF format.',
-            'business_pdf.max' => 'The business PDF size must not exceed ' . Config::get("AllFileValidation.DESIGNS_PDF_MAX_SIZE") . ' KB.',
-            'business_pdf.min' => 'The business PDF size must not be less than ' . Config::get("AllFileValidation.DESIGNS_PDF_MIN_SIZE") . ' KB.',
+            'business_pdf.max' => 'The business PDF size must not exceed ' . Config::get("AllFileValidation.BUSINESS_PDF_MAX_SIZE") . ' KB.',
+            'business_pdf.min' => 'The business PDF size must not be less than ' . Config::get("AllFileValidation.BUSINESS_PDF_MIN_SIZE") . ' KB.',
         ];
 
         try {
@@ -129,8 +129,13 @@ class BusinessController extends Controller
             'addmore.*.description' => 'required|string',
             'addmore.*.quantity' => 'required|integer|min:1',
             'addmore.*.rate' => 'required|numeric|min:0',
-            'business_pdf' => 'nullable|mimes:pdf|max:' .
-                Config::get("AllFileValidation.DESIGNS_PDF_MAX_SIZE"),
+            'business_pdf' => [
+                'nullable', // ✅ FIX
+                'file',
+                'mimes:pdf',
+                'max:' . Config::get('AllFileValidation.BUSINESS_PDF_MAX_SIZE'), // KB
+                'min:' . Config::get('AllFileValidation.BUSINESS_PDF_MIN_SIZE')  // KB
+            ],
         ];
 
         $messages = [

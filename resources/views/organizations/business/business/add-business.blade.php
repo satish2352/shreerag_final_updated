@@ -236,7 +236,8 @@
                                                                 </div>
 
                                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                                    <label for="business_pdf">Upload File :</label>
+                                                                    <label for="business_pdf">Upload File :<span
+                                                                            class="text-danger">*</span></label>
                                                                     <input type="file" class="form-control"
                                                                         accept="application/pdf" id="business_pdf"
                                                                         name="business_pdf">
@@ -289,7 +290,10 @@
                         $('#po_validity').attr('min', todayDate);
                     }
                     setMinDate();
-
+                    $.validator.addMethod("filesize", function(value, element, param) {
+                        if (element.files.length === 0) return true;
+                        return element.files[0].size <= param;
+                    }, "File size is too large");
                     // Initialize jQuery Validation
                     var validator = $("#addEmployeeForm").validate({
                         ignore: [], // Validate hidden inputs as well
@@ -318,6 +322,11 @@
                             remarks: {
                                 required: true,
                                 maxlength: 255
+                            },
+                            business_pdf: {
+                                required: true,
+                                extension: "pdf",
+                                filesize: 1024 * 1024 // 1MB
                             },
                             'addmore[0][product_name]': {
                                 required: true,
@@ -360,6 +369,11 @@
                             remarks: {
                                 required: "Please enter remark.",
                                 maxlength: "Remarks must be at most 255 characters long."
+                            },
+                            business_pdf: {
+                                required: "Please upload PDF file.",
+                                extension: "Only PDF file allowed.",
+                                filesize: "PDF must be less than 1MB."
                             },
                             'addmore[0][product_name]': {
                                 required: "Please enter the Product Name.",

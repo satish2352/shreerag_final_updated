@@ -69,6 +69,8 @@
                                             <input type="hidden" name="business_main_id" id=""
                                                 class="form-control" value="{{ $editData[0]->business_main_id }}"
                                                 placeholder="">
+                                            <input type="hidden" name="old_business_pdf"
+                                                value="{{ $editData[0]->business_pdf }}">
                                             <div class="form-group-inner">
                                                 @foreach ($editData as $key => $editDataNew)
                                                     @if ($key == 0)
@@ -240,7 +242,8 @@
                                                             </div>
                                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                                 <label for="customer_payment_terms">Payment Terms
-                                                                    (optional):</label>
+                                                                    (optional)
+                                                                    :</label>
 
                                                                 <textarea class="form-control customer_payment_terms" name="customer_payment_terms" id="customer_payment_terms"
                                                                     placeholder="Enter the Description">
@@ -265,7 +268,8 @@
                                                         </div>
                                                         <div class="row mt-3">
                                                             <div class="col-lg-6 col-md-6 col-sm-6">
-                                                                <label>Business PDF (optional)</label>
+                                                                <label>Business PDF : <span class="text-danger">*</span>
+                                                                </label>
 
                                                                 <input type="file" name="business_pdf"
                                                                     class="form-control" accept=".pdf">
@@ -274,7 +278,7 @@
                                                                 @if (!empty($editData[0]->business_pdf))
                                                                     <a class="btn btn-sm btn-info mt-2" target="_blank"
                                                                         href="{{ Config::get('FileConstant.BUSINESS_PDF_VIEW') }}{{ $editData[0]->business_pdf }}"
-                                                                        alt="Design"> Click to view</a>
+                                                                        alt="Design"> Click to view File</a>
                                                                 @endif
                                                             </div>
                                                         </div>

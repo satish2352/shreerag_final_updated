@@ -77,10 +77,10 @@ class AllListServices
             return $e;
         }
     }
-    public function getAllListMaterialReceivedFromQualityPOTrackingBusinessWise()
+    public function getAllListMaterialReceivedFromQualityPOTrackingBusinessWise($id)
     {
         try {
-            $data_output = $this->repo->getAllListMaterialReceivedFromQualityPOTrackingBusinessWise();
+            $data_output = $this->repo->getAllListMaterialReceivedFromQualityPOTrackingBusinessWise($id);
             return $data_output;
         } catch (\Exception $e) {
             return $e;
