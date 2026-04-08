@@ -122,8 +122,8 @@ class ReportRepository
                     'businesses_details.description',
                     'businesses_details.quantity',
                     'estimation.total_estimation_amount',
-                )
-                ->havingRaw('SUM(tcqt1.completed_quantity) = businesses_details.quantity');
+                );
+            // ->havingRaw('SUM(tcqt1.completed_quantity) = businesses_details.quantity');
 
             // Sort
             $query->orderBy(DB::raw('MAX(tbl_dispatch.updated_at)'), 'desc');
@@ -1349,7 +1349,7 @@ class ReportRepository
                     'businesses_details.description',
                     'businesses_details.quantity'
                 )
-                ->havingRaw('SUM(tcqt1.completed_quantity) = businesses_details.quantity')
+                // ->havingRaw('SUM(tcqt1.completed_quantity) = businesses_details.quantity')
                 ->orderBy(DB::raw('MAX(tbl_dispatch.updated_at)'), 'desc')
                 ->get();
 
