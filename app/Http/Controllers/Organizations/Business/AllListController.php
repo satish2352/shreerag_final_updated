@@ -466,13 +466,6 @@ class AllListController extends Controller
         try {
             $data_output = $this->service->getAllListSubmitedPurchaeOrderByVendorOwnerside();
 
-            if ($data_output->isEmpty()) {
-                return view('organizations.business.list.list-owner-all-po-sent-to-vendor', [
-                    'data_output' => [],
-                    'message' => 'No data found'
-                ]);
-            }
-
             $businessIds = $data_output->pluck('business_id')->filter()->unique()->values();
 
             if ($businessIds->isNotEmpty()) {
@@ -582,13 +575,6 @@ class AllListController extends Controller
         try {
             $data_output = $this->service->getOwnerFinalAllCompletedProductionLogistics();
 
-            if ($data_output->isEmpty()) {
-                return view('organizations.business.list.list-owner-production-completed-received-logistics', [
-                    'data_output' => [],
-                    'message' => 'No data found'
-                ]);
-            }
-
             $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
 
             if ($bdIds->isNotEmpty()) {
@@ -656,13 +642,6 @@ class AllListController extends Controller
     {
         try {
             $data_output = $this->service->listProductDispatchCompletedFromDispatch();
-
-            if ($data_output->isEmpty()) {
-                return view('organizations.business.list.list-dispatch-completed', [
-                    'data_output' => [],
-                    'message' => 'No data found'
-                ]);
-            }
 
             $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
 

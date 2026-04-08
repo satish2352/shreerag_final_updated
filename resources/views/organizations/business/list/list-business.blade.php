@@ -99,7 +99,7 @@
                                                 </tr>
                                             @empty
                                                 <tr>
-                                                    <td colspan="9" class="text-center">
+                                                    <td colspan="12" class="text-center">
                                                         No Record Found
                                                     </td>
                                                 </tr>
