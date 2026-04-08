@@ -1965,7 +1965,7 @@ class ReportRepository
                     $join->on('tbl_logistics.quantity_tracking_id', '=', 'tbl_dispatch.quantity_tracking_id');
                 })
                 ->whereIn('tcqt1.quantity_tracking_status', $array_to_be_quantity_tracking)
-                ->whereIn('bap1.dispatch_status_id', $array_to_be_check)
+                // ->whereIn('bap1.dispatch_status_id', $array_to_be_check)
                 ->where('bap1.off_canvas_status', 22)
                 ->where('businesses.is_active', true)
                 ->where('businesses.is_deleted', 0);
@@ -2042,8 +2042,8 @@ class ReportRepository
                     'businesses_details.quantity'
                 )
 
-                ->havingRaw('SUM(tcqt1.completed_quantity) = businesses_details.quantity')
-                ->orderBy('last_updated_at', 'desc') // Use the alias instead of tbl_dispatch.last_updated_at
+                // ->havingRaw('SUM(tcqt1.completed_quantity) = businesses_details.quantity')
+                // ->orderBy('last_updated_at', 'desc') // Use the alias instead of tbl_dispatch.last_updated_at
                 ->get()
                 ->map(function ($data) {
                     $data->last_updated_at = Carbon::parse($data->last_updated_at);

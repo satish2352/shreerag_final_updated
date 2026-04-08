@@ -123,8 +123,8 @@ class AllListRepository
                 ->leftJoin('tbl_vehicle_type', function ($join) {
                     $join->on('tbl_logistics.vehicle_type_id', '=', 'tbl_vehicle_type.id');
                 })
-                ->leftJoin('tbl_dispatch', function ($join) {
-                    $join->on('tbl_logistics.quantity_tracking_id', '=', 'tbl_dispatch.quantity_tracking_id');
+                ->join(DB::raw('(SELECT id, logistics_id, outdoor_no, gate_entry, remark, updated_at FROM tbl_dispatch WHERE id IN (SELECT MIN(id) FROM tbl_dispatch GROUP BY logistics_id)) as tbl_dispatch'), function ($join) {
+                    $join->on('tbl_logistics.id', '=', 'tbl_dispatch.logistics_id');
                 })
                 ->whereIn('tbl_customer_product_quantity_tracking.quantity_tracking_status', $array_to_be_quantity_tracking)
                 // ->whereIn('bap1.dispatch_status_id',$array_to_be_check)
@@ -197,11 +197,11 @@ class AllListRepository
                 ->leftJoin('businesses_details', function ($join) {
                     $join->on('tbl_logistics.business_details_id', '=', 'businesses_details.id');
                 })
-                ->leftJoin('tbl_dispatch', function ($join) {
-                    $join->on('tbl_logistics.quantity_tracking_id', '=', 'tbl_dispatch.quantity_tracking_id');
+                ->join(DB::raw('(SELECT id, logistics_id, business_details_id, updated_at FROM tbl_dispatch WHERE id IN (SELECT MIN(id) FROM tbl_dispatch GROUP BY logistics_id)) as tbl_dispatch'), function ($join) {
+                    $join->on('tbl_logistics.id', '=', 'tbl_dispatch.logistics_id');
                 })
                 ->leftJoin('estimation', function ($join) {
-                    $join->on('tbl_dispatch.business_details_id', '=', 'estimation.business_details_id');
+                    $join->on('tbl_logistics.business_details_id', '=', 'estimation.business_details_id');
                 })
                 ->leftJoin(
                     DB::raw('(SELECT business_details_id, SUM(items_used_total_amount) as total_items_used_amount 
@@ -232,7 +232,7 @@ class AllListRepository
                     'businesses_details.product_name',
                     'businesses_details.description',
                     'businesses_details.quantity',
-                    'estimation.total_estimation_amount',
+                    DB::raw('MAX(estimation.total_estimation_amount) as total_estimation_amount'),
                     DB::raw('SUM(tcqt1.completed_quantity) as total_completed_quantity'),
                     DB::raw('COALESCE(MAX(pd.total_items_used_amount), 0) as total_items_used_amount'),
                     DB::raw('MAX(tbl_dispatch.updated_at) as last_updated_at')
@@ -248,7 +248,6 @@ class AllListRepository
                     'businesses_details.product_name',
                     'businesses_details.description',
                     'businesses_details.quantity',
-                    'estimation.total_estimation_amount',
                 )
 
                 ->havingRaw('SUM(tcqt1.completed_quantity) = businesses_details.quantity')

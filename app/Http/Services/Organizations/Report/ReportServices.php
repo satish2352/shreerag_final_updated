@@ -159,6 +159,7 @@ class ReportServices
     {
         try {
             $data_output = $this->repo->listDispatchReport($request);
+
             return $data_output;
         } catch (\Exception $e) {
             throw $e;
