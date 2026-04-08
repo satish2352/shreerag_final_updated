@@ -133,21 +133,14 @@ class PurchaseOrderController extends Controller
             ->paginate($perPage)
             ->withQueryString();
         // if ($getOutput instanceof \Illuminate\Support\Collection && $getOutput->isNotEmpty()) {
-        if ($getOutput && $getOutput->count() > 0) {
-            foreach ($getOutput as $data) {
-                $business_id = $data->business_details_id;
-                if (!empty($business_id)) {
-                    $update_data['purchase_order_is_rejected_view'] = '1';
-                    NotificationStatus::where('purchase_order_is_rejected_view', '0')
-                        ->where('business_details_id', $business_id)
-                        ->update($update_data);
-                }
+        foreach ($getOutput as $data) {
+            $business_id = $data->business_details_id;
+            if (!empty($business_id)) {
+                $update_data['purchase_order_is_rejected_view'] = '1';
+                NotificationStatus::where('purchase_order_is_rejected_view', '0')
+                    ->where('business_details_id', $business_id)
+                    ->update($update_data);
             }
-        } else {
-            return view('organizations.purchase.addpurchasedetails.list-purchase-order-rejected', [
-                'data_output' => [],
-                'message' => 'No data found'
-            ]);
         }
         return view(
             'organizations.purchase.addpurchasedetails.list-purchase-order-rejected',

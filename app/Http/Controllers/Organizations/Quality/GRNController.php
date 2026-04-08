@@ -283,23 +283,12 @@ class GRNController extends Controller
                 ->withQueryString();
 
 
-            if ($data_output->isNotEmpty()) {
+            $bdIds = $data_output->pluck('id')->filter()->unique()->values();
 
-                // IMPORTANT: $data->id currently is businesses_details.id (because you selected only businesses_details.id)
-                // So update should be on business_details_id (NOT business_id)
-
-                $bdIds = $data_output->pluck('id')->filter()->unique()->values();
-
-                if ($bdIds->isNotEmpty()) {
-                    NotificationStatus::where('quality_create_grn', 0)
-                        ->whereIn('business_details_id', $bdIds)
-                        ->update(['quality_create_grn' => 1]);
-                }
-            } else {
-                return view('organizations.quality.list.list-checked-material-sent-to-store', [
-                    'data_output' => [],
-                    'message' => 'No data found'
-                ]);
+            if ($bdIds->isNotEmpty()) {
+                NotificationStatus::where('quality_create_grn', 0)
+                    ->whereIn('business_details_id', $bdIds)
+                    ->update(['quality_create_grn' => 1]);
             }
 
             // return $data_output;
