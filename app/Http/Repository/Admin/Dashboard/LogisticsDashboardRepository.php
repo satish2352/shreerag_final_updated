@@ -7,7 +7,8 @@ use App\Models\{
     BusinessApplicationProcesses,
     Logistics,
     VehicleType,
-    TransportName
+    TransportName,
+    CustomerProductQuantityTracking
 };
 
 class LogisticsDashboardRepository
@@ -25,16 +26,20 @@ class LogisticsDashboardRepository
             ->where('grn_tbl.is_active', 1)
             ->where('grn_tbl.is_deleted', 0)
             ->count();
-        $production_completed_prod_dept_logisitics = PurchaseOrdersModel::leftJoin('grn_tbl', function ($join) {
-            $join->on('purchase_orders.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id');
-        })
-            ->where('grn_tbl.grn_status_sanction', 6001)
-            ->whereNotNull('grn_tbl.grn_no_generate')
-            ->whereNotNull('grn_tbl.store_receipt_no_generate')
-            ->whereNotNull('grn_tbl.store_remark')
-            ->where('grn_tbl.is_active', 1)
-            ->where('grn_tbl.is_deleted', 0)
+        $production_completed_prod_dept_logisitics = CustomerProductQuantityTracking::where('quantity_tracking_status', 3001)
+            ->where('is_active', 1)
+            ->where('is_deleted', 0)
             ->count();
+        // $production_completed_prod_dept_logisitics = PurchaseOrdersModel::leftJoin('grn_tbl', function ($join) {
+        //     $join->on('purchase_orders.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id');
+        // })
+        //     ->where('grn_tbl.grn_status_sanction', 6001)
+        //     ->whereNotNull('grn_tbl.grn_no_generate')
+        //     ->whereNotNull('grn_tbl.store_receipt_no_generate')
+        //     ->whereNotNull('grn_tbl.store_remark')
+        //     ->where('grn_tbl.is_active', 1)
+        //     ->where('grn_tbl.is_deleted', 0)
+        //     ->count();
         $po_pyament_need_to_release = PurchaseOrdersModel::leftJoin('grn_tbl', function ($join) {
             $join->on('purchase_orders.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id');
         })

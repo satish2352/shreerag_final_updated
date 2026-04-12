@@ -454,14 +454,32 @@ class ReportController extends Controller
 
     public function listConsumptionReport(Request $request)
     {
-        $getProjectName = Business::whereNotNull('project_name')
-            ->where('is_deleted', 0)
-            ->where('is_active', 1)
+        // $getProjectName = Business::whereNotNull('project_name')
+        //     ->where('is_deleted', 0)
+        //     ->where('is_active', 1)
 
-            ->whereNotNull('project_name')
-            ->where('project_name', '!=', '')
+        //     ->whereNotNull('project_name')
+        //     ->where('project_name', '!=', '')
 
-            ->pluck('project_name', 'id');
+        //     ->pluck('project_name', 'id');
+
+        $getProjectName = Business::leftJoin('business_application_processes', function ($join) {
+            $join->on('businesses.id', '=', 'business_application_processes.business_id');
+        })
+            ->whereNotNull('businesses.project_name')
+            ->where('businesses.project_name', '!=', '')
+            ->where('businesses.is_deleted', 0)
+            ->where('businesses.is_active', 1)
+            ->where('business_application_processes.off_canvas_status', 22)
+            ->pluck('businesses.project_name', 'businesses.id');
+
+        $getProductName = BusinessDetails::leftJoin('business_application_processes as bap', function ($join) {
+            $join->on('businesses_details.id', '=', 'bap.business_details_id');
+        })
+            ->where('businesses_details.is_deleted', 0)
+            ->where('businesses_details.is_active', 1)
+            ->where('bap.off_canvas_status', 22)
+            ->pluck('businesses_details.product_name', 'businesses_details.id');
 
         if ($request->filled('export_type')) {
             $data = $this->service->getConsumptionReport($request)['data'];
@@ -821,14 +839,6 @@ class ReportController extends Controller
                 ->where('business_application_processes.off_canvas_status', 22)
                 ->pluck('businesses.project_name', 'businesses.id');
 
-            $getProductName = BusinessDetails::leftJoin('business_application_processes as bap', function ($join) {
-                $join->on(' businesses_details.id', '=', 'bap.business_details_id');
-            })
-                // ->whereNotNull('businesses_details.product_name')
-                ->where('businesses_details.is_deleted', 0)
-                ->where('businesses_details.is_active', 1)
-                ->where('bap.off_canvas_status', 22)
-                ->select('businesses_details.product_name', 'businesses_details.id');
 
             return view('organizations.report.dispatch-report', compact('data', 'getProjectName', 'getProductName'));
         } catch (\Exception $e) {
@@ -930,15 +940,25 @@ class ReportController extends Controller
         try {
             $data = $this->service->listDispatchBarChart($request);
             $DataProductWise = $this->service->listDispatchBarChartProductWise($request);
-            $getProjectName = Business::whereNotNull('project_name')
-                ->where('is_deleted', 0)
-                ->where('is_active', 1)
-                ->pluck('project_name', 'id');
+            $getProjectName = Business::leftJoin('business_application_processes', function ($join) {
+                $join->on('businesses.id', '=', 'business_application_processes.business_id');
+            })
+                ->whereNotNull('businesses.project_name')
+                ->where('businesses.project_name', '!=', '')
+                ->where('businesses.is_deleted', 0)
+                ->where('businesses.is_active', 1)
+                ->where('business_application_processes.off_canvas_status', 22)
+                ->pluck('businesses.project_name', 'businesses.id');
 
-            $getProductName = BusinessDetails::whereNotNull('product_name')
-                ->where('is_deleted', 0)
-                ->where('is_active', 1)
-                ->pluck('product_name', 'id');
+            $getProductName = BusinessDetails::leftJoin('business_application_processes as bap', function ($join) {
+                $join->on(' businesses_details.id', '=', 'bap.business_details_id');
+            })
+                // ->whereNotNull('businesses_details.product_name')
+                ->where('businesses_details.is_deleted', 0)
+                ->where('businesses_details.is_active', 1)
+                ->where('bap.off_canvas_status', 22)
+                ->select('businesses_details.product_name', 'businesses_details.id');
+
             $vendorWise = $this->service->listVendorWise($request);
             return view('organizations.report.dispatch-bar-chart', ['data' => $data, 'DataProductWise' => $DataProductWise, 'getProjectName' => $getProjectName, 'getProductName' => $getProductName,  'vendorWise' => $vendorWise['data'],]);
         } catch (\Exception $e) {

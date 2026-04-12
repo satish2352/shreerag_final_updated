@@ -128,11 +128,37 @@ class OwnerDashboardRepository
             ->groupBy('customer_po_number');
 
 
-        $total_revenue = EstimationModel::sum('total_estimation_amount');
+        // $total_revenue = EstimationModel::sum('total_estimation_amount');
+        $total_revenue = EstimationModel::join(
+            'business_application_processes',
+            'estimation.business_details_id',
+            '=',
+            'business_application_processes.business_details_id'
+        )
+            ->where('business_application_processes.dispatch_status_id', 1154)
+            ->sum('estimation.total_estimation_amount');
 
-        $total_material_amount = ProductionDetails::sum('items_used_total_amount');
+        // Total Material Amount
+        $total_material_amount = ProductionDetails::join(
+            'business_application_processes',
+            'production_details.business_details_id',
+            '=',
+            'business_application_processes.business_details_id'
+        )
+            ->where('business_application_processes.dispatch_status_id', 1154)
+            ->sum('production_details.items_used_total_amount');
 
-        $profit = $total_revenue - $total_material_amount;
+        // Profit
+        if ($total_revenue > 0) {
+            $profit = $total_revenue - $total_material_amount;
+        } else {
+            $profit = 0; // ✅ no negative profit
+        }
+
+
+        // $total_material_amount = ProductionDetails::sum('items_used_total_amount');
+
+        // $profit = $total_revenue - $total_material_amount;
 
 
         $department_count = RolesModel::where('is_active', 1)->where('is_deleted', 0)->count();
