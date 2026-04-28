@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Organizations\Estimation;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Services\Organizations\Estimation\AllListServices;
+use App\Http\Services\Organizations\Estimation\EstimationServices;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Config;
@@ -23,10 +24,12 @@ class AllListController extends Controller
 {
 
     protected $service;
+    protected $estimationService;
 
     public function __construct()
     {
         $this->service = new AllListServices();
+        $this->estimationService = new EstimationServices();
     }
 
     public function getAllNewRequirement(Request $request)
@@ -179,6 +182,38 @@ class AllListController extends Controller
             }
 
             return view('organizations.productions.product.list-recived-bussinesswise', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    /**
+     * List estimations where owner has suggested a revised amount (BAP status 1301).
+     * Estimator reviews and accepts the suggestion here.
+     */
+    public function getAllCorrectedDesignBomReceivedFromDesign()
+    {
+        try {
+            $data_output = $this->service->getAllCorrectedDesignBomReceivedFromDesign();
+
+            $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
+            if ($bdIds->isNotEmpty()) {
+                NotificationStatus::where('estimation_view', 0)
+                    ->whereIn('business_details_id', $bdIds)
+                    ->update(['estimation_view' => 1]);
+            }
+
+            return view('organizations.estimation.list.list-corrected-design-bom-received-from-design', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    public function getExceedOwnerSuggested()
+    {
+        try {
+            $data_output = $this->estimationService->getExceedOwnerSuggested();
+            return view('organizations.estimation.list.list-bom-exceed-owner-suggested', compact('data_output'));
         } catch (\Exception $e) {
             return $e;
         }

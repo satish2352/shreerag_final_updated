@@ -29,7 +29,8 @@ use App\Models\{
     VendorType,
     EstimationModel,
     Business,
-    BusinessDetails
+    BusinessDetails,
+    RequisitionItem
 };
 use App\Http\Controllers\Organizations\CommanController;
 
@@ -204,6 +205,25 @@ class PurchaseOrderController extends Controller
         // ============================
         $remaining_amount = $grand_total_amount - $used_po_amount;
 
+        // Fetch all requisition items for this requisition
+        $requisitionItems = RequisitionItem::where('requisition_id', $requistitionId)
+            ->where('is_deleted', 0)
+            ->get();
+
+        // Find part_item_ids already covered by an existing Purchase Order for this requisition
+        $purchasedPartIds = \App\Models\PurchaseOrderDetailsModel::join(
+                'purchase_orders', 'purchase_orders.id', '=', 'purchase_order_details.purchase_id'
+            )
+            ->where('purchase_orders.requisition_id', $requistitionId)
+            ->pluck('purchase_order_details.part_no_id')
+            ->map(fn($id) => (string) $id)
+            ->unique()
+            ->toArray();
+
+        // Split: items not yet in any PO (auto-fill in form) vs already in a PO (show as reference only)
+        $newRequisitionItems  = $requisitionItems->filter(fn($i) => !in_array((string)$i->part_item_id, $purchasedPartIds))->values();
+        $purchasedItems       = $requisitionItems->filter(fn($i) =>  in_array((string)$i->part_item_id, $purchasedPartIds))->values();
+
         return view(
             'organizations.purchase.addpurchasedetails.add-purchase-orders',
             compact(
@@ -217,9 +237,11 @@ class PurchaseOrderController extends Controller
                 'dataPurchaseOrder',
                 'business_detailsId',
                 'dataOutputVendorTyper',
-                'grand_total_amount',   // 👈 new
-                'used_po_amount',      // 👈 new
-                'remaining_amount'     // 👈 new
+                'grand_total_amount',
+                'used_po_amount',
+                'remaining_amount',
+                'newRequisitionItems',
+                'purchasedItems'
             )
         );
     }
@@ -490,17 +512,19 @@ class PurchaseOrderController extends Controller
     public function checkDetailsBeforeSendPOToVendor($purchase_order_id)
     {
         try {
-            $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
-
-            $data = $this->serviceCommon->getPurchaseOrderDetails($purchase_order_id);
+            $getOrganizationData      = $this->serviceCommon->getAllOrganizationData();
+            $data                     = $this->serviceCommon->getPurchaseOrderDetails($purchase_order_id);
             $getAllRulesAndRegulations = $this->serviceCommon->getAllRulesAndRegulations();
-            $business_id = $data['purchaseOrder']->business_id;
-            $purchaseOrder = $data['purchaseOrder'];
-            $purchaseOrderDetails = $data['purchaseOrderDetails'];
+            $purchaseOrder            = $data['purchaseOrder'];
+            $purchaseOrderDetails     = $data['purchaseOrderDetails'];
+            $business_id              = $purchaseOrder->business_id;
+
+            $businessData        = \App\Models\Business::find($purchaseOrder->business_id);
+            $businessDetailsData = \App\Models\BusinessDetails::find($purchaseOrder->business_details_id);
 
             return view(
                 'organizations.purchase.purchase.purchase-order-details',
-                compact('purchase_order_id', 'purchaseOrder', 'purchaseOrderDetails', 'getOrganizationData', 'getAllRulesAndRegulations', 'business_id')
+                compact('purchase_order_id', 'purchaseOrder', 'purchaseOrderDetails', 'getOrganizationData', 'getAllRulesAndRegulations', 'business_id', 'businessData', 'businessDetailsData')
             );
 
 
@@ -536,14 +560,27 @@ class PurchaseOrderController extends Controller
     public function getAllListPurchaseOrderTowardsOwnerDetails($purchase_order_id)
     {
         try {
-            $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
-            $data = $this->serviceCommon->getPurchaseOrderDetails($purchase_order_id);
+            $getOrganizationData      = $this->serviceCommon->getAllOrganizationData();
+            $data                     = $this->serviceCommon->getPurchaseOrderDetails($purchase_order_id);
             $getAllRulesAndRegulations = $this->serviceCommon->getAllRulesAndRegulations();
-            $business_id = $data['purchaseOrder']->business_id;
-            $purchaseOrder = $data['purchaseOrder'];
-            $purchaseOrderDetails = $data['purchaseOrderDetails'];
+            $purchaseOrder            = $data['purchaseOrder'];
+            $purchaseOrderDetails     = $data['purchaseOrderDetails'];
+            $business_id              = $purchaseOrder->business_id;
 
-            return view('organizations.purchase.addpurchasedetails.view-purchase-orders-details', compact('purchase_order_id', 'purchaseOrder', 'purchaseOrderDetails', 'getOrganizationData', 'getAllRulesAndRegulations', 'business_id'));
+            // Fetch business (project) and product details for display above the PO
+            $businessData        = \App\Models\Business::find($purchaseOrder->business_id);
+            $businessDetailsData = \App\Models\BusinessDetails::find($purchaseOrder->business_details_id);
+
+            return view('organizations.purchase.addpurchasedetails.view-purchase-orders-details', compact(
+                'purchase_order_id',
+                'purchaseOrder',
+                'purchaseOrderDetails',
+                'getOrganizationData',
+                'getAllRulesAndRegulations',
+                'business_id',
+                'businessData',
+                'businessDetailsData'
+            ));
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }

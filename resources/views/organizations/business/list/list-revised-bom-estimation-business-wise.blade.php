@@ -65,9 +65,15 @@
                                                             href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
                                                             alt="Design"> Click to view</a>
                                                     </td>
-                                                    <td> <a class="img-size"
-                                                            href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
-                                                            alt="bill of material">Click to download</a>
+                                                    <td>
+                                                        @if(!empty($data->design_id) && !empty($data->id))
+                                                            <button type="button" class="btn btn-outline-info btn-sm"
+                                                                onclick="openRevisedBomModal({{ $data->id }}, {{ $data->design_id }})">
+                                                                <i class="fa fa-list"></i> View BOM
+                                                            </button>
+                                                        @else
+                                                            <span class="text-muted">—</span>
+                                                        @endif
                                                     </td>
                                                     <td>{{ ucwords($data->total_estimation_amount) }}</td>
                                                     <td>{{ ucwords($data->remark_by_estimation) }}</td>
@@ -100,4 +106,23 @@
             </div>
         </div>
     </div>
-   @endsection
+{{-- BOM Material Items Modal (view-only — Revised BOM Business Wise List, owner side) --}}
+@include('organizations.common.bom-material-items-modal', [
+    'mode'              => 'view_only',
+    'businessId'        => 0,
+    'businessDetailsId' => 0,
+    'designId'          => 0,
+    'bomModalId'        => 'revisedBomOwnerModal',
+])
+
+@push('scripts')
+<script>
+    function openRevisedBomModal(businessDetailsId, designId) {
+        var bdEncoded = btoa(businessDetailsId);
+        var dEncoded  = btoa(designId);
+        var fetchUrl  = '{{ url("owner/get-bom-material-items") }}/' + bdEncoded + '/' + dEncoded;
+        openBomModal_revisedBomOwnerModal(fetchUrl);
+    }
+</script>
+@endpush
+@endsection

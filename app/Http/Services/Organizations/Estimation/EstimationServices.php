@@ -53,6 +53,103 @@ class EstimationServices
         }
     }
 
+    /**
+     * Handle estimation submission when amount exceeds the business total_amount limit.
+     * Saves the exceeded amount, flags the row, and notifies the owner (status 1300).
+     */
+    public function updateEstimationExceed($request)
+    {
+        try {
+            $return_data = $this->repo->updateEstimationExceed($request);
+
+            if (isset($return_data['status']) && $return_data['status'] === 'error') {
+                return $return_data;
+            }
+
+            $productName = $return_data['product_name'];
+            $formattedProductName = preg_replace('/[^A-Za-z0-9_-]/', '_', $productName);
+            $formattedProductName = preg_replace('/_+/', '_', $formattedProductName);
+            $path = Config::get('FileConstant.DESIGNS_ADD');
+
+            if ($request->hasFile('bom_image')) {
+                if ($return_data['bom_image']) {
+                    if (file_exists(Config::get('DocumentConstant.DESIGNS_DELETE') . $return_data['bom_image'])) {
+                        removeImage(Config::get('DocumentConstant.DESIGNS_DELETE') . $return_data['bom_image']);
+                    }
+                }
+                $marathiImageName = $return_data['last_insert_id'] . '_' . $formattedProductName . '_' . rand(100000, 999999) . '.' . $request->bom_image->extension();
+                uploadImage($request, 'bom_image', $path, $marathiImageName);
+                $slide_data = DesignRevisionForProd::find($return_data['last_insert_id']);
+                $slide_data->bom_image = $marathiImageName;
+                $slide_data->save();
+            }
+
+            return ['status' => 'success', 'msg' => 'Estimation submitted. Owner has been notified to review the exceeded amount.'];
+        } catch (Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * Estimator accepts the owner-suggested amount and re-enters the standard 1149 flow.
+     */
+    public function acceptOwnerSuggestedAmount($business_details_id)
+    {
+        try {
+            return $this->repo->acceptOwnerSuggestedAmount($business_details_id);
+        } catch (Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * Owner submits a counter-amount for an exceeded estimation.
+     */
+    public function ownerSubmitSuggestedAmount($request)
+    {
+        try {
+            return $this->repo->ownerSubmitSuggestedAmount($request);
+        } catch (Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * Get list of pending exceed-requests for the owner dashboard.
+     */
+    public function getExceedPendingForOwner()
+    {
+        try {
+            return $this->repo->getExceedPendingForOwner();
+        } catch (Exception $e) {
+            return collect([]);
+        }
+    }
+
+    /**
+     * Get details for the owner's suggest-amount form.
+     */
+    public function getExceedDetailForOwner($business_details_id)
+    {
+        try {
+            return $this->repo->getExceedDetailForOwner($business_details_id);
+        } catch (Exception $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Get list of estimations where owner has suggested an amount (status 1301).
+     */
+    public function getExceedOwnerSuggested()
+    {
+        try {
+            return $this->repo->getExceedOwnerSuggested();
+        } catch (Exception $e) {
+            return collect([]);
+        }
+    }
+
     public function sendToProduction($id)
     { //checked
         try {

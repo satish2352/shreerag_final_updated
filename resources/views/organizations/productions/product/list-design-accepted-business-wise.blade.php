@@ -20,20 +20,20 @@
                                     data-toolbar="#toolbar">
                                     <thead>
                                         <tr>
-                                            <th data-field="id">ID</th>   
+                                            <th data-field="id">ID</th>
                                             <th data-field="product_name" data-editable="false">Product Name</th>
                                             <th data-field="quantity" data-editable="false">Quantity</th>
                                             <th data-field="grn_date" data-editable="false">Description</th>
                                             <th data-field="design_image" data-editable="false">Design Layout</th>
                                             <th data-field="bom_image" data-editable="false">BOM</th>
                                             <th data-field="re_design_image" data-editable="false">Revised Design Layout</th>
-                                                <th data-field="re_bom_image" data-editable="false">Revised BOM</th>      
+                                            <th data-field="bom_items" data-editable="false">BOM Items</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach($data_output as $data)
                                         <tr>
-                                            
+
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ucwords($data->product_name)}}</td>
                                             <td>{{ucwords($data->quantity)}}</td>
@@ -48,18 +48,22 @@
                                         </td>
                                         @if($data->reject_reason_prod == '')
                                         <td>-</td>
-                                        <td>-</td>
-
                                         @else
                                         <td> <a class="img-size" target="_blank"
                                             href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['re_design_image'] }}"
                                             alt="Design"> Click to view</a>
                                     </td>
-                                    <td> <a class="img-size"
-                                            href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['re_bom_image'] }}"
-                                            alt="bill of material">Click to download</a>
-                                    </td> 
-                                    @endif     
+                                    @endif
+                                    <td>
+                                        @if(!empty($data->design_id))
+                                        <button type="button" class="btn btn-outline-info btn-sm"
+                                            onclick="prodOpenBomModal({{ $data->id }}, {{ $data->design_id }})">
+                                            <i class="fa fa-list"></i> View BOM
+                                        </button>
+                                        @else
+                                        <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
                                            </tr>
                                         @endforeach
                                     </tbody>
@@ -72,4 +76,23 @@
         </div>
     </div>
 </div>
+{{-- BOM Material Items Modal (production view-only) --}}
+@include('organizations.common.bom-material-items-modal', [
+    'mode'              => 'view_only',
+    'businessId'        => 0,
+    'businessDetailsId' => 0,
+    'designId'          => 0,
+    'bomModalId'        => 'prodBomItemsModal',
+])
+
+@push('scripts')
+<script>
+    function prodOpenBomModal(businessDetailsId, designId) {
+        var bdEncoded = btoa(businessDetailsId);
+        var dEncoded  = btoa(designId);
+        var fetchUrl  = '{{ url("production/get-bom-material-items") }}/' + bdEncoded + '/' + dEncoded;
+        openBomModal_prodBomItemsModal(fetchUrl);
+    }
+</script>
+@endpush
 @endsection

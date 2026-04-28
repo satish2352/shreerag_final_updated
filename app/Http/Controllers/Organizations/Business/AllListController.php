@@ -311,6 +311,16 @@ class AllListController extends Controller
             return $e;
         }
     }
+    public function loadRevisedDesignBomReceivedFromEstimation()
+    {
+        try {
+            $data_output = $this->service->loadRevisedDesignBomReceivedFromEstimation();
+            return view('organizations.business.design.list-revised-design-bom-received-from-estimation', compact('data_output'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
     public function getAcceptEstimationBOM()
     {
         try {
@@ -660,5 +670,22 @@ class AllListController extends Controller
     {
         $register_user = $this->service->listLoginHistory();
         return view('organizations.hr.employees.list-login-history', compact('register_user'));
+    }
+
+    public function listExceedAmountRequests()
+    {
+        try {
+            $data_output = $this->service->loadExceedAmountRequests();
+            // Mark AdminView rows for off_canvas_status=50 as viewed when owner opens this list
+            AdminView::where('off_canvas_status', 50)
+                ->where('is_view', '0')
+                ->update(['is_view' => '1']);
+            return view('organizations.business.design.list-exceed-amount-requests', compact('data_output'));
+        } catch (\Exception $e) {
+            return view('organizations.business.design.list-exceed-amount-requests', [
+                'data_output' => collect(),
+                'message' => 'No data found'
+            ]);
+        }
     }
 }

@@ -143,41 +143,54 @@
                                                         <tbody>
                                                             @foreach ($editData as $key => $editDataNew)
                                                                 {{-- <input type="hidden" name="delete_id" id="delete_id" value="{{ $editDataNew->id }}"> --}}
-                                                                <tr>
+                                                                @php
+                                                                    $isOriginallyEditable = $editDataNew->business_status_id == 1112 && $editDataNew->design_status_id == 1111;
+                                                                    // Also allow editing rate when this product has an exceed-pending estimation
+                                                                    $isExceedPending = $editDataNew->bom_estimation_send_to_owner == 1300;
+                                                                    $isRateEditable = $isOriginallyEditable || $isExceedPending;
+                                                                @endphp
+                                                                <tr @if($isExceedPending) style="background-color:#fff8e1; border-left: 4px solid #f39c12;" @endif>
                                                                     <input type="hidden" name="design_count"
                                                                         value="{{ count($editData) }}">
                                                                     <input type="hidden"
                                                                         name="design_id_{{ $key }}"
                                                                         value="{{ $editDataNew->id }}">
-                                                                    <td>{{ $key + 1 }}</td>
+                                                                    <td>{{ $key + 1 }}
+                                                                        @if($isExceedPending)
+                                                                            <br><span class="badge badge-warning" style="font-size:10px;">Exceed Pending</span>
+                                                                        @endif
+                                                                    </td>
 
                                                                     <td>
                                                                         <input type="text"
                                                                             name="product_name_{{ $key }}"
                                                                             value="{{ $editDataNew->product_name }}"
                                                                             class="form-control"
-                                                                            @if (!($editDataNew->business_status_id == 1112 && $editDataNew->design_status_id == 1111)) readonly @endif />
+                                                                            @if (!$isOriginallyEditable) readonly @endif />
                                                                     </td>
                                                                     <td>
                                                                         <input type="text"
                                                                             name="description_{{ $key }}"
                                                                             value="{{ $editDataNew->description }}"
                                                                             class="form-control"
-                                                                            @if (!($editDataNew->business_status_id == 1112 && $editDataNew->design_status_id == 1111)) readonly @endif />
+                                                                            @if (!$isOriginallyEditable) readonly @endif />
                                                                     </td>
                                                                     <td>
                                                                         <input type="text"
                                                                             name="quantity_{{ $key }}"
                                                                             value="{{ $editDataNew->quantity }}"
                                                                             class="form-control quantity"
-                                                                            @if (!($editDataNew->business_status_id == 1112 && $editDataNew->design_status_id == 1111)) readonly @endif />
+                                                                            @if (!$isRateEditable) readonly @endif />
                                                                     </td>
                                                                     <td>
                                                                         <input type="text"
                                                                             name="rate_{{ $key }}"
                                                                             value="{{ $editDataNew->rate }}"
                                                                             class="form-control rate"
-                                                                            @if (!($editDataNew->business_status_id == 1112 && $editDataNew->design_status_id == 1111)) readonly @endif />
+                                                                            @if (!$isRateEditable) readonly @endif />
+                                                                        @if($isExceedPending)
+                                                                            <small class="text-warning">Update rate to set new amount for this product</small>
+                                                                        @endif
                                                                     </td>
                                                                     <td><input type="text"
                                                                             name="total_{{ $key }}"
@@ -185,29 +198,14 @@
                                                                             value="{{ $editDataNew->quantity * $editDataNew->rate }}">
                                                                     </td>
                                                                     <td>
-                                                                        @php
-                                                                            $isEditable =
-                                                                                $editDataNew->business_status_id ==
-                                                                                    1112 &&
-                                                                                $editDataNew->design_status_id == 1111;
-                                                                        @endphp
-
-                                                                        {{-- <button type="button"
-            class="btn btn-sm btn-danger remove-row"
-            data-id="{{ $isEditable ? $editDataNew->id : 0 }}"
-            title="Delete"
-            @if (!$isEditable) readonly @endif>
-        <i class="fa fa-trash"></i>
-    </button> --}}
-
+                                                                        {{-- Delete is only allowed for new/initial-stage rows --}}
                                                                         <button type="button"
                                                                             class="btn btn-sm btn-danger remove-row"
-                                                                            data-id="{{ $isEditable ? $editDataNew->id : 0 }}"
+                                                                            data-id="{{ $isOriginallyEditable ? $editDataNew->id : 0 }}"
                                                                             title="Delete"
-                                                                            @if (!$isEditable) disabled @endif>
+                                                                            @if (!$isOriginallyEditable) disabled @endif>
                                                                             <i class="fa fa-trash"></i>
                                                                         </button>
-
                                                                     </td>
 
 

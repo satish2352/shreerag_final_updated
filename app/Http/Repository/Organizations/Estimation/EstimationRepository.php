@@ -63,6 +63,12 @@ class EstimationRepository
             $estimation_data->business_id = $dataOutputNew->business_id;
             $estimation_data->business_details_id = $dataOutputNew->business_details_id;
             $estimation_data->total_estimation_amount = $request->total_estimation_amount;
+            // Clear exceed/owner-suggestion state on normal (within-limit) submit
+            $estimation_data->is_exceed_pending = 0;
+            $estimation_data->owner_suggested_amount = null;
+            $estimation_data->owner_suggestion_remark = null;
+            $estimation_data->owner_suggested_at = null;
+            $estimation_data->owner_suggested_by = null;
             $estimation_data->save();
 
             // Update existing BusinessApplicationProcesses
@@ -73,6 +79,9 @@ class EstimationRepository
                 $business_application->estimation_id = $estimation_data->id;
                 $business_application->bom_estimation_send_to_owner = config('constants.ESTIMATION_DEPARTMENT.BOM_ESTIMATION_SEND_TO_OWNER');
                 $business_application->off_canvas_status = 28;
+                // Clear previous-cycle accept/send state so owner must re-review this new BOM
+                $business_application->owner_bom_accepted = null;
+                $business_application->estimation_send_to_production = null;
                 $business_application->save();
             }
 
@@ -282,6 +291,279 @@ class EstimationRepository
 
 
 
+
+    /**
+     * Save estimation with exceeded amount and notify owner (status 1300, off_canvas 50).
+     * Called when total_estimation_amount > businessDetails.total_amount.
+     */
+    public function updateEstimationExceed($request)
+    {
+        try {
+            $return_data = [];
+            $edit_id = $request->business_id;
+            $dataOutputNew = DesignRevisionForProd::where('business_details_id', $edit_id)->first();
+
+            if (!$dataOutputNew) {
+                return [
+                    'msg' => 'Design not found.',
+                    'status' => 'error',
+                ];
+            }
+
+            $businessDetails = BusinessDetails::find($dataOutputNew->business_details_id);
+            if (!$businessDetails) {
+                return [
+                    'msg' => 'Business details not found.',
+                    'status' => 'error',
+                ];
+            }
+
+            $productName = $businessDetails->product_name;
+            $bomImageName = $dataOutputNew->bom_image;
+
+            if ($request->hasFile('bom_image')) {
+                $formattedProductName = preg_replace('/_+/', '_', $productName);
+                $bomImageName = $dataOutputNew->id . '_' . $formattedProductName . '_' . rand(100000, 999999) . '.' . $request->file('bom_image')->getClientOriginalExtension();
+                $dataOutputNew->bom_image = $bomImageName;
+            }
+            $dataOutputNew->remark_by_estimation = $request->remark_by_estimation;
+            $dataOutputNew->save();
+
+            $estimation_data = EstimationModel::where('design_id', $dataOutputNew->design_id)->first();
+
+            if (!$estimation_data) {
+                return [
+                    'status' => 'error',
+                    'msg' => 'Estimation record not found for update.',
+                ];
+            }
+
+            DB::transaction(function () use ($request, $dataOutputNew, $estimation_data, $edit_id) {
+                $estimation_data->business_id = $dataOutputNew->business_id;
+                $estimation_data->business_details_id = $dataOutputNew->business_details_id;
+                $estimation_data->total_estimation_amount = $request->total_estimation_amount;
+                $estimation_data->is_exceed_pending = 1;
+                $estimation_data->exceed_remark = $request->exceed_remark ?? $request->remark_by_estimation;
+                // Clear any prior owner suggestion when restarting the exceed flow
+                $estimation_data->owner_suggested_amount = null;
+                $estimation_data->owner_suggestion_remark = null;
+                $estimation_data->owner_suggested_at = null;
+                $estimation_data->owner_suggested_by = null;
+                $estimation_data->save();
+
+                $business_application = BusinessApplicationProcesses::where('business_details_id', $edit_id)->first();
+                if ($business_application) {
+                    $business_application->design_id = $dataOutputNew->design_id;
+                    $business_application->estimation_id = $estimation_data->id;
+                    $business_application->bom_estimation_send_to_owner = 1300;
+                    $business_application->off_canvas_status = 50;
+                    $business_application->save();
+                }
+
+                AdminView::where('business_details_id', $edit_id)->update([
+                    'off_canvas_status' => 50,
+                    'is_view' => 0,
+                ]);
+                NotificationStatus::where('business_details_id', $edit_id)->update([
+                    'off_canvas_status' => 50,
+                ]);
+            });
+
+            $return_data['last_insert_id'] = $dataOutputNew->id;
+            $return_data['bom_image'] = $bomImageName;
+            $return_data['product_name'] = $productName;
+
+            return $return_data;
+        } catch (\Exception $e) {
+            return [
+                'msg' => 'Failed to submit exceed request.',
+                'status' => 'error',
+                'error' => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * Estimator accepts the owner-suggested amount.
+     * Copies owner_suggested_amount → total_estimation_amount, clears exceed flags,
+     * and moves to the standard BOM-send-to-owner flow (status 1149, off_canvas 28).
+     */
+    public function acceptOwnerSuggestedAmount($business_details_id)
+    {
+        try {
+            DB::transaction(function () use ($business_details_id) {
+                $estimation_data = EstimationModel::where('business_details_id', $business_details_id)
+                    ->where('is_deleted', 0)
+                    ->first();
+
+                if (!$estimation_data) {
+                    throw new \Exception('Estimation record not found.');
+                }
+
+                if (is_null($estimation_data->owner_suggested_amount)) {
+                    throw new \Exception('No owner-suggested amount available to accept.');
+                }
+
+                $estimation_data->total_estimation_amount = $estimation_data->owner_suggested_amount;
+                $estimation_data->is_exceed_pending = 0;
+                $estimation_data->owner_suggested_amount = null;
+                $estimation_data->owner_suggestion_remark = null;
+                $estimation_data->owner_suggested_at = null;
+                $estimation_data->owner_suggested_by = null;
+                $estimation_data->save();
+
+                $business_application = BusinessApplicationProcesses::where('business_details_id', $business_details_id)
+                    ->where('is_deleted', 0)
+                    ->first();
+
+                if ($business_application) {
+                    $business_application->bom_estimation_send_to_owner = config('constants.ESTIMATION_DEPARTMENT.BOM_ESTIMATION_SEND_TO_OWNER');
+                    $business_application->off_canvas_status = 28;
+                    $business_application->save();
+                }
+
+                AdminView::where('business_details_id', $business_details_id)->update([
+                    'off_canvas_status' => 28,
+                    'is_view' => 0,
+                ]);
+                NotificationStatus::where('business_details_id', $business_details_id)->update([
+                    'off_canvas_status' => 28,
+                ]);
+            });
+
+            return ['status' => 'success', 'msg' => 'Owner suggested amount accepted. Estimation sent to owner for approval.'];
+        } catch (\Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * Owner submits a suggested amount for an exceeded estimation (status 1301, off_canvas 51).
+     */
+    public function ownerSubmitSuggestedAmount($request)
+    {
+        try {
+            $business_details_id = $request->business_details_id;
+
+            DB::transaction(function () use ($request, $business_details_id) {
+                $estimation_data = EstimationModel::where('business_details_id', $business_details_id)
+                    ->where('is_deleted', 0)
+                    ->first();
+
+                if (!$estimation_data) {
+                    throw new \Exception('Estimation record not found.');
+                }
+
+                $estimation_data->owner_suggested_amount = $request->owner_suggested_amount;
+                $estimation_data->owner_suggestion_remark = $request->owner_suggestion_remark;
+                $estimation_data->owner_suggested_at = now();
+                $estimation_data->owner_suggested_by = session('user_id');
+                $estimation_data->save();
+
+                $business_application = BusinessApplicationProcesses::where('business_details_id', $business_details_id)
+                    ->where('is_deleted', 0)
+                    ->first();
+
+                if ($business_application) {
+                    $business_application->bom_estimation_send_to_owner = 1301;
+                    $business_application->off_canvas_status = 51;
+                    $business_application->save();
+                }
+
+                AdminView::where('business_details_id', $business_details_id)->update([
+                    'off_canvas_status' => 51,
+                    'is_view' => 0,
+                ]);
+                NotificationStatus::where('business_details_id', $business_details_id)->update([
+                    'off_canvas_status' => 51,
+                ]);
+            });
+
+            return ['status' => 'success', 'msg' => 'Suggested amount sent to estimation department.'];
+        } catch (\Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * Get list of pending exceed-requests for owner (BAP.bom_estimation_send_to_owner = 1300).
+     */
+    public function getExceedPendingForOwner()
+    {
+        return DB::table('business_application_processes as bap')
+            ->join('businesses_details as bd', 'bap.business_details_id', '=', 'bd.id')
+            ->join('businesses as b', 'bd.business_id', '=', 'b.id')
+            ->join('estimation as e', 'bap.business_details_id', '=', 'e.business_details_id')
+            ->where('bap.bom_estimation_send_to_owner', 1300)
+            ->where('bap.is_deleted', 0)
+            ->where('e.is_deleted', 0)
+            ->select(
+                'bap.business_details_id',
+                'bd.product_name',
+                'bd.quantity',
+                'b.customer_po_number',
+                'b.project_name',
+                'e.total_estimation_amount',
+                'e.exceed_remark',
+                'bap.updated_at'
+            )
+            ->get();
+    }
+
+    /**
+     * Get estimation details for the owner's suggest-amount form.
+     */
+    public function getExceedDetailForOwner($business_details_id)
+    {
+        return DB::table('business_application_processes as bap')
+            ->join('businesses_details as bd', 'bap.business_details_id', '=', 'bd.id')
+            ->join('businesses as b', 'bd.business_id', '=', 'b.id')
+            ->join('estimation as e', 'bap.business_details_id', '=', 'e.business_details_id')
+            ->where('bap.business_details_id', $business_details_id)
+            ->where('bap.is_deleted', 0)
+            ->where('e.is_deleted', 0)
+            ->select(
+                'bap.business_details_id',
+                'bd.product_name',
+                'bd.quantity',
+                'bd.total_amount',
+                'b.customer_po_number',
+                'b.project_name',
+                'e.id as estimation_id',
+                'e.total_estimation_amount',
+                'e.exceed_remark',
+                'e.owner_suggested_amount',
+                'e.owner_suggestion_remark'
+            )
+            ->first();
+    }
+
+    /**
+     * Get list of estimations where owner has suggested an amount (status 1301).
+     */
+    public function getExceedOwnerSuggested()
+    {
+        return DB::table('business_application_processes as bap')
+            ->join('businesses_details as bd', 'bap.business_details_id', '=', 'bd.id')
+            ->join('businesses as b', 'bd.business_id', '=', 'b.id')
+            ->join('estimation as e', 'bap.business_details_id', '=', 'e.business_details_id')
+            ->where('bap.bom_estimation_send_to_owner', 1301)
+            ->where('bap.is_deleted', 0)
+            ->where('e.is_deleted', 0)
+            ->select(
+                'bap.business_details_id',
+                'bd.product_name',
+                'bd.quantity',
+                'b.customer_po_number',
+                'b.project_name',
+                'e.total_estimation_amount',
+                'e.exceed_remark',
+                'e.owner_suggested_amount',
+                'e.owner_suggestion_remark',
+                'e.owner_suggested_at'
+            )
+            ->get();
+    }
 
     public function acceptdesign($id)
     {

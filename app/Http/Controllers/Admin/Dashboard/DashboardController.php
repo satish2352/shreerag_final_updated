@@ -81,6 +81,17 @@ class DashboardController extends Controller
                 'message' => 'Estimation Received For Accept/Reject',
                 'url' => $baseUrl . '/owner/list-design-received-estimation',
             ];
+            $exceed_pending_data = AdminView::where('off_canvas_status', 50)
+                ->where('is_view', '0')
+                ->select('id')
+                ->get();
+            $exceed_pending_count = $exceed_pending_data->count();
+            $notifications[] = [
+                'admin_count' => $exceed_pending_count,
+                'message' => 'Exceed Amount Requests Pending',
+                'url' => $baseUrl . '/owner/list-exceed-amount-requests',
+            ];
+
             $revised_rejected_list = AdminView::where('off_canvas_status', 31)
                 ->where('is_view', '0')
                 ->select('id')
@@ -240,7 +251,7 @@ class DashboardController extends Controller
             ];
             $count = $business_count + $revised_rejected_list_count + $received_design_for_estimation_count + $uploaded_design_count  + $material_ask_prod_to_store_count + $received_correction_design_count + $material_ask_by_store_to_purchase_count + $Purchase_order_need_to_check_count + $purchase_order_approved_count
                 + $po_send_to_vendor_count + $gate_pass_generate_count + $quality_dept_material_received_in_store_count + $production_completed_count + $logistics_send_to_fianance_count
-                + $received_fianance_to_dispatch_count + $dispatch_completed_count;
+                + $received_fianance_to_dispatch_count + $dispatch_completed_count + $exceed_pending_count;
         }
 
         /*
@@ -625,8 +636,18 @@ class DashboardController extends Controller
                 'url' => $baseUrl . '/owner/list-rejected-bom-estimation',
             ];
 
+            $owner_updated_amount_data = AdminView::where('off_canvas_status', 51)
+                ->where('is_view', '0')
+                ->select('id')
+                ->get();
+            $owner_updated_amount_count = $owner_updated_amount_data->count();
+            $notifications[] = [
+                'admin_count' => $owner_updated_amount_count,
+                'message' => 'Owner Updated Amount — Pending Review',
+                'url' => $baseUrl . '/estimationdept/list-bom-exceed-owner-suggested',
+            ];
 
-            $count = $received_design_for_estimation + $estimation_accept_data_count + $estimation_rejected_data_count;
+            $count = $received_design_for_estimation + $estimation_accept_data_count + $estimation_rejected_data_count + $owner_updated_amount_count;
         }
 
         /*

@@ -58,12 +58,12 @@
                                                     <td>{{ ucwords($data->quantity) }}</td>
                                                     <td>{{ ucwords($data->description) }}</td> 
                                                                                                        <td>
-                                                        <a
-                                                        href="{{ route('edit-recived-inprocess-production-material', $data->id) }}"><button
-                                                            data-toggle="tooltip" title="Edit"
-                                                            class="pd-setting-ed"><i class="fas fa-pen-square"
-                                                                aria-hidden="true"></i> Check Details</button></a>
-                                                    &nbsp; &nbsp; &nbsp;
+                                                        <a href="{{ route('bom-inventory-check', base64_encode($data->id)) }}">
+                                                            <button data-toggle="tooltip" title="View & Issue Materials"
+                                                                class="pd-setting-ed">
+                                                                <i class="fa fa-cubes" aria-hidden="true"></i> Issue Materials
+                                                            </button>
+                                                        </a>
                                                     </td>
 
                                                 </tr>

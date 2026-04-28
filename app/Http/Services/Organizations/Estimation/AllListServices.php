@@ -95,6 +95,16 @@ class AllListServices
     //     }
     // }
 
+    public function getAllCorrectedDesignBomReceivedFromDesign()
+    {
+        try {
+            return $this->repo->getAllCorrectedDesignBomReceivedFromDesign();
+        } catch (\Exception $e) {
+            Log::error('Service Error: ' . $e->getMessage());
+            return collect();
+        }
+    }
+
     public function getAllreviseddesign()
     {
         try {

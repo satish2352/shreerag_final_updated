@@ -82,6 +82,7 @@
                                                             <span class="red-text"><?php echo $errors->first('design_image', ':message'); ?></span>
                                                         @endif
                                                     </div>
+                                                    {{-- T-2026-003: BOM Excel upload disabled — BOM is now captured via the structured BOM Material Items modal (T-2026-002). Uncomment to restore.
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="bom_image">Upload BOM (upload excel file min : 1KB to
                                                             max : 5MB) :</label>
@@ -91,6 +92,7 @@
                                                             <span class="red-text"><?php echo $errors->first('bom_image', ':message'); ?></span>
                                                         @endif
                                                     </div>
+                                                    --}}
 
 
                                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -164,11 +166,12 @@
                         fileExtension: ["pdf"], // Validate for PDF extension
                         fileSize: [1, 6144], // Min 1KB and Max 2MB
                     },
-                    bom_image: {
-                        required: true,
-                        fileExtension: ["xls", "xlsx"], // Validate for Excel files
-                        fileSize: [1, 6144], // Min 1KB and Max 2MB
-                    },
+                    // T-2026-003: bom_image validation disabled — field is hidden (commented out in HTML).
+                    // bom_image: {
+                    //     required: true,
+                    //     fileExtension: ["xls", "xlsx"],
+                    //     fileSize: [1, 6144],
+                    // },
                 },
                 messages: {
                     design_image: {
@@ -176,11 +179,12 @@
                         fileExtension: "Only PDF files are allowed.",
                         fileSize: "File size must be between 1 KB and 5MB.",
                     },
-                    bom_image: {
-                        required: "Please select BOM Excel file.",
-                        fileExtension: "Only Excel files (.xls, .xlsx) are allowed.",
-                        fileSize: "File size must be between 1 KB and 5MB.",
-                    },
+                    // T-2026-003: bom_image messages disabled — field is hidden.
+                    // bom_image: {
+                    //     required: "Please select BOM Excel file.",
+                    //     fileExtension: "Only Excel files (.xls, .xlsx) are allowed.",
+                    //     fileSize: "File size must be between 1 KB and 5MB.",
+                    // },
                 },
                 submitHandler: function(form) {
                     Swal.fire({

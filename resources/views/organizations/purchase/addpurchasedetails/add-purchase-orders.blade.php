@@ -171,6 +171,39 @@
 
 
 
+                                @if($purchasedItems->count() > 0)
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <div style="background:#f0fff4; border:1px solid #28a745; border-radius:6px; padding:12px 16px;">
+                                            <strong style="color:#28a745;"><i class="fa fa-check-circle"></i>
+                                                Already in Purchase Order ({{ $purchasedItems->count() }} item(s) — not added again)</strong>
+                                            <table class="table table-sm table-bordered mt-2 mb-0" style="background:#fff;">
+                                                <thead style="background:#28a745; color:#fff;">
+                                                    <tr>
+                                                        <th>Sr.</th>
+                                                        <th>Product Description</th>
+                                                        <th>Shortage Qty</th>
+                                                        <th>Unit</th>
+                                                        <th>Rate</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach($purchasedItems as $pi => $pitem)
+                                                    <tr>
+                                                        <td>{{ $pi + 1 }}</td>
+                                                        <td>{{ $pitem->product_description ?? '—' }}</td>
+                                                        <td>{{ number_format((float)$pitem->shortage_quantity, 3) }}</td>
+                                                        <td>{{ optional(\App\Models\UnitMaster::find($pitem->unit_id))->name ?? $pitem->unit_id ?? '—' }}</td>
+                                                        <td>{{ $pitem->rate !== null ? number_format((float)$pitem->rate, 3) : '—' }}</td>
+                                                    </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endif
+
                                 <div class="row">
                                     <div class="col-md-12 col-sm-12">
                                         <div class="table-responsive">
@@ -199,85 +232,130 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+                                                    @php
+                                                        $reqRows   = $newRequisitionItems->count();
+                                                        $iIdStart  = max(0, $reqRows - 1);
+                                                    @endphp
+                                                    {{-- Hidden counter for "Add More" JS --}}
+                                                    <input type="hidden" id="i_id" value="{{ $iIdStart }}">
+
+                                                    @forelse($newRequisitionItems as $ri => $ritem)
+                                                    <tr>
+                                                        <td>
+                                                            <input type="text" name="id" class="form-control"
+                                                                style="min-width:15px" readonly value="{{ $ri + 1 }}">
+                                                        </td>
+                                                        <td class="reverse-label">
+                                                            <select class="form-control mb-2 part_no_id select2"
+                                                                name="addmore[{{ $ri }}][part_no_id]" style="width:100%">
+                                                                <option value="">Select Description</option>
+                                                                @foreach ($dataOutputPartItem as $data)
+                                                                    <option value="{{ $data['id'] }}"
+                                                                        {{ $data['id'] == $ritem->part_item_id ? 'selected' : '' }}>
+                                                                        {{ $data['description'] }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <input class="form-control hsn_name" type="text"
+                                                                style="min-width:100px" disabled>
+                                                            <input type="hidden" class="form-control hsn_id"
+                                                                name="addmore[{{ $ri }}][hsn_id]" type="text"
+                                                                style="min-width:100px">
+                                                        </td>
+                                                        <td>
+                                                            <input class="form-control description"
+                                                                name="addmore[{{ $ri }}][description]" type="text"
+                                                                style="min-width:100px"
+                                                                value="{{ $ritem->product_description ?? '' }}">
+                                                        </td>
+                                                        <td>
+                                                            <input class="form-control quantity"
+                                                                name="addmore[{{ $ri }}][quantity]" style="width:100%"
+                                                                type="text" value="{{ $ritem->shortage_quantity ?? '' }}">
+                                                        </td>
+                                                        <td>
+                                                            <select class="form-control mb-2 unit"
+                                                                name="addmore[{{ $ri }}][unit]" style="min-width:100px">
+                                                                <option value="">Select Unit</option>
+                                                                @foreach ($dataOutputUnitMaster as $data)
+                                                                    <option value="{{ $data['id'] }}"
+                                                                        {{ $data['id'] == $ritem->unit_id ? 'selected' : '' }}>
+                                                                        {{ $data['name'] }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <input class="form-control rate"
+                                                                name="addmore[{{ $ri }}][rate]" style="min-width:100px"
+                                                                type="text" value="{{ $ritem->rate ?? '' }}">
+                                                        </td>
+                                                        <td>
+                                                            <select class="form-control discount"
+                                                                name="addmore[{{ $ri }}][discount]" style="width:80px">
+                                                                @for($d = 0; $d <= 50; $d++)
+                                                                    <option value="{{ $d }}">{{ $d }} %</option>
+                                                                @endfor
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <input class="form-control total_amount"
+                                                                name="addmore[{{ $ri }}][amount]" readonly
+                                                                style="width:150px" type="text">
+                                                        </td>
+                                                        <td>
+                                                            <button type="button"
+                                                                class="btn btn-sm btn-danger font-18 ml-2 remove-row"
+                                                                title="Delete" data-repeater-delete>
+                                                                <i class="fa fa-trash"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                    @empty
+                                                    {{-- Fallback: one empty row when no requisition items --}}
                                                     <tr>
                                                         <td>
                                                             <input type="text" name="id" class="form-control"
                                                                 style="min-width:15px" readonly value="1">
-                                                            <input type="hidden" id="i_id" class="form-control"
-                                                                style="min-width:15px" readonly value="0">
                                                         </td>
-
-
-
-                                                        {{-- <td>
-                                                            <select class="form-control part-no mb-2"
-                                                                name="addmore[0][part_no_id]" id=""
-                                                                style="min-width:200px">
-                                                                <option value="" default>Select Description</option>
-                                                                @foreach ($dataOutputPartItem as $data)
-                                                                    <option value="{{ $data['id'] }}">
-                                                                        {{ $data['description'] }}</option>
-                                                                @endforeach
-                                                            </select>
-
-                                                        </td> --}}
-
                                                         <td class="reverse-label">
-                                                            <select
-                                                                class="form-control mb-2 part_no_id select2"name="addmore[0][part_no_id]"
-                                                                id="" style="width:100%">
+                                                            <select class="form-control mb-2 part_no_id select2"
+                                                                name="addmore[0][part_no_id]" style="width:100%">
                                                                 <option value="" default>Select Description</option>
                                                                 @foreach ($dataOutputPartItem as $data)
                                                                     <option value="{{ $data['id'] }}">
                                                                         {{ $data['description'] }}</option>
                                                                 @endforeach
                                                             </select>
-                                                            {{-- <input class="form-control quantity" name="addmore[0][quantity]" type="text"> --}}
                                                         </td>
                                                         <td>
-                                                            <input class="form-control hsn_name" name="addmore[0][hsn_id]"
-                                                                type="text" style="min-width:100px" disabled>
-
+                                                            <input class="form-control hsn_name" type="text"
+                                                                style="min-width:100px" disabled>
                                                             <input type="hidden" class="form-control hsn_id"
                                                                 name="addmore[0][hsn_id]" type="text"
                                                                 style="min-width:100px">
-                                                            {{-- <select class="form-control mb-2" name="addmore[0][hsn_id]"
-                                                                id="" style="min-width:100px">
-                                                                <option value="" default>Select HSN</option>
-                                                                @foreach ($dataOutputHSNMaster as $data)
-                                                                    <option value="{{ $data['id'] }}">
-                                                                        {{ $data['name'] }}</option>
-                                                                @endforeach
-                                                            </select> --}}
-                                                            {{-- <input class="form-control quantity" name="addmore[0][quantity]" type="text"> --}}
                                                         </td>
                                                         <td>
                                                             <input class="form-control description"
                                                                 name="addmore[0][description]" type="text"
                                                                 style="min-width:100px">
                                                         </td>
-                                                        {{-- <td>
-                                        <input class="form-control due-date" placeholder="YYYY-MM-DD" name="addmore[0][due_date]" type="date"
-                                            style="min-width:150px" value="">
-                                    </td> --}}
                                                         <td>
                                                             <input class="form-control quantity"
                                                                 name="addmore[0][quantity]" style="width:100%"
                                                                 type="text">
                                                         </td>
-                                                        {{-- <td>
-                                        <input class="form-control unit" name="addmore[0][unit]" style="width:80px" type="text">
-                                    </td> --}}
                                                         <td>
-                                                            <select class="form-control mb-2 unit" name="addmore[0][unit]"
-                                                                id="" style="min-width:100px">
+                                                            <select class="form-control mb-2 unit"
+                                                                name="addmore[0][unit]" style="min-width:100px">
                                                                 <option value="" default>Select Unit</option>
                                                                 @foreach ($dataOutputUnitMaster as $data)
                                                                     <option value="{{ $data['id'] }}">
                                                                         {{ $data['name'] }}</option>
                                                                 @endforeach
                                                             </select>
-                                                            {{-- <input class="form-control description" name="addmore[0][description]" type="text" style="min-width:150px"> --}}
                                                         </td>
                                                         <td>
                                                             <input class="form-control rate" name="addmore[0][rate]"
@@ -285,59 +363,10 @@
                                                         </td>
                                                         <td>
                                                             <select class="form-control discount"
-                                                                name="addmore[0][discount]" id="discount"
-                                                                style="width:80px">
-                                                                <option value="0">0 %</option>
-                                                                <option value="1">1 %</option>
-                                                                <option value="2">2 %</option>
-                                                                <option value="3">3 %</option>
-                                                                <option value="4">4 %</option>
-                                                                <option value="5">5 %</option>
-                                                                <option value="6">6 %</option>
-                                                                <option value="7">7 %</option>
-                                                                <option value="8">8 %</option>
-                                                                <option value="9">9 %</option>
-                                                                <option value="10">10 %</option>
-                                                                <option value="11">11 %</option>
-                                                                <option value="12">12 %</option>
-                                                                <option value="13">13 %</option>
-                                                                <option value="14">14 %</option>
-                                                                <option value="15">15 %</option>
-                                                                <option value="16">16 %</option>
-                                                                <option value="17">17 %</option>
-                                                                <option value="18">18 %</option>
-                                                                <option value="19">19 %</option>
-                                                                <option value="20">20 %</option>
-                                                                <option value="21">21 %</option>
-                                                                <option value="22">22 %</option>
-                                                                <option value="23">23 %</option>
-                                                                <option value="24">24 %</option>
-                                                                <option value="25">25 %</option>
-                                                                <option value="26">26 %</option>
-                                                                <option value="27">27 %</option>
-                                                                <option value="28">28 %</option>
-                                                                <option value="29">29 %</option>
-                                                                <option value="30">30 %</option>
-                                                                <option value="31">31 %</option>
-                                                                <option value="32">32 %</option>
-                                                                <option value="33">33 %</option>
-                                                                <option value="34">34 %</option>
-                                                                <option value="35">35 %</option>
-                                                                <option value="36">36 %</option>
-                                                                <option value="37">37 %</option>
-                                                                <option value="38">38 %</option>
-                                                                <option value="39">39 %</option>
-                                                                <option value="40">40 %</option>
-                                                                <option value="41">41 %</option>
-                                                                <option value="42">42 %</option>
-                                                                <option value="43">43 %</option>
-                                                                <option value="44">44 %</option>
-                                                                <option value="45">45 %</option>
-                                                                <option value="46">46 %</option>
-                                                                <option value="47">47 %</option>
-                                                                <option value="48">48 %</option>
-                                                                <option value="49">49 %</option>
-                                                                <option value="50">50 %</option>
+                                                                name="addmore[0][discount]" style="width:80px">
+                                                                @for($d = 0; $d <= 50; $d++)
+                                                                    <option value="{{ $d }}">{{ $d }} %</option>
+                                                                @endfor
                                                             </select>
                                                         </td>
                                                         <td>
@@ -353,6 +382,7 @@
                                                             </button>
                                                         </td>
                                                     </tr>
+                                                    @endforelse
                                                 <tfoot>
                                                     <tr class="grand-total-row">
                                                         <td colspan="8" class="text-end"><strong>Grand Total:</strong>
@@ -686,8 +716,8 @@
                                 });
                                 $("#add_more_btn").click(function() {
 
-                                    var i_count = $('#i_id').val();
-                                    var i = parseInt(i_count) + 1;
+                                    var i_count = parseInt($('#i_id').val()) || 0;
+                                    var i = i_count + 1;
                                     $('#i_id').val(i);
 
                                     var newRow = `
@@ -824,39 +854,33 @@
                         <script>
                             $(document).ready(function() {
 
-
+                                function fetchHsn(partNoId, row) {
+                                    if (!partNoId) return;
+                                    $.ajax({
+                                        url: '{{ route('get-hsn-for-part') }}',
+                                        type: 'GET',
+                                        data: { part_no_id: partNoId },
+                                        success: function(response) {
+                                            if (response.part && response.part.length > 0) {
+                                                row.find('.hsn_name').val(response.part[0].name);
+                                                row.find('.hsn_id').val(response.part[0].id);
+                                            }
+                                        }
+                                    });
+                                }
 
                                 $(document).on('change', '.part_no_id', function(e) {
-
-                                    var partNoId = $(this).val();
-                                    var currentRow = $(this).closest('tr');
-
-                                    if (partNoId) {
-
-                                        $.ajax({
-                                            url: '{{ route('get-hsn-for-part') }}',
-                                            type: 'GET',
-                                            data: {
-                                                part_no_id: partNoId
-                                            },
-                                            success: function(response) {
-
-                                                if (response.part && response.part.length > 0) {
-
-                                                    currentRow.find('.hsn_name').val(response.part[0].name);
-                                                    currentRow.find('.hsn_id').val(response.part[0].id);
-
-                                                } else {
-                                                    alert("HSN not found for the selected part.");
-                                                }
-                                            },
-                                            error: function(xhr, status, error) {
-                                                alert("Error fetching HSN. Please try again.");
-                                            }
-                                        });
-
-                                    }
+                                    fetchHsn($(this).val(), $(this).closest('tr'));
                                 });
+
+                                // Auto-fetch HSN for pre-filled rows on page load
+                                $('#purchase_order_table tbody tr').each(function() {
+                                    var partId = $(this).find('.part_no_id').val();
+                                    if (partId) fetchHsn(partId, $(this));
+                                });
+
+                                // Trigger initial amount calculation for pre-filled rows
+                                $(document).trigger('keyup');
 
                             });
                         </script>

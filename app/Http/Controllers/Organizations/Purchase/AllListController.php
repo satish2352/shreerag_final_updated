@@ -16,8 +16,11 @@ use Exception;
 use App\Models\{
     Business,
     NotificationStatus,
-    Vendors
+    Vendors,
+    RequisitionItem,
+    PurchaseOrderDetailsModel
 };
+use Illuminate\Support\Facades\DB;
 
 class AllListController extends Controller
 {
@@ -54,7 +57,29 @@ class AllListController extends Controller
                 }
             }
 
-            return view('organizations.purchase.list.list-bom-material-recived-for-purchase', compact('data_output'));
+            // Load requisition items keyed by requisition_id for the modal
+            $reqIds = collect($data_output->items())->pluck('requistition_id')->filter()->unique()->values();
+            $requisitionItemsMap = RequisitionItem::with(['unitMaster', 'partItem'])
+                ->whereIn('requisition_id', $reqIds)
+                ->where('is_deleted', 0)
+                ->get()
+                ->groupBy('requisition_id');
+
+            // Build map of part_item_ids that have a PO (any status) per requisition_id
+            $poCreatedPartsMap = [];
+            if ($reqIds->isNotEmpty()) {
+                $allPoRows = DB::table('purchase_order_details')
+                    ->join('purchase_orders', 'purchase_orders.id', '=', 'purchase_order_details.purchase_id')
+                    ->whereIn('purchase_orders.requisition_id', $reqIds->toArray())
+                    ->select('purchase_orders.requisition_id', 'purchase_order_details.part_no_id')
+                    ->get();
+
+                foreach ($allPoRows as $row) {
+                    $poCreatedPartsMap[$row->requisition_id][] = (string) $row->part_no_id;
+                }
+            }
+
+            return view('organizations.purchase.list.list-bom-material-recived-for-purchase', compact('data_output', 'requisitionItemsMap', 'poCreatedPartsMap'));
         } catch (\Exception $e) {
             // dd($e->getMessage());
             $e->getMessage(); // debugging
@@ -338,5 +363,30 @@ class AllListController extends Controller
         } catch (\Exception $e) {
             return response()->json(['status' => false, 'message' => $e->getMessage()]);
         }
+    }
+
+    public function getBusinessPoReport(Request $request)
+    {
+        $businesses = Business::where('is_deleted', 0)->where('is_active', 1)
+            ->orderBy('project_name')->pluck('project_name', 'id');
+
+        $products = collect();
+        if ($request->filled('business_id')) {
+            $products = \App\Models\BusinessDetails::where('business_id', $request->business_id)
+                ->where('is_deleted', 0)->orderBy('product_name')->pluck('product_name', 'id');
+        }
+
+        // Always load data (default = all records, paginated)
+        $result = $this->service->getBusinessPoReport($request);
+
+        return view('organizations.report.business-po-report', compact('businesses', 'products', 'result'));
+    }
+
+    public function getProductsByBusiness(Request $request)
+    {
+        $products = \App\Models\BusinessDetails::where('business_id', $request->business_id)
+            ->where('is_deleted', 0)->orderBy('product_name')
+            ->select('id', 'product_name')->get();
+        return response()->json($products);
     }
 }

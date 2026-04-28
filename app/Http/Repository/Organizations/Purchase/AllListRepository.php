@@ -933,4 +933,100 @@ class AllListRepository
       ];
     }
   }
+
+  public function getBusinessPoReport($request)
+  {
+    try {
+      $perPage = Config::get('AllFileValidation.PAGINATION', 15);
+
+      // Base: GRN-completed POs only — join grn_tbl (INNER) to ensure GRN exists
+      $query = DB::table('grn_tbl')
+        ->join('tbl_grn_po_quantity_tracking',
+               'grn_tbl.id', '=', 'tbl_grn_po_quantity_tracking.grn_id')
+        ->join('purchase_orders',
+               'purchase_orders.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id')
+        ->join('purchase_order_details',
+               'purchase_order_details.id', '=', 'tbl_grn_po_quantity_tracking.purchase_order_details_id')
+        ->join('businesses',
+               'businesses.id', '=', 'purchase_orders.business_id')
+        ->join('businesses_details',
+               'businesses_details.id', '=', 'purchase_orders.business_details_id')
+        ->join('vendors',
+               'vendors.id', '=', 'purchase_orders.vendor_id')
+        ->leftJoin('tbl_unit as u',
+               'u.id', '=', 'purchase_order_details.unit')
+        ->where('businesses.is_active',  1)
+        ->where('businesses.is_deleted', 0)
+        ->where('grn_tbl.is_deleted',    0)
+        ->where('tbl_grn_po_quantity_tracking.is_deleted', 0);
+
+      if ($request->filled('business_id')) {
+        $query->where('purchase_orders.business_id', $request->business_id);
+      }
+      if ($request->filled('product_id')) {
+        $query->where('purchase_orders.business_details_id', $request->product_id);
+      }
+      if ($request->filled('year')) {
+        $query->whereYear('grn_tbl.grn_date', $request->year);
+      }
+      if ($request->filled('from_date')) {
+        $query->whereDate('grn_tbl.grn_date', '>=', $request->from_date);
+      }
+      if ($request->filled('to_date')) {
+        $query->whereDate('grn_tbl.grn_date', '<=', $request->to_date);
+      }
+      if ($request->filled('search')) {
+        $s = $request->search;
+        $query->where(function ($q) use ($s) {
+          $q->where('purchase_orders.purchase_orders_id',    'like', "%{$s}%")
+            ->orWhere('grn_tbl.grn_no_generate',             'like', "%{$s}%")
+            ->orWhere('businesses.project_name',             'like', "%{$s}%")
+            ->orWhere('businesses_details.product_name',     'like', "%{$s}%")
+            ->orWhere('vendors.vendor_name',                 'like', "%{$s}%")
+            ->orWhere('vendors.vendor_company_name',         'like', "%{$s}%")
+            ->orWhere('purchase_order_details.description',  'like', "%{$s}%");
+        });
+      }
+
+      // Grand total of (accepted_quantity × rate) across ALL rows before pagination
+      $grandTotal = (clone $query)->selectRaw(
+        'SUM(tbl_grn_po_quantity_tracking.accepted_quantity * purchase_order_details.rate) as total'
+      )->value('total');
+
+      $paginator = $query->select(
+          'businesses.id                                    as business_id',
+          'businesses.project_name',
+          'businesses_details.id                           as business_details_id',
+          'businesses_details.product_name',
+          'purchase_orders.id                              as po_id',
+          'purchase_orders.purchase_orders_id',
+          'purchase_orders.created_at                      as po_date',
+          'vendors.vendor_name',
+          'vendors.vendor_company_name',
+          'grn_tbl.grn_no_generate',
+          'grn_tbl.grn_date',
+          'purchase_order_details.description              as material_description',
+          'purchase_order_details.quantity                 as po_quantity',
+          'u.name                                          as unit_name',
+          'purchase_order_details.rate',
+          'tbl_grn_po_quantity_tracking.actual_quantity',
+          'tbl_grn_po_quantity_tracking.accepted_quantity',
+          'tbl_grn_po_quantity_tracking.rejected_quantity',
+          DB::raw('(tbl_grn_po_quantity_tracking.accepted_quantity * purchase_order_details.rate) as line_amount')
+        )
+        ->orderBy('businesses.project_name')
+        ->orderBy('purchase_orders.purchase_orders_id')
+        ->orderBy('grn_tbl.grn_date')
+        ->paginate($perPage)
+        ->withQueryString();
+
+      return [
+        'status'     => true,
+        'data'       => $paginator,
+        'grandTotal' => (float) $grandTotal,
+      ];
+    } catch (\Exception $e) {
+      return ['status' => false, 'message' => $e->getMessage()];
+    }
+  }
 }

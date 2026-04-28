@@ -132,6 +132,15 @@ class AllListServices
         }
     }
 
+    public function loadRevisedDesignBomReceivedFromEstimation()
+    {
+        try {
+            return $this->repo->loadRevisedDesignBomReceivedFromEstimation();
+        } catch (\Exception $e) {
+            return collect();
+        }
+    }
+
     public function getAcceptEstimationBOM()
     {
         try {
@@ -464,5 +473,15 @@ class AllListServices
 
     //     return $user;
     // }
+
+    public function loadExceedAmountRequests()
+    {
+        try {
+            $data_output = $this->repo->loadExceedAmountRequests();
+            return $data_output;
+        } catch (\Exception $e) {
+            return collect();
+        }
+    }
 
 }

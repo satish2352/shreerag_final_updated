@@ -124,4 +124,13 @@ class AllListServices
             return ['status' => false, 'message' => $e->getMessage()];
         }
     }
+
+    public function getBusinessPoReport($request)
+    {
+        try {
+            return $this->repo->getBusinessPoReport($request);
+        } catch (\Exception $e) {
+            return ['status' => false, 'message' => $e->getMessage()];
+        }
+    }
 }

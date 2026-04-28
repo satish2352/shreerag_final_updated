@@ -71,6 +71,8 @@ return [
         'OWNER_BOM_ESTIMATION_ACCEPTED' => 1150,
         'OWNER_BOM_ESTIMATION_REJECTED' => 1151,
         'RIVISED_BOM_ESTIMATION_SEND_TO_OWNER' => 1153,
+        'ESTIMATION_EXCEED_AMOUNT_REQUEST_TO_OWNER' => 1300,
+        'OWNER_SUGGESTED_AMOUNT_FOR_ESTIMATION' => 1301,
     ],
 
     'PUCHASE_DEPARTMENT' => [
@@ -90,6 +92,9 @@ return [
         'LIST_NEW_REQUIREMENTS_RECEIVED_FOR_DESIGN'              => 1111,
         'NEW_REQUIREMENTS_DESIGN_DEPARTMENT_STARTED_DESIGN'      => 1112,
         'DESIGN_SENT_TO_ESTIMATION_DEPT_FIRST_TIME' => 1113,
+        // T-2026-006: revised design (after production reject) re-routed back to estimation.
+        // Uses 11131 (not 1113) for traceability — distinguishes first-time vs revised submission.
+        'DESIGN_REVISED_SENT_TO_ESTIMATION'          => 11131,
         'LIST_DESIGN_RECIEVED_FROM_PROD_DEPT_FOR_REVISED'    => 1115,
         'DESIGN_SENT_TO_PROD_DEPT_REVISED'    => 1116,
         'ACCEPTED_DESIGN_BY_PRODUCTION'           => 1114,
@@ -99,6 +104,8 @@ return [
 
     'ESTIMATION_DEPARTMENT' => [
         'LIST_DESIGN_RECEIVED_FOR_ESTIMATION'           => 1113,
+        // T-2026-006: estimation also receives revised designs (11131) re-routed from production reject.
+        'LIST_DESIGN_REVISED_RECEIVED_FOR_ESTIMATION'   => 11131,
         'ACCEPTED_DESIGN_RECEIVED_FOR_PRODUCTION'           => 1114,
         'DESIGN_SENT_TO_DESIGN_DEPT_FOR_REVISED'   => 1115,
         'LIST_DESIGN_RECIVED_FROM_PRODUCTION_DEPT_REVISED'   => 1116,
@@ -118,6 +125,8 @@ return [
         'RECEIVED_OWNER_BOM_ESTIMATION_REJECTED' => 1151,
         'UPDATED_ACCEPTED_BOM_SEND_TO_PRODUCTION' => 1152,
         'RIVISED_BOM_ESTIMATION_SEND_TO_OWNER' => 1153,
+        'ESTIMATION_EXCEED_AMOUNT_REQUEST_TO_OWNER' => 1300,
+        'OWNER_SUGGESTED_AMOUNT_FOR_ESTIMATION' => 1301,
 
     ],
 

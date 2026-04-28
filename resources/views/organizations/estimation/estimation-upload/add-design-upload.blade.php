@@ -100,6 +100,7 @@
                                                                 class="red-text">{{ $errors->first('design_image') }}</span>
                                                         @endif
                                                     </div>
+                                                    {{-- T-2026-003: BOM Excel upload disabled — BOM is now captured via the structured BOM Material Items modal (T-2026-002). Uncomment to restore.
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="bom_image">Upload BOM (Excel, 1KB - 5MB) <span
                                                                 class="text-danger">*</span></label>
@@ -110,6 +111,7 @@
                                                             <span class="red-text">{{ $errors->first('bom_image') }}</span>
                                                         @endif
                                                     </div>
+                                                    --}}
 
                                                 </div>
                                                 <div class="login-btn-inner">
@@ -166,14 +168,15 @@
                             max: 5242880
                         } // 1KB to 5MB
                     },
-                    bom_image: {
-                        required: true,
-                        accept: ".xls,.xlsx",
-                        filesize: {
-                            min: 1024,
-                            max: 5242880
-                        } // 1KB to 5MB
-                    }
+                    // T-2026-003: bom_image validation disabled — field is hidden (commented out in HTML).
+                    // bom_image: {
+                    //     required: true,
+                    //     accept: ".xls,.xlsx",
+                    //     filesize: {
+                    //         min: 1024,
+                    //         max: 5242880
+                    //     } // 1KB to 5MB
+                    // }
                 },
                 messages: {
                     design_image: {
@@ -181,11 +184,12 @@
                         accept: "Please select a valid design layout PDF file.",
                         filesize: "The file must be between 1KB and 5MB."
                     },
-                    bom_image: {
-                        required: "Please select a BOM Excel file.",
-                        accept: "Please select a valid BOM Excel file.",
-                        filesize: "The file must be between 1KB and 5MB."
-                    }
+                    // T-2026-003: bom_image messages disabled — field is hidden.
+                    // bom_image: {
+                    //     required: "Please select a BOM Excel file.",
+                    //     accept: "Please select a valid BOM Excel file.",
+                    //     filesize: "The file must be between 1KB and 5MB."
+                    // }
                 },
                 errorPlacement: function(error, element) {
                     error.addClass('text-danger'); // Add Bootstrap text-danger class for styling

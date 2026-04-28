@@ -227,218 +227,249 @@
                         @include('admin.pages.dashboard.super-dashboard')
                     @elseif ($role == config('constants.ROLE_ID.DESIGNER'))
                         <div class="analysis-progrebar-area mg-b-15">
-                            <div class="row">
-                                <div class="col-xl-4 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
-                                        <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-2">Receive
-                                                        For Design</span>
-                                                    <span
-                                                        class="h5 font-bold mb-0">{{ $design_dept_counts['business_received_for_designs'] ?? 0 }}</span>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
 
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="mt-2 mb-0 text-sm">
-                                                <a href="{{ route('list-new-requirements-received-for-design') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
-                                        <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-2">Designs
-                                                        Sent To Production</span>
-                                                    <span
-                                                        class="h5 font-bold mb-0">{{ $design_dept_counts['design_sent_for_production'] ?? 0 }}</span>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="mt-2 mb-0 text-sm">
-                                                <a href="{{ route('list-design-upload') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 col-sm-6 col-12 ">
-                                    <div class="card shadow border-0">
-                                        <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-2">Accepted
-                                                        Design</span>
-                                                    <span
-                                                        class="h5 font-bold mb-0">{{ $design_dept_counts['accepted_design_production_dept'] ?? 0 }}</span>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="mt-2 mb-0 text-sm">
-                                                <a href="{{ route('list-accept-design-by-production') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 col-sm-6 col-12 mt-4">
-                                    <div class="card shadow border-0">
-                                        <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-2">Rejected
-                                                        Design</span>
-                                                    <span
-                                                        class="h5 font-bold mb-0">{{ $design_dept_counts['rejected_design_production_dept'] ?? 0 }}</span>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="mt-2 mb-0 text-sm">
-                                                <a href="{{ route('list-reject-design-from-prod') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                @if (!empty($employee_counts['user_leaves_status']))
-                                    @include('admin.pages.dashboard.leave-chart', [
-                                        'leaveData' => $employee_counts['user_leaves_status'],
-                                    ])
-                                @endif
-                                @php $department_leaves = $employee_counts['user_leaves_status'][$role] ?? []; @endphp
+                            {{-- Pipeline header --}}
+                            <div class="mb-3">
+                                <small class="text-muted font-semibold" style="font-size:12px; letter-spacing:0.5px;">
+                                    DESIGN PIPELINE &#8594; Receive &#8594; Submit to Estimation &#8594; To Production
+                                    &#8594; Accepted / Rejected &#8594; Correct &amp; Resubmit
+                                </small>
                             </div>
+
+                            {{-- ROW 1: Pipeline status cards --}}
+                            <div class="row g-3 mb-3">
+
+                                {{-- 1. New For Design --}}
+                                <div class="col-xl-2 col-md-4 col-6">
+                                    <div class="card shadow border-0 h-100"
+                                        style="border-left:4px solid #6c757d !important;">
+                                        <div class="card-body text-center py-3">
+                                            <div class="icon icon-shape text-white rounded-circle mx-auto mb-2"
+                                                style="background:#6c757d; width:2.5rem; height:2.5rem;">
+                                                <i class="fa-solid fa-inbox"></i>
+                                            </div>
+                                            <div class="h4 font-bold mb-1">
+                                                {{ $design_dept_counts['business_received_for_designs'] ?? 0 }}</div>
+                                            <div class="text-muted" style="font-size:11px; font-weight:600;">New<br>For
+                                                Design</div>
+                                            <div class="mt-2">
+                                                <a href="{{ route('list-new-requirements-received-for-design') }}"
+                                                    style="font-size:11px; color:#1a3a6b;">View &#8594;</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- 2. Sent to Estimation --}}
+                                <div class="col-xl-2 col-md-4 col-6">
+                                    <div class="card shadow border-0 h-100"
+                                        style="border-left:4px solid #1a3a6b !important;">
+                                        <div class="card-body text-center py-3">
+                                            <div class="icon icon-shape text-white rounded-circle mx-auto mb-2"
+                                                style="background:#1a3a6b; width:2.5rem; height:2.5rem;">
+                                                <i class="fa-solid fa-paper-plane"></i>
+                                            </div>
+                                            <div class="h4 font-bold mb-1">
+                                                {{ $design_dept_counts['designs_sent_to_estimation'] ?? 0 }}</div>
+                                            <div class="text-muted" style="font-size:11px; font-weight:600;">Sent
+                                                to<br>Estimation</div>
+                                            <div class="mt-2">
+                                                <a href="{{ route('list-design-upload') }}"
+                                                    style="font-size:11px; color:#1a3a6b;">View &#8594;</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- 3. Sent to Production --}}
+                                <div class="col-xl-2 col-md-4 col-6">
+                                    <div class="card shadow border-0 h-100"
+                                        style="border-left:4px solid #17a2b8 !important;">
+                                        <div class="card-body text-center py-3">
+                                            <div class="icon icon-shape text-white rounded-circle mx-auto mb-2"
+                                                style="background:#17a2b8; width:2.5rem; height:2.5rem;">
+                                                <i class="fa-solid fa-industry"></i>
+                                            </div>
+                                            <div class="h4 font-bold mb-1">
+                                                {{ $design_dept_counts['design_sent_for_production'] ?? 0 }}</div>
+                                            <div class="text-muted" style="font-size:11px; font-weight:600;">Sent
+                                                to<br>Production</div>
+                                            <div class="mt-2">
+                                                <a href="{{ route('list-design-upload') }}"
+                                                    style="font-size:11px; color:#1a3a6b;">View &#8594;</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- 4. Accepted by Production --}}
+                                <div class="col-xl-2 col-md-4 col-6">
+                                    <div class="card shadow border-0 h-100"
+                                        style="border-left:4px solid #28a745 !important;">
+                                        <div class="card-body text-center py-3">
+                                            <div class="icon icon-shape text-white rounded-circle mx-auto mb-2"
+                                                style="background:#28a745; width:2.5rem; height:2.5rem;">
+                                                <i class="fa-solid fa-circle-check"></i>
+                                            </div>
+                                            <div class="h4 font-bold mb-1">
+                                                {{ $design_dept_counts['accepted_design_production_dept'] ?? 0 }}</div>
+                                            <div class="text-muted" style="font-size:11px; font-weight:600;">Accepted
+                                                by<br>Production</div>
+                                            <div class="mt-2">
+                                                <a href="{{ route('list-accept-design-by-production') }}"
+                                                    style="font-size:11px; color:#1a3a6b;">View &#8594;</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- 5. Rejected by Production --}}
+                                <div class="col-xl-2 col-md-4 col-6">
+                                    <div class="card shadow border-0 h-100"
+                                        style="border-left:4px solid #dc3545 !important; {{ ($design_dept_counts['rejected_design_production_dept'] ?? 0) > 0 ? 'background:#fff8f8;' : '' }}">
+                                        <div class="card-body text-center py-3">
+                                            <div class="icon icon-shape text-white rounded-circle mx-auto mb-2"
+                                                style="background:#dc3545; width:2.5rem; height:2.5rem;">
+                                                <i class="fa-solid fa-circle-xmark"></i>
+                                            </div>
+                                            <div class="h4 font-bold mb-1"
+                                                style="{{ ($design_dept_counts['rejected_design_production_dept'] ?? 0) > 0 ? 'color:#dc3545;' : '' }}">
+                                                {{ $design_dept_counts['rejected_design_production_dept'] ?? 0 }}
+                                            </div>
+                                            <div class="text-muted" style="font-size:11px; font-weight:600;">Rejected
+                                                by<br>Production</div>
+                                            <div class="mt-2">
+                                                <a href="{{ route('list-reject-design-from-prod') }}"
+                                                    style="font-size:11px; color:#dc3545;">View &#8594;</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- 6. Corrected & Resubmitted --}}
+                                <div class="col-xl-2 col-md-4 col-6">
+                                    <div class="card shadow border-0 h-100"
+                                        style="border-left:4px solid #20a38e !important;">
+                                        <div class="card-body text-center py-3">
+                                            <div class="icon icon-shape text-white rounded-circle mx-auto mb-2"
+                                                style="background:#20a38e; width:2.5rem; height:2.5rem;">
+                                                <i class="fa-solid fa-rotate"></i>
+                                            </div>
+                                            <div class="h4 font-bold mb-1">
+                                                {{ $design_dept_counts['corrected_design_sent'] ?? 0 }}</div>
+                                            <div class="text-muted" style="font-size:11px; font-weight:600;">Corrected
+                                                &amp;<br>Resubmitted</div>
+                                            <div class="mt-2">
+                                                <a href="{{ route('list-updated-design') }}"
+                                                    style="font-size:11px; color:#1a3a6b;">View &#8594;</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            @if (!empty($employee_counts['user_leaves_status']))
+                                @include('admin.pages.dashboard.leave-chart', [
+                                    'leaveData' => $employee_counts['user_leaves_status'],
+                                ])
+                            @endif
+                            @php $department_leaves = $employee_counts['user_leaves_status'][$role] ?? []; @endphp
                         </div>
                     @elseif ($role == config('constants.ROLE_ID.PRODUCTION'))
                         <div class="analysis-progrebar-area mg-b-15">
-                            <div class="row">
+
+                            {{-- Pipeline header --}}
+                            <div class="mb-3">
+                                <small class="text-muted font-semibold" style="font-size:12px; letter-spacing:0.5px;">
+                                    PRODUCTION PIPELINE &#8594; New Design &#8594; Accept / Reject &#8594; Revised &#8594;
+                                    Material In &#8594; Completed
+                                </small>
+                            </div>
+
+                            {{-- Row 1: New Design / Accepted / Rejected --}}
+                            <div class="row g-3 mb-3">
+
                                 <div class="col-xl-4 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
+                                    <div class="card shadow border-0" style="border-left:4px solid #6c757d !important;">
                                         <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-2">New
-                                                        Design</span>
+                                            <div class="row border-bottom align-items-center pb-2 mb-2">
+                                                <div class="col">
+                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-1">New
+                                                        Design Received</span>
                                                     <span
-                                                        class="h5 font-bold mb-0">{{ $production_dept_counts['design_recived_for_production'] }}</span>
+                                                        class="h4 font-bold mb-0">{{ $production_dept_counts['design_recived_for_production'] }}</span>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle"
+                                                        style="background:#6c757d;">
+                                                        <i class="fa-solid fa-file-import"></i>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="mt-2 mb-0 text-sm">
+                                            <div class="mt-1 text-sm">
                                                 <a
                                                     href="{{ route('list-new-requirements-received-for-production-business-wise') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
+                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i
+                                                            class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="col-xl-4 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
+                                    <div class="card shadow border-0" style="border-left:4px solid #28a745 !important;">
                                         <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-2">Accepted
-                                                        Design</span>
+                                            <div class="row border-bottom align-items-center pb-2 mb-2">
+                                                <div class="col">
+                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-1">Design
+                                                        Accepted</span>
                                                     <span
-                                                        class="h5 font-bold mb-0">{{ $production_dept_counts['accepted_and_sent_to_store'] }}</span>
+                                                        class="h4 font-bold mb-0">{{ $production_dept_counts['accepted_and_sent_to_store'] }}</span>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle"
+                                                        style="background:#28a745;">
+                                                        <i class="fa-solid fa-circle-check"></i>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="mt-2 mb-0 text-sm">
+                                            <div class="mt-1 text-sm">
                                                 <a href="{{ route('list-accept-design') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
+                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i
+                                                            class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="col-xl-4 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
+                                    <div class="card shadow border-0"
+                                        style="border-left:4px solid #dc3545 !important; {{ $production_dept_counts['rejected_design_list_sent'] > 0 ? 'background:#fff8f8;' : '' }}">
                                         <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-2">Rejected
-                                                        Design</span>
-                                                    <span
-                                                        class="h5 font-bold mb-0">{{ $production_dept_counts['rejected_design_list_sent'] }}</span>
+                                            <div class="row border-bottom align-items-center pb-2 mb-2">
+                                                <div class="col">
+                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-1">Design
+                                                        Rejected</span>
+                                                    <span class="h4 font-bold mb-0"
+                                                        style="{{ $production_dept_counts['rejected_design_list_sent'] > 0 ? 'color:#dc3545;' : '' }}">{{ $production_dept_counts['rejected_design_list_sent'] }}</span>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle"
+                                                        style="background:#dc3545;">
+                                                        <i class="fa-solid fa-circle-xmark"></i>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="mt-2 mb-0 text-sm">
+                                            <div class="mt-1 text-sm">
                                                 <a href="{{ route('list-reject-design') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
+                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i
+                                                            class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
                                         </div>
@@ -446,31 +477,32 @@
                                 </div>
 
                             </div>
-                            <div class="row mt-4">
+
+                            {{-- Row 2: Revised / Material / Completed --}}
+                            <div class="row g-3 mb-3">
+
                                 <div class="col-xl-4 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
+                                    <div class="card shadow border-0" style="border-left:4px solid #e6a817 !important;">
                                         <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-2">Revised
-                                                        Design</span>
+                                            <div class="row border-bottom align-items-center pb-2 mb-2">
+                                                <div class="col">
+                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-1">Revised
+                                                        Design Received</span>
                                                     <span
-                                                        class="h5 font-bold mb-0">{{ $production_dept_counts['corected_design_list_recived'] }}</span>
+                                                        class="h4 font-bold mb-0">{{ $production_dept_counts['corected_design_list_recived'] }}</span>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle"
+                                                        style="background:#e6a817;">
+                                                        <i class="fa-solid fa-rotate"></i>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="mt-2 mb-0 text-sm">
+                                            <div class="mt-1 text-sm">
                                                 <a href="{{ route('list-revislist-material-reciveded-design') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
+                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i
+                                                            class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
                                         </div>
@@ -478,29 +510,27 @@
                                 </div>
 
                                 <div class="col-xl-4 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
+                                    <div class="card shadow border-0" style="border-left:4px solid #17a2b8 !important;">
                                         <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-2">Material
-                                                        Received For Production</span>
+                                            <div class="row border-bottom align-items-center pb-2 mb-2">
+                                                <div class="col">
+                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-1">Material
+                                                        Received</span>
                                                     <span
-                                                        class="h5 font-bold mb-0">{{ $production_dept_counts['material_received_for_production'] }}</span>
+                                                        class="h4 font-bold mb-0">{{ $production_dept_counts['material_received_for_production'] }}</span>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle"
+                                                        style="background:#17a2b8;">
+                                                        <i class="fa-solid fa-boxes-stacked"></i>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="mt-2 mb-0 text-sm">
+                                            <div class="mt-1 text-sm">
                                                 <a href="{{ route('list-material-received') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
+                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i
+                                                            class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
                                         </div>
@@ -508,447 +538,550 @@
                                 </div>
 
                                 <div class="col-xl-4 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
+                                    <div class="card shadow border-0" style="border-left:4px solid #1a3a6b !important;">
                                         <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
+                                            <div class="row border-bottom align-items-center pb-2 mb-2">
+                                                <div class="col">
                                                     <span
-                                                        class="h6 font-semibold text-muted text-sm d-block mb-2">Production
+                                                        class="h6 font-semibold text-muted text-sm d-block mb-1">Production
                                                         Completed</span>
                                                     <span
-                                                        class="h5 font-bold mb-0">{{ $production_dept_counts['production_completed_prod_dept'] }}</span>
+                                                        class="h4 font-bold mb-0">{{ $production_dept_counts['production_completed_prod_dept'] }}</span>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle"
+                                                        style="background:#1a3a6b;">
+                                                        <i class="fa-solid fa-flag-checkered"></i>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="mt-2 mb-0 text-sm">
+                                            <div class="mt-1 text-sm">
                                                 <a href="{{ route('list-final-production-completed') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
+                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i
+                                                            class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                @if (!empty($employee_counts['user_leaves_status']))
-                                    @include('admin.pages.dashboard.leave-chart', [
-                                        'leaveData' => $employee_counts['user_leaves_status'],
-                                    ])
-                                @endif
-                                @php $department_leaves = $employee_counts['user_leaves_status'][$role] ?? []; @endphp
+
                             </div>
+
+                            @if (!empty($employee_counts['user_leaves_status']))
+                                @include('admin.pages.dashboard.leave-chart', [
+                                    'leaveData' => $employee_counts['user_leaves_status'],
+                                ])
+                            @endif
+                            @php $department_leaves = $employee_counts['user_leaves_status'][$role] ?? []; @endphp
                         </div>
                     @elseif ($role == config('constants.ROLE_ID.STORE'))
                         <div class="analysis-progrebar-area mg-b-15">
-                            <div class="row">
-                                <div class="col-xl-4 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
+
+                            {{-- ROW 1: Inventory & Chalan KPIs --}}
+                            <div class="row g-3 mb-3">
+
+                                <div class="col-xl-3 col-md-6 col-12">
+                                    <div class="card shadow border-0 h-100"
+                                        style="border-left:4px solid #1a3a6b !important;">
                                         <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-2">New
-                                                        Requirements</span>
+                                            <div class="row align-items-center">
+                                                <div class="col">
+                                                    <span class="font-semibold text-muted text-sm d-block mb-1">Items In
+                                                        Stock</span>
                                                     <span
-                                                        class="h5 font-bold mb-0">{{ $store_dept_counts['material_need_to_sent_to_production'] ?? 0 }}</span>
+                                                        class="h5 font-bold mb-0">{{ $store_dept_counts['stock_items_count'] }}</span>
+                                                    <small class="text-muted" style="font-size:11px;">distinct part
+                                                        items</small>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle"
+                                                        style="background:#1a3a6b;">
+                                                        <i class="fa-solid fa-warehouse"></i>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="mt-2 mb-0 text-sm">
-                                                <a href="{{ route('list-accepted-design-from-prod') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                {{-- <div class="col-xl-4 col-sm-6 col-12">
-                                <div class="card shadow border-0">
-                                    <div class="card-body">
-                                        <div class="row border-bottom">
-                                            <div class="col mb-2">
-                                                <span
-                                                    class="h6 font-semibold text-muted text-sm d-block mb-2">Sent To Production</span>
-                                                <span
-                                                    class="h5 font-bold mb-0">{{ $store_dept_counts['material_sent_to_production'] }}</span>
-                                            </div>
-                                            <div class="col-auto">
-                                                <div
-                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                    <i class="fa-solid fa-paint-brush"></i>
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="mt-2 mb-0 text-sm">
-                                            <a href="{{ route('list-material-sent-to-prod') }}">
-                                                <span
-                                                    class="badge badge-pill bg-soft-success text-success me-2">
-                                                    <i class="fa-solid fa-arrow-right"></i> </span>
-                                                <span class="text-nowrap text-xs text-muted">View
-                                                    Details</span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> --}}
-                                <div class="col-xl-4 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
-                                        <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-2">Material
-                                                        For Purchase</span>
-                                                    <span
-                                                        class="h5 font-bold mb-0">{{ $store_dept_counts['material_for_purchase'] ?? 0 }}</span>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="mt-2 mb-0 text-sm">
-                                                <a href="{{ route('list-material-sent-to-purchase') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
-                                        <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-2">Received
-                                                        From Quality</span>
-                                                    <span
-                                                        class="h5 font-bold mb-0">{{ $store_dept_counts['material_received_from_quality'] ?? 0 }}</span>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="mt-2 mb-0 text-sm">
-                                                <a href="{{ route('list-material-received-from-quality') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row mt-3">
-
-                                <div class="col-xl-4 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
-                                        <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-2">Rejected
-                                                        Chalan</span>
-                                                    <span
-                                                        class="h5 font-bold mb-0">{{ $store_dept_counts['rejected_chalan'] ?? 0 }}</span>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="mt-2 mb-0 text-sm">
-                                                <a href="{{ route('list-rejected-chalan-updated') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
-                                                </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="col-xl-4 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
+                                <div class="col-xl-3 col-md-6 col-12">
+                                    <div class="card shadow border-0 h-100"
+                                        style="border-left:4px solid #20a38e !important;">
                                         <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-2">Delivery
-                                                        Chalan</span>
+                                            <div class="row align-items-center">
+                                                <div class="col">
+                                                    <span class="font-semibold text-muted text-sm d-block mb-1">Total Stock
+                                                        Qty</span>
                                                     <span
-                                                        class="h5 font-bold mb-0">{{ $store_dept_counts['delivery_chalan'] ?? 0 }}</span>
+                                                        class="h5 font-bold mb-0">{{ number_format($store_dept_counts['total_stock_qty'], 2) }}</span>
+                                                    <small class="text-muted" style="font-size:11px;">units across all
+                                                        items</small>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle"
+                                                        style="background:#20a38e;">
+                                                        <i class="fa-solid fa-boxes-stacked"></i>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="mt-2 mb-0 text-sm">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-3 col-md-6 col-12">
+                                    <div class="card shadow border-0 h-100"
+                                        style="border-left:4px solid #17a2b8 !important;">
+                                        <div class="card-body">
+                                            <div class="row align-items-center">
+                                                <div class="col">
+                                                    <span class="font-semibold text-muted text-sm d-block mb-1">Delivery
+                                                        Chalans</span>
+                                                    <span
+                                                        class="h5 font-bold mb-0">{{ $store_dept_counts['delivery_chalan'] }}</span>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle"
+                                                        style="background:#17a2b8;">
+                                                        <i class="fa-solid fa-truck-ramp-box"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mt-2 text-sm">
                                                 <a href="{{ route('list-delivery-chalan') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
+                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i
+                                                            class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-xl-4 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
+
+                                <div class="col-xl-3 col-md-6 col-12">
+                                    <div class="card shadow border-0 h-100"
+                                        style="border-left:4px solid #6c757d !important;">
                                         <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
+                                            <div class="row align-items-center">
+                                                <div class="col">
+                                                    <span class="font-semibold text-muted text-sm d-block mb-1">Returnable
+                                                        Chalans</span>
                                                     <span
-                                                        class="h6 font-semibold text-muted text-sm d-block mb-2">Returnable
-                                                        Chalan</span>
-                                                    <span
-                                                        class="h5 font-bold mb-0">{{ $store_dept_counts['returnable_chalan'] ?? 0 }}</span>
+                                                        class="h5 font-bold mb-0">{{ $store_dept_counts['returnable_chalan'] }}</span>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle"
+                                                        style="background:#6c757d;">
+                                                        <i class="fa-solid fa-rotate-left"></i>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="mt-2 mb-0 text-sm">
+                                            <div class="mt-2 text-sm">
                                                 <a href="{{ route('list-returnable-chalan') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
+                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i
+                                                            class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                @if (!empty($employee_counts['user_leaves_status']))
-                                    @include('admin.pages.dashboard.leave-chart', [
-                                        'leaveData' => $employee_counts['user_leaves_status'],
-                                    ])
-                                @endif
+
                             </div>
+
+                            {{-- ROW 2: Material Pipeline (6 small cards) --}}
+                            <div class="row g-3 mb-3">
+
+                                <div class="col-xl-2 col-md-4 col-6">
+                                    <div class="card shadow border-0 h-100"
+                                        style="border-left:4px solid #e6a817 !important;">
+                                        <div class="card-body text-center py-3">
+                                            <div class="icon icon-shape text-white rounded-circle mx-auto mb-2"
+                                                style="background:#e6a817; width:2.5rem; height:2.5rem;">
+                                                <i class="fa-solid fa-inbox"></i>
+                                            </div>
+                                            <div class="h4 font-bold mb-1">
+                                                {{ $store_dept_counts['material_need_to_sent_to_production'] }}</div>
+                                            <div class="text-muted" style="font-size:11px; font-weight:600;">
+                                                New<br>Requirements</div>
+                                            <div class="mt-2">
+                                                <a href="{{ route('list-accepted-design-from-prod') }}"
+                                                    style="font-size:11px; color:#1a3a6b;">View &rarr;</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-2 col-md-4 col-6">
+                                    <div class="card shadow border-0 h-100"
+                                        style="border-left:4px solid #20a38e !important;">
+                                        <div class="card-body text-center py-3">
+                                            <div class="icon icon-shape text-white rounded-circle mx-auto mb-2"
+                                                style="background:#20a38e; width:2.5rem; height:2.5rem;">
+                                                <i class="fa-solid fa-dolly"></i>
+                                            </div>
+                                            <div class="h4 font-bold mb-1">
+                                                {{ $store_dept_counts['material_sent_to_production'] }}</div>
+                                            <div class="text-muted" style="font-size:11px; font-weight:600;">Issued
+                                                to<br>Production</div>
+                                            <div class="mt-2">
+                                                <a href="{{ route('list-material-sent-to-prod') }}"
+                                                    style="font-size:11px; color:#1a3a6b;">View &rarr;</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-2 col-md-4 col-6">
+                                    <div class="card shadow border-0 h-100"
+                                        style="border-left:4px solid #1a3a6b !important;">
+                                        <div class="card-body text-center py-3">
+                                            <div class="icon icon-shape text-white rounded-circle mx-auto mb-2"
+                                                style="background:#1a3a6b; width:2.5rem; height:2.5rem;">
+                                                <i class="fa-solid fa-cart-shopping"></i>
+                                            </div>
+                                            <div class="h4 font-bold mb-1">
+                                                {{ $store_dept_counts['material_for_purchase'] }}</div>
+                                            <div class="text-muted" style="font-size:11px; font-weight:600;">Sent
+                                                to<br>Purchase</div>
+                                            <div class="mt-2">
+                                                <a href="{{ route('list-material-sent-to-purchase') }}"
+                                                    style="font-size:11px; color:#1a3a6b;">View &rarr;</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-2 col-md-4 col-6">
+                                    <div class="card shadow border-0 h-100"
+                                        style="border-left:4px solid #28a745 !important;">
+                                        <div class="card-body text-center py-3">
+                                            <div class="icon icon-shape text-white rounded-circle mx-auto mb-2"
+                                                style="background:#28a745; width:2.5rem; height:2.5rem;">
+                                                <i class="fa-solid fa-clipboard-check"></i>
+                                            </div>
+                                            <div class="h4 font-bold mb-1">
+                                                {{ $store_dept_counts['material_received_from_quality'] }}</div>
+                                            <div class="text-muted" style="font-size:11px; font-weight:600;">
+                                                Received<br>From Quality</div>
+                                            <div class="mt-2">
+                                                <a href="{{ route('list-material-received-from-quality') }}"
+                                                    style="font-size:11px; color:#1a3a6b;">View &rarr;</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-2 col-md-4 col-6">
+                                    <div class="card shadow border-0 h-100"
+                                        style="border-left:4px solid #dc3545 !important;">
+                                        <div class="card-body text-center py-3">
+                                            <div class="icon icon-shape text-white rounded-circle mx-auto mb-2"
+                                                style="background:#dc3545; width:2.5rem; height:2.5rem;">
+                                                <i class="fa-solid fa-circle-xmark"></i>
+                                            </div>
+                                            <div class="h4 font-bold mb-1">{{ $store_dept_counts['rejected_chalan'] }}
+                                            </div>
+                                            <div class="text-muted" style="font-size:11px; font-weight:600;">
+                                                Rejected<br>Chalans</div>
+                                            <div class="mt-2">
+                                                <a href="{{ route('list-rejected-chalan-updated') }}"
+                                                    style="font-size:11px; color:#1a3a6b;">View &rarr;</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-2 col-md-4 col-6">
+                                    <div class="card shadow border-0 h-100"
+                                        style="border-left:4px solid #6c757d !important;">
+                                        <div class="card-body text-center py-3">
+                                            <div class="icon icon-shape text-white rounded-circle mx-auto mb-2"
+                                                style="background:#6c757d; width:2.5rem; height:2.5rem;">
+                                                <i class="fa-solid fa-file-lines"></i>
+                                            </div>
+                                            <div class="h4 font-bold mb-1">
+                                                {{ $store_dept_counts['returnable_chalan'] + $store_dept_counts['delivery_chalan'] }}
+                                            </div>
+                                            <div class="text-muted" style="font-size:11px; font-weight:600;">
+                                                Total<br>Chalans</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            @if (!empty($employee_counts['user_leaves_status']))
+                                @include('admin.pages.dashboard.leave-chart', [
+                                    'leaveData' => $employee_counts['user_leaves_status'],
+                                ])
+                            @endif
                         </div>
                     @elseif ($role == config('constants.ROLE_ID.PURCHASE'))
                         <div class="analysis-progrebar-area mg-b-15">
-                            <div class="row">
-                                <div class="col-xl-4 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
+
+                            {{-- ======= ROW 1: Financial KPIs ======= --}}
+                            <div class="row g-3 mb-3">
+                                <div class="col-xl-3 col-md-6 col-12">
+                                    <div class="card shadow border-0 h-100"
+                                        style="border-left:4px solid #1a3a6b !important;">
                                         <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-2">Purchase
-                                                        Orders</span>
+                                            <div class="row align-items-center">
+                                                <div class="col">
+                                                    <span class="font-semibold text-muted text-sm d-block mb-1">Total PO
+                                                        Value</span>
                                                     <span
-                                                        class="h5 font-bold mb-0">{{ $purchase_dept_counts['BOM_recived_for_purchase'] ?? 0 }}</span>
+                                                        class="h5 font-bold mb-0">&#8377;&nbsp;{{ number_format($purchase_dept_counts['total_po_value'], 2) }}</span>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle"
+                                                        style="background:#1a3a6b;">
+                                                        <i class="fa-solid fa-indian-rupee-sign"></i>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="mt-2 mb-0 text-sm">
-                                                <a href="{{ route('list-purchase') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
-                                                </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-xl-4 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
+                                <div class="col-xl-3 col-md-6 col-12">
+                                    <div class="card shadow border-0 h-100"
+                                        style="border-left:4px solid #20a38e !important;">
                                         <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
+                                            <div class="row align-items-center">
+                                                <div class="col">
+                                                    <span class="font-semibold text-muted text-sm d-block mb-1">GRN
+                                                        Received Value</span>
                                                     <span
-                                                        class="h6 font-semibold text-muted text-sm d-block mb-2">Vendor</span>
+                                                        class="h5 font-bold mb-0">&#8377;&nbsp;{{ number_format($purchase_dept_counts['total_grn_value'], 2) }}</span>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle"
+                                                        style="background:#20a38e;">
+                                                        <i class="fa-solid fa-boxes-stacked"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-md-6 col-12">
+                                    <div class="card shadow border-0 h-100"
+                                        style="border-left:4px solid #6c757d !important;">
+                                        <div class="card-body">
+                                            <div class="row align-items-center">
+                                                <div class="col">
+                                                    <span class="font-semibold text-muted text-sm d-block mb-1">Active
+                                                        Vendors</span>
                                                     <span
                                                         class="h5 font-bold mb-0">{{ $purchase_dept_counts['vendor_list'] }}</span>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle"
+                                                        style="background:#6c757d;">
+                                                        <i class="fa-solid fa-truck"></i>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="mt-2 mb-0 text-sm">
+                                            <div class="mt-2 text-sm">
                                                 <a href="{{ route('list-vendor') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
+                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i
+                                                            class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-xl-4 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
+                                <div class="col-xl-3 col-md-6 col-12">
+                                    <div class="card shadow border-0 h-100"
+                                        style="border-left:4px solid #6c757d !important;">
                                         <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span
-                                                        class="h6 font-semibold text-muted text-sm d-block mb-2">Tax</span>
-                                                    <span
-                                                        class="h5 font-bold mb-0">{{ $purchase_dept_counts['tax'] }}</span>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="mt-2 mb-0 text-sm">
-                                                <a href="{{ route('list-tax') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col-xl-4 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
-                                        <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-2">Part
-                                                        Item</span>
+                                            <div class="row align-items-center">
+                                                <div class="col">
+                                                    <span class="font-semibold text-muted text-sm d-block mb-1">Part
+                                                        Items</span>
                                                     <span
                                                         class="h5 font-bold mb-0">{{ $purchase_dept_counts['part_item'] }}</span>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle"
+                                                        style="background:#6c757d;">
+                                                        <i class="fa-solid fa-gears"></i>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="mt-2 mb-0 text-sm">
+                                            <div class="mt-2 text-sm">
                                                 <a href="{{ route('list-part-item') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
+                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i
+                                                            class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-xl-4 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
-                                        <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-2">PO
-                                                        Approved</span>
-                                                    <span
-                                                        class="h5 font-bold mb-0">{{ $purchase_dept_counts['purchase_order_approved'] }}</span>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="mt-2 mb-0 text-sm">
-                                                <a href="{{ route('list-approved-purchase-orders') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
-                                        <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-2">PO
-                                                        Sent To Vendor</span>
-                                                    <span
-                                                        class="h5 font-bold mb-0">{{ $purchase_dept_counts['purchase_order_submited_by_vendor'] }}</span>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="mt-2 mb-0 text-sm">
-                                                <a href="{{ route('list-submited-po-to-vendor') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                @if (!empty($employee_counts['user_leaves_status']))
-                                    @include('admin.pages.dashboard.leave-chart', [
-                                        'leaveData' => $employee_counts['user_leaves_status'],
-                                    ])
-                                @endif
                             </div>
+
+                            {{-- ======= ROW 2: Pipeline Status ======= --}}
+                            <div class="row g-3 mb-3">
+
+                                {{-- Requisitions Pending --}}
+                                <div class="col-xl-2 col-md-4 col-6">
+                                    <div class="card shadow border-0 h-100"
+                                        style="border-left:4px solid #6c757d !important;">
+                                        <div class="card-body text-center py-3">
+                                            <div class="icon icon-shape text-white text-lg rounded-circle mx-auto mb-2"
+                                                style="background:#6c757d; width:2.5rem; height:2.5rem;">
+                                                <i class="fa-solid fa-inbox"></i>
+                                            </div>
+                                            <div class="h4 font-bold mb-1">
+                                                {{ $purchase_dept_counts['requisitions_pending'] }}</div>
+                                            <div class="text-muted" style="font-size:11px; font-weight:600;">
+                                                Requisitions<br>Pending</div>
+                                            <div class="mt-2">
+                                                <a href="{{ route('list-purchase') }}"
+                                                    style="font-size:11px; color:#1a3a6b;">View &rarr;</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- POs Pending Owner --}}
+                                <div class="col-xl-2 col-md-4 col-6">
+                                    <div class="card shadow border-0 h-100"
+                                        style="border-left:4px solid #e6a817 !important;">
+                                        <div class="card-body text-center py-3">
+                                            <div class="icon icon-shape text-white text-lg rounded-circle mx-auto mb-2"
+                                                style="background:#e6a817; width:2.5rem; height:2.5rem;">
+                                                <i class="fa-solid fa-clock"></i>
+                                            </div>
+                                            <div class="h4 font-bold mb-1">{{ $purchase_dept_counts['po_pending_owner'] }}
+                                            </div>
+                                            <div class="text-muted" style="font-size:11px; font-weight:600;">PO
+                                                Awaiting<br>Owner Approval</div>
+                                            <div class="mt-2">
+                                                <a href="{{ route('list-purchase-orders-sent-to-owner') }}"
+                                                    style="font-size:11px; color:#1a3a6b;">View &rarr;</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- POs Approved, pending send --}}
+                                <div class="col-xl-2 col-md-4 col-6">
+                                    <div class="card shadow border-0 h-100"
+                                        style="border-left:4px solid #20a38e !important;">
+                                        <div class="card-body text-center py-3">
+                                            <div class="icon icon-shape text-white text-lg rounded-circle mx-auto mb-2"
+                                                style="background:#20a38e; width:2.5rem; height:2.5rem;">
+                                                <i class="fa-solid fa-circle-check"></i>
+                                            </div>
+                                            <div class="h4 font-bold mb-1">
+                                                {{ $purchase_dept_counts['po_approved_pending_send'] }}</div>
+                                            <div class="text-muted" style="font-size:11px; font-weight:600;">PO
+                                                Approved<br>(Send to Vendor)</div>
+                                            <div class="mt-2">
+                                                <a href="{{ route('list-approved-purchase-orders') }}"
+                                                    style="font-size:11px; color:#1a3a6b;">View &rarr;</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- POs Sent to Vendor --}}
+                                <div class="col-xl-2 col-md-4 col-6">
+                                    <div class="card shadow border-0 h-100"
+                                        style="border-left:4px solid #1a3a6b !important;">
+                                        <div class="card-body text-center py-3">
+                                            <div class="icon icon-shape text-white text-lg rounded-circle mx-auto mb-2"
+                                                style="background:#1a3a6b; width:2.5rem; height:2.5rem;">
+                                                <i class="fa-solid fa-paper-plane"></i>
+                                            </div>
+                                            <div class="h4 font-bold mb-1">
+                                                {{ $purchase_dept_counts['po_sent_to_vendor'] }}</div>
+                                            <div class="text-muted" style="font-size:11px; font-weight:600;">POs
+                                                Sent<br>to Vendor</div>
+                                            <div class="mt-2">
+                                                <a href="{{ route('list-submited-po-to-vendor') }}"
+                                                    style="font-size:11px; color:#1a3a6b;">View &rarr;</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- Gatepasses --}}
+                                <div class="col-xl-2 col-md-4 col-6">
+                                    <div class="card shadow border-0 h-100"
+                                        style="border-left:4px solid #17a2b8 !important;">
+                                        <div class="card-body text-center py-3">
+                                            <div class="icon icon-shape text-white text-lg rounded-circle mx-auto mb-2"
+                                                style="background:#17a2b8; width:2.5rem; height:2.5rem;">
+                                                <i class="fa-solid fa-id-card"></i>
+                                            </div>
+                                            <div class="h4 font-bold mb-1">{{ $purchase_dept_counts['gatepasses_count'] }}
+                                            </div>
+                                            <div class="text-muted" style="font-size:11px; font-weight:600;">
+                                                Gatepasses<br>Generated</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- GRNs --}}
+                                <div class="col-xl-2 col-md-4 col-6">
+                                    <div class="card shadow border-0 h-100"
+                                        style="border-left:4px solid #28a745 !important;">
+                                        <div class="card-body text-center py-3">
+                                            <div class="icon icon-shape text-white text-lg rounded-circle mx-auto mb-2"
+                                                style="background:#28a745; width:2.5rem; height:2.5rem;">
+                                                <i class="fa-solid fa-clipboard-check"></i>
+                                            </div>
+                                            <div class="h4 font-bold mb-1">{{ $purchase_dept_counts['grn_count'] }}</div>
+                                            <div class="text-muted" style="font-size:11px; font-weight:600;">
+                                                GRNs<br>Generated</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            {{-- PO Rejected (show only if > 0) --}}
+                            @if ($purchase_dept_counts['po_rejected'] > 0)
+                                <div class="row g-3 mb-3">
+                                    <div class="col-xl-3 col-md-6 col-12">
+                                        <div class="card shadow border-0"
+                                            style="border-left:4px solid #dc3545 !important; background:#fff8f8;">
+                                            <div class="card-body">
+                                                <div class="row align-items-center">
+                                                    <div class="col">
+                                                        <span class="font-semibold text-sm d-block mb-1"
+                                                            style="color:#dc3545;">POs Rejected by Owner</span>
+                                                        <span class="h5 font-bold mb-0"
+                                                            style="color:#dc3545;">{{ $purchase_dept_counts['po_rejected'] }}</span>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <div class="icon icon-shape text-white text-lg rounded-circle"
+                                                            style="background:#dc3545;">
+                                                            <i class="fa-solid fa-circle-xmark"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mt-2 text-sm">
+                                                    <a href="{{ route('list-purchase-orders-sent-to-owner') }}"
+                                                        style="color:#dc3545; font-size:12px;">
+                                                        <i class="fa-solid fa-arrow-right"></i> Review &amp; Resubmit
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
+                            @if (!empty($employee_counts['user_leaves_status']))
+                                @include('admin.pages.dashboard.leave-chart', [
+                                    'leaveData' => $employee_counts['user_leaves_status'],
+                                ])
+                            @endif
                         </div>
                     @elseif ($role == config('constants.ROLE_ID.SECURITY'))
                         <div class="analysis-progrebar-area mg-b-15">
@@ -991,259 +1124,288 @@
                         </div>
                     @elseif ($role == config('constants.ROLE_ID.QUALITY'))
                         <div class="analysis-progrebar-area mg-b-15">
-                            <div class="row">
-                                <div class="col-xl-4 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
+
+                            {{-- Pipeline header --}}
+                            <div class="mb-3">
+                                <small class="text-muted font-semibold" style="font-size:12px; letter-spacing:0.5px;">
+                                    QUALITY PIPELINE &#8594; Received from Security &#8594; Under Inspection &#8594; GRN
+                                    Generated &#8594; Sent to Store
+                                </small>
+                            </div>
+
+                            {{-- Single row: 4 cards --}}
+                            <div class="row g-3 mb-3">
+
+                                <div class="col-xl-3 col-sm-6 col-12">
+                                    <div class="card shadow border-0" style="border-left:4px solid #6c757d !important;">
                                         <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
+                                            <div class="row border-bottom align-items-center pb-2 mb-2">
+                                                <div class="col">
+                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-1">Received
+                                                        from Security</span>
                                                     <span
-                                                        class="h6 font-semibold text-muted text-sm d-block mb-2">GRN</span>
-                                                    <span
-                                                        class="h5 font-bold mb-0">{{ $quality_dept_counts['GRN_genration'] }}</span>
+                                                        class="h4 font-bold mb-0">{{ $quality_dept_counts['GRN_genration'] }}</span>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle"
+                                                        style="background:#6c757d;">
+                                                        <i class="fa-solid fa-shield-halved"></i>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="mt-2 mb-0 text-sm">
+                                            <div class="mt-1 text-sm">
                                                 <a href="{{ route('list-grn') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
+                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i
+                                                            class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-xl-4 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
+
+                                <div class="col-xl-3 col-sm-6 col-12">
+                                    <div class="card shadow border-0" style="border-left:4px solid #28a745 !important;">
                                         <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-2">Material
+                                            <div class="row border-bottom align-items-center pb-2 mb-2">
+                                                <div class="col">
+                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-1">GRN
+                                                        Generated</span>
+                                                    <span
+                                                        class="h4 font-bold mb-0">{{ $quality_dept_counts['material_need_to_sent_to_store'] }}</span>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle"
+                                                        style="background:#28a745;">
+                                                        <i class="fa-solid fa-file-circle-check"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mt-1 text-sm">
+                                                <a href="{{ route('list-material-sent-to-quality') }}">
+                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i
+                                                            class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-3 col-sm-6 col-12">
+                                    <div class="card shadow border-0" style="border-left:4px solid #17a2b8 !important;">
+                                        <div class="card-body">
+                                            <div class="row border-bottom align-items-center pb-2 mb-2">
+                                                <div class="col">
+                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-1">Material
                                                         Sent to Store</span>
                                                     <span
-                                                        class="h5 font-bold mb-0">{{ $quality_dept_counts['material_need_to_sent_to_store'] }}</span>
+                                                        class="h4 font-bold mb-0">{{ $quality_dept_counts['material_need_to_sent_to_store'] }}</span>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle"
+                                                        style="background:#17a2b8;">
+                                                        <i class="fa-solid fa-boxes-stacked"></i>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="mt-2 mb-0 text-sm">
+                                            <div class="mt-1 text-sm">
                                                 <a href="{{ route('list-material-sent-to-quality') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
+                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i
+                                                            class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="col-xl-4 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
+                                <div class="col-xl-3 col-sm-6 col-12">
+                                    <div class="card shadow border-0"
+                                        style="border-left:4px solid #fd7e14 !important; {{ $quality_dept_counts['rejected_chalan_po_wise'] > 0 ? 'background:#fff8f0;' : '' }}">
                                         <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-2">Rejected
-                                                        Chalan</span>
-                                                    <span
-                                                        class="h5 font-bold mb-0">{{ $quality_dept_counts['rejected_chalan_po_wise'] }}</span>
+                                            <div class="row border-bottom align-items-center pb-2 mb-2">
+                                                <div class="col">
+                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-1">Rejected
+                                                        Chalans</span>
+                                                    <span class="h4 font-bold mb-0"
+                                                        style="{{ $quality_dept_counts['rejected_chalan_po_wise'] > 0 ? 'color:#fd7e14;' : '' }}">{{ $quality_dept_counts['rejected_chalan_po_wise'] }}</span>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle"
+                                                        style="background:#fd7e14;">
+                                                        <i class="fa-solid fa-file-circle-xmark"></i>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="mt-2 mb-0 text-sm">
+                                            <div class="mt-1 text-sm">
                                                 <a href="{{ route('list-rejected-chalan-updated') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
+                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i
+                                                            class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                @if (!empty($employee_counts['user_leaves_status']))
-                                    @include('admin.pages.dashboard.leave-chart', [
-                                        'leaveData' => $employee_counts['user_leaves_status'],
-                                    ])
-                                @endif
+
                             </div>
+
+                            @if (!empty($employee_counts['user_leaves_status']))
+                                @include('admin.pages.dashboard.leave-chart', [
+                                    'leaveData' => $employee_counts['user_leaves_status'],
+                                ])
+                            @endif
+                            @php $department_leaves = $employee_counts['user_leaves_status'][$role] ?? []; @endphp
                         </div>
                     @elseif ($role == config('constants.ROLE_ID.LOGISTICS'))
                         <div class="analysis-progrebar-area mg-b-15">
-                            <div class="row">
-                                <div class="col-xl-4 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
-                                        <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span
-                                                        class="h6 font-semibold text-muted text-sm d-block mb-2">Production
-                                                        Completed Product</span>
-                                                    <span
-                                                        class="h5 font-bold mb-0">{{ $logistics_counts['production_completed_prod_dept_logisitics'] }}</span>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
 
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="mt-2 mb-0 text-sm">
-                                                <a
-                                                    href="{{ route('list-final-production-completed-recive-to-logistics') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-xl-4 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
-                                        <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-2">Total
-                                                        Logistics List</span>
-                                                    <span
-                                                        class="h5 font-bold mb-0">{{ $logistics_counts['logistics_list_count'] }}</span>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="mt-2 mb-0 text-sm">
-                                                <a href="{{ route('list-logistics') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
-                                        <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-2">Submited
-                                                        by Fianance</span>
-                                                    <span
-                                                        class="h5 font-bold mb-0">{{ $logistics_counts['logistics_send_by_finance_count'] }}</span>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="mt-2 mb-0 text-sm">
-                                                <a href="{{ route('list-send-to-fianance-by-logistics') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 col-sm-6 col-12 mt-4">
-                                    <div class="card shadow border-0">
-                                        <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-2">Total
-                                                        Vehicle Type</span>
-                                                    <span
-                                                        class="h5 font-bold mb-0">{{ $logistics_counts['vehicle_type_count'] }}</span>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="mt-2 mb-0 text-sm">
-                                                <a href="{{ route('list-vehicle-type') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 col-sm-6 col-12 mt-4">
-                                    <div class="card shadow border-0">
-                                        <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-2">Total
-                                                        Transport Name</span>
-                                                    <span
-                                                        class="h5 font-bold mb-0">{{ $logistics_counts['transport_name_count'] }}</span>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="mt-2 mb-0 text-sm">
-                                                <a href="{{ route('list-transport-name') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                @if (!empty($employee_counts['user_leaves_status']))
-                                    @include('admin.pages.dashboard.leave-chart', [
-                                        'leaveData' => $employee_counts['user_leaves_status'],
-                                    ])
-                                @endif
+                            {{-- Pipeline header --}}
+                            <div class="mb-3">
+                                <small class="text-muted font-semibold" style="font-size:12px; letter-spacing:0.5px;">
+                                    LOGISTICS PIPELINE &#8594; Production Completed &#8594; Logistics In Process &#8594; Submitted to Finance
+                                </small>
                             </div>
+
+                            {{-- Row 1: Pipeline stages --}}
+                            <div class="row g-3 mb-3">
+
+                                <div class="col-xl-4 col-sm-6 col-12">
+                                    <div class="card shadow border-0" style="border-left:4px solid #6c757d !important;">
+                                        <div class="card-body">
+                                            <div class="row border-bottom align-items-center pb-2 mb-2">
+                                                <div class="col">
+                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-1">Production Completed</span>
+                                                    <span class="h4 font-bold mb-0">{{ $logistics_counts['production_completed_prod_dept_logisitics'] }}</span>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle" style="background:#6c757d;">
+                                                        <i class="fa-solid fa-industry"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mt-1 text-sm">
+                                                <a href="{{ route('list-final-production-completed-recive-to-logistics') }}">
+                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-4 col-sm-6 col-12">
+                                    <div class="card shadow border-0" style="border-left:4px solid #e6a817 !important;">
+                                        <div class="card-body">
+                                            <div class="row border-bottom align-items-center pb-2 mb-2">
+                                                <div class="col">
+                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-1">Logistics In Process</span>
+                                                    <span class="h4 font-bold mb-0">{{ $logistics_counts['logistics_list_count'] }}</span>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle" style="background:#e6a817;">
+                                                        <i class="fa-solid fa-truck-moving"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mt-1 text-sm">
+                                                <a href="{{ route('list-logistics') }}">
+                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-4 col-sm-6 col-12">
+                                    <div class="card shadow border-0" style="border-left:4px solid #17a2b8 !important;">
+                                        <div class="card-body">
+                                            <div class="row border-bottom align-items-center pb-2 mb-2">
+                                                <div class="col">
+                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-1">Submitted to Finance</span>
+                                                    <span class="h4 font-bold mb-0">{{ $logistics_counts['logistics_send_by_finance_count'] }}</span>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle" style="background:#17a2b8;">
+                                                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mt-1 text-sm">
+                                                <a href="{{ route('list-send-to-fianance-by-logistics') }}">
+                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            {{-- Row 2: Master data --}}
+                            <div class="row g-3 mb-3">
+
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-12">
+                                    <div class="card shadow border-0" style="border-left:4px solid #1a3a6b !important;">
+                                        <div class="card-body">
+                                            <div class="row border-bottom align-items-center pb-2 mb-2">
+                                                <div class="col">
+                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-1">Total Vehicle Types</span>
+                                                    <span class="h4 font-bold mb-0">{{ $logistics_counts['vehicle_type_count'] }}</span>
+                                                    <small class="text-muted" style="font-size:11px;">master records</small>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle" style="background:#1a3a6b;">
+                                                        <i class="fa-solid fa-truck"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mt-1 text-sm">
+                                                <a href="{{ route('list-vehicle-type') }}">
+                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-12">
+                                    <div class="card shadow border-0" style="border-left:4px solid #1a3a6b !important;">
+                                        <div class="card-body">
+                                            <div class="row border-bottom align-items-center pb-2 mb-2">
+                                                <div class="col">
+                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-1">Total Transport Names</span>
+                                                    <span class="h4 font-bold mb-0">{{ $logistics_counts['transport_name_count'] }}</span>
+                                                    <small class="text-muted" style="font-size:11px;">master records</small>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle" style="background:#1a3a6b;">
+                                                        <i class="fa-solid fa-building-user"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mt-1 text-sm">
+                                                <a href="{{ route('list-transport-name') }}">
+                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            @if (!empty($employee_counts['user_leaves_status']))
+                                @include('admin.pages.dashboard.leave-chart', [
+                                    'leaveData' => $employee_counts['user_leaves_status'],
+                                ])
+                            @endif
+                            @php $department_leaves = $employee_counts['user_leaves_status'][$role] ?? []; @endphp
                         </div>
                     @elseif ($role == config('constants.ROLE_ID.FINANCE'))
                         <div class="analysis-progrebar-area mg-b-15">
@@ -1467,73 +1629,126 @@
                         </div>
                     @elseif ($role == config('constants.ROLE_ID.DISPATCH'))
                         <div class="analysis-progrebar-area mg-b-15">
-                            <div class="row">
-                                <div class="col-xl-4 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
-                                        <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-2">Received
-                                                        From Finance</span>
-                                                    <span
-                                                        class="h5 font-bold mb-0">{{ $dispatch_counts['dispatch_received_from_finance'] }}</span>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
 
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="mt-2 mb-0 text-sm">
-                                                <a
-                                                    href="{{ route('list-final-production-completed-received-from-fianance') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
-                                        <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span
-                                                        class="h6 font-semibold text-muted text-sm d-block mb-2">Completed
-                                                        Dispatch</span>
-                                                    <span
-                                                        class="h5 font-bold mb-0">{{ $dispatch_counts['dispatch_completed'] }}</span>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="mt-2 mb-0 text-sm">
-                                                <a href="{{ route('list-dispatch') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                @if (!empty($employee_counts['user_leaves_status']))
-                                    @include('admin.pages.dashboard.leave-chart', [
-                                        'leaveData' => $employee_counts['user_leaves_status'],
-                                    ])
-                                @endif
+                            {{-- Pipeline header --}}
+                            <div class="mb-3">
+                                <small class="text-muted font-semibold" style="font-size:12px; letter-spacing:0.5px;">
+                                    DISPATCH PIPELINE &#8594; Received from Finance &#8594; In Process &#8594; Dispatched &#8594; Product Closed
+                                </small>
                             </div>
+
+                            {{-- Row 1: Pipeline stages (3 cards) --}}
+                            <div class="row g-3 mb-3">
+
+                                <div class="col-xl-4 col-sm-6 col-12">
+                                    <div class="card shadow border-0" style="border-left:4px solid #6c757d !important;">
+                                        <div class="card-body">
+                                            <div class="row border-bottom align-items-center pb-2 mb-2">
+                                                <div class="col">
+                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-1">Received from Finance</span>
+                                                    <span class="h4 font-bold mb-0">{{ $dispatch_counts['dispatch_received_from_finance'] }}</span>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle" style="background:#6c757d;">
+                                                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mt-1 text-sm">
+                                                <a href="{{ route('list-final-production-completed-received-from-fianance') }}">
+                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-4 col-sm-6 col-12">
+                                    <div class="card shadow border-0" style="border-left:4px solid #e6a817 !important;">
+                                        <div class="card-body">
+                                            <div class="row border-bottom align-items-center pb-2 mb-2">
+                                                <div class="col">
+                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-1">Dispatch In Process</span>
+                                                    <span class="h4 font-bold mb-0">{{ $dispatch_counts['dispatch_in_process'] }}</span>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle" style="background:#e6a817;">
+                                                        <i class="fa-solid fa-dolly"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mt-1 text-sm">
+                                                <a href="{{ route('list-dispatch') }}">
+                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-4 col-sm-6 col-12">
+                                    <div class="card shadow border-0" style="border-left:4px solid #28a745 !important;">
+                                        <div class="card-body">
+                                            <div class="row border-bottom align-items-center pb-2 mb-2">
+                                                <div class="col">
+                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-1">Dispatch Completed</span>
+                                                    <span class="h4 font-bold mb-0">{{ $dispatch_counts['dispatch_completed'] }}</span>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle" style="background:#28a745;">
+                                                        <i class="fa-solid fa-truck-ramp-box"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mt-1 text-sm">
+                                                <a href="{{ route('list-dispatch') }}">
+                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            {{-- Row 2: Final closure --}}
+                            <div class="row g-3 mb-3">
+
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-12">
+                                    <div class="card shadow border-0" style="border-left:4px solid #1a3a6b !important;">
+                                        <div class="card-body">
+                                            <div class="row border-bottom align-items-center pb-2 mb-2">
+                                                <div class="col">
+                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-1">Final Product Closed</span>
+                                                    <span class="h4 font-bold mb-0">{{ $dispatch_counts['final_product_closed'] }}</span>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle" style="background:#1a3a6b;">
+                                                        <i class="fa-solid fa-flag-checkered"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mt-1 text-sm">
+                                                <a href="{{ route('list-dispatch-final-product-close') }}">
+                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            @if (!empty($employee_counts['user_leaves_status']))
+                                @include('admin.pages.dashboard.leave-chart', [
+                                    'leaveData' => $employee_counts['user_leaves_status'],
+                                ])
+                            @endif
+                            @php $department_leaves = $employee_counts['user_leaves_status'][$role] ?? []; @endphp
                         </div>
                     @elseif ($role == config('constants.ROLE_ID.EMPOLYEE'))
                         <div class="analysis-progrebar-area mg-b-15">

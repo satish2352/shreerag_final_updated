@@ -13,8 +13,10 @@ use Exception;
 
 use App\Models\{
     Gatepass,
+    NotificationStatus,
     PurchaseOrdersModel
 };
+use Illuminate\Support\Facades\DB;
 
 class GatepassController extends Controller
 {
@@ -26,11 +28,69 @@ class GatepassController extends Controller
         $this->serviceCommon = new CommanController();
     }
 
-    public function searchByPONo()
+    public function searchByPONo(Request $request)
     {
         try {
+            $array_to_be_check_security = [config('constants.SECURIY_DEPARTMENT.LIST_PO_TO_BE_CHECKED')];
+            $array_to_be_purchase       = [config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY_SENT_TO_VENDOR')];
+            $searchPoNo = trim($request->input('purchase_orders_id', ''));
 
-            return view('organizations.security.search-by-pono');
+            $data_output = PurchaseOrdersModel::leftJoin('production', function ($join) {
+                    $join->on('purchase_orders.business_details_id', '=', 'production.business_details_id');
+                })
+                ->leftJoin('gatepass', function ($join) {
+                    $join->on('purchase_orders.purchase_orders_id', '=', 'gatepass.purchase_orders_id');
+                })
+                ->leftJoin('businesses', function ($join) {
+                    $join->on('purchase_orders.business_id', '=', 'businesses.id');
+                })
+                ->leftJoin('businesses_details', function ($join) {
+                    $join->on('purchase_orders.business_details_id', '=', 'businesses_details.id');
+                })
+                ->whereIn('purchase_orders.purchase_status_from_owner', $array_to_be_check_security)
+                ->whereIn('purchase_orders.purchase_status_from_purchase', $array_to_be_purchase)
+                ->when($searchPoNo, function ($query) use ($searchPoNo) {
+                    $query->where('purchase_orders.purchase_orders_id', 'like', '%' . $searchPoNo . '%');
+                })
+                ->where('businesses.is_active', true)
+                ->select(
+                    'purchase_orders.purchase_orders_id',
+                    'purchase_orders.id as gatepass_id',
+                    'businesses_details.id as business_details_id',
+                    'businesses.title',
+                    'businesses_details.product_name',
+                    'businesses_details.description',
+                    'businesses.remarks',
+                    'businesses.is_active',
+                    'production.business_id',
+                    'production.id as productionId',
+                    DB::raw('COUNT(gatepass.id) as gatepass_count')
+                )
+                ->groupBy(
+                    'purchase_orders.purchase_orders_id',
+                    'purchase_orders.id',
+                    'businesses_details.id',
+                    'businesses.title',
+                    'businesses_details.product_name',
+                    'businesses_details.description',
+                    'businesses.remarks',
+                    'businesses.is_active',
+                    'production.business_id',
+                    'production.id'
+                )
+                ->havingRaw('COUNT(gatepass.id) = 0')
+                ->get();
+
+            if ($data_output->isNotEmpty()) {
+                $bdIds = $data_output->pluck('business_details_id')->filter()->unique()->values();
+                if ($bdIds->isNotEmpty()) {
+                    NotificationStatus::where('po_send_to_vendor_visible_security', 0)
+                        ->whereIn('business_details_id', $bdIds)
+                        ->update(['po_send_to_vendor_visible_security' => 1]);
+                }
+            }
+
+            return view('organizations.security.search-by-pono', compact('data_output', 'searchPoNo'));
         } catch (\Exception $e) {
             return $e;
         }

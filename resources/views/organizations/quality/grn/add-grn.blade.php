@@ -237,18 +237,22 @@
                                                                 </td>
 
 
-                                                                <td><input type="text"
+                                                                <td><input type="number"
                                                                         name="addmore[{{ $index }}][actual_quantity]"
                                                                         placeholder="Enter Actual Qty"
-                                                                        class="form-control actual_quantity" />
+                                                                        class="form-control actual_quantity"
+                                                                        data-po-qty="{{ $item->quantity }}"
+                                                                        min="0" step="any" />
                                                                 </td>
 
 
 
-                                                                <td><input type="text"
+                                                                <td><input type="number"
                                                                         name="addmore[{{ $index }}][accepted_quantity]"
                                                                         placeholder="Enter Accepted Qty"
-                                                                        class="form-control accepted_quantity" />
+                                                                        class="form-control accepted_quantity"
+                                                                        data-po-qty="{{ $item->quantity }}"
+                                                                        min="0" step="any" />
                                                                 </td>
 
                                                                 <td><input type="text"
@@ -336,16 +340,18 @@
     </script>
     <script>
         $(document).ready(function() {
-            $(document).on('keyup', '.actual_quantity, .accepted_quantity', function(e) {
+            $(document).on('input', '.actual_quantity, .accepted_quantity', function(e) {
                 var currentRow = $(this).closest("tr");
-                var current_row_actual_quantity = currentRow.find('.actual_quantity').val();
-                var current_row_accepted_quantity = currentRow.find('.accepted_quantity').val();
-                var new_rejected_quantity = '0';
-                if (current_row_actual_quantity != '' && current_row_accepted_quantity != '') {
-                    var new_rejected_quantity = current_row_actual_quantity - current_row_accepted_quantity;
-                }
+                var actual = parseFloat(currentRow.find('.actual_quantity').val()) || 0;
+                var accepted = parseFloat(currentRow.find('.accepted_quantity').val()) || 0;
+                var rejected = actual - accepted;
+                currentRow.find('.rejected_quantity').val(actual !== 0 || accepted !== 0 ? rejected : '');
 
-                currentRow.find('.rejected_quantity').val(new_rejected_quantity);
+                // Re-validate accepted qty when actual changes so error clears live
+                var acceptedInput = currentRow.find('.accepted_quantity');
+                if (acceptedInput.val() !== '') {
+                    acceptedInput.valid();
+                }
             });
         });
     </script>
@@ -354,6 +360,23 @@
     <script>
         jQuery.noConflict();
         jQuery(document).ready(function($) {
+
+            // Custom rule: value must not exceed PO qty stored in data-po-qty
+            $.validator.addMethod("maxPoQty", function(value, element) {
+                var poQty = parseFloat($(element).data('po-qty'));
+                if (isNaN(poQty)) return true;
+                return parseFloat(value) <= poQty;
+            }, function(params, element) {
+                var poQty = $(element).data('po-qty');
+                return "Cannot exceed PO Qty (" + poQty + ").";
+            });
+
+            // Custom rule: accepted qty must not exceed actual qty in same row
+            $.validator.addMethod("maxActualQty", function(value, element) {
+                var actualQty = parseFloat($(element).closest('tr').find('.actual_quantity').val());
+                if (isNaN(actualQty)) return true;
+                return parseFloat(value) <= actualQty;
+            }, "Accepted Qty cannot exceed Actual Qty.");
 
             // Initialize validation
             var validator = $("#addDesignsForm").validate({
@@ -417,9 +440,12 @@
                 $(this).rules("add", {
                     required: true,
                     number: true,
+                    min: 0,
+                    maxPoQty: true,
                     messages: {
                         required: "Please enter Actual Qty.",
-                        number: "Enter a valid number."
+                        number: "Enter a valid number.",
+                        min: "Actual Qty cannot be negative."
                     }
                 });
             });
@@ -429,9 +455,13 @@
                 $(this).rules("add", {
                     required: true,
                     number: true,
+                    min: 0,
+                    maxPoQty: true,
+                    maxActualQty: true,
                     messages: {
                         required: "Please enter Accepted Qty.",
-                        number: "Enter a valid number."
+                        number: "Enter a valid number.",
+                        min: "Accepted Qty cannot be negative."
                     }
                 });
             });

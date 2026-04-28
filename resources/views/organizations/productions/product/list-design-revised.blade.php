@@ -30,10 +30,8 @@
                                                 <th data-field="Remark" data-editable="false">Remark</th>
                                                 <th data-field="reject_reason" data-editable="false">Reject Reason</th>
                                                 <th data-field="design_image" data-editable="false">Design Layout</th>
-                                                <th data-field="bom_image" data-editable="false">BOM</th>
-                                                <th data-field="design_image_re" data-editable="false">Revised Design Layout
-                                                </th>
-                                                <th data-field="bom_image_re" data-editable="false">Revised BOM</th>
+                                                <th data-field="design_image_re" data-editable="false">Revised Design Layout</th>
+                                                <th data-field="bom_items" data-editable="false">BOM Items</th>
                                                 <th data-field="remark_by_design" data-editable="false">Design Team Remark</th>
                                                 <th data-field="action" data-editable="false">Action</th>
                                             </tr>
@@ -44,7 +42,7 @@
                                                 <tr>
                                                     
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td> {{ $data->created_at ? $data->created_at->format('d-m-Y') : 'N/A' }}</td>
+                                                    <td>{{ !empty($data->updated_at) ? \Carbon\Carbon::parse($data->updated_at)->format('d-m-Y') : 'N/A' }}</td>
                                                     <td>{{ucwords($data->project_name)}}</td>
                                                     <td>{{ucwords($data->customer_po_number)}}</td>
                                                     <td>{{ucwords($data->product_name)}}</td>
@@ -52,22 +50,34 @@
                                                     <td>{{ucwords($data->quantity)}}</td>
                                                     <td>{{ ucwords($data->remarks) }}</td>
                                                     <td>{{ ucwords($data->reject_reason_prod) }}</td>
-                                                <td> <a class="img-size" target="_blank"
-                                                    href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
-                                                    alt="Design"> Click to view</a>
-                                            </td>
-                                            <td> <a class="img-size"
-                                                    href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
-                                                    alt="bill of material" >Click to download</a>
-                                            </td>
-                                                <td> <a class="img-size" target="_blank"
-                                                    href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['re_design_image'] }}"
-                                                    alt="Design"> Click to view</a>
-                                            </td>
-                                            <td> <a class="img-size"
-                                                    href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['re_bom_image'] }}"
-                                                    alt="bill of material" >Click to download</a>
-                                            </td>
+                                                        <td>
+                                                        @if(!empty($data->design_image))
+                                                            <a class="img-size" target="_blank"
+                                                                href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data->design_image }}"
+                                                                alt="Design">Click to view</a>
+                                                        @else
+                                                            <span class="text-muted">—</span>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if(!empty($data->re_design_image))
+                                                            <a class="img-size" target="_blank"
+                                                                href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data->re_design_image }}"
+                                                                alt="Revised Design">Click to view</a>
+                                                        @else
+                                                            <span class="text-muted">—</span>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if(!empty($data->design_id) && !empty($data->business_details_id))
+                                                            <button type="button" class="btn btn-outline-info btn-sm"
+                                                                onclick="openRevisedDesignProdBomModal({{ $data->business_details_id }}, {{ $data->design_id }})">
+                                                                <i class="fa fa-list"></i> View BOM
+                                                            </button>
+                                                        @else
+                                                            <span class="text-muted">—</span>
+                                                        @endif
+                                                    </td>
                                                     <td>{{ ucwords($data->remark_by_design) }}</td>
                                                     <td>
                                                         <div style="display: flex; align-items: center;">
@@ -95,4 +105,22 @@
             </div>
         </div>
     </div>
-   @endsection
+@include('organizations.common.bom-material-items-modal', [
+    'mode'              => 'view_only',
+    'businessId'        => 0,
+    'businessDetailsId' => 0,
+    'designId'          => 0,
+    'bomModalId'        => 'revisedDesignProdBomModal',
+])
+
+@push('scripts')
+<script>
+    function openRevisedDesignProdBomModal(businessDetailsId, designId) {
+        var bdEncoded = btoa(businessDetailsId);
+        var dEncoded  = btoa(designId);
+        var fetchUrl  = '{{ url("production/get-bom-material-items") }}/' + bdEncoded + '/' + dEncoded;
+        openBomModal_revisedDesignProdBomModal(fetchUrl);
+    }
+</script>
+@endpush
+@endsection

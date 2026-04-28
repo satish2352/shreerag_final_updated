@@ -10,7 +10,9 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Config;
 use Exception;
 use App\Models\{
-    AdminView
+    AdminView,
+    Business,
+    BusinessDetails
 };
 use App\Http\Controllers\Organizations\CommanController;
 
@@ -306,19 +308,28 @@ class BusinessController extends Controller
 
     public function getPurchaseOrderDetails($purchase_order_id)
     {
-
         try {
-            $getOrganizationData = $this->serviceCommon->getAllOrganizationData();
+            $getOrganizationData      = $this->serviceCommon->getAllOrganizationData();
             $getAllRulesAndRegulations = $this->serviceCommon->getAllRulesAndRegulations();
 
-            $data = $this->serviceCommon->getPurchaseOrderDetails($purchase_order_id);
-            // $business_id = $data[ 'purchaseOrder' ]->business_id;
-            $business_id = $data['purchaseOrder']->business_id;
-
-            $purchaseOrder = $data['purchaseOrder'];
+            $data                 = $this->serviceCommon->getPurchaseOrderDetails($purchase_order_id);
+            $purchaseOrder        = $data['purchaseOrder'];
             $purchaseOrderDetails = $data['purchaseOrderDetails'];
+            $business_id          = $purchaseOrder->business_id;
 
-            return view('organizations.business.purchase-order.purchase-order-details', compact('purchase_order_id', 'purchaseOrder', 'purchaseOrderDetails', 'getOrganizationData', 'business_id', 'getAllRulesAndRegulations'));
+            $businessData        = Business::find($purchaseOrder->business_id);
+            $businessDetailsData = BusinessDetails::find($purchaseOrder->business_details_id);
+
+            return view('organizations.business.purchase-order.purchase-order-details', compact(
+                'purchase_order_id',
+                'purchaseOrder',
+                'purchaseOrderDetails',
+                'getOrganizationData',
+                'business_id',
+                'getAllRulesAndRegulations',
+                'businessData',
+                'businessDetailsData'
+            ));
         } catch (\Exception $e) {
             return $e;
         }

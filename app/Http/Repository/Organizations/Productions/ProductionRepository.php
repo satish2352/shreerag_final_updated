@@ -376,6 +376,9 @@ class ProductionRepository
                 ->where('businesses_details.id', $id)
                 ->where('businesses_details.is_active', true)
                 ->where('pd.is_deleted', 0)
+                ->whereNotNull('pd.part_item_id')
+                ->where('pd.part_item_id', '!=', '')
+                ->where('pd.quantity', '>', 0)
                 ->select(
                     'businesses_details.id',
                     'pd.id as pd_id',
@@ -395,7 +398,7 @@ class ProductionRepository
                     'business_application_processes.store_material_sent_date',
                     'estimation.total_estimation_amount'
                 )
-                ->distinct()  // Ensure only distinct rows
+                ->distinct()
                 ->get();
 
             // Extract product details
@@ -434,6 +437,27 @@ class ProductionRepository
 
             $errorMessages = [];
 
+            // Remove any stale pending rows that have no part item (from previously empty form rows)
+            ProductionDetails::where('business_details_id', $request->business_details_id)
+                ->where('quantity_minus_status', 'pending')
+                ->where('material_send_production', 0)
+                ->where('is_deleted', 0)
+                ->where(function ($q) {
+                    $q->whereNull('part_item_id')
+                      ->orWhere('part_item_id', '');
+                })
+                ->update(['is_deleted' => 1]);
+
+            // Fix stale rows saved by old buggy form (material_send_production=1 but still pending)
+            // Reset to 0 so store can see them as pending requests
+            ProductionDetails::where('business_details_id', $request->business_details_id)
+                ->where('material_send_production', 1)
+                ->where('quantity_minus_status', 'pending')
+                ->where('is_deleted', 0)
+                ->whereNotNull('part_item_id')
+                ->where('part_item_id', '!=', '')
+                ->update(['material_send_production' => 0]);
+
             // ============================================
             // 2️⃣ LOOP THROUGH addmore ROWS
             // ============================================
@@ -466,7 +490,6 @@ class ProductionRepository
                 $partItemId = $item['part_item_id'];
                 $quantity   = (float) $item['quantity'];
                 $unit       = $item['unit'] ?? null;
-                $isSendProd = $item['material_send_production'] ?? 0;
 
                 // --------------------------------------------------
                 // 3️⃣ FETCH PART ITEM BASIC RATE
@@ -486,30 +509,30 @@ class ProductionRepository
                     ->first();
 
                 if ($pendingRow) {
-
-                    $pendingRow->quantity                 = $quantity;
-                    $pendingRow->unit                     = $unit;
-                    $pendingRow->basic_rate               = $basicRate;
-                    $pendingRow->items_used_total_amount  = $totalAmount;
-                    $pendingRow->material_send_production = $isSendProd;
-                    $pendingRow->quantity_minus_status    = 'pending';
+                    // Update quantity/unit only — keep material_send_production=0 (store controls it)
+                    $pendingRow->quantity                = $quantity;
+                    $pendingRow->unit                    = $unit;
+                    $pendingRow->basic_rate              = $basicRate;
+                    $pendingRow->items_used_total_amount = $totalAmount;
                     $pendingRow->save();
 
                     continue;
                 }
 
                 // --------------------------------------------------
-                // 5️⃣ CHECK IF ALREADY PROCESSED (DONE) ROW EXISTS
+                // 5️⃣ SKIP IF ALREADY PROCESSED (DONE) ROW EXISTS
                 // --------------------------------------------------
                 $existingDoneRow = ProductionDetails::where('business_details_id', $request->business_details_id)
                     ->where('part_item_id', $partItemId)
                     ->where('quantity_minus_status', 'done')
                     ->first();
 
-                // DONE rows are IGNORED — no update needed
+                if ($existingDoneRow) {
+                    continue; // already issued — don't create a duplicate
+                }
 
                 // --------------------------------------------------
-                // 6️⃣ INSERT NEW PENDING ROW
+                // 6️⃣ INSERT NEW PENDING ROW (material_send_production=0 so store can see it)
                 // --------------------------------------------------
                 $new = new ProductionDetails();
                 $new->business_id              = $baseDetail->business_id;
@@ -522,7 +545,7 @@ class ProductionRepository
                 $new->unit                     = $unit;
                 $new->basic_rate               = $basicRate;
                 $new->items_used_total_amount  = $totalAmount;
-                $new->material_send_production = $isSendProd;
+                $new->material_send_production = 0;    // store issues it — keeps it visible as pending
                 $new->quantity_minus_status    = 'pending';
                 $new->save();
             }
@@ -537,6 +560,10 @@ class ProductionRepository
                 config('constants.PRODUCTION_DEPARTMENT.ACTUAL_WORK_INPROCESS_FOR_PRODUCTION');
 
             $businessOutput->save();
+
+            // Mark production record so Store tracking list can see pending material requests
+            ProductionModel::where('business_details_id', $baseDetail->business_details_id)
+                ->update(['store_status_quantity_tracking' => 'incomplete-store']);
 
             return [
                 'status' => 'success',

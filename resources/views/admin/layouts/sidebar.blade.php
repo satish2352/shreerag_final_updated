@@ -251,6 +251,7 @@
                                     'list-consumption-report',
                                     'list-product-completed-report',
                                     'stock-item',
+                                    'business-po-report',
                                 ];
                                 $isReportActive = in_array(Route::currentRouteName(), $reportRoutes);
                             @endphp
@@ -298,6 +299,14 @@
                                             class="{{ Route::currentRouteName() == 'list-vendor-through-taken-material' ? 'active-submenu' : '' }}">
                                             <i class="fa fa-people-carry icon-wrap"></i>
                                             <span class="mini-sub-pro">Vendor Taken Material</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a title="Business PO Report"
+                                            href="{{ route('business-po-report') }}"
+                                            class="{{ Route::currentRouteName() == 'business-po-report' ? 'active-submenu' : '' }}">
+                                            <i class="fa fa-file-invoice icon-wrap"></i>
+                                            <span class="mini-sub-pro">Business PO Report</span>
                                         </a>
                                     </li>
 
@@ -435,6 +444,29 @@
                                         Received Estimation</span></a>
                             </li>
                             <li
+                                class="nav-item {{ request()->is('owner/list-revised-design-bom-received-from-estimation') ? 'active' : '' }}">
+                                <a href="{{ route('list-revised-design-bom-received-from-estimation') }}" aria-expanded="false"><i
+                                        class="fa fa-pencil-alt icon-wrap"></i><span class="mini-click-non">Revised Design And BOM Received From Estimation</span></a>
+                            </li>
+                            @php
+                                $exceedPendingCount = \DB::table('business_application_processes')
+                                    ->where('bom_estimation_send_to_owner', 1300)
+                                    ->whereNull('owner_bom_accepted')
+                                    ->where('is_deleted', 0)
+                                    ->count();
+                            @endphp
+                            <li
+                                class="nav-item {{ request()->is('owner/list-exceed-amount-requests') ? 'active' : '' }}">
+                                <a href="{{ route('list-exceed-amount-requests') }}" aria-expanded="false"><i
+                                        class="fa fa-exclamation-triangle icon-wrap"></i><span
+                                        class="mini-click-non">Exceed Amount Requests</span>
+                                    @if($exceedPendingCount > 0)
+                                        <span class="badge badge-warning ml-1"
+                                            style="background:#e6a817;color:#fff;border-radius:10px;padding:2px 7px;font-size:11px;">{{ $exceedPendingCount }}</span>
+                                    @endif
+                                </a>
+                            </li>
+                            <li
                                 class="nav-item {{ request()->is('owner/list-accept-bom-estimation') || request()->is('owner/list-accept-bom-estimation-business-wise/*') ? 'active' : '' }}">
                                 <a href="{{ route('list-accept-bom-estimation') }}" aria-expanded="false"><i
                                         class="fa big-icon fa-check icon-wrap"></i> <span
@@ -531,12 +563,24 @@
                                         class="fa big-icon fa-check-circle icon-wrap"></i> <span
                                         class="mini-click-non">Production Department Completed Production</span></a>
                             </li>
+                            @php
+                                $logisticsReceivedCount = \DB::table('admin_view')
+                                    ->where('off_canvas_status', 19)
+                                    ->where('is_view', 0)
+                                    ->where('is_deleted', 0)
+                                    ->count();
+                            @endphp
                             <li
                                 class="nav-item {{ request()->is('owner/list-owner-final-production-completed-recive-to-logistics') ? 'active' : '' }}">
                                 <a href="{{ route('list-owner-final-production-completed-recive-to-logistics') }}"><i
                                         class="fa big-icon fa-warehouse icon-wrap"></i><span
                                         class="mini-click-non">Logistics Dept Received Product completed
-                                        list</span></a>
+                                        list</span>
+                                    @if($logisticsReceivedCount > 0)
+                                        <span class="badge badge-warning ml-1"
+                                            style="background:#e6a817;color:#fff;border-radius:10px;padding:2px 7px;font-size:11px;">{{ $logisticsReceivedCount }}</span>
+                                    @endif
+                                </a>
                             </li>
 
                             <li
@@ -627,6 +671,11 @@
                                         href="{{ route('follow-up-report') }}"><i
                                             class="fa fa-clipboard-check icon-wrap"></i><span
                                             class="mini-click-non">Follow Up Report</span></a></li>
+
+                                <li class="nav-item {{ Request::is('purchase/business-po-report') ? 'active' : '' }}"><a
+                                        href="{{ route('business-po-report') }}"><i
+                                            class="fa fa-chart-bar icon-wrap"></i><span
+                                            class="mini-click-non">Business PO Report</span></a></li>
 
                                 <li
                                     class="nav-item {{ Request::is('list-itemwise-vendor-rate-report') ? 'active' : '' }}">
@@ -751,8 +800,7 @@
                         </li>
                         <li class="nav-item {{ request()->is('designdept/list-updated-design') ? 'active' : '' }}">
                             <a class="" href="{{ route('list-updated-design') }}" aria-expanded="false"><i
-                                    class="fa fa-pencil-alt icon-wrap"></i> <span class="mini-click-non">Corrected
-                                    Designs Sent To Production</span></a>
+                                    class="fa fa-pencil-alt icon-wrap"></i> <span class="mini-click-non">Corrected Design Send To Estimation</span></a>
                         </li>
                         <li
                             class="nav-item {{ request()->is('designdept/list-reject-design-from-prod') || request()->is('designdept/add-re-upload-design/*') ? 'active' : '' }}">
@@ -797,10 +845,34 @@
                                 </a>
                             </li>
                             <li
+                                class="nav-item {{ request()->is('estimationdept/list-corrected-design-bom-received-from-design') ? 'active' : '' }}">
+                                <a href="{{ route('list-corrected-design-bom-received-from-design') }}">
+                                    <i class="fa big-icon fa-pencil-alt icon-wrap"></i>
+                                    <span class="mini-click-non">Corrected Design And BOM Material List Received From Design Dept</span>
+                                </a>
+                            </li>
+                            <li
                                 class="nav-item {{ request()->is('estimationdept/list-updated-estimation-send-to-owner') || request()->is('estimationdept/list-updated-estimation-send-to-owner-business-wise/*') ? 'active' : '' }}">
                                 <a href="{{ route('list-updated-estimation-send-to-owner') }}">
                                     <i class="fa big-icon fa-paper-plane icon-wrap"></i>
                                     <span class="mini-click-non">Updated Estimation Send to Owner</span>
+                                </a>
+                            </li>
+                            @php
+                                $ownerSuggestedCount = \DB::table('business_application_processes')
+                                    ->where('bom_estimation_send_to_owner', 1301)
+                                    ->where('is_deleted', 0)
+                                    ->count();
+                            @endphp
+                            <li
+                                class="nav-item {{ request()->is('estimationdept/list-bom-exceed-owner-suggested') ? 'active' : '' }}">
+                                <a href="{{ route('list-bom-exceed-owner-suggested') }}" aria-expanded="false">
+                                    <i class="fa big-icon fa-reply icon-wrap"></i>
+                                    <span class="mini-click-non">Owner Updated Amount</span>
+                                    @if($ownerSuggestedCount > 0)
+                                        <span
+                                            style="background:#e6a817;color:#fff;border-radius:10px;padding:2px 7px;font-size:11px;">{{ $ownerSuggestedCount }}</span>
+                                    @endif
                                 </a>
                             </li>
                             <li

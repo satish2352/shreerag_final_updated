@@ -15,7 +15,11 @@ class AllListRepository
     public function getAllNewRequirement()
     { //checked
         try {
-            $send_estimation = config('constants.ESTIMATION_DEPARTMENT.LIST_DESIGN_RECEIVED_FOR_ESTIMATION');
+            // New Design List shows first-time designs only (1113).
+            // Revised/corrected designs (11131) appear in the dedicated "Corrected Design" list.
+            $send_estimation_values = [
+                config('constants.ESTIMATION_DEPARTMENT.LIST_DESIGN_RECEIVED_FOR_ESTIMATION'), // 1113 first-time only
+            ];
 
             $data_output = BusinessApplicationProcesses::leftJoin('estimation', function ($join) {
                 $join->on('business_application_processes.business_id', '=', 'estimation.business_id');
@@ -24,7 +28,7 @@ class AllListRepository
                     $join->on('business_application_processes.business_id', '=', 'businesses.id');
                 })
                 ->whereNull('business_application_processes.bom_estimation_send_to_owner')
-                ->where('business_application_processes.design_send_to_estimation', $send_estimation)
+                ->whereIn('business_application_processes.design_send_to_estimation', $send_estimation_values)
                 ->where('businesses.is_active', true)
                 ->where('businesses.is_deleted', 0)
                 ->select(
@@ -63,7 +67,11 @@ class AllListRepository
         try {
             $decoded_business_id = base64_decode($business_id);
 
-            $array_to_be_check = [config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_ESTIMATION_DEPT_FIRST_TIME')];
+            // New Design List shows first-time designs only (1113).
+            // Revised/corrected designs (11131) appear in the dedicated "Corrected Design" list.
+            $array_to_be_check = [
+                config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_ESTIMATION_DEPT_FIRST_TIME'),  // 1113 first-time only
+            ];
 
             $data_output = BusinessApplicationProcesses::leftJoin('estimation', function ($join) {
                 $join->on('business_application_processes.business_details_id', '=', 'estimation.business_details_id');
@@ -83,7 +91,7 @@ class AllListRepository
                 ->where('businesses_details.is_deleted', 0)
                 ->distinct('businesses_details.id')
                 ->select(
-                    'estimation.business_details_id',
+                    'businesses_details.id as business_details_id',
                     'businesses_details.product_name',
                     'businesses_details.description',
                     'businesses_details.quantity',
@@ -92,6 +100,7 @@ class AllListRepository
                     'estimation.id as estimationId',
                     'designs.bom_image',
                     'designs.design_image',
+                    DB::raw('designs.id as design_id'),
                     'business_application_processes.business_status_id',
                     'business_application_processes.design_status_id',
                     'estimation.updated_at'
@@ -180,17 +189,15 @@ class AllListRepository
                     'estimation.total_estimation_amount',
                     DB::raw('MAX(design_revision_for_prod.bom_image) as bom_image'),
                     DB::raw('MAX(designs.design_image) as design_image'),
-                    'estimation.total_estimation_amount',
+                    DB::raw('MAX(designs.id) as design_id'),
                 )
                 ->groupBy(
-                    'businesses_details.id',
                     'businesses_details.id',
                     'businesses_details.product_name',
                     'businesses_details.quantity',
                     'businesses_details.total_amount',
                     'estimation.total_estimation_amount',
                     'businesses_details.description',
-                    'estimation.total_estimation_amount',
                 )
                 ->get();
             return $data_output;
@@ -380,12 +387,14 @@ class AllListRepository
                     'estimation.updated_at',
 
                     // These fields are not in groupBy, so we wrap them in MAX()
+                    DB::raw('MAX(businesses_details.id) as business_details_id'),
                     DB::raw('MAX(businesses_details.product_name) as product_name'),
                     DB::raw('MAX(businesses_details.quantity) as quantity'),
                     DB::raw('MAX(businesses_details.description) as description'),
 
                     DB::raw('MAX(design_revision_for_prod.bom_image) as bom_image'),
                     DB::raw('MAX(designs.design_image) as design_image'),
+                    DB::raw('MAX(designs.id) as design_id'),
 
                     'estimation.total_estimation_amount'
                 )
@@ -755,4 +764,57 @@ class AllListRepository
     //       ];
     //   }
     // }
+
+    public function getAllCorrectedDesignBomReceivedFromDesign()
+    {
+        try {
+            return BusinessApplicationProcesses::leftJoin('businesses_details', function ($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+                })
+                ->leftJoin('businesses', function ($join) {
+                    $join->on('business_application_processes.business_id', '=', 'businesses.id');
+                })
+                ->leftJoin('designs', function ($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
+                })
+                ->leftJoin('design_revision_for_prod', function ($join) {
+                    $join->on('designs.id', '=', 'design_revision_for_prod.design_id');
+                })
+                ->where('business_application_processes.design_status_id', config('constants.DESIGN_DEPARTMENT.DESIGN_REVISED_SENT_TO_ESTIMATION'))
+                ->whereNull('business_application_processes.bom_estimation_send_to_owner')
+                ->where('businesses.is_active', true)
+                ->where('businesses.is_deleted', 0)
+                ->select(
+                    'business_application_processes.id',
+                    'businesses.id as business_id',
+                    'businesses.project_name',
+                    'businesses.customer_po_number',
+                    'businesses_details.id as business_details_id',
+                    'businesses_details.product_name',
+                    'businesses_details.quantity',
+                    'businesses_details.description',
+                    DB::raw('MAX(designs.id) as design_id'),
+                    DB::raw('MAX(designs.design_image) as design_image'),
+                    DB::raw('MAX(design_revision_for_prod.design_image) as re_design_image'),
+                    DB::raw('MAX(design_revision_for_prod.reject_reason_prod) as reject_reason_prod'),
+                    DB::raw('MAX(design_revision_for_prod.remark_by_design) as remark_by_design'),
+                    DB::raw('MAX(design_revision_for_prod.updated_at) as updated_at'),
+                )
+                ->groupBy(
+                    'business_application_processes.id',
+                    'businesses.id',
+                    'businesses.project_name',
+                    'businesses.customer_po_number',
+                    'businesses_details.id',
+                    'businesses_details.product_name',
+                    'businesses_details.quantity',
+                    'businesses_details.description',
+                )
+                ->orderBy('updated_at', 'desc')
+                ->get();
+        } catch (\Exception $e) {
+            Log::error('Error in getAllCorrectedDesignBomReceivedFromDesign: ' . $e->getMessage());
+            return collect();
+        }
+    }
 }

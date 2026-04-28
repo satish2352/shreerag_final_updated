@@ -74,7 +74,8 @@
                                                             value="{{ old('description', $business_details_data->description) }}"
                                                             readonly>
                                                     </div>
-                                               
+
+                                                    {{-- T-2026-003: BOM Excel upload disabled — BOM is now captured via the structured BOM Material Items modal (T-2026-002). Uncomment to restore.
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 mt-4">
                                                         <label for="bom_image">Upload Estimation BOM (Excel, 1KB - 5MB) <span
                                                                 class="text-danger">*</span></label>
@@ -85,11 +86,39 @@
                                                             <span class="red-text">{{ $errors->first('bom_image') }}</span>
                                                         @endif
                                                     </div>
+                                                    --}}
+
+                                                    {{-- T-2026-011: BOM Material Items button — same pattern as edit-estimation-upload.blade.php.
+                                                         Guard on design_id so the button is only shown when a design (and hence BOM data) exists.
+                                                         Uses business_details_id alias (= businesses_details.id) added to SELECT in editRevisedEstimation(). --}}
+                                                    @if(isset($business_details_data) && $business_details_data && $business_details_data->design_id)
+                                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3">
+                                                        <label>BOM Material Items (Structured Data)</label><br>
+                                                        <button type="button" class="btn btn-info btn-sm"
+                                                            onclick="openBomModal_bomMaterialItemsModal('{{ route('estimation.get-bom-material-items', [base64_encode($business_details_data->business_details_id), base64_encode($business_details_data->design_id)]) }}')">
+                                                            <i class="fa fa-list"></i> View / Edit BOM Items
+                                                        </button>
+                                                        <small class="text-muted ml-2">Review and edit structured BOM line items.</small>
+                                                    </div>
+                                                    @endif
+
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 mt-4">
-                                                        <label for="total_estimation_amount">Total Estimation Amount</label>
+                                                        <label for="total_estimation_amount">Total Estimation Amount <span
+                                                                class="text-danger">*</span></label>
+                                                        {{-- T-2026-011: Field value priority (same as edit-estimation-upload.blade.php / T-2026-010):
+                                                             1. BOM Final Total ($bom_final_total, server-computed SUM(rate×qty)) when > 0
+                                                             2. total_estimation_amount saved on the estimation row (prior saves fallback)
+                                                             3. blank
+                                                             Field is readonly — auto-populated from BOM items via the modal above. --}}
                                                         <input type="text" class="form-control" id="total_estimation_amount"
-                                                        value="{{ old('total_estimation_amount', $business_details_data->total_estimation_amount) }}"
-                                                            name="total_estimation_amount" >
+                                                            name="total_estimation_amount"
+                                                            readonly
+                                                            style="background-color:#f8f9fa; cursor:not-allowed;"
+                                                            value="{{ (isset($bom_final_total) && $bom_final_total > 0) ? number_format($bom_final_total, 2, '.', '') : (isset($business_details_data) && !is_null($business_details_data) && !is_null($business_details_data->total_estimation_amount) ? $business_details_data->total_estimation_amount : '') }}">
+                                                        <small class="text-muted">
+                                                            <i class="fa fa-info-circle"></i>
+                                                            This amount is auto-calculated from BOM items. Use the BOM modal above to add or edit items.
+                                                        </small>
                                                     </div>
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 mt-4">
                                                         <label for="remark_by_estimation">Remark <span
@@ -126,54 +155,71 @@
             </div>
         </div>
     </div>
-   @push('scripts')  
+    {{-- T-2026-011: BOM modal partial — estimation_edit mode (same as edit-estimation-upload.blade.php).
+         Guarded on design_id. business_id from estimation.business_id (added to SELECT).
+         business_details_id from businesses_details.id alias added to SELECT.
+         bomSaveUrl = estimation.save-bom-material-items (same endpoint as first-time estimation edit). --}}
+    @if(isset($business_details_data) && $business_details_data && $business_details_data->design_id)
+        @include('organizations.common.bom-material-items-modal', [
+            'mode'              => 'estimation_edit',
+            'businessId'        => $business_details_data->business_id ?? 0,
+            'businessDetailsId' => $business_details_data->business_details_id,
+            'designId'          => $business_details_data->design_id,
+            'bomSaveUrl'        => route('estimation.save-bom-material-items'),
+        ])
+    @endif
+   @push('scripts')
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script>
         jQuery.noConflict();
         jQuery(document).ready(function($) {
             $.validator.addMethod('filesize', function(value, element, param) {
-                if (element.files.length === 0) return true; 
-                var fileSize = element.files[0].size; 
+                if (element.files.length === 0) return true;
+                var fileSize = element.files[0].size;
                 return this.optional(element) || (fileSize >= param.min && fileSize <= param.max);
             }, 'Invalid file size.');
 
             // Initialize jQuery Validation
+            // Note: total_estimation_amount is readonly — ignore:[] ensures jQuery Validate still
+            // evaluates it (readonly fields are excluded by default; ignore:[] overrides that).
             $("#addDesignsForm").validate({
-                ignore: [], // Validate hidden inputs as well
+                ignore: [],
                 rules: {
-               
-                    bom_image: {
+                    // T-2026-003: bom_image validation disabled — field is hidden (commented out in HTML).
+                    // bom_image: {
+                    //     required: true,
+                    //     accept: ".xls,.xlsx",
+                    //     filesize: {
+                    //         min: 1024,
+                    //         max: 5242880
+                    //     } // 1KB to 5MB
+                    // },
+                    total_estimation_amount: {
                         required: true,
-                        accept: ".xls,.xlsx",
-                        filesize: {
-                            min: 1024,
-                            max: 5242880
-                        } // 1KB to 5MB
                     },
-                     total_estimation_amount: {
+                    remark_by_estimation: {
                         required: true,
-                    },
-                    remark_by_estimation:{
-                          required: true,
                     }
                 },
                 messages: {
-              
-                    bom_image: {
-                        required: "Please select a BOM Excel file.",
-                        accept: "Please select a valid BOM Excel file.",
-                        filesize: "The file must be between 1KB and 5MB."
+                    // T-2026-003: bom_image messages disabled — field is hidden.
+                    // bom_image: {
+                    //     required: "Please select a BOM Excel file.",
+                    //     accept: "Please select a valid BOM Excel file.",
+                    //     filesize: "The file must be between 1KB and 5MB."
+                    // },
+                    total_estimation_amount: {
+                        required: "Total Estimation Amount is auto-calculated from BOM items. Please save BOM items first.",
                     },
-                     total_estimation_amount: {
-                        required: "Please enter the total estimation amount",
-                    },
-                     remark_by_estimation:{
-                          required: "Please enter the remark",
+                    remark_by_estimation: {
+                        required: "Please enter the remark",
                     }
-                   
                 },
                 errorPlacement: function(error, element) {
-                    error.addClass('text-danger'); 
-                    error.insertAfter(element); 
+                    error.addClass('text-danger');
+                    error.insertAfter(element);
                 },
                 submitHandler: function(form) {
                     Swal.fire({
@@ -201,6 +247,19 @@
                     }, // 1KB to 5MB
                 });
                 $(this).valid(); // Trigger validation immediately
+            });
+
+            // T-2026-011: Listen for bom-saved event dispatched by the BOM modal
+            // to update the readonly Total Estimation Amount field (same listener as
+            // edit-estimation-upload.blade.php / T-2026-005).
+            window.addEventListener('bom-saved', function(e) {
+                var detail = e.detail || {};
+                if (detail.bomFinalTotal !== null && detail.bomFinalTotal !== undefined && !isNaN(detail.bomFinalTotal)) {
+                    $('#total_estimation_amount').val(parseFloat(detail.bomFinalTotal).toFixed(2));
+                    if (typeof $('#addDesignsForm').validate === 'function') {
+                        $('#addDesignsForm').validate().element('#total_estimation_amount');
+                    }
+                }
             });
         });
     </script>

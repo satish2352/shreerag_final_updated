@@ -294,6 +294,7 @@ class AllListRepository
                     'businesses_details.description',
                     'businesses.remarks',
                     'estimation.total_estimation_amount',
+                    DB::raw('MAX(designs.id) as design_id'),
                     DB::raw('MAX(design_revision_for_prod.reject_reason_prod) as reject_reason_prod'),
                     DB::raw('MAX(designs.bom_image) as bom_image'),
                     DB::raw('MAX(designs.design_image) as design_image'),

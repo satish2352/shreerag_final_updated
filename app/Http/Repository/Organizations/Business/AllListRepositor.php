@@ -171,6 +171,7 @@ class AllListRepositor
           'businesses.id',
           'businesses.project_name',
           'businesses.customer_po_number',
+          'businesses_details.id as business_details_id',
           'businesses_details.product_name',
           'businesses.title',
           'businesses_details.description',
@@ -184,6 +185,7 @@ class AllListRepositor
           'design_revision_for_prod.id as design_revision_for_prod_id',
           'design_revision_for_prod.design_image as re_design_image',
           'design_revision_for_prod.bom_image as re_bom_image',
+          'designs.id as design_id',
           'designs.bom_image',
           'designs.design_image',
           'production.updated_at'
@@ -867,9 +869,9 @@ class AllListRepositor
         ->leftJoin('business_application_processes', function ($join) {
           $join->on('estimation.business_id', '=', 'business_application_processes.business_id');
         })
-        ->where('business_application_processes.bom_estimation_send_to_owner', $array_to_be_check)
+        ->whereIn('business_application_processes.bom_estimation_send_to_owner', [$array_to_be_check, 1300])
         ->whereNull('business_application_processes.owner_bom_accepted')
-        ->whereNull('business_application_processes.owner_bom_rejected')
+        ->where('business_application_processes.design_status_id', '!=', config('constants.DESIGN_DEPARTMENT.DESIGN_REVISED_SENT_TO_ESTIMATION'))
         ->where('businesses.is_active', true)
         ->where('businesses.is_deleted', 0)
         ->select(
@@ -901,7 +903,9 @@ class AllListRepositor
   { //checked
     try {
       $decoded_business_id = base64_decode($business_details_id);
-      $array_to_be_check = config('constants.HIGHER_AUTHORITY.ESTIMATION_DEPT_THROUGH_RECEIVED_BOM');
+      // Include both the normal BOM-sent-to-owner rows (1149) AND the exceed-pending rows (1300)
+      $normal_status = config('constants.HIGHER_AUTHORITY.ESTIMATION_DEPT_THROUGH_RECEIVED_BOM');
+      $exceed_status = 1300; // Exceed amount pending owner review
       $data_output = BusinessApplicationProcesses::leftJoin('businesses_details', function ($join) {
         $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
       })
@@ -919,29 +923,37 @@ class AllListRepositor
             ->orWhereNull('business_application_processes.owner_bom_rejected');
         })
         ->where('businesses_details.business_id', $decoded_business_id)
-        ->where('business_application_processes.bom_estimation_send_to_owner', $array_to_be_check)
+        ->whereIn('business_application_processes.bom_estimation_send_to_owner', [$normal_status, $exceed_status])
         ->whereNull('business_application_processes.owner_bom_accepted')
-        // ->whereNull('business_application_processes.owner_bom_rejected')
+        ->where('business_application_processes.design_status_id', '!=', config('constants.DESIGN_DEPARTMENT.DESIGN_REVISED_SENT_TO_ESTIMATION'))
         ->where('businesses_details.is_active', true)
         ->where('businesses_details.is_deleted', 0)
         ->select(
           'businesses_details.id',
+          'businesses_details.business_id as business_main_id',
           'businesses_details.product_name',
           'businesses_details.quantity',
           'businesses_details.description',
           'businesses_details.total_amount',
           DB::raw('MAX(design_revision_for_prod.bom_image) as bom_image'),
           DB::raw('MAX(designs.design_image) as design_image'),
+          DB::raw('MAX(designs.id) as design_id'),
           'estimation.total_estimation_amount',
+          'estimation.is_exceed_pending',
+          'estimation.exceed_remark',
+          'business_application_processes.bom_estimation_send_to_owner',
         )
         ->groupBy(
           'businesses_details.id',
-          'businesses_details.id',
+          'businesses_details.business_id',
           'businesses_details.product_name',
           'businesses_details.quantity',
           'businesses_details.description',
           'businesses_details.total_amount',
           'estimation.total_estimation_amount',
+          'estimation.is_exceed_pending',
+          'estimation.exceed_remark',
+          'business_application_processes.bom_estimation_send_to_owner',
         )
         ->get();
       return $data_output;
@@ -983,6 +995,65 @@ class AllListRepositor
   //         return $e;
   //     }
   // }
+  public function loadRevisedDesignBomReceivedFromEstimation()
+  {
+    try {
+      $normal_status = config('constants.HIGHER_AUTHORITY.ESTIMATION_DEPT_THROUGH_RECEIVED_BOM'); // 1149
+      return BusinessApplicationProcesses::leftJoin('businesses_details', function ($join) {
+          $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+        })
+        ->leftJoin('businesses', function ($join) {
+          $join->on('business_application_processes.business_id', '=', 'businesses.id');
+        })
+        ->leftJoin('designs', function ($join) {
+          $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
+        })
+        ->leftJoin('design_revision_for_prod', function ($join) {
+          $join->on('designs.id', '=', 'design_revision_for_prod.design_id');
+        })
+        ->leftJoin('estimation', function ($join) {
+          $join->on('business_application_processes.business_details_id', '=', 'estimation.business_details_id');
+        })
+        ->where('business_application_processes.design_status_id', config('constants.DESIGN_DEPARTMENT.DESIGN_REVISED_SENT_TO_ESTIMATION'))
+        ->where('business_application_processes.bom_estimation_send_to_owner', $normal_status)
+        ->whereNull('business_application_processes.owner_bom_accepted')
+        ->where('businesses.is_active', true)
+        ->where('businesses.is_deleted', 0)
+        ->select(
+          'businesses_details.id as business_details_id',
+          'businesses.id as business_id',
+          'businesses.project_name',
+          'businesses.customer_po_number',
+          'businesses_details.product_name',
+          'businesses_details.quantity',
+          'businesses_details.description',
+          'businesses_details.total_amount',
+          'estimation.total_estimation_amount',
+          DB::raw('MAX(designs.id) as design_id'),
+          DB::raw('MAX(designs.design_image) as design_image'),
+          DB::raw('MAX(design_revision_for_prod.design_image) as re_design_image'),
+          DB::raw('MAX(design_revision_for_prod.reject_reason_prod) as reject_reason_prod'),
+          DB::raw('MAX(estimation.updated_at) as updated_at'),
+        )
+        ->groupBy(
+          'businesses_details.id',
+          'businesses.id',
+          'businesses.project_name',
+          'businesses.customer_po_number',
+          'businesses_details.product_name',
+          'businesses_details.quantity',
+          'businesses_details.description',
+          'businesses_details.total_amount',
+          'estimation.total_estimation_amount',
+        )
+        ->orderBy('updated_at', 'desc')
+        ->get();
+    } catch (\Exception $e) {
+      Log::error('loadRevisedDesignBomReceivedFromEstimation error: ' . $e->getMessage());
+      return collect();
+    }
+  }
+
   public function getAcceptEstimationBOM()
   {
     try {
@@ -991,7 +1062,7 @@ class AllListRepositor
       $data_output = BusinessApplicationProcesses::leftJoin('businesses', function ($join) {
         $join->on('business_application_processes.business_id', '=', 'businesses.id');
       })
-        ->whereNull('business_application_processes.estimation_send_to_production')
+        ->where('business_application_processes.off_canvas_status', 32)
         ->where('business_application_processes.owner_bom_accepted', $array_to_be_check)
         ->where('businesses.is_active', true)
         ->where('businesses.is_deleted', 0)
@@ -1043,9 +1114,8 @@ class AllListRepositor
           $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
         })
         ->where('businesses.id', $decoded_business_id)
-        // ->where('business_application_processes.bom_estimation_send_to_owner', $received)
+        ->where('business_application_processes.off_canvas_status', 32)
         ->where('business_application_processes.owner_bom_accepted', $accepted)
-        ->whereNull('business_application_processes.estimation_send_to_production')
         ->where('businesses.is_active', true)
         ->where('businesses.is_deleted', 0)
         ->select(
@@ -1055,6 +1125,7 @@ class AllListRepositor
           'businesses_details.description',
           DB::raw('MAX(design_revision_for_prod.bom_image) as bom_image'),
           DB::raw('MAX(designs.design_image) as design_image'),
+          DB::raw('MAX(designs.id) as design_id'),
           'design_revision_for_prod.remark_by_estimation',
           'estimation.total_estimation_amount',
           'business_application_processes.updated_at',
@@ -1157,6 +1228,7 @@ class AllListRepositor
           'businesses_details.description',
           // DB::raw('MAX(designs.bom_image) as bom_image'),
           DB::raw('MAX(designs.design_image) as design_image'),
+          DB::raw('MAX(designs.id) as design_id'),
           'estimation.total_estimation_amount',
           'design_revision_for_prod.rejected_remark_by_owner',
           'design_revision_for_prod.bom_image',
@@ -1257,13 +1329,12 @@ class AllListRepositor
           'businesses_details.description',
           DB::raw('MAX(design_revision_for_prod.bom_image) as bom_image'),
           DB::raw('MAX(designs.design_image) as design_image'),
+          DB::raw('MAX(designs.id) as design_id'),
           'estimation.total_estimation_amount',
           'design_revision_for_prod.remark_by_estimation',
           'business_application_processes.updated_at'
-
         )
         ->groupBy(
-          'businesses_details.id',
           'businesses_details.id',
           'businesses_details.product_name',
           'businesses_details.quantity',
@@ -1271,7 +1342,6 @@ class AllListRepositor
           'estimation.total_estimation_amount',
           'design_revision_for_prod.remark_by_estimation',
           'business_application_processes.updated_at',
-          'design_revision_for_prod.remark_by_estimation',
         )
         ->get();
       return $data_output;
@@ -1390,6 +1460,7 @@ class AllListRepositor
           'businesses.remarks',
 
           DB::raw('MAX(design_revision_for_prod.reject_reason_prod) as reject_reason_prod'),
+          DB::raw('MAX(designs.id) as design_id'),
           DB::raw('MAX(designs.bom_image) as bom_image'),
           DB::raw('MAX(designs.design_image) as design_image'),
           DB::raw('MAX(design_revision_for_prod.bom_image) as re_bom_image'),
@@ -2212,5 +2283,45 @@ class AllListRepositor
   //         ];
   //     }
   // }
+
+  public function loadExceedAmountRequests()
+  {
+    try {
+      $data_output = BusinessApplicationProcesses::leftJoin('businesses_details', function ($join) {
+        $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+      })
+        ->leftJoin('businesses', function ($join) {
+          $join->on('businesses_details.business_id', '=', 'businesses.id');
+        })
+        ->leftJoin('estimation', function ($join) {
+          $join->on('business_application_processes.business_details_id', '=', 'estimation.business_details_id');
+        })
+        ->where('business_application_processes.bom_estimation_send_to_owner', 1300)
+        ->whereNull('business_application_processes.owner_bom_accepted')
+        ->where('businesses.is_active', true)
+        ->where('businesses.is_deleted', 0)
+        ->where('businesses_details.is_active', true)
+        ->where('businesses_details.is_deleted', 0)
+        ->where('estimation.is_exceed_pending', 1)
+        ->where('estimation.is_deleted', 0)
+        ->select(
+          'businesses.id as business_id',
+          'businesses.project_name',
+          'businesses.customer_po_number',
+          'businesses_details.id as business_details_id',
+          'businesses_details.product_name',
+          'businesses_details.total_amount',
+          'estimation.total_estimation_amount',
+          'estimation.exceed_remark',
+          'estimation.updated_at',
+          DB::raw('(estimation.total_estimation_amount - businesses_details.total_amount) as exceed_difference')
+        )
+        ->orderBy('estimation.updated_at', 'desc')
+        ->get();
+      return $data_output;
+    } catch (\Exception $e) {
+      return collect();
+    }
+  }
 
 }

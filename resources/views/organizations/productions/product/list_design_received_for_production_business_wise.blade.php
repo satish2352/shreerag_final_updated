@@ -41,9 +41,6 @@
                                 <h1>New Design and BOM Received For Production <span class="table-project-n"></span></h1>
                                 <div class="form-group-inner login-btn-inner row">
                                     <div class="col-lg-2">
-                                        {{-- <div class="login-horizental cancel-wp pull-left">
-                                            <a href="{{ route('add-design-upload') }}" ><button class="btn btn-sm btn-primary login-submit-cs" type="submit" >Add Design</button></a>
-                                    </div> --}}
                                     </div>
                                     <div class="col-lg-10">
 
@@ -57,7 +54,6 @@
                                 <button type="button" class="close sucess-op" data-dismiss="alert" aria-label="Close">
                                     <span class="icon-sc-cl" aria-hidden="true">&times;</span>
                                 </button>
-                                {{-- <i class="fa fa-check adminpro-checked-pro admin-check-pro" aria-hidden="true"></i> --}}
                                 <p><strong>Success!</strong> {{ Session::get('msg') }}</p>
                             </div>
                         @endif
@@ -73,9 +69,6 @@
 
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
-
-
-
                                 <div class="table-responsive">
                                     <form method="GET" action="{{ url()->current() }}">
                                         <div class="d-flex justify-content-end mb-3">
@@ -90,28 +83,18 @@
                                         </div>
                                     </form>
                                     <table class="table table-bordered table-striped">
-                                        {{-- <table id="table" data-toggle="table" data-pagination="true" data-search="true"
-                                    data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="false"
-                                    data-key-events="true" data-show-toggle="true" data-resizable="true" data-cookie="true"
-                                    data-cookie-id-table="saveId" data-show-export="true" data-click-to-select="true"
-                                    data-toolbar="#toolbar"> --}}
                                         <thead>
                                             <tr>
-
                                                 <th data-field="id">ID</th>
-                                                {{-- <th data-field="customer_po_number" data-editable="false">PO Number</th> --}}
                                                 <th>Project Name</th>
                                                 <th>Grand Total Amount</th>
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
-                                                {{-- <th data-field="title" data-editable="false">Name</th> --}}
                                                 <th data-field="quantity" data-editable="false">Quantity</th>
                                                 <th data-field="grn_date" data-editable="false">Description</th>
                                                 <th data-field="total_estimation_amount" data-editable="false">Estimated
                                                     Amount</th>
-                                                {{-- <th data-field="purchase_id" data-editable="false">Remark</th>                                          --}}
                                                 <th data-field="design_image" data-editable="false">Design Layout</th>
-                                                <th data-field="bom_image" data-editable="false">Estimated BOM</th>
-
+                                                <th data-field="bom_items" data-editable="false">BOM Items</th>
                                                 <th data-field="action">Action</th>
                                             </tr>
 
@@ -125,35 +108,24 @@
                                                     <td>{{ ucwords($data->project_name) }}</td>
                                                     <td><b>{{ ucwords($data->grand_total_amount) }}</b></td>
                                                     <td>{{ ucwords($data->product_name) }}</td>
-                                                    {{-- <td>{{ucwords($data->title)}}</td> --}}
                                                     <td>{{ ucwords($data->quantity) }}</td>
                                                     <td>{{ ucwords($data->description) }}</td>
-                                                    {{-- <td>{{ucwords($data->remarks)}}</td>  
-                                                                                       --}}
                                                     <td><b>{{ ucwords($data->total_estimation_amount) }}</b></td>
                                                     <td><a class="img-size" target="_blank"
                                                             href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
                                                             alt="Design"> Click to view</a>
                                                     </td>
-                                                    <td> <a class="img-size"
-                                                            href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['re_bom_image'] }}"
-                                                            alt="bill of material">Click to download</a>
-                                                    </td>
-
                                                     <td>
-                                                        {{-- <div style="display: inline-block; align-items: center;">
-                                                    <a href="{{route('reject-design-edit', base64_encode($data->business_details_id))}}"><button data-toggle="tooltip" title="Edit" class="pd-setting-ed mb-4"><i class="fas fa-pen-square" aria-hidden="true"></i> Reject</button></a> &nbsp;
-                                                   
-
-                                                    <a href="{{ route('accept-design', base64_encode($data->business_details_id)) }}"
-                                                        onclick="return confirmAccept('{{ route('accept-design', base64_encode($data->business_details_id)) }}')"
-                                                        class="pd-setting-ed"
-                                                        data-toggle="tooltip"
-                                                        title="Accept">
-                                                        <button><i class="fa fa-check" aria-hidden="true"></i> Accept </button>
-                                                    </a>
-                                                </div> --}}
-
+                                                        @if(!empty($data->business_details_id) && !empty($data->design_id))
+                                                            <button type="button" class="btn btn-outline-info btn-sm"
+                                                                onclick="prodNewReqOpenBomModal({{ $data->business_details_id }}, {{ $data->design_id }})">
+                                                                <i class="fa fa-list"></i> View BOM
+                                                            </button>
+                                                        @else
+                                                            <span class="text-muted">-</span>
+                                                        @endif
+                                                    </td>
+                                                    <td>
                                                         <div>
                                                             <a
                                                                 href="{{ route('accept-design', base64_encode($data->business_details_id)) }}"><button
@@ -172,7 +144,7 @@
                                                 </tr>
                                             @empty
                                                 <tr>
-                                                    <td colspan="11" class="text-center">
+                                                    <td colspan="10" class="text-center">
                                                         No Record Found
                                                     </td>
                                                 </tr>
@@ -200,6 +172,16 @@
             </div>
         </div>
     </div>
+
+{{-- BOM Material Items Modal (production view-only — new requirements received) --}}
+@include('organizations.common.bom-material-items-modal', [
+    'mode'              => 'view_only',
+    'businessId'        => 0,
+    'businessDetailsId' => 0,
+    'designId'          => 0,
+    'bomModalId'        => 'prodNewReqBomModal',
+])
+
     @push('scripts')
         <script>
             function confirmAccept(acceptUrl) {
@@ -219,6 +201,13 @@
                 });
                 // Prevent the default link action until the user confirms
                 return false;
+            }
+
+            function prodNewReqOpenBomModal(businessDetailsId, designId) {
+                var bdEncoded = btoa(businessDetailsId);
+                var dEncoded  = btoa(designId);
+                var fetchUrl  = '{{ url("production/get-bom-material-items") }}/' + bdEncoded + '/' + dEncoded;
+                openBomModal_prodNewReqBomModal(fetchUrl);
             }
         </script>
     @endpush

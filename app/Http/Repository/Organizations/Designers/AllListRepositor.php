@@ -123,7 +123,9 @@ class AllListRepositor
                     DB::raw('MAX(COALESCE(design_revision_for_prod.reject_reason_prod, "")) as reject_reason_prod'),
                     'businesses.updated_at',
                     'design_revision_for_prod.bom_image',
-                    'designs.design_image'
+                    'designs.design_image',
+                    DB::raw('businesses_details.id as business_details_id'),
+                    DB::raw('MAX(designs.id) as design_id')
                 )
                 ->groupBy(
                     'businesses.id',
@@ -153,16 +155,13 @@ class AllListRepositor
     { //checked
         try {
 
-            $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.LIST_DESIGN_RECIVED_FROM_PRODUCTION_DEPT_REVISED')];
-
-            $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
-                $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
-            })
-                ->leftJoin('designs', function ($join) {
+            // T-2026-006: revised designs now go back to estimation (design_status_id=11131),
+            // production_status_id is cleared to 0 — filter on design_status_id instead.
+            $data_output = BusinessApplicationProcesses::leftJoin('designs', function ($join) {
                     $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
                 })
                 ->leftJoin('businesses_details', function ($join) {
-                    $join->on('production.business_details_id', '=', 'businesses_details.id');
+                    $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
                 })
                 ->leftJoin('businesses', function ($join) {
                     $join->on('business_application_processes.business_id', '=', 'businesses.id');
@@ -170,7 +169,7 @@ class AllListRepositor
                 ->leftJoin('design_revision_for_prod', function ($join) {
                     $join->on('designs.id', '=', 'design_revision_for_prod.design_id');
                 })
-                ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
+                ->where('business_application_processes.design_status_id', config('constants.DESIGN_DEPARTMENT.DESIGN_REVISED_SENT_TO_ESTIMATION'))
                 ->where('businesses.is_active', true)
                 ->where('businesses.is_deleted', 0)
                 ->select(
@@ -185,13 +184,14 @@ class AllListRepositor
                     'businesses_details.quantity',
                     'businesses_details.description',
                     'businesses.remarks',
-                    DB::raw('MAX(design_revision_for_prod.reject_reason_prod) as reject_reason_prod'), // Aggregated
-                    DB::raw('MAX(designs.bom_image) as bom_image'), // Aggregated
-                    DB::raw('MAX(designs.design_image) as design_image'), // Aggregated
-                    DB::raw('MAX(design_revision_for_prod.bom_image) as re_bom_image'), // Aggregated
-                    DB::raw('MAX(design_revision_for_prod.design_image) as re_design_image'), // Aggregated
-                    DB::raw('MAX(design_revision_for_prod.remark_by_design) as remark_by_design'), // Aggregated    
-                    DB::raw('MAX(design_revision_for_prod.updated_at) as updated_at'), // Aggregated                
+                    DB::raw('MAX(designs.id) as design_id'),
+                    DB::raw('MAX(design_revision_for_prod.reject_reason_prod) as reject_reason_prod'),
+                    DB::raw('MAX(designs.bom_image) as bom_image'),
+                    DB::raw('MAX(designs.design_image) as design_image'),
+                    DB::raw('MAX(design_revision_for_prod.bom_image) as re_bom_image'),
+                    DB::raw('MAX(design_revision_for_prod.design_image) as re_design_image'),
+                    DB::raw('MAX(design_revision_for_prod.remark_by_design) as remark_by_design'),
+                    DB::raw('MAX(design_revision_for_prod.updated_at) as updated_at'),
                 )
                 ->groupBy(
                     'business_application_processes.id',
@@ -205,9 +205,8 @@ class AllListRepositor
                     'businesses_details.quantity',
                     'businesses_details.description',
                     'businesses.remarks',
-                    'design_revision_for_prod.updated_at',
                 )
-                ->orderBy('design_revision_for_prod.updated_at', 'desc')
+                ->orderBy('updated_at', 'desc')
                 ->get();
 
             return $data_output;

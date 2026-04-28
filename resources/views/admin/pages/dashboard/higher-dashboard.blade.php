@@ -10,13 +10,12 @@
 
                         <div class="col-sm-6 col-12 text-sm-end">
                             <div class="mx-n1">
-                                <a href="#" class="btn  btn-sm btn-primary mx-1" type="button"
+                                <a href="#" class="btn btn-sm btn-primary mx-1" type="button"
                                     data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
                                     aria-controls="offcanvasRight">
                                     <span class="p-1">
                                         <i class="fa-solid fa-bars"></i>
                                     </span>
-
                                 </a>
                             </div>
                         </div>
@@ -28,603 +27,377 @@
         <main class="py-6">
             <div class="container-fluid">
 
-                <div class="row g-6 mb-6">
+                {{-- ================================================================
+                     ROW 1 — Financial KPIs (4 cards full width)
+                ================================================================ --}}
+                <div class="row g-4 mb-4">
 
-                    <div class="col-xl-8 col-md-8 col-lg-8">
-                        {{-- =============================================== --}}
-                        <div class="row">
-                            <div class="col-xl-4 col-sm-4 col-12 mb-2">
-                                <div class="card shadow border-0">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col mb-2 font-size-dashboard">
-                                                <span class="font-semibold text-muted text-sm d-block mb-2 ">Total
-                                                    Estimation
-                                                </span>
-                                                <span class="h5 font-bold mb-0">
-                                                    ₹
-                                                    {{ number_format($business_total_amount['total_revenu_count'], 2) }}
-                                                </span>
-                                            </div>
-                                            <div class="col-auto">
-                                                <div
-                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                    <i class="fa-solid fa-user-tie"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-sm-4 col-12 mb-2">
-                                <div class="card shadow border-0">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col mb-2 font-size-dashboard">
-                                                <span class="font-semibold text-muted text-sm d-block mb-2 ">Total
-                                                    utilize
-                                                </span>
-                                                <span class="h5 font-bold mb-0">
-                                                    {{-- ₹ {{ $business_total_amount['total_utilize_materila_amount'] }} --}}
-                                                    ₹
-                                                    {{ number_format($business_total_amount['total_utilize_materila_amount'], 2) }}
-                                                </span>
-                                            </div>
-                                            <div class="col-auto">
-                                                <div
-                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                    <i class="fa-solid fa-user-tie"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-sm-4 col-12 mb-2">
-                                <div class="card shadow border-0">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col mb-2 font-size-dashboard">
-                                                <span class="font-semibold text-muted text-sm d-block mb-2">Total Profit
-                                                </span>
-                                                <span class="h5 font-bold mb-0">₹
-                                                    {{ number_format($business_total_amount['profit'], 2) }}
-                                                </span>
-                                            </div>
-                                            <div class="col-auto">
-                                                <div
-                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                    <i class="fa-solid fa-user-tie"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {{-- ======================================================= --}}
-                        <div class="row">
-                            <div class="col-xl-4 col-sm-4 col-12 mb-2">
-                                <div class="card shadow border-0">
-                                    <div class="card-body">
-                                        <div class="row border-bottom">
-                                            <div class="col mb-2  font-size-dashboard">
-                                                <span class="font-semibold text-muted text-sm d-block mb-2">Total
-                                                    Project
-                                                </span>
-                                                <span class="h5 font-bold mb-0">{{ $return_data['active_businesses'] }}
-
-                                                </span>
-                                            </div>
-                                            <div class="col-auto">
-                                                <div
-                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                    <i class="fa-solid fa-user-tie"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="mt-2 mb-0 text-sm">
-                                            <a href="{{ route('list-business') }}">
-                                                <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                    <i class="fa-solid fa-arrow-right"></i> </span>
-                                                <span class="text-nowrap text-xs text-muted">View
-                                                    Details</span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="ccol-xl-4 col-sm-4 col-12 mb-2">
-                                <div class="card shadow border-0">
-                                    <div class="card-body">
-                                        <div class="row border-bottom">
-                                            <div class="col mb-2 font-size-dashboard">
-                                                <span class="font-semibold text-muted text-sm d-block mb-2">Total
-                                                    Product</span>
-                                                <span
-                                                    class="h5 font-bold mb-0">{{ $return_data['business_details'] }}</span>
-                                            </div>
-                                            <div class="col-auto">
-                                                <div
-                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                    <i class="fa-solid fa-paint-brush"></i>
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="mt-2 mb-0 text-sm">
-                                            <a href="{{ route('list-business') }}">
-                                                <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                    <i class="fa-solid fa-arrow-right"></i> </span>
-                                                <span class="text-nowrap text-xs text-muted">View
-                                                    Details</span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="ccol-xl-4 col-sm-4 col-12 mb-2">
-                                <div class="card shadow border-0">
-                                    <div class="card-body">
-                                        <div class="row border-bottom">
-                                            <div class="col mb-2  font-size-dashboard">
-                                                <span class="font-semibold text-muted text-sm d-block mb-2">Total
-                                                    PO Order</span>
-                                                <span
-                                                    class="h5 font-bold mb-0">{{ $purchase_dept_counts['purchase_order_submited_by_vendor'] }}</span>
-                                            </div>
-                                            <div class="col-auto">
-                                                <div
-                                                    class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                    <i class="fa-solid fa-paint-brush"></i>
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="mt-2 mb-0 text-sm">
-                                            <a href="{{ route('list-business') }}">
-                                                <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                    <i class="fa-solid fa-arrow-right"></i> </span>
-                                                <span class="text-nowrap text-xs text-muted">View
-                                                    Details</span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {{-- <div class="col-xl-4 col-sm-4 col-12 mb-2">
-                        <div class="card shadow border-0">
+                    {{-- Business Value --}}
+                    <div class="col-xl-3 col-md-6 col-12">
+                        <div class="card shadow border-0 h-100">
                             <div class="card-body">
-                                <div class="row border-bottom">
-                                    <div class="col mb-2">
-                                        <span class="font-semibold text-muted text-sm d-block mb-2">Inprocess
-                                            Product</span>
-                                        <span class="h5 font-bold mb-0">{{ $return_data['product_inprocess'] }}</span>
+                                <div class="row align-items-center">
+                                    <div class="col font-size-dashboard">
+                                        <span class="font-semibold text-muted text-sm d-block mb-2">Business Value</span>
+                                        <span class="h5 font-bold mb-0">
+                                            &#8377;&nbsp;{{ number_format($owner_kpis['total_business_value'], 2) }}
+                                        </span>
                                     </div>
                                     <div class="col-auto">
-                                        <div class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                            <i class="fa-solid fa-store"></i>
-
+                                        <div class="icon icon-shape bg-primary text-white text-lg rounded-circle">
+                                            <i class="fa-solid fa-briefcase"></i>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="mt-2 mb-0 text-sm">
-                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                    <span class="text-nowrap text-xs text-muted">
-                                        
-                                    </span>
-                                  
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-4 col-sm-4 col-12 mb-2">
-                        <div class="card shadow border-0">
+
+                    {{-- Total Estimation --}}
+                    <div class="col-xl-3 col-md-6 col-12">
+                        <div class="card shadow border-0 h-100">
                             <div class="card-body">
-                                <div class="row border-bottom">
-                                    <div class="col mb-2">
-                                        <span class="font-semibold text-muted text-sm d-block mb-2">Completed
-                                            Customer PO</span>
+                                <div class="row align-items-center">
+                                    <div class="col font-size-dashboard">
+                                        <span class="font-semibold text-muted text-sm d-block mb-2">Total Estimation</span>
                                         <span class="h5 font-bold mb-0">
-                                            {{ $return_data['business_completed'] }}
+                                            &#8377;&nbsp;{{ number_format($owner_kpis['total_estimation_all'], 2) }}
                                         </span>
                                     </div>
                                     <div class="col-auto">
-                                        <div class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                            <i class="fa-solid fa-industry"></i>
+                                        <div class="icon icon-shape text-white text-lg rounded-circle" style="background-color:#20a38e;">
+                                            <i class="fa-solid fa-file-invoice"></i>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="mt-2 mb-0 text-sm">
-                                    <a href="{{ route('list-dispatch-final-product-close') }}">
-                                        <span class="badge badge-pill bg-soft-success text-success me-2">
-                                            <i class="fa-solid fa-arrow-right"></i> </span>
-                                        <span class="text-nowrap text-xs text-muted">view
-                                            details</span>
-                                    </a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-4 col-sm-4 col-12 mb-2">
-                        <div class="card shadow border-0">
+
+                    {{-- Total PO Amount --}}
+                    <div class="col-xl-3 col-md-6 col-12">
+                        <div class="card shadow border-0 h-100">
                             <div class="card-body">
-                                <div class="row border-bottom">
-                                    <div class="col mb-2">
-                                        <span class="font-semibold text-muted text-sm d-block mb-2">Completed
-                                            Product</span>
+                                <div class="row align-items-center">
+                                    <div class="col font-size-dashboard">
+                                        <span class="font-semibold text-muted text-sm d-block mb-2">Total PO Amount</span>
                                         <span class="h5 font-bold mb-0">
-                                            {{ $return_data['product_completed'] }}
+                                            &#8377;&nbsp;{{ number_format($owner_kpis['total_po_amount'], 2) }}
                                         </span>
                                     </div>
                                     <div class="col-auto">
-                                        <div class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                            <i class="fa-solid fa-star"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mt-2 mb-0 text-sm">
-                                    <a href="{{ route('list-product-dispatch-completed') }}">
-                                        <span class="badge badge-pill bg-soft-success text-success me-2">
-                                            <i class="fa-solid fa-arrow-right"></i> </span>
-                                        <span class="text-nowrap text-xs text-muted">view
-                                            details</span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div> --}}
-                        {{-- <div class="col-xl-4 col-sm-4 col-12 mb-2">
-                        <div class="card shadow border-0">
-                            <div class="card-body">
-                                <div class="row border-bottom">
-                                    <div class="col mb-2">
-                                        <span class="font-semibold text-muted text-sm d-block mb-2">Total
-                                            Employee</span>
-                                        <span class="h5 font-bold mb-0">{{ $return_data['user_active_count'] }}</span>
-                                    </div>
-                                    <div class="col-auto">
-                                        <div class="icon icon-shape bg-warning text-white text-lg rounded-circle">
+                                        <div class="icon icon-shape text-white text-lg rounded-circle" style="background-color:#1a3a5c;">
                                             <i class="fa-solid fa-shopping-cart"></i>
-
                                         </div>
                                     </div>
                                 </div>
-                                <div class="mt-2 mb-0 text-sm">
-                                    <a href="{{ route('list-employee') }}">
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- GRN Received --}}
+                    <div class="col-xl-3 col-md-6 col-12">
+                        <div class="card shadow border-0 h-100">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col font-size-dashboard">
+                                        <span class="font-semibold text-muted text-sm d-block mb-2">GRN Received</span>
+                                        <span class="h5 font-bold mb-0">
+                                            &#8377;&nbsp;{{ number_format($owner_kpis['total_grn_accepted_amount'], 2) }}
+                                        </span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-success text-white text-lg rounded-circle">
+                                            <i class="fa-solid fa-boxes"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>{{-- end Row 1 --}}
+
+                {{-- ================================================================
+                     ROW 2 — Operational Counts (4 count cards + donut chart)
+                ================================================================ --}}
+                <div class="row g-4 mb-4">
+
+                    {{-- Left: 4 count cards --}}
+                    <div class="col-xl-8">
+                        <div class="row g-3">
+
+                            {{-- Active Projects --}}
+                            <div class="col-xl-6 col-sm-6 col-12">
+                                <div class="card shadow border-0 h-100">
+                                    <div class="card-body">
+                                        <div class="row border-bottom pb-2">
+                                            <div class="col font-size-dashboard">
+                                                <span class="font-semibold text-muted text-sm d-block mb-2">
+                                                    <i class="fa-solid fa-city me-1 text-primary"></i>Active Projects
+                                                </span>
+                                                <span class="h5 font-bold mb-0">{{ $return_data['active_businesses'] }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 text-sm">
+                                            <a href="{{ route('list-business') }}">
+                                                <span class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i>
+                                                </span>
+                                                <span class="text-nowrap text-xs text-muted">View Details</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Total Products --}}
+                            <div class="col-xl-6 col-sm-6 col-12">
+                                <div class="card shadow border-0 h-100">
+                                    <div class="card-body">
+                                        <div class="row border-bottom pb-2">
+                                            <div class="col font-size-dashboard">
+                                                <span class="font-semibold text-muted text-sm d-block mb-2">
+                                                    <i class="fa-solid fa-cube me-1 text-primary"></i>Total Products
+                                                </span>
+                                                <span class="h5 font-bold mb-0">{{ $return_data['business_details'] }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 text-sm">
+                                            <a href="{{ route('list-business') }}">
+                                                <span class="badge badge-pill bg-soft-success text-success me-2">
+                                                    <i class="fa-solid fa-arrow-right"></i>
+                                                </span>
+                                                <span class="text-nowrap text-xs text-muted">View Details</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Products In Progress --}}
+                            <div class="col-xl-6 col-sm-6 col-12">
+                                <div class="card shadow border-0 h-100">
+                                    <div class="card-body">
+                                        <div class="row border-bottom pb-2">
+                                            <div class="col font-size-dashboard">
+                                                <span class="font-semibold text-muted text-sm d-block mb-2">
+                                                    <i class="fa-solid fa-spinner me-1 text-warning"></i>Products In Progress
+                                                </span>
+                                                <span class="h5 font-bold mb-0">{{ $owner_kpis['products_in_progress'] }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 text-sm">
+                                            <span class="text-nowrap text-xs text-muted">Active workflow items</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Products Completed --}}
+                            <div class="col-xl-6 col-sm-6 col-12">
+                                <div class="card shadow border-0 h-100">
+                                    <div class="card-body">
+                                        <div class="row border-bottom pb-2">
+                                            <div class="col font-size-dashboard">
+                                                <span class="font-semibold text-muted text-sm d-block mb-2">
+                                                    <i class="fa-solid fa-check-circle me-1 text-success"></i>Products Completed
+                                                </span>
+                                                <span class="h5 font-bold mb-0">{{ $owner_kpis['products_completed'] }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 text-sm">
+                                            <span class="text-nowrap text-xs text-muted">Fully dispatched</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>{{-- end inner row --}}
+                    </div>{{-- end col-xl-8 --}}
+
+                    {{-- Right: Donut Chart --}}
+                    <div class="col-xl-4">
+                        <div class="card shadow border-0 h-100">
+                            <canvas id="myDonutChart" width="300" height="300"></canvas>
+                        </div>
+                    </div>
+
+                </div>{{-- end Row 2 --}}
+
+                {{-- ================================================================
+                     ROW 3 — Action Required + Realized Financials (3 cards)
+                ================================================================ --}}
+                <div class="row g-4 mb-4">
+
+                    {{-- Pending Approvals --}}
+                    <div class="col-xl-4 col-md-4 col-12">
+                        <div class="card shadow border-0 h-100 {{ $owner_kpis['pending_owner_actions'] > 0 ? 'border-warning' : '' }}"
+                             style="{{ $owner_kpis['pending_owner_actions'] > 0 ? 'border-left:4px solid #fd7e14 !important;' : '' }}">
+                            <div class="card-body">
+                                <div class="row align-items-center border-bottom pb-2">
+                                    <div class="col font-size-dashboard">
+                                        <span class="font-semibold text-muted text-sm d-block mb-2">
+                                            <i class="fa-solid fa-clock me-1 {{ $owner_kpis['pending_owner_actions'] > 0 ? 'text-warning' : 'text-muted' }}"></i>Pending Approvals
+                                        </span>
+                                        <span class="h5 font-bold mb-0 {{ $owner_kpis['pending_owner_actions'] > 0 ? 'text-warning' : '' }}">
+                                            {{ $owner_kpis['pending_owner_actions'] }}
+                                        </span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape text-white text-lg rounded-circle"
+                                             style="background-color:{{ $owner_kpis['pending_owner_actions'] > 0 ? '#fd7e14' : '#6c757d' }};">
+                                            <i class="fa-solid fa-clock"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-2 text-sm">
+                                    <a href="{{ route('list-approved-purchase-orders-owner') }}">
                                         <span class="badge badge-pill bg-soft-success text-success me-2">
-                                            <i class="fa-solid fa-arrow-right"></i> </span>
-                                        <span class="text-nowrap text-xs text-muted">view
-                                            details</span>
+                                            <i class="fa-solid fa-arrow-right"></i>
+                                        </span>
+                                        <span class="text-nowrap text-xs text-muted">Review Now</span>
                                     </a>
                                 </div>
                             </div>
                         </div>
-                    </div> --}}
                     </div>
-                    <div class="col-xl-4 col-md-4 col-lg-4">
-                        <div class="card shadow border-0">
-                            <canvas id="myDonutChart" width="300" height="300" class=""></canvas>
+
+                    {{-- Total PO Orders (count) --}}
+                    <div class="col-xl-4 col-md-4 col-12">
+                        <div class="card shadow border-0 h-100">
+                            <div class="card-body">
+                                <div class="row align-items-center border-bottom pb-2">
+                                    <div class="col font-size-dashboard">
+                                        <span class="font-semibold text-muted text-sm d-block mb-2">
+                                            <i class="fa-solid fa-file-alt me-1 text-primary"></i>Total PO Orders
+                                        </span>
+                                        <span class="h5 font-bold mb-0">
+                                            {{ $purchase_dept_counts['purchase_order_submited_by_vendor'] }}
+                                        </span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-primary text-white text-lg rounded-circle">
+                                            <i class="fa-solid fa-file-alt"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-2 text-sm">
+                                    <a href="{{ route('list-business') }}">
+                                        <span class="badge badge-pill bg-soft-success text-success me-2">
+                                            <i class="fa-solid fa-arrow-right"></i>
+                                        </span>
+                                        <span class="text-nowrap text-xs text-muted">View Details</span>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
-
-
-                        <script>
-                            document.addEventListener("DOMContentLoaded", function() {
-                                const ctx = document.getElementById('myDonutChart').getContext('2d');
-
-                                // Get Laravel data
-                                const counts = @json($return_data);
-
-                                // Labels must match the meaning of your data
-                                const labels = [
-                                    "Business Completed",
-                                    "Business In Process",
-                                    "Product Completed",
-                                    "Product In Process"
-                                ];
-
-                                // Values must match the keys in $owner_counts
-                                const data = [
-                                    counts.business_completed ?? 0,
-                                    counts.business_inprocess ?? 0,
-                                    counts.product_completed ?? 0,
-                                    counts.product_inprocess ?? 0
-                                ];
-
-                                const backgroundColors = [
-                                    '#2D4E59', // Deep Blue-Teal
-                                    '#33B78C', // Emerald Green
-                                    '#34BAB8', // Aqua Blue
-                                    '#199CC2' // Sky Blue
-                                ];
-
-                                new Chart(ctx, {
-                                    type: 'doughnut',
-                                    data: {
-                                        labels: labels,
-                                        datasets: [{
-                                            data: data,
-                                            backgroundColor: backgroundColors
-                                        }]
-                                    },
-                                    options: {
-                                        cutout: '80%',
-                                        borderWidth: 2,
-                                        plugins: {
-                                            legend: {
-                                                position: 'right'
-                                            },
-                                            title: {
-                                                display: true,
-                                                text: 'Project Details',
-                                                font: {
-                                                    size: 18
-                                                }
-                                            }
-                                        },
-                                        responsive: true,
-                                        maintainAspectRatio: false
-                                    }
-                                });
-                            });
-                        </script>
-
-                        <style>
-                            #myDonutChart {
-                                max-width: 400px;
-                                height: 235px;
-                                padding: 30px;
-                            }
-                        </style>
-
-
-
-
-
-
-                        {{-- =============== --}}
-
                     </div>
-                </div>
-            </div>
+
+                    {{-- Realized Profit (dispatched products only) --}}
+                    <div class="col-xl-4 col-md-4 col-12">
+                        <div class="card shadow border-0 h-100">
+                            <div class="card-body">
+                                <div class="row align-items-center border-bottom pb-2">
+                                    <div class="col font-size-dashboard">
+                                        <span class="font-semibold text-muted text-sm d-block mb-2">
+                                            <i class="fa-solid fa-chart-line me-1 text-success"></i>Realized Profit
+                                        </span>
+                                        <span class="h5 font-bold mb-0">
+                                            &#8377;&nbsp;{{ number_format($business_total_amount['profit'], 2) }}
+                                        </span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-success text-white text-lg rounded-circle">
+                                            <i class="fa-solid fa-chart-line"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-2 text-sm">
+                                    <span class="text-nowrap text-xs text-muted">From fully dispatched products</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>{{-- end Row 3 --}}
+
+            </div>{{-- end container-fluid --}}
         </main>
 
-        <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-6">
-                <canvas id="myPieChart"></canvas>
-            </div>
-            <div class="col-lg-6 col-md-6 col-sm-6">
-                <canvas id="myBarChart"></canvas>
-            </div>
-        </div>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        {{-- <script>
-            var ctx = document.getElementById('myPieChart').getContext('2d');
+        {{-- Donut Chart Script --}}
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const ctx = document.getElementById('myDonutChart').getContext('2d');
 
-            // Pass PHP data to JavaScript
-            var counts = @json($return_data); // Ensure $return_data is correctly set in the controller
+                const counts = @json($return_data);
 
-            var backgroundColors = [
-                '#2d4e59',
-                '#33b78c',
-                '#34bab8',
-                '#199cc2',
-                '#3585b2',
-                '#6d9baa'
-            ];
+                const labels = [
+                    "Business Completed",
+                    "Business In Process",
+                    "Product Completed",
+                    "Product In Process"
+                ];
 
-            var labels = Object.keys(counts);
-            var data = Object.values(counts);
+                const data = [
+                    counts.business_completed ?? 0,
+                    counts.business_inprocess ?? 0,
+                    counts.product_completed ?? 0,
+                    counts.product_inprocess ?? 0
+                ];
 
-            var myPieChart = new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        data: data,
-                        backgroundColor: backgroundColors
-                    }]
-                },
-                options: {
-                    plugins: {
-                        tooltip: {
-                            enabled: true
-                        },
-                        legend: {
-                            position: 'right'
-                        },
-                        title: {
-                            display: true,
-                            text: 'Product Pie Chart',
-                            font: {
-                                size: 20
-                            }
-                        }
+                const backgroundColors = [
+                    '#2D4E59',
+                    '#33B78C',
+                    '#34BAB8',
+                    '#199CC2'
+                ];
+
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: data,
+                            backgroundColor: backgroundColors
+                        }]
                     },
-                    responsive: true
-                }
+                    options: {
+                        cutout: '80%',
+                        borderWidth: 2,
+                        plugins: {
+                            legend: {
+                                position: 'right'
+                            },
+                            title: {
+                                display: true,
+                                text: 'Project Details',
+                                font: {
+                                    size: 18
+                                }
+                            }
+                        },
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
             });
-        </script> --}}
+        </script>
+
         <style>
-            #myPieChart {
+            #myDonutChart {
                 max-width: 400px;
-                /* limit width */
-                max-height: 400px;
-                /* limit height */
+                height: 235px;
+                padding: 30px;
             }
         </style>
-        <script>
-            var ctx = document.getElementById('myPieChart').getContext('2d');
-
-            // Pass PHP data to JavaScript
-            var counts = @json($return_data);
-
-            var backgroundColors = [
-                '#1E3A5F', // Dark Navy
-                '#3FB8AF', // Teal
-                '#7FC7D9', // Aqua
-                '#4A90E2', // Sky Blue
-                '#5D7290', // Steel Blue
-                '#A9B8C9' // Light Gray-Blue
-            ];
-
-            var labels = Object.keys(counts);
-            var data = Object.values(counts);
-
-            var myPieChart = new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        data: data,
-                        backgroundColor: backgroundColors
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false, // allow custom size
-                    plugins: {
-                        tooltip: {
-                            enabled: true
-                        },
-                        legend: {
-                            position: 'right'
-                        },
-                        title: {
-                            display: true,
-                            text: 'Product Pie Chart',
-                            font: {
-                                size: 16
-                            }
-                        }
-                    }
-                }
-            });
-        </script>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        {{-- <script>
-            var ctx = document.getElementById('myBarChart').getContext('2d');
-
-            // Pass PHP data to JavaScript
-            var counts = @json($return_data); // Ensure $return_data is correctly set in the controller
-
-            var backgroundColors = [
-                '#2d4e59',
-                '#33b78c',
-                '#34bab8',
-                '#199cc2',
-                '#3585b2',
-                '#6d9baa'
-            ];
-
-            var labels = Object.keys(counts);
-            var data = Object.values(counts);
-
-            var myBarChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Products',
-                        data: data,
-                        backgroundColor: backgroundColors,
-                        borderColor: '#000', // Optional: border color for the bars
-                        borderWidth: 1 // Optional: border width for the bars
-                    }]
-                },
-                options: {
-                    plugins: {
-                        tooltip: {
-                            enabled: true
-                        },
-                        legend: {
-                            position: 'top'
-                        },
-                        title: {
-                            display: true,
-                            text: 'Product Bar Chart',
-                            font: {
-                                size: 20
-                            }
-                        }
-                    },
-                    responsive: true,
-                    scales: {
-                        x: {
-                            beginAtZero: true
-                        },
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        </script> --}}
-
 
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script>
-            var ctx = document.getElementById('myBarChart').getContext('2d');
-            var counts = @json($return_data);
-            var labels = Object.keys(counts);
-            var dataValues = Object.values(counts);
 
-            // Create gradient for each bar
-            function createGradient(ctx, color1, color2) {
-                let gradient = ctx.createLinearGradient(0, 0, 0, 400);
-                gradient.addColorStop(0, color1);
-                gradient.addColorStop(1, color2);
-                return gradient;
-            }
-
-            var myBarChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Products',
-                        data: dataValues,
-                        backgroundColor: [
-                            createGradient(ctx, 'rgba(45,78,89,0.8)', 'rgba(45,78,89,0.2)'),
-                            createGradient(ctx, 'rgba(51,183,140,0.8)', 'rgba(51,183,140,0.2)'),
-                            createGradient(ctx, 'rgba(52,186,184,0.8)', 'rgba(52,186,184,0.2)'),
-                            createGradient(ctx, 'rgba(25,156,194,0.8)', 'rgba(25,156,194,0.2)'),
-                            createGradient(ctx, 'rgba(53,133,178,0.8)', 'rgba(53,133,178,0.2)'),
-                            createGradient(ctx, 'rgba(109,155,170,0.8)', 'rgba(109,155,170,0.2)')
-                        ],
-                        borderRadius: 8, // Rounded bars
-                        borderSkipped: false
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        title: {
-                            display: true,
-                            text: 'Product Bar Chart',
-                            font: {
-                                size: 20
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        </script>
     </div>
 </div>
+
+{{-- Customer PO List offcanvas (unchanged) --}}
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
     <div class="offcanvas-header">
         <h5 id="offcanvasRightLabel">Customer PO List</h5>
@@ -652,7 +425,6 @@
                                         @switch(true)
                                             @case($data->quantity_tracking_status == 3005 && $data->dispatch_status_id == 1154)
                                                 Product Dispatch Completed
-                                                {{-- {{ $data->completed_quantity }} --}}
                                             @break
 
                                             @case($data->quantity_tracking_status == 3005)
@@ -684,7 +456,7 @@
 
                                             @case($data->po_tracking_status == 4002)
                                                 Quality Department (Generated GRN) and Store Department Material Received PO
-                                                {{ $data->purchase_orders_id }} & {{ $data->tracking_id }} time
+                                                {{ $data->purchase_orders_id }} &amp; {{ $data->tracking_id }} time
                                             @break
 
                                             @case($data->po_tracking_status == 4001)

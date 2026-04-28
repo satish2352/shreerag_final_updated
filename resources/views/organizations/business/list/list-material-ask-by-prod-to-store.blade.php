@@ -54,10 +54,8 @@
                                                 <th data-field="grn_date" data-editable="false">Description</th>
                                                 <th data-field="purchase_id" data-editable="false">Remark</th>
                                                 <th data-field="design_image" data-editable="false">Design Layout</th>
-                                                <th data-field="bom_image" data-editable="false">BOM</th>
-                                                <th data-field="re_design_image" data-editable="false">Revised Design Layout
-                                                </th>
-                                                <th data-field="re_bom_image" data-editable="false">Revised BOM</th>
+                                                <th data-field="re_design_image" data-editable="false">Revised Design Layout</th>
+                                                <th data-field="bom_items" data-editable="false">BOM Items</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -74,27 +72,33 @@
                                                     <td>{{ ucwords($data->quantity) }}</td>
                                                     <td>{{ ucwords($data->description) }}</td>
                                                     <td>{{ ucwords($data->remarks) }}</td>
-                                                    <td> <a class="img-size" target="_blank"
-                                                            href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
-                                                            alt="Design"> Click to view</a>
-                                                    </td>
-                                                    <td> <a class="img-size"
-                                                            href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
-                                                            alt="bill of material">Click to download</a>
+                                                    <td>
+                                                        @if(!empty($data->design_image))
+                                                            <a class="img-size" target="_blank"
+                                                                href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
+                                                                alt="Design">Click to view</a>
+                                                        @else
+                                                            <span class="text-muted">—</span>
+                                                        @endif
                                                     </td>
                                                     @if ($data->reject_reason_prod == '')
-                                                        <td>-</td>
                                                         <td>-</td>
                                                     @else
                                                         <td> <a class="img-size" target="_blank"
                                                                 href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['re_design_image'] }}"
-                                                                alt="Design"> Click to view</a>
-                                                        </td>
-                                                        <td> <a class="img-size"
-                                                                href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['re_bom_image'] }}"
-                                                                alt="bill of material">Click to download</a>
+                                                                alt="Design">Click to view</a>
                                                         </td>
                                                     @endif
+                                                    <td>
+                                                        @if(!empty($data->design_id) && !empty($data->business_details_id))
+                                                            <button type="button" class="btn btn-outline-info btn-sm"
+                                                                onclick="ownerProdStoreOpenBomModal({{ $data->business_details_id }}, {{ $data->design_id }})">
+                                                                <i class="fa fa-list"></i> View BOM
+                                                            </button>
+                                                        @else
+                                                            <span class="text-muted">—</span>
+                                                        @endif
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -107,4 +111,22 @@
             </div>
         </div>
     </div>
-   @endsection
+@include('organizations.common.bom-material-items-modal', [
+    'mode'              => 'view_only',
+    'businessId'        => 0,
+    'businessDetailsId' => 0,
+    'designId'          => 0,
+    'bomModalId'        => 'ownerProdStoreBomModal',
+])
+
+@push('scripts')
+<script>
+    function ownerProdStoreOpenBomModal(businessDetailsId, designId) {
+        var bdEncoded = btoa(businessDetailsId);
+        var dEncoded  = btoa(designId);
+        var fetchUrl  = '{{ url("owner/get-bom-material-items") }}/' + bdEncoded + '/' + dEncoded;
+        openBomModal_ownerProdStoreBomModal(fetchUrl);
+    }
+</script>
+@endpush
+@endsection

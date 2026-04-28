@@ -40,51 +40,80 @@
                                         data-click-to-select="true" data-toolbar="#toolbar">
                                         <thead>
                                             <tr>
-
                                                 <th data-field="id">ID</th>
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="description" data-editable="false">Description</th>
                                                 <th data-field="quantity" data-editable="false">Quantity</th>
                                                 <th data-field="design_image" data-editable="false">Design Layout</th>
                                                 <th data-field="bom_image" data-editable="false">Estimated BOM</th>
-                                                 <th data-field="total_amount" data-editable="false">Owner Side Amount</th>
-                                                  <th data-field="total_estimation_amount" data-editable="false">Estimated BOM Amount</th>
-                                                <th data-field="action">Action</th>
+                                                <th data-field="total_amount" data-editable="false">Owner Side Amount</th>
+                                                <th data-field="total_estimation_amount" data-editable="false">Estimated BOM Amount</th>
+                                                <th data-field="exceed_remark" data-editable="false">Estimator Reason</th>
+                                                <th data-field="bom_items" data-editable="false">BOM Items</th>
+                                            <th data-field="action">Action</th>
                                             </tr>
-
                                         </thead>
                                         <tbody>
                                             @foreach ($data_output as $data)
                                                 <tr>
-
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->description) }}</td>
                                                     <td>{{ ucwords($data->quantity) }}</td>
-                                                    <td> <a class="img-size" target="_blank"
+                                                    <td>
+                                                        <a class="img-size" target="_blank"
                                                             href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
-                                                            alt="Design"> Click to view</a>
+                                                            alt="Design">Click to view</a>
                                                     </td>
-                                                    <td> <a class="img-size"
+                                                    <td>
+                                                        <a class="img-size"
                                                             href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
                                                             alt="bill of material">Click to download</a>
                                                     </td>
-                                                    </td>
-                                                      <td>{{ ucwords($data->total_amount) }}</td>
+                                                    <td>{{ ucwords($data->total_amount) }}</td>
                                                     <td>{{ ucwords($data->total_estimation_amount) }}</td>
-                                                   <td>
-                                                <div>
-                                                    <a
-                                                        href="{{ route('accept-bom-estimation', base64_encode($data->id)) }}"><button
-                                                            data-toggle="tooltip" title="Accept BOM Estimation" class="accept-btn">Accept</button></a> &nbsp;
-                                                    &nbsp; &nbsp;
-
-                                                    <a
-                                                        href="{{ route('edit-reject-estimation-owner-side', base64_encode($data->id)) }}"><button
-                                                            data-toggle="tooltip" title="Rejected BOM Estimation" class="reject-btn">Reject</button></a> &nbsp;
-                                                    &nbsp; &nbsp;
-                                                </div>
-                                            </td>
+                                                    <td>
+                                                        @if ($data->is_exceed_pending)
+                                                            <span class="badge badge-warning" style="font-size:13px; padding:5px 8px;">
+                                                                {{ $data->exceed_remark ?? '-' }}
+                                                            </span>
+                                                        @else
+                                                            <span class="text-muted">—</span>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if($data->design_id)
+                                                        <button type="button" class="btn btn-outline-info btn-sm"
+                                                            onclick="ownerOpenBomModal({{ $data->id }}, {{ $data->design_id }})">
+                                                            <i class="fa fa-list"></i> View BOM
+                                                        </button>
+                                                        @else
+                                                        <span class="text-muted">-</span>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if ($data->is_exceed_pending)
+                                                            {{-- Exceed-pending row: owner must update the business amount --}}
+                                                            <div class="alert alert-warning" style="padding:6px 10px; margin-bottom:5px; font-size:12px;">
+                                                                Amount exceeds business limit.
+                                                            </div>
+                                                            <a href="{{ route('edit-business', base64_encode($data->business_main_id)) }}">
+                                                                <button data-toggle="tooltip" title="Update Business Amount to resolve exceeded estimation"
+                                                                    class="btn btn-sm btn-warning">
+                                                                    Update Amount
+                                                                </button>
+                                                            </a>
+                                                        @else
+                                                            {{-- Normal row: Accept / Reject --}}
+                                                            <a href="{{ route('accept-bom-estimation', base64_encode($data->id)) }}">
+                                                                <button data-toggle="tooltip" title="Accept BOM Estimation" class="accept-btn">Accept</button>
+                                                            </a>
+                                                            &nbsp;&nbsp;&nbsp;
+                                                            <a href="{{ route('edit-reject-estimation-owner-side', base64_encode($data->id)) }}">
+                                                                <button data-toggle="tooltip" title="Rejected BOM Estimation" class="reject-btn">Reject</button>
+                                                            </a>
+                                                        @endif
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -97,4 +126,23 @@
             </div>
         </div>
     </div>
-   @endsection
+{{-- BOM Material Items Modal (owner view-only) --}}
+@include('organizations.common.bom-material-items-modal', [
+    'mode'              => 'view_only',
+    'businessId'        => 0,
+    'businessDetailsId' => 0,
+    'designId'          => 0,
+    'bomModalId'        => 'ownerBomItemsModal',
+])
+
+@push('scripts')
+<script>
+    function ownerOpenBomModal(businessDetailsId, designId) {
+        var bdEncoded  = btoa(businessDetailsId);
+        var dEncoded   = btoa(designId);
+        var fetchUrl   = '{{ url("owner/get-bom-material-items") }}/' + bdEncoded + '/' + dEncoded;
+        openBomModal_ownerBomItemsModal(fetchUrl);
+    }
+</script>
+@endpush
+@endsection

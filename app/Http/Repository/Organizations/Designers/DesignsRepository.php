@@ -312,41 +312,55 @@ class DesignsRepository
                 $designRevisionForProd->remark_by_design = $request->remark_by_design;
 
                 $designImageName = $designRevisionForProd->id . '_' . $formattedProductName . '_' . rand(100000, 999999) . '_re_design.' . $request->design_image->getClientOriginalExtension();
-                $bomImageName = $designRevisionForProd->id . '_' . $formattedProductName . '_' . rand(100000, 999999) . '_re_bom.' . $request->bom_image->getClientOriginalExtension();
-
-                // Update the design image and bom image fields in the DesignModel
                 $designRevisionForProd->design_image = $designImageName;
-                $designRevisionForProd->bom_image = $bomImageName;
+
+                // T-2026-003: BOM Excel upload is optional — only process if a file was uploaded.
+                $bomImageName = $designRevisionForProd->bom_image; // retain existing value by default
+                if ($request->hasFile('bom_image')) {
+                    $bomImageName = $designRevisionForProd->id . '_' . $formattedProductName . '_' . rand(100000, 999999) . '_re_bom.' . $request->bom_image->getClientOriginalExtension();
+                    $designRevisionForProd->bom_image = $bomImageName;
+                }
 
                 $designRevisionForProd->save();
             }
 
-            // Update BusinessApplicationProcesses if record exists
+            // T-2026-006: After production rejection, re-route revised design BACK TO ESTIMATION
+            // (not directly to production as it was previously with 1116/off_canvas=14).
+            // Estimation re-reviews → sends to owner for approval → owner accepts → estimation sends to production.
+            // New status: 11131 (DESIGN_REVISED_SENT_TO_ESTIMATION), off_canvas=12 (same as first-time send to estimation).
             $business_application = BusinessApplicationProcesses::where('business_details_id', $designRevisionForProd->business_details_id)->first();
 
             if ($business_application) {
+                DB::transaction(function () use ($business_application, $designRevisionForProd) {
+                    // Route back to estimation with new traceability status 11131
+                    $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.DESIGN_REVISED_SENT_TO_ESTIMATION');
+                    $business_application->design_send_to_estimation = config('constants.DESIGN_DEPARTMENT.DESIGN_REVISED_SENT_TO_ESTIMATION');
+                    // Clear any prior production_status_id so production no longer sees this item
+                    $business_application->production_status_id = 0;
+                    // Reset owner BOM fields so estimation's "New Design List" query (whereNull bom_estimation_send_to_owner)
+                    // can pick up this revised design correctly.
+                    $business_application->bom_estimation_send_to_owner = null;
+                    $business_application->owner_bom_accepted = null;
+                    $business_application->owner_bom_rejected = null;
+                    $business_application->estimation_send_to_production = null;
+                    $business_application->off_canvas_status = 12;
+                    $business_application->save();
 
-                // $business_application->business_id = $designRevisionForProd->business_id;
-                $business_application->business_status_id = config('constants.HIGHER_AUTHORITY.DESIGN_SENT_TO_PROD_DEPT_REVISED');
-                // $business_application->design_id = $designRevisionForProd->design_id;
-                $business_application->design_status_id = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_REVISED');
-                // $business_application->production_id = $designRevisionForProd->production_id;
-                $business_application->production_status_id = config('constants.PRODUCTION_DEPARTMENT.LIST_DESIGN_RECIVED_FROM_PRODUCTION_DEPT_REVISED');
-                $business_application->off_canvas_status = 14;
-                $business_application->save();
-
-                // $update_data_admin['current_department'] = config('constants.DESIGN_DEPARTMENT.DESIGN_SENT_TO_PROD_DEPT_FIRST_TIME');
-                $update_data_admin['off_canvas_status'] = 14;
-                $update_data_business['off_canvas_status'] = 14;
-                $update_data_admin['is_view'] = '0';
-                AdminView::where('business_details_id', $business_application->business_details_id)
-                    ->update($update_data_admin);
-                NotificationStatus::where('business_details_id', $business_application->business_details_id)
-                    ->update($update_data_business);
+                    AdminView::where('business_details_id', $business_application->business_details_id)
+                        ->update([
+                            'off_canvas_status' => 12,
+                            'is_view'           => '0',
+                        ]);
+                    NotificationStatus::where('business_details_id', $business_application->business_details_id)
+                        ->update([
+                            'off_canvas_status' => 12,
+                            'estimation_view'   => '0', // reset so bell icon shows notification to estimation dept
+                        ]);
+                });
             }
 
             $return_data['designImageName'] = $designImageName;
-            $return_data['bomImageName'] = $bomImageName;
+            $return_data['bomImageName'] = $bomImageName ?? null; // T-2026-003: may be null if no file uploaded
             $return_data['last_insert_id'] = $designRevisionForProd->business_id;
 
             return $return_data;

@@ -42,6 +42,24 @@
                                     </div>
                                 @endif
 
+                                @if(isset($estimation_data) && !is_null($estimation_data) && !is_null($estimation_data->owner_suggested_amount))
+                                    <div class="col-md-12">
+                                        <div class="alert alert-warning alert-dismissible" role="alert" style="border-left: 4px solid #e6a817;">
+                                            <strong>Owner Has Suggested a Revised Amount</strong><br>
+                                            The owner has reviewed your exceeded estimation and suggested a revised amount of
+                                            <strong>&#8377;{{ number_format($estimation_data->owner_suggested_amount, 2) }}</strong>
+                                            @if($estimation_data->owner_suggested_at)
+                                                (on {{ \Carbon\Carbon::parse($estimation_data->owner_suggested_at)->format('d-m-Y') }})
+                                            @endif.<br>
+                                            The estimation amount field below shows the BOM-derived total.
+                                            Update the BOM items if needed to match or revise this suggestion before resubmitting for owner approval.
+                                            @if(!is_null($estimation_data->owner_suggestion_remark))
+                                                <br><strong>Owner Remark:</strong> {{ $estimation_data->owner_suggestion_remark }}
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endif
+
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="all-form-element-inner">
                                         <form action="{{ route('update-estimation') }}" method="POST"
@@ -75,6 +93,7 @@
                                                             readonly>
                                                     </div>
                                                
+                                                    {{-- T-2026-003: BOM Excel upload disabled — BOM is now captured via the structured BOM Material Items modal (T-2026-002). Uncomment to restore.
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 mt-4">
                                                         <label for="bom_image">Upload Estimation BOM (Excel, 1KB - 5MB) <span
                                                                 class="text-danger">*</span></label>
@@ -85,17 +104,52 @@
                                                             <span class="red-text">{{ $errors->first('bom_image') }}</span>
                                                         @endif
                                                     </div>
+                                                    --}}
+
+                                                    @if(isset($estimation_data) && $estimation_data && $estimation_data->design_id)
+                                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3">
+                                                        <label>BOM Material Items (Structured Data)</label><br>
+                                                        <button type="button" class="btn btn-info btn-sm"
+                                                            onclick="openBomModal_bomMaterialItemsModal('{{ route('estimation.get-bom-material-items', [base64_encode($estimation_data->business_details_id), base64_encode($estimation_data->design_id)]) }}')">
+                                                            <i class="fa fa-list"></i> View / Edit BOM Items
+                                                        </button>
+                                                        <small class="text-muted ml-2">Review and edit structured BOM line items from the design department.</small>
+                                                    </div>
+                                                    @endif
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 mt-4">
                                                         <label for="total_estimation_amount">Total Estimation Amount <span
                                                                 class="text-danger">*</span></label>
+                                                        {{-- T-2026-010: Field value priority:
+                                                             1. BOM Final Total ($bom_final_total, server-computed SUM(rate×qty)) when > 0
+                                                             2. total_estimation_amount saved on the estimation row (prior saves fallback)
+                                                             3. blank
+                                                             owner_suggested_amount is intentionally excluded — it is shown in the
+                                                             informational banner above this field only. --}}
                                                         <input type="text" class="form-control" id="total_estimation_amount"
-                                                            name="total_estimation_amount" >
+                                                            name="total_estimation_amount"
+                                                            readonly
+                                                            style="background-color:#f8f9fa; cursor:not-allowed;"
+                                                            value="{{ (isset($bom_final_total) && $bom_final_total > 0) ? number_format($bom_final_total, 2, '.', '') : (isset($estimation_data) && !is_null($estimation_data) && !is_null($estimation_data->total_estimation_amount) ? $estimation_data->total_estimation_amount : '') }}">
+                                                        <small class="text-muted">
+                                                            <i class="fa fa-info-circle"></i>
+                                                            This amount is auto-calculated from BOM line items. Use the BOM modal above to add or edit items.
+                                                        </small>
                                                     </div>
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 mt-4">
                                                         <label for="remark_by_estimation">Remark <span
                                                                 class="text-danger">*</span></label>
                                                         <input type="text" class="form-control" id="remark_by_estimation"
                                                             name="remark_by_estimation" >
+                                                    </div>
+                                                    {{-- T-2026-005: Exceed-remark block removed from this form.
+                                                         The exceed flow is now triggered automatically when BOM items are saved
+                                                         in the BOM modal (when Final Total > business limit). The reason textarea
+                                                         has been moved inside the BOM modal. This block is hidden and kept only
+                                                         as a compatibility stub in case any JS references it.
+                                                    --}}
+                                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3" id="exceed_remark_block" style="display:none;">
+                                                        {{-- STUB: exceed flow now handled by BOM modal. This block is intentionally hidden. --}}
+                                                        <input type="hidden" id="exceed_remark" name="exceed_remark" value="">
                                                     </div>
                                                 </div>
                                                 <div class="login-btn-inner">
@@ -125,63 +179,81 @@
             </div>
         </div>
     </div>
+    @if(isset($estimation_data) && $estimation_data && $estimation_data->design_id)
+        @include('organizations.common.bom-material-items-modal', [
+            'mode'              => 'estimation_edit',
+            'businessId'        => $estimation_data->business_id,
+            'businessDetailsId' => $estimation_data->business_details_id,
+            'designId'          => $estimation_data->design_id,
+            'bomSaveUrl'        => route('estimation.save-bom-material-items'),
+        ])
+    @endif
     @push('scripts')
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
     <script>
+        // T-2026-005: Exceed-amount flow is now triggered automatically from the BOM modal.
+        // The estimationExceeds flag and the blur-check AJAX call have been removed.
+        // The total_estimation_amount field is readonly and auto-populated from BOM Final Total.
+
         jQuery.noConflict();
         jQuery(document).ready(function($) {
             // Custom validation method for file size
             $.validator.addMethod('filesize', function(value, element, param) {
-                if (element.files.length === 0) return true; // Allow if no file selected
-                var fileSize = element.files[0].size; // Get file size in bytes
+                if (element.files.length === 0) return true;
+                var fileSize = element.files[0].size;
                 return this.optional(element) || (fileSize >= param.min && fileSize <= param.max);
             }, 'Invalid file size.');
 
             // Initialize jQuery Validation
+            // Note: total_estimation_amount is readonly so it won't be validated by jQuery Validate
+            // by default (ignore: [] ensures hidden fields are validated but readonly fields
+            // still work). We keep the required rule so the server rejects empty submissions.
             $("#addDesignsForm").validate({
-                ignore: [], // Validate hidden inputs as well
+                ignore: [],
                 rules: {
-                    bom_image: {
-                        required: true,
-                        accept: ".xls,.xlsx",
-                        filesize: {
-                            min: 1024,
-                            max: 5242880
-                        } // 1KB to 5MB
-                    },
-                     total_estimation_amount: {
-                        required: true,
-                    },
-                      remark_by_estimation: {
+                    // T-2026-003: bom_image validation disabled — field is hidden (commented out in HTML).
+                    // bom_image: {
+                    //     required: true,
+                    //     accept: ".xls,.xlsx",
+                    //     filesize: {
+                    //         min: 1024,
+                    //         max: 5242880
+                    //     }
+                    // },
+                    total_estimation_amount: {
                         required: true,
                     },
-                    
+                    remark_by_estimation: {
+                        required: true,
+                    },
                 },
                 messages: {
-
-                    bom_image: {
-                        required: "Please select a BOM Excel file.",
-                        accept: "Please select a valid BOM Excel file.",
-                        filesize: "The file must be between 1KB and 5MB."
-                    },
+                    // T-2026-003: bom_image messages disabled — field is hidden.
+                    // bom_image: {
+                    //     required: "Please select a BOM Excel file.",
+                    //     accept: "Please select a valid BOM Excel file.",
+                    //     filesize: "The file must be between 1KB and 5MB."
+                    // },
                     total_estimation_amount: {
-                        required: "Please enter the total estimation amount",
+                        required: "Total Estimation Amount is auto-calculated from BOM items. Please save BOM items first.",
                     },
-                     remark_by_estimation: {
-                         required: "Please enter the remark",
+                    remark_by_estimation: {
+                        required: "Please enter the remark",
                     },
                 },
                 errorPlacement: function(error, element) {
-                    error.addClass('text-danger'); // Add Bootstrap text-danger class for styling
-                    error.insertAfter(element); // Insert error message after the input
+                    error.addClass('text-danger');
+                    error.insertAfter(element);
                 },
                 submitHandler: function(form) {
+                    // T-2026-005: Exceed flow is triggered at BOM-save time (not form-submit time).
+                    // Form submit only saves remark and other metadata.
                     Swal.fire({
                         icon: 'question',
                         title: 'Are you sure?',
-                        text: 'Do you want to update the Estimation BOM',
+                        text: 'Do you want to update the Estimation data?',
                         showCancelButton: true,
                         confirmButtonText: 'Yes',
                         cancelButtonText: 'No',
@@ -195,50 +267,30 @@
 
             // Event listener for file input changes
             $(document).on('change', 'input[type="file"]', function() {
-                $(this).rules("remove"); // Remove existing rules
-                $(this).rules("add", { // Re-add rules for validation
+                $(this).rules("remove");
+                $(this).rules("add", {
                     filesize: {
                         min: 1024,
                         max: 5242880
-                    }, // 1KB to 5MB
+                    },
                 });
-                $(this).valid(); // Trigger validation immediately
+                $(this).valid();
+            });
+
+            // T-2026-005: Listen for bom-saved event dispatched by the BOM modal
+            // to update the readonly Total Estimation Amount field.
+            window.addEventListener('bom-saved', function(e) {
+                var detail = e.detail || {};
+                if (detail.bomFinalTotal !== null && detail.bomFinalTotal !== undefined && !isNaN(detail.bomFinalTotal)) {
+                    $('#total_estimation_amount').val(parseFloat(detail.bomFinalTotal).toFixed(2));
+                    // Trigger jQuery Validate to re-validate the field now it has a value
+                    if (typeof $('#addDesignsForm').validate === 'function') {
+                        $('#addDesignsForm').validate().element('#total_estimation_amount');
+                    }
+                }
             });
         });
     </script>
-    <script>
-let estimationAmountValid = false;
-
-$('#total_estimation_amount').on('blur', function () {
-    let totalAmount = $(this).val();
-    let businessId  = $('#business_id').val();
-
-    if (totalAmount !== '') {
-        $.ajax({
-            url: "{{ route('check.estimation.amount') }}",
-            type: "POST",
-            data: {
-                _token: "{{ csrf_token() }}",
-                total_estimation_amount: totalAmount,
-                business_id: businessId
-            },
-            success: function (response) {
-                if (response.status === 'error') {
-                    estimationAmountValid = false;
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Invalid Amount',
-                        text: response.message
-                    });
-                    $('#total_estimation_amount').val('').focus();
-                } else {
-                    estimationAmountValid = true;
-                }
-            }
-        });
-    }
-});
-</script>
 
 
     @endpush

@@ -77,6 +77,7 @@
                                                             <span class="red-text"><?php echo $errors->first('design_image', ':message'); ?></span>
                                                         @endif
                                                     </div>
+                                                    {{-- T-2026-003: BOM Excel upload disabled — BOM is now captured via the structured BOM Material Items modal (T-2026-002). Uncomment to restore.
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="bom_image">Upload BOM (upload excel file min : 1KB to
                                                             max : 5MB) :</label>
@@ -86,6 +87,7 @@
                                                             <span class="red-text"><?php echo $errors->first('bom_image', ':message'); ?></span>
                                                         @endif
                                                     </div>
+                                                    --}}
 
 
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -103,12 +105,31 @@
                                                         </div>
                                                     </div>
                                                 </div>
+
+                                                {{-- T-2026-006: BOM Material Items section (design_edit mode) --}}
+                                                {{-- Designer can revise BOM items alongside the revised PDF. --}}
+                                                {{-- After submission, revised design goes to estimation (not production directly). --}}
+                                                @if(!empty($business_details_id) && !empty($design_id))
+                                                <div class="row" style="margin-top:16px;">
+                                                    <div class="col-lg-12">
+                                                        <div class="alert alert-info" style="padding:10px 15px;">
+                                                            <strong>Update BOM Items:</strong>
+                                                            If your revised design changes the bill of materials, please update the BOM items before saving. After submission, this design will be sent to the <strong>Estimation Department</strong> for review.
+                                                        </div>
+                                                        <button type="button" class="btn btn-warning"
+                                                            onclick="openReSubmitBomModal()">
+                                                            <i class="fa fa-list"></i> Edit BOM Items
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                @endif
+
                                                 <div class="login-btn-inner">
                                                     <div class="row">
                                                         <div class="col-lg-5"></div>
                                                         <div class="col-lg-7">
                                                             <div class="login-horizental cancel-wp pull-left">
-                                                                <a href="{{ route('list-design-upload') }}"
+                                                                <a href="{{ route('list-reject-design-from-prod') }}"
                                                                     class="btn btn-white"
                                                                     style="margin-bottom:50px">Cancel</a>
                                                                 <button class="btn btn-sm btn-primary login-submit-cs"
@@ -130,10 +151,26 @@
         </div>
     </div>
 
+    {{-- T-2026-006: BOM modal partial (design_edit mode, editable) --}}
+    {{-- Only include if we have the required IDs from the controller --}}
+    @if(!empty($business_details_id) && !empty($design_id))
+        @include('organizations.common.bom-material-items-modal', [
+            'mode'               => 'design_edit',
+            'businessId'         => $business_id ?? 0,
+            'businessDetailsId'  => $business_details_id,
+            'designId'           => $design_id,
+            'bomSaveUrl'         => route('design.save-bom-material-items'),
+            'bomModalId'         => 'designReSubmitBomModal',
+        ])
+    @endif
+
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
     <script>
+        // T-2026-007: Server-rendered flag — true when at least one BOM item is persisted for this design.
+        var hasBomItems = {{ isset($bom_items_count) && $bom_items_count > 0 ? 'true' : 'false' }};
+
         jQuery.noConflict();
         jQuery(document).ready(function($) {
             // Custom validation method to check file extension
@@ -152,14 +189,15 @@
                 rules: {
                     design_image: {
                         required: true,
-                        fileExtension: ["pdf"], 
-                        fileSize: [1, 6144], 
+                        fileExtension: ["pdf"],
+                        fileSize: [1, 6144],
                     },
-                    bom_image: {
-                        required: true,
-                        fileExtension: ["xls", "xlsx"], // Validate for Excel files
-                        fileSize: [1, 6144], // Min 1KB and Max 2MB
-                    },
+                    // T-2026-003: bom_image validation disabled — field is hidden (commented out in HTML).
+                    // bom_image: {
+                    //     required: true,
+                    //     fileExtension: ["xls", "xlsx"],
+                    //     fileSize: [1, 6144],
+                    // },
                     remark_by_design: {
                          required: true,
                     }
@@ -170,25 +208,57 @@
                         fileExtension: "Only PDF files are allowed.",
                         fileSize: "File size must be between 1 KB and 5MB.",
                     },
-                    bom_image: {
-                        required: "Please select BOM Excel file.",
-                        fileExtension: "Only Excel files (.xls, .xlsx) are allowed.",
-                        fileSize: "File size must be between 1 KB and 5MB.",
-                    },
+                    // T-2026-003: bom_image messages disabled — field is hidden.
+                    // bom_image: {
+                    //     required: "Please select BOM Excel file.",
+                    //     fileExtension: "Only Excel files (.xls, .xlsx) are allowed.",
+                    //     fileSize: "File size must be between 1 KB and 5MB.",
+                    // },
                      remark_by_design: {
                         required: "Please enter remark",
                     }
                 },
                 submitHandler: function(form) {
+                    // T-2026-007: Block submission if no BOM items have been saved for this design.
+                    if (!hasBomItems) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'BOM Required',
+                            text: 'Please add at least one BOM Material Item before sending the design to the Estimation Department.',
+                        });
+                        return false;
+                    }
                     Swal.fire({
                         icon: 'success',
                         title: 'Success!',
-                        text: 'Design re-submit added successfully.',
+                        text: 'Design re-submit added successfully. It will be sent to Estimation for review.',
                     }).then(function() {
                         form.submit(); // Submit the form after the user clicks OK
                     });
                 }
             });
+
+            // T-2026-007: Update hasBomItems when the user saves BOM items via the modal
+            // without requiring a page reload.
+            window.addEventListener('bom-saved', function(e) {
+                if (e.detail && e.detail.itemCount > 0) {
+                    hasBomItems = true;
+                }
+            });
         });
     </script>
+
+    @push('scripts')
+    {{-- T-2026-006: JS to open the BOM modal for the re-submit form --}}
+    @if(!empty($business_details_id) && !empty($design_id))
+    <script>
+    function openReSubmitBomModal() {
+        var bdEncoded = btoa({{ $business_details_id }});
+        var dEncoded  = btoa({{ $design_id }});
+        var fetchUrl  = '{{ url("designdept/get-bom-material-items") }}/' + bdEncoded + '/' + dEncoded;
+        openBomModal_designReSubmitBomModal(fetchUrl);
+    }
+    </script>
+    @endif
+    @endpush
 @endsection

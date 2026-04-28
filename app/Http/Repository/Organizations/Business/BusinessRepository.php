@@ -203,8 +203,7 @@ class BusinessRepository
                     'business_application_processes.business_status_id',
                     'business_application_processes.design_status_id',
                     'business_application_processes.production_status_id',
-
-
+                    'business_application_processes.bom_estimation_send_to_owner',
                 )
                 ->where('businesses.id', $id)
                 ->where('businesses_details.is_deleted', 0)
@@ -277,9 +276,8 @@ class BusinessRepository
                 $description = $request->input("description_" . $i);
                 $quantity = $request->input("quantity_" . $i);
                 $rate = $request->input("rate_" . $i);
-                // $total_amount = $request->input("total_amount_" . $i);
 
-                // 👇 Calculate total_amount backend-side (ignore frontend calculation)
+                // Calculate total_amount backend-side (ignore frontend calculation)
                 $total_amount = $quantity * $rate;
 
                 if ($designId && !is_null($productName)) {
@@ -292,6 +290,46 @@ class BusinessRepository
                     $designDetails->save();
 
                     $grandTotal += $total_amount;
+
+                    // --- Exceed-pending writeback ---
+                    // If this product has an estimation row in exceed-pending state
+                    // (is_exceed_pending=1, BAP.bom_estimation_send_to_owner=1300),
+                    // write the new total_amount as owner_suggested_amount and
+                    // transition the workflow to 1301 (owner suggested).
+                    $exceedEstimation = EstimationModel::where('business_details_id', $designId)
+                        ->where('is_exceed_pending', 1)
+                        ->where('is_deleted', 0)
+                        ->first();
+
+                    if ($exceedEstimation) {
+                        $exceedBap = BusinessApplicationProcesses::where('business_details_id', $designId)
+                            ->where('bom_estimation_send_to_owner', 1300)
+                            ->where('is_deleted', 0)
+                            ->first();
+
+                        if ($exceedBap) {
+                            DB::transaction(function () use ($exceedEstimation, $exceedBap, $designId, $total_amount) {
+                                $exceedEstimation->owner_suggested_amount = $total_amount;
+                                $exceedEstimation->owner_suggestion_remark = 'Owner updated the business amount.';
+                                $exceedEstimation->owner_suggested_at = now();
+                                $exceedEstimation->owner_suggested_by = session('user_id');
+                                $exceedEstimation->save();
+
+                                $exceedBap->bom_estimation_send_to_owner = 1301;
+                                $exceedBap->off_canvas_status = 51;
+                                $exceedBap->save();
+
+                                AdminView::where('business_details_id', $designId)->update([
+                                    'off_canvas_status' => 51,
+                                    'is_view' => 0,
+                                ]);
+                                NotificationStatus::where('business_details_id', $designId)->update([
+                                    'off_canvas_status' => 51,
+                                ]);
+                            });
+                        }
+                    }
+                    // --- End exceed-pending writeback ---
                 }
             }
 
@@ -467,6 +505,9 @@ class BusinessRepository
 
                 // Optional: update off_canvas_status if needed
                 $business_application->off_canvas_status = 32;
+
+                // Reset so revised-design second cycle appears in Accepted Estimation list
+                $business_application->estimation_send_to_production = null;
 
                 // Save the updates
                 $business_application->save();

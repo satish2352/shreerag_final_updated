@@ -111,7 +111,10 @@ class DesignsServices
             $designImageName = $last_id['designImageName'];
             $bomImageName = $last_id['bomImageName'];
             uploadImage($request, 'design_image', $path, $designImageName);
-            uploadImage($request, 'bom_image', $path, $bomImageName);
+            // T-2026-003: only upload BOM file if one was actually submitted.
+            if ($request->hasFile('bom_image') && $bomImageName) {
+                uploadImage($request, 'bom_image', $path, $bomImageName);
+            }
 
             if ($last_id) {
                 return ['status' => 'success', 'msg' => 'Data Added Successfully.'];

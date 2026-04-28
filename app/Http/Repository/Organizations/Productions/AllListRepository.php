@@ -24,6 +24,7 @@ class AllListRepository
                     $join->on('business_application_processes.business_id', '=', 'businesses.id');
                 })
                 ->whereIn('business_application_processes.estimation_send_to_production', $array_to_be_check)
+                ->where('business_application_processes.design_status_id', '!=', config('constants.DESIGN_DEPARTMENT.DESIGN_REVISED_SENT_TO_ESTIMATION'))
                 ->where('businesses.is_active', true)
                 ->where('businesses.is_deleted', 0)
                 ->groupBy('businesses.id', 'businesses.project_name', 'businesses.customer_po_number', 'businesses.created_at', 'businesses.title', 'businesses.remarks', 'businesses.is_active', 'estimation.business_id', 'businesses.updated_at', 'businesses.grand_total_amount')
@@ -72,6 +73,7 @@ class AllListRepository
                 })
                 // ->where('businesses_details.business_id', $decoded_business_id)
                 ->whereIn('business_application_processes.estimation_send_to_production', $array_to_be_check)
+                ->where('business_application_processes.design_status_id', '!=', config('constants.DESIGN_DEPARTMENT.DESIGN_REVISED_SENT_TO_ESTIMATION'))
                 ->where('business_application_processes.off_canvas_status', 33)
                 ->whereNull('estimation.is_approved_estimation')
                 ->where('businesses_details.is_active', true)
@@ -95,6 +97,7 @@ class AllListRepository
                     'estimation.id as productionId',
                     'designs.bom_image',
                     'designs.design_image',
+                    'designs.id as design_id',
                     'design_revision_for_prod.bom_image as re_bom_image',
                     'business_application_processes.estimation_send_to_production',
                     'business_application_processes.business_status_id',
@@ -232,6 +235,7 @@ class AllListRepository
                     // 'businesses.remarks',
                     'businesses_details.is_active',
                     'production.business_id',
+                    'designs.id as design_id',
                     'designs.bom_image',
                     'designs.design_image',
                     'design_revision_for_prod.reject_reason_prod',
@@ -279,13 +283,11 @@ class AllListRepository
                     'businesses_details.quantity',
                     'businesses_details.is_active',
                     'production.business_id',
-                    'businesses.updated_at',
-                    'designs.bom_image',
-                    'designs.design_image'
+                    'businesses.updated_at'
                 )
                 ->select(
                     'businesses.id',
-                    'businesses_details.id',
+                    DB::raw('businesses_details.id as business_details_id'),
                     'businesses.project_name',
                     'businesses.customer_po_number',
                     'businesses.created_at',
@@ -296,9 +298,9 @@ class AllListRepository
                     'production.business_id',
                     DB::raw('MAX(COALESCE(design_revision_for_prod.reject_reason_prod, "")) as reject_reason_prod'),
                     DB::raw('MAX(COALESCE(design_revision_for_prod.bom_image, "")) as re_bom_image'),
-                    'businesses.updated_at',
-                    'designs.bom_image',
-                    'designs.design_image'
+                    DB::raw('MAX(designs.id) as design_id'),
+                    DB::raw('MAX(designs.design_image) as design_image'),
+                    'businesses.updated_at'
                 )
                 ->orderBy('businesses.updated_at', 'desc')
                 ->get();
@@ -312,8 +314,6 @@ class AllListRepository
     public function getAllRevisedDesign()
     {
         try {
-            $array_to_be_check = [config('constants.PRODUCTION_DEPARTMENT.LIST_DESIGN_RECIVED_FROM_PRODUCTION_DEPT_REVISED')];
-
             $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
                 $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
             })
@@ -321,7 +321,7 @@ class AllListRepository
                     $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
                 })
                 ->leftJoin('businesses_details', function ($join) {
-                    $join->on('production.business_details_id', '=', 'businesses_details.id');
+                    $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
                 })
                 ->leftJoin('businesses', function ($join) {
                     $join->on('business_application_processes.business_id', '=', 'businesses.id');
@@ -329,7 +329,9 @@ class AllListRepository
                 ->leftJoin('design_revision_for_prod', function ($join) {
                     $join->on('designs.id', '=', 'design_revision_for_prod.design_id');
                 })
-                ->whereIn('business_application_processes.production_status_id', $array_to_be_check)
+                ->where('business_application_processes.design_status_id', config('constants.DESIGN_DEPARTMENT.DESIGN_REVISED_SENT_TO_ESTIMATION'))
+                ->where('business_application_processes.estimation_send_to_production', config('constants.PRODUCTION_DEPARTMENT.LIST_ESTIMATION_RECEIVED_FOR_PRODUCTION'))
+                ->where('business_application_processes.off_canvas_status', 33)
                 ->where('businesses.is_active', true)
                 ->where('businesses.is_deleted', 0)
                 ->select(
@@ -339,39 +341,36 @@ class AllListRepository
                     'businesses.customer_po_number',
                     'businesses.title',
                     'businesses.created_at',
-                    'businesses_details.id as business_details_id',
+                    'business_application_processes.business_details_id',
                     'businesses_details.product_name',
                     'businesses_details.quantity',
                     'businesses_details.description',
                     'businesses.remarks',
-                    DB::raw('MAX(design_revision_for_prod.reject_reason_prod) as reject_reason_prod'), // Aggregated
-                    DB::raw('MAX(designs.bom_image) as bom_image'), // Aggregated
-                    DB::raw('MAX(designs.design_image) as design_image'), // Aggregated
-                    DB::raw('MAX(design_revision_for_prod.bom_image) as re_bom_image'), // Aggregated
-                    DB::raw('MAX(design_revision_for_prod.design_image) as re_design_image'), // Aggregated
-                    DB::raw('MAX(design_revision_for_prod.remark_by_design) as remark_by_design'), // Aggregated    
-                    DB::raw('MAX(design_revision_for_prod.updated_at) as updated_at'), // Aggregated                
+                    DB::raw('MAX(designs.id) as design_id'),
+                    DB::raw('MAX(design_revision_for_prod.reject_reason_prod) as reject_reason_prod'),
+                    DB::raw('MAX(designs.design_image) as design_image'),
+                    DB::raw('MAX(design_revision_for_prod.design_image) as re_design_image'),
+                    DB::raw('MAX(design_revision_for_prod.remark_by_design) as remark_by_design'),
+                    DB::raw('MAX(design_revision_for_prod.updated_at) as updated_at'),                
                 )
                 ->groupBy(
                     'business_application_processes.id',
+                    'business_application_processes.business_details_id',
                     'businesses.id',
                     'businesses.project_name',
                     'businesses.customer_po_number',
                     'businesses.title',
                     'businesses.created_at',
-                    'businesses_details.id',
                     'businesses_details.product_name',
                     'businesses_details.quantity',
                     'businesses_details.description',
                     'businesses.remarks',
-                    'design_revision_for_prod.updated_at',
                 )
-                ->orderBy('design_revision_for_prod.updated_at', 'desc')
+                ->orderBy('updated_at', 'desc')
                 ->get();
 
             return $data_output;
         } catch (\Exception $e) {
-            // Log the exception for debugging
             Log::error('Error in getAllRevisedDesign: ' . $e->getMessage());
             return response()->json(['error' => $e->getMessage()], 500);
         }

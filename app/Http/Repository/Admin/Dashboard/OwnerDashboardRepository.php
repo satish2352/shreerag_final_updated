@@ -2,6 +2,7 @@
 
 namespace App\Http\Repository\Admin\Dashboard;
 
+use Illuminate\Support\Facades\DB;
 use App\Models\{
     User,
     Business,
@@ -10,7 +11,8 @@ use App\Models\{
     EstimationModel,
     ProductionDetails,
     Dispatch,
-    RolesModel
+    RolesModel,
+    AdminView
 };
 
 class OwnerDashboardRepository
@@ -163,6 +165,43 @@ class OwnerDashboardRepository
 
         $department_count = RolesModel::where('is_active', 1)->where('is_deleted', 0)->count();
 
+        // -------------------------------------------------------
+        // Owner KPIs — real-time financial + operational metrics
+        // -------------------------------------------------------
+
+        // 1. Total business value (sum of all active customer PO grand totals)
+        $total_business_value = (float) DB::table('businesses')
+            ->where('is_active', 1)
+            ->where('is_deleted', 0)
+            ->sum('grand_total_amount');
+
+        // 2. Total estimation (all active estimations, no dispatch filter)
+        $total_estimation_all = (float) DB::table('estimation')
+            ->join('business_application_processes', 'estimation.business_details_id', '=', 'business_application_processes.business_details_id')
+            ->where('business_application_processes.is_active', 1)
+            ->where('business_application_processes.is_deleted', 0)
+            ->sum('estimation.total_estimation_amount');
+
+        // 3. Total PO amount (quantity × rate across all non-deleted purchase orders)
+        $total_po_amount = (float) DB::table('purchase_order_details')
+            ->join('purchase_orders', 'purchase_order_details.purchase_id', '=', 'purchase_orders.id')
+            ->where('purchase_orders.is_deleted', 0)
+            ->selectRaw('SUM(purchase_order_details.quantity * purchase_order_details.rate) as total')
+            ->value('total');
+
+        // 4. GRN accepted amount (accepted_quantity × rate from tracking table)
+        $total_grn_accepted_amount = (float) DB::table('tbl_grn_po_quantity_tracking')
+            ->join('purchase_order_details', 'tbl_grn_po_quantity_tracking.purchase_order_details_id', '=', 'purchase_order_details.id')
+            ->where('tbl_grn_po_quantity_tracking.is_deleted', 0)
+            ->selectRaw('SUM(tbl_grn_po_quantity_tracking.accepted_quantity * purchase_order_details.rate) as total')
+            ->value('total');
+
+        // 5. Pending owner actions: PO approval (23), estimation review (28), exceed amount (50)
+        $pending_owner_actions = (int) AdminView::where('is_view', 0)
+            ->where('is_deleted', 0)
+            ->whereIn('off_canvas_status', [23, 28, 50])
+            ->count();
+
         return [
 
 
@@ -191,8 +230,16 @@ class OwnerDashboardRepository
             ],
             $department_count => [
                 'department_total_count' => $department_count,
-            ]
-
+            ],
+            'owner_kpis' => [
+                'total_business_value'      => $total_business_value,
+                'total_estimation_all'      => $total_estimation_all,
+                'total_po_amount'           => $total_po_amount,
+                'total_grn_accepted_amount' => $total_grn_accepted_amount,
+                'pending_owner_actions'     => $pending_owner_actions,
+                'products_in_progress'      => $business_inprocess_count,
+                'products_completed'        => $product_completed_count,
+            ],
 
         ];
     }

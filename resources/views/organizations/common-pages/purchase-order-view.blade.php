@@ -84,6 +84,15 @@
         display: table-footer-group !important;
     }
 
+    @isset($is_pdf)
+    thead {
+        display: table-row-group !important;
+    }
+    tfoot {
+        display: table-row-group !important;
+    }
+    @endisset
+
     tr {
         page-break-inside: avoid !important;
     }
@@ -121,6 +130,12 @@
         }
     }
 
+    @media print {
+        .biz-product-info {
+            display: none !important;
+        }
+    }
+
     .span {
         font-family: sans-serif !important;
     }
@@ -132,6 +147,26 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="sparkline13-list-new border-page" id="printableArea"
                     style="padding: 10px; box-sizing: border-box;">
+                    @isset($businessData, $businessDetailsData)
+                    <div class="biz-product-info" style="margin-bottom: 8px; padding: 8px 12px; background:#f8f9fa; border: 1px solid #dee2e6; border-radius: 4px;">
+                        <table style="width:100%; border:none; margin:0;">
+                            <tr>
+                                <td style="border:none; padding:2px 6px; width:50%;">
+                                    <span style="font-size:12px; color:#555; font-family:'Play',sans-serif;">Business / Project:</span>
+                                    <strong style="font-size:13px; font-family:'Play',sans-serif;">
+                                        {{ ucwords($businessData->project_name ?? '—') }}
+                                    </strong>
+                                </td>
+                                <td style="border:none; padding:2px 6px; width:50%;">
+                                    <span style="font-size:12px; color:#555; font-family:'Play',sans-serif;">Product Name:</span>
+                                    <strong style="font-size:13px; font-family:'Play',sans-serif;">
+                                        {{ ucwords($businessDetailsData->product_name ?? '—') }}
+                                    </strong>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    @endisset
                     <div style="border: 1px solid black; width: 100%;">
                         <div style="border-bottom: 1px solid black; padding-bottom: 10px;">
                             <table style="width: 100%;">
@@ -231,7 +266,7 @@
                                     <th class="pdf-font-size"
                                         style="border: 1px solid black; padding: 5px; font-size:14px;">HSN No.</th>
                                     <th class="pdf-font-size"
-                                        style="border: 1px solid black; padding: 5px; font-size:14px;">Part No.</th>
+                                        style="border: 1px solid black; padding: 5px; font-size:14px; width:15%;">Part No.</th>
                                     <th class="pdf-font-size"
                                         style="border: 1px solid black; padding: 5px; font-size:14px;">Quantity</th>
                                     <th class="pdf-font-size"
@@ -255,7 +290,7 @@
 overflow-wrap: anywhere !important;">
                                             {{ $item->item_description }}</td>
                                         <td style="border: 1px solid black; padding: 5px;">{{ $item->hsn_name }}</td>
-                                        <td class="description-column" style="border: 1px solid black; padding: 5px;">
+                                        <td style="border: 1px solid black; padding: 5px; word-break: break-word; overflow-wrap: anywhere; width:15%;">
                                             {{ $item->description }}
                                         </td>
                                         <td style="border: 1px solid black; padding: 5px; text-align: left;">
@@ -324,74 +359,38 @@ overflow-wrap: anywhere !important;">
                                         </div>
                                     </td>
                                 </tr>
-                                <tr
-                                    style="padding-bottom: 20px; bold; font-family: 'Play', sans-serif!important; font-size:12px;">
-                                    <td colspan="8" class="no-border" style="padding: 0px;">
-                                        {{-- Delivery AS PER ATTACHED DELIVERY SCHEDULE --}}
-                                    </td>
-                                </tr>
-                                <tr style="bold; font-family: 'Play', sans-serif!important; font-size:12px;">
-                                    <td colspan="8" class="no-border" style="height: 10px; padding: 5px;">
-                                        <div style="float: right; font-size:12px;"><strong>
-                                                @php echo convertToWords(($purchaseOrderDetails->sum('amount') - $purchaseOrderDetails->sum('amount') * ($purchaseOrder->discount / 100)) * (1 + ($purchaseOrder->name / 100)));  @endphp
-                                            </strong></div>
-                                    </td>
-                                </tr>
-
-                                <tr style="bold; font-family: 'Play', sans-serif!important; font-size:12px;">
-                                    <td colspan="8" class="no-border" style="height: 100px; padding: 5px;">
-                                        <div style="float: right; font-size:18px; font-size:12px;"><strong>For: <span
-                                                    style="text-transform: uppercase;">{{ $getOrganizationData->company_name }}</span></strong>
-                                        </div>
-                                    </td>
-
-                                    {{-- <td colspan="8" class="no-border" style="height: 20vh;">
-                                            <div style="float: right; font-size:18px;"><strong>For: {{ $getOrganizationData->company_name }}</strong></div>
-                                        </td> --}}
-                                </tr>
-                                <tr style="bold; font-family: 'Play', sans-serif!important; font-size:12px;">
-                                    <td class="no-border" colspan="2"
-                                        style="padding-bottom: 10px;  font-size:11px;">
-
-                                    </td>
-                                    <td class="no-border" colspan="2"
-                                        style="padding-bottom: 10px; text-align:center; font-size:11px;"></td>
-                                    <td class="no-border" colspan="3"
-                                        style="padding-bottom: 10px; text-align:center; font-size:11px;"></td>
-                                    <td class="no-border" colspan="2"
-                                        style="display: block; text-align: center; padding-bottom: 10px; font-size:11px;">
-                                        @if ($purchaseOrder->purchase_status_from_owner == 1127 || $purchaseOrder->purchase_status_from_owner == 1129)
-                                            <div style="font-size: 26px; color: green;">
-                                                {{-- <i class="fa fa-check" aria-hidden="true"></i> --}}
-                                                {{-- <img src="{{ public_path('website/assets/img/tick.png') }}"
-                                                    style="width:44px;"> --}}
-
-                                                <img src="{{ asset('website/assets/img/tick.png') }}"
-                                                    style="width: 44px;" alt="">
-                                            </div>
-                                        @else
-                                        @endif
-                                    </td>
-                                </tr>
-
-
-                                <tr style="bold; font-family: 'Play', sans-serif!important; font-size:12px;">
-                                    <td class="no-border" colspan="2"
-                                        style="padding-bottom: 10px;  font-size:11px;">
-                                        <strong>Prepared By</strong>
-                                    </td>
-                                    <td class="no-border" colspan="2"
-                                        style="padding-bottom: 10px; text-align:center; font-size:11px;">( Finance
-                                        Signatory )</td>
-                                    <td class="no-border" colspan="2"
-                                        style="padding-bottom: 10px; text-align:center; font-size:11px;">( Purchase
-                                        Signatory )</td>
-                                    <td class="no-border" colspan="2"
-                                        style="padding-bottom: 10px; text-align:end; font-size:11px; font-size:11px;">
-                                        (Authorized Signatory)</td>
-                                </tr>
                             </tfoot>
                         </table>
+
+                        {{-- Signature block — outside main table so it never gets split across pages --}}
+                        <div style="page-break-inside: avoid; border-top: 1px solid black; padding: 5px 0;">
+                            {{-- In-words amount --}}
+                            <div style="text-align: right; font-size:12px; font-family:'Play',sans-serif; padding: 4px 5px;">
+                                <strong>
+                                    @php echo convertToWords(($purchaseOrderDetails->sum('amount') - $purchaseOrderDetails->sum('amount') * ($purchaseOrder->discount / 100)) * (1 + ($purchaseOrder->name / 100))); @endphp
+                                </strong>
+                            </div>
+                            {{-- For: company + tick --}}
+                            <div style="display: flex; justify-content: space-between; align-items: flex-end; min-height: 80px; padding: 5px;">
+                                <div></div>
+                                <div style="text-align: right; font-size:12px; font-family:'Play',sans-serif;">
+                                    @if ($purchaseOrder->purchase_status_from_owner == 1127 || $purchaseOrder->purchase_status_from_owner == 1129)
+                                        <img src="{{ asset('website/assets/img/tick.png') }}" style="width:40px; display:block; margin-left:auto;" alt="">
+                                    @endif
+                                    <strong>For: <span style="text-transform:uppercase;">{{ $getOrganizationData->company_name }}</span></strong>
+                                </div>
+                            </div>
+                            {{-- Signatory row --}}
+                            <table style="width:100%; border:none; margin-top:4px;">
+                                <tr>
+                                    <td style="border:none; padding:4px 5px; font-size:11px; font-family:'Play',sans-serif; width:25%;"><strong>Prepared By</strong></td>
+                                    <td style="border:none; padding:4px 5px; font-size:11px; font-family:'Play',sans-serif; width:25%; text-align:center;">( Finance Signatory )</td>
+                                    <td style="border:none; padding:4px 5px; font-size:11px; font-family:'Play',sans-serif; width:25%; text-align:center;">( Purchase Signatory )</td>
+                                    <td style="border:none; padding:4px 5px; font-size:11px; font-family:'Play',sans-serif; width:25%; text-align:right;">(Authorized Signatory)</td>
+                                </tr>
+                            </table>
+                        </div>
+
                         @if (!empty($is_pdf))
                             <!-- PDF only spacing -->
                             <div style="margin-top:15px; margin-bottom:15px;">
@@ -449,6 +448,12 @@ overflow-wrap: anywhere !important;">
             var printButtons = contentToPrint.getElementsByClassName("print-button");
             while (printButtons.length > 0) {
                 printButtons[0].parentNode.removeChild(printButtons[0]);
+            }
+
+            // Remove business/product info bar from print
+            var bizInfoBars = contentToPrint.getElementsByClassName("biz-product-info");
+            while (bizInfoBars.length > 0) {
+                bizInfoBars[0].parentNode.removeChild(bizInfoBars[0]);
             }
 
             // Open new print window

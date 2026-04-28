@@ -7,7 +7,6 @@
 
         label.error {
             color: red;
-            /* Error text color */
             font-size: 12px;
         }
 
@@ -16,6 +15,34 @@
             color: #666;
             cursor: not-allowed;
             opacity: 0.7;
+        }
+
+        /* Row source highlighting */
+        tr.row-store-issued {
+            background-color: #e8f8ea !important;
+        }
+
+        tr.row-prod-request {
+            background-color: #fff3e0 !important;
+        }
+
+        .src-badge {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 1px 6px;
+            border-radius: 3px;
+            margin-top: 2px;
+        }
+
+        .src-badge-store {
+            background: #28a745;
+            color: #fff;
+        }
+
+        .src-badge-prod {
+            background: #fd7e14;
+            color: #fff;
         }
 
         .custom-dropdown .dropdown-options {
@@ -112,6 +139,35 @@
                                                 </div>
                                             </div>
 
+                                            {{-- Design image links --}}
+                                            @if (!empty($productDetails->design_image) || !empty($productDetails->bom_image))
+                                                <div class="row" style="margin-top:10px;">
+                                                    @if (!empty($productDetails->design_image))
+                                                        <div class="col-lg-3">
+                                                            <a href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $productDetails->design_image }}"
+                                                                target="_blank" class="btn btn-sm btn-outline-primary">
+                                                                <i class="fa fa-image"></i> View Design Layout
+                                                            </a>
+                                                        </div>
+                                                    @endif
+                                                    @if (!empty($productDetails->bom_image))
+                                                        <div class="col-lg-3">
+                                                            <a href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $productDetails->bom_image }}"
+                                                                target="_blank" class="btn btn-sm btn-outline-secondary">
+                                                                <i class="fa fa-file-alt"></i> View BOM
+                                                            </a>
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                            @endif
+
+                                            {{-- Legend --}}
+                                            <div style="margin-top:10px; margin-bottom:4px; font-size:12px;">
+                                                <span class="src-badge src-badge-store">&#9632; Received from Store</span>
+                                                &nbsp;
+                                                <span class="src-badge src-badge-prod">&#9632; Production Request</span>
+                                            </div>
+
                                             <div class="table-responsive" style="margin-top:20px;">
                                                 <table class="table table-hover table-white repeater"
                                                     id="purchase_order_table">
@@ -123,7 +179,8 @@
                                                             <th>Basic Rate</th>
                                                             <th>Quantity</th>
                                                             <th>Unit</th>
-                                                            <th>Received Material for Production</th>
+                                                            <th>Status</th>
+                                                            <th>Received</th>
                                                             <th>
                                                                 <button type="button" class="btn btn-sm btn-bg-colour"
                                                                     id="add_more_btn">
@@ -151,7 +208,7 @@
             <input type="text" class="search-box form-control" placeholder="Search...">
             <div class="options-list">
                 @foreach ($dataOutputPartItem as $data)
-                    <div class="option" data-id="{{ $data->id }}">{{ $data->part_description }}</div>
+                    <div class="option" data-id="{{ $data->id }}">{{ $data->description }}</div>
                 @endforeach
             </div>
         </div>
@@ -167,7 +224,7 @@
             <input type="text" class="search-box form-control" placeholder="Search...">
             <div class="options-list">
                 @foreach ($dataOutputPartItem as $data)
-                    <div class="option" data-id="{{ $data->id }}">{{ $data->part_description }}</div>
+                    <div class="option" data-id="{{ $data->id }}">{{ $data->description }}</div>
                 @endforeach
             </div>
         </div>
@@ -256,10 +313,34 @@
                                                         @foreach ($dataGroupedById as $key => $items)
                                                             @foreach ($items as $item)
                                                                 @php
-                                                                    $index = $rowIndex++; // FIXED INDEX
+                                                                    $index = $rowIndex++;
+                                                                    // Determine row source
+                                                                    // Both flags must be true — stale rows (send=1,pending) are NOT received from store
+                                                                    if (
+                                                                        $item->material_send_production == 1 ||
+                                                                        $item->quantity_minus_status === 'done'
+                                                                    ) {
+                                                                        $rowClass = 'row-store-issued';
+                                                                        $badgeClass = 'src-badge-store';
+                                                                        $badgeText = 'Received from Store';
+                                                                    } else {
+                                                                        $rowClass = 'row-prod-request';
+                                                                        $badgeClass = 'src-badge-prod';
+                                                                        $badgeText = 'Production Request';
+                                                                    }
+                                                                    // Safe date parse
+                                                                    try {
+                                                                        $rowDate = $item->updated_at
+                                                                            ? \Carbon\Carbon::parse(
+                                                                                $item->updated_at,
+                                                                            )->format('d-m-Y H:i')
+                                                                            : '—';
+                                                                    } catch (\Exception $e) {
+                                                                        $rowDate = '—';
+                                                                    }
                                                                 @endphp
 
-                                                                <tr>
+                                                                <tr class="{{ $rowClass }}">
                                                                     <td>
                                                                         <span class="form-control" style="min-width:50px">
                                                                             {{ $index + 1 }}
@@ -268,8 +349,7 @@
                                                                     <td>
                                                                         <input class="form-control"
                                                                             name="addmore[{{ $index }}][updated_at]"
-                                                                            value="{{ \Carbon\Carbon::parse($item->updated_at)->format('d-m-Y H:i') }}"
-                                                                            readonly>
+                                                                            value="{{ $rowDate }}" readonly>
 
 
                                                                         {{-- <input type="hidden" class="udated_at"
@@ -298,7 +378,7 @@
                                                                                     @foreach ($dataOutputPartItem as $data)
                                                                                         <div class="option"
                                                                                             data-id="{{ $data->id }}">
-                                                                                            {{ $data->part_description }}
+                                                                                            {{ $data->description }}
                                                                                         </div>
                                                                                     @endforeach
                                                                                 </div>
@@ -341,18 +421,25 @@
                                                                         </select>
                                                                     </td>
 
-                                                                    <td>
+                                                                    {{-- Status badge --}}
+                                                                    <td style="vertical-align:middle;">
+                                                                        <span
+                                                                            class="src-badge {{ $badgeClass }}">{{ $badgeText }}</span>
+                                                                    </td>
+
+                                                                    {{-- Received checkbox --}}
+                                                                    <td style="vertical-align:middle;">
                                                                         @if ($item->material_send_production == 0)
-                                                                            <span>-</span>
+                                                                            <span class="text-muted">—</span>
                                                                             <input type="hidden"
                                                                                 name="addmore[{{ $index }}][material_send_production]"
-                                                                                value="1">
+                                                                                value="0">
                                                                         @else
                                                                             <input type="checkbox" checked disabled>
                                                                         @endif
                                                                     </td>
 
-                                                                    <td>
+                                                                    <td style="vertical-align:middle;">
                                                                         @if ($item->material_send_production == 0)
                                                                             <a href="javascript:void(0)"
                                                                                 class="btn btn-danger btn-sm ajax-delete"
@@ -505,21 +592,18 @@
                 // ========================
                 //  ADD MORE ROW
                 // ========================
-                let rowCount = table.find("tbody tr").length;
                 $("#add_more_btn").click(function() {
-                    rowCount = table.find("tbody tr").length + 1;
+                    let rowCount = table.find("tbody tr").length;
 
-                    // rowCount++;
                     let newRow = `
-            <tr>
-                <td><input type="text" class="form-control" value="${rowCount}" readonly></td>
-                 <td>-
-                     </td>
+            <tr class="row-prod-request">
+                <td><span class="form-control" style="min-width:50px">${rowCount + 1}</span></td>
+                <td><input class="form-control" value="—" readonly></td>
                 <td>
                     <div class="custom-dropdown">
                         <input type="hidden" name="addmore[${rowCount}][part_item_id]" class="part_no" value="">
                         <input type="text" class="dropdown-input form-control" placeholder="Select Part Item..." readonly required>
-                        <div class="dropdown-options dropdown-height" style="display: none;">
+                        <div class="dropdown-options dropdown-height" style="display:none;">
                             <input type="text" class="search-box form-control" placeholder="Search...">
                             <div class="options-list">
                                 @foreach ($dataOutputPartItem as $data)
@@ -544,21 +628,18 @@
                         @endforeach
                     </select>
                 </td>
-                <td>
-                 -
+                <td style="vertical-align:middle;">
+                    <span class="src-badge src-badge-prod">Production Request</span>
+                    <input type="hidden" name="addmore[${rowCount}][material_send_production]" value="1">
                 </td>
-                <td>
+                <td style="vertical-align:middle;">
+                    <span class="text-muted">—</span>
+                </td>
+                <td style="vertical-align:middle;">
                     <button type="button" class="btn btn-danger btn-sm remove-row"><i class="fa fa-trash"></i></button>
                 </td>
             </tr>`;
                     table.find("tbody").append(newRow);
-
-                    $(`input[name="addmore[${rowCount}][part_item_id]"]`).rules("add", {
-                        required: true,
-                        messages: {
-                            required: "Please select a Part Item"
-                        }
-                    });
                 });
 
                 // Remove row

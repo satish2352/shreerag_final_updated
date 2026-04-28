@@ -68,6 +68,7 @@
     use App\Http\Controllers\Organizations\Store\DocUploadFianaceController;
     use App\Http\Controllers\Organizations\Security\SecurityRemarkController;
     use App\Http\Controllers\Organizations\Store\StoreReceiptController;
+    use App\Http\Controllers\Organizations\Common\BomMaterialItemsController;
     /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -98,6 +99,12 @@
         Route::get('/get-notification', [DashboardController::class, 'getNotification'])->name('get-notification');
         Route::get('/get-offcanvas-data', [DashboardController::class, 'getOffcanvas'])->name('get-offcanvas-data');
         Route::get('/admin-log-out', [LoginController::class, 'logout'])->name('log-out');
+
+        // ===================== COMMON MASTER DATA ENDPOINTS (all roles) =====================
+        Route::prefix('common')->group(function () {
+            Route::get('/get-part-items', [BomMaterialItemsController::class, 'getPartItems'])->name('common.get-part-items');
+            Route::get('/get-units', [BomMaterialItemsController::class, 'getUnits'])->name('common.get-units');
+        });
 
         // Organizations
         Route::prefix('organizations')->group(function () {
@@ -183,11 +190,19 @@
         Route::get('/list-purchase-order-rejected-bussinesswise/{id}', [BusinessAllListController::class, 'getPurchaseOrderRejectedBusinessWise'])
             ->name('list-purchase-order-rejected-bussinesswise');
 
-        // Design Received for Estimation
+        // Design Received for Estimation (first-time designs only)
         Route::get('/list-design-received-estimation', [BusinessAllListController::class, 'loadDesignSubmittedForEstimation'])
             ->name('list-design-received-estimation');
         Route::get('/list-design-received-estimation-business-wise/{business_details_id}', [BusinessAllListController::class, 'loadDesignSubmittedForEstimationBusinessWise'])
             ->name('list-design-received-estimation-business-wise');
+
+        // Revised Design & BOM received from Estimation (after corrected-design cycle)
+        Route::get('/list-revised-design-bom-received-from-estimation', [BusinessAllListController::class, 'loadRevisedDesignBomReceivedFromEstimation'])
+            ->name('list-revised-design-bom-received-from-estimation');
+
+        // Exceed Amount Requests — Global Owner List
+        Route::get('/list-exceed-amount-requests', [BusinessAllListController::class, 'listExceedAmountRequests'])
+            ->name('list-exceed-amount-requests');
 
         // Accept BOM Estimation
         Route::get('/accept-bom-estimation/{id}', [BusinessController::class, 'acceptEstimationBOM'])
@@ -273,6 +288,9 @@
             ->name('list-product-completed-report');
         Route::get('/list-product-completed-report-ajax', [ReportController::class, 'getCompletedProductListAjax'])
             ->name('list-product-completed-report-ajax');
+
+        // BOM Material Items (owner — view only)
+        Route::get('/get-bom-material-items/{businessDetailsId}/{designId}', [BomMaterialItemsController::class, 'ownerGetItems'])->name('owner.get-bom-material-items');
     });
 
     Route::group(['prefix' => 'designdept', 'middleware' => 'admin'], function () {
@@ -345,6 +363,10 @@
 
         Route::get('/item-stock-history-list', [ReportController::class, 'getItemStockHistoryList'])->name('item-stock-history-list');
         Route::get('/item-stock-history-list-ajax', [ReportController::class, 'getItemStockListHistoryAjax'])->name('item-stock-history-list-ajax');
+
+        // BOM Material Items (design dept)
+        Route::get('/get-bom-material-items/{businessDetailsId}/{designId}', [BomMaterialItemsController::class, 'designGetItems'])->name('design.get-bom-material-items');
+        Route::post('/save-bom-material-items', [BomMaterialItemsController::class, 'designSaveItems'])->name('design.save-bom-material-items');
     });
 
     // ===================== ESTIMATION DEPT =====================
@@ -389,12 +411,23 @@
         // Route::get('/reject-design-edit/{id}', [EstimationProductionController::class, 'rejectdesignedit'])->name('reject-design-edit');
         // Route::post('/reject-design', [EstimationProductionController::class, 'rejectdesign'])->name('estimation-reject-design');
 
+        // Corrected Design & BOM received from Design Dept (after production rejection + designer re-submit)
+        Route::get('/list-corrected-design-bom-received-from-design', [EstimationAllListController::class, 'getAllCorrectedDesignBomReceivedFromDesign'])->name('list-corrected-design-bom-received-from-design');
+
+        // Exceed Amount Workflow — Estimator Side
+        Route::get('/list-bom-exceed-owner-suggested', [EstimationAllListController::class, 'getExceedOwnerSuggested'])->name('list-bom-exceed-owner-suggested');
+        Route::get('/accept-owner-suggested-amount/{id}', [EstimationController::class, 'acceptOwnerSuggestedAmount'])->name('accept-owner-suggested-amount');
+
         // Revised Material Received
         Route::get('/list-revised-material-received-design', [EstimationAllListController::class, 'reviseddesignlist'])->name('list-revised-material-received-design');
 
         // Reports
         Route::get('/list-production-report', [ReportController::class, 'getProductionReport'])->name('list-production-report');
         Route::get('/production-report-ajax', [ReportController::class, 'getProductionReportAjax'])->name('production-report-ajax');
+
+        // BOM Material Items (estimation dept)
+        Route::get('/get-bom-material-items/{businessDetailsId}/{designId}', [BomMaterialItemsController::class, 'estimationGetItems'])->name('estimation.get-bom-material-items');
+        Route::post('/save-bom-material-items', [BomMaterialItemsController::class, 'estimationSaveItems'])->name('estimation.save-bom-material-items');
     });
 
 
@@ -453,6 +486,10 @@
         Route::get('/accepted-and-material-sent/{id}', [StoreController::class, 'orderAcceptedAndMaterialForwareded'])->name('accepted-and-material-sent');
         Route::get('/need-to-create-req/{id}', [StoreController::class, 'createRequesition'])->name('need-to-create-req');
         Route::post('/store-purchase-request-req', [StoreController::class, 'storeRequesition'])->name('store-purchase-request-req');
+        Route::get('/bom-inventory-check/{business_details_id}', [StoreController::class, 'showBomInventoryCheck'])->name('bom-inventory-check');
+        Route::post('/store-shortage-requisition', [StoreController::class, 'storeShortageRequisition'])->name('store-shortage-requisition');
+        Route::post('/store-additional-shortage-requisition', [StoreController::class, 'storeAdditionalShortageRequisition'])->name('store-additional-shortage-requisition');
+        Route::post('/issue-available-materials', [StoreController::class, 'issueAvailableMaterials'])->name('issue-available-materials');
         Route::post('/generate-sr-store-dept', [StoreController::class, 'generateSRstoreDept'])->name('generate-sr-store-dept');
         Route::get('/accepted-store-material-sent-to-production/{purchase_orders_id}/{business_id}', [StoreController::class, 'genrateStoreReciptAndForwardMaterialToTheProduction'])->name('accepted-store-material-sent-to-production');
         Route::get('/get-part-item-rate', [StoreController::class, 'getPartItemRate'])->name('get-part-item-rate');
@@ -573,6 +610,8 @@
         Route::get('/party-ajax', [PurchaseAllListController::class, 'getPurchasePartyReportAjax'])->name('party-ajax');
         Route::get('/follow-up-report', [PurchaseAllListController::class, 'FollowUpReport'])->name('follow-up-report');
         Route::get('/follow-up-report-ajax', [PurchaseAllListController::class, 'FollowUpReportAjax'])->name('follow-up-report-ajax');
+        Route::get('/business-po-report', [PurchaseAllListController::class, 'getBusinessPoReport'])->name('business-po-report');
+        Route::get('/get-products-by-business', [PurchaseAllListController::class, 'getProductsByBusiness'])->name('get-products-by-business');
 
         // Purchase Orders
 
@@ -903,6 +942,9 @@
         Route::get('/edit-products/{id}', [ProductionController::class, 'edit'])->name('edit-products');
         Route::post('/update-products', [ProductionController::class, 'update'])->name('update-products');
         Route::delete('/delete-products/{id}', [ProductionController::class, 'destroy'])->name('delete-products');
+
+        // BOM Material Items (production — view only)
+        Route::get('/get-bom-material-items/{businessDetailsId}/{designId}', [BomMaterialItemsController::class, 'productionGetItems'])->name('production.get-bom-material-items');
     });
 
     // ======================== Doc Upload Finance ======================== //

@@ -7,7 +7,7 @@
                     <div class="sparkline13-list">
                         <div class="sparkline13-hd">
                             <div class="main-sparkline13-hd">
-                                <h1>Corected Design Send to Production  Department</h1>
+                                <h1>Corrected Design Send To Estimation</h1>
                             </div>
                         </div>                       
                         <div class="sparkline13-graph">
@@ -30,10 +30,9 @@
                                                 <th data-field="Remark" data-editable="false">Remark</th>
                                                 <th data-field="reject_reason" data-editable="false">Reject Reason</th>
                                                 <th data-field="design_image" data-editable="false">Design Layout</th>
-                                                <th data-field="bom_image" data-editable="false">BOM</th>
                                                 <th data-field="design_image_re" data-editable="false">Revised Design Layout
                                                 </th>
-                                                <th data-field="bom_image_re" data-editable="false">Revised BOM</th>
+                                                <th data-field="bom_image_re" data-editable="false">Revised BOM Items</th>
                                                 <th data-field="remark_by_design" data-editable="false">Design Team Remark</th>
                                             </tr>
 
@@ -55,20 +54,22 @@
                                                     href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
                                                     alt="Design"> Click to view</a>
                                             </td>
-                                            <td> <a class="img-size"
-                                                    href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
-                                                    alt="bill of material" >Click to download</a>
-                                            </td>
                                                 <td> <a class="img-size" target="_blank"
                                                     href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['re_design_image'] }}"
                                                     alt="Design"> Click to view</a>
-                                            </td>
-                                            <td> <a class="img-size"
-                                                    href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['re_bom_image'] }}"
-                                                    alt="bill of material" >Click to download</a>
-                                            </td>
+                                                </td>
+                                                <td>
+                                                    @if(!empty($data->design_id) && !empty($data->business_details_id))
+                                                        <button type="button" class="btn btn-outline-info btn-sm"
+                                                            onclick="correctedDesignOpenBomModal({{ $data->business_details_id }}, {{ $data->design_id }})">
+                                                            <i class="fa fa-list"></i> View BOM
+                                                        </button>
+                                                    @else
+                                                        <span class="text-muted">—</span>
+                                                    @endif
+                                                </td>
                                                     <td>{{ ucwords($data->remark_by_design) }}</td>
-                                                    
+
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -81,4 +82,24 @@
             </div>
         </div>
     </div>
-   @endsection
+
+{{-- BOM Material Items Modal (designer view-only — corrected design send to estimation) --}}
+@include('organizations.common.bom-material-items-modal', [
+    'mode'              => 'view_only',
+    'businessId'        => 0,
+    'businessDetailsId' => 0,
+    'designId'          => 0,
+    'bomModalId'        => 'correctedDesignBomModal',
+])
+
+@push('scripts')
+<script>
+    function correctedDesignOpenBomModal(businessDetailsId, designId) {
+        var bdEncoded = btoa(businessDetailsId);
+        var dEncoded  = btoa(designId);
+        var fetchUrl  = '{{ url("designdept/get-bom-material-items") }}/' + bdEncoded + '/' + dEncoded;
+        openBomModal_correctedDesignBomModal(fetchUrl);
+    }
+</script>
+@endpush
+@endsection
