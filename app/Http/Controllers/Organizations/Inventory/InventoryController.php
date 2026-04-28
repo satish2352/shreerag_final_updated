@@ -75,7 +75,7 @@ class InventoryController extends Controller
                 }
             }
         } catch (Exception $e) {
-            return redirect('storedept/add-product-stock')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+            return redirect('storedept/add-product-stock')->withInput()->with(['msg' => 'Something went wrong. Please try again.', 'status' => 'error']);
         }
     }
     public function edit(Request $request)
@@ -124,7 +124,7 @@ class InventoryController extends Controller
         } catch (Exception $e) {
             return redirect()->back()
                 ->withInput()
-                ->with(['msg' => $e->getMessage(), 'status' => 'error']);
+                ->with(['msg' => 'Something went wrong. Please try again.', 'status' => 'error']);
         }
     }
     public function destroy(Request $request)

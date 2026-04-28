@@ -179,7 +179,7 @@ class DeliveryChalanController extends Controller
                 }
             }
         } catch (Exception $e) {
-            return redirect('storedept/add-business')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+            return redirect('storedept/add-business')->withInput()->with(['msg' => 'Something went wrong. Please try again.', 'status' => 'error']);
         }
     }
     public function show(Request $request)
@@ -231,7 +231,7 @@ class DeliveryChalanController extends Controller
             return redirect('storedept/list-purchase')->with(compact('msg', 'status'));
         } catch (\Exception $e) {
             return [
-                'msg' => $e->getMessage(),
+                'msg' => 'Something went wrong. Please try again.',
                 'status' => 'error'
             ];
         }
@@ -248,7 +248,7 @@ class DeliveryChalanController extends Controller
 
             return view('organizations.store.delivery-chalan.view-delivery-chalan-details', compact('purchase_order_id', 'purchaseOrder', 'purchaseOrderDetails', 'getOrganizationData', 'getAllRulesAndRegulations', 'business_id'));
         } catch (Exception $e) {
-            return ['status' => 'error', 'msg' => $e->getMessage()];
+            return ['status' => 'error', 'msg' => 'Something went wrong. Please try again.'];
         }
     }
     public function edit(Request $request)
@@ -349,7 +349,7 @@ class DeliveryChalanController extends Controller
         } catch (Exception $e) {
             return redirect()->back()
                 ->withInput()
-                ->with(['msg' => $e->getMessage(), 'status' => 'error']);
+                ->with(['msg' => 'Something went wrong. Please try again.', 'status' => 'error']);
         }
     }
 
@@ -407,7 +407,7 @@ class DeliveryChalanController extends Controller
 
             return response()->json(['part' => $part]);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json(['error' => 'Something went wrong. Please try again.'], 500);
         }
     }
 }

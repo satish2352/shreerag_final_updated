@@ -101,7 +101,7 @@ class CommanController
                 'purchaseOrderDetails' => $purchaseOrderDetails,
             ];
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json(['error' => 'Something went wrong. Please try again.'], 500);
         }
     }
 

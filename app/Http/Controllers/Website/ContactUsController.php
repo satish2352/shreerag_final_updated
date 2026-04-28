@@ -70,7 +70,7 @@ class ContactUsController extends Controller
             }
         } catch (Exception $e) {
             return redirect('contactus')->withInput()->with([
-                'sweet_error' => 'An error occurred: ' . $e->getMessage(),
+                'sweet_error' => 'Something went wrong. Please try again.',
             ]);
         }
     }

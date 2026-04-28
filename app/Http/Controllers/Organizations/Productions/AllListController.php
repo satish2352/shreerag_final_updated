@@ -349,7 +349,7 @@ public function reviseddesignlist()
                 'id' => $id
             ]);
         } catch (\Exception $e) {
-            return redirect()->back()->with(['status' => 'error', 'msg' => $e->getMessage()]);
+            return redirect()->back()->with(['status' => 'error', 'msg' => 'Something went wrong. Please try again.']);
         }
     }
 }

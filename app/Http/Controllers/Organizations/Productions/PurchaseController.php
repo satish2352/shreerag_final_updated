@@ -89,7 +89,7 @@ class PurchaseController extends Controller
                 }
             }
         } catch (Exception $e) {
-            return redirect('add-purchases')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+            return redirect('add-purchases')->withInput()->with(['msg' => 'Something went wrong. Please try again.', 'status' => 'error']);
         }
     }
 
@@ -157,7 +157,7 @@ class PurchaseController extends Controller
         } catch (Exception $e) {
             return redirect()->back()
                 ->withInput()
-                ->with(['msg' => $e->getMessage(), 'status' => 'error']);
+                ->with(['msg' => 'Something went wrong. Please try again.', 'status' => 'error']);
         }
     }
 

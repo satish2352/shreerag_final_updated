@@ -174,7 +174,7 @@ class GatepassController extends Controller
                 'businessDetailsId'
             ));
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json(['error' => 'Something went wrong. Please try again.'], 500);
         }
     }
 
@@ -266,7 +266,7 @@ class GatepassController extends Controller
                 'businessDetailsId'
             ));
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json(['error' => 'Something went wrong. Please try again.'], 500);
         }
     }
 
@@ -337,7 +337,7 @@ class GatepassController extends Controller
                 }
             }
         } catch (Exception $e) {
-            return redirect('add-gatepass')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+            return redirect('add-gatepass')->withInput()->with(['msg' => 'Something went wrong. Please try again.', 'status' => 'error']);
         }
     }
     public function edit(Request $request)
@@ -401,7 +401,7 @@ class GatepassController extends Controller
         } catch (Exception $e) {
             return redirect()->back()
                 ->withInput()
-                ->with(['msg' => $e->getMessage(), 'status' => 'error']);
+                ->with(['msg' => 'Something went wrong. Please try again.', 'status' => 'error']);
         }
     }
 }

@@ -78,7 +78,7 @@ class StoreController extends Controller
             }
             // }
         } catch (Exception $e) {
-            return redirect('storedept/add-requistion')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+            return redirect('storedept/add-requistion')->withInput()->with(['msg' => 'Something went wrong. Please try again.', 'status' => 'error']);
         }
     }
 
@@ -112,7 +112,7 @@ class StoreController extends Controller
                 'id' => $id
             ]);
         } catch (\Exception $e) {
-            return redirect()->back()->with(['status' => 'error', 'msg' => $e->getMessage()]);
+            return redirect()->back()->with(['status' => 'error', 'msg' => 'Something went wrong. Please try again.']);
         }
     }
     public function checkStockQuantity(Request $request)
@@ -218,7 +218,7 @@ class StoreController extends Controller
 
             return redirect()->back()->withInput()->with([
                 'status' => 'error',
-                'msg' => $e->getMessage()
+                'msg' => 'Something went wrong. Please try again.'
             ]);
         }
     }
@@ -246,7 +246,7 @@ class StoreController extends Controller
     //             return redirect()->back()->withInput()->with(['status' => 'error', 'msg' => $updateData['message']]);
     //         }
     //     } catch (\Exception $e) {
-    //         return redirect()->back()->withInput()->with(['status' => 'error', 'msg' => $e->getMessage()]);
+    //         return redirect()->back()->withInput()->with(['status' => 'error', 'msg' => 'Something went wrong. Please try again.']);
     //     }
     // }
     public function getPartItemRate(Request $request)
@@ -281,7 +281,7 @@ class StoreController extends Controller
                 'business_id' => $business_id
             ]);
         } catch (\Exception $e) {
-            return redirect()->back()->with(['status' => 'error', 'msg' => $e->getMessage()]);
+            return redirect()->back()->with(['status' => 'error', 'msg' => 'Something went wrong. Please try again.']);
         }
     }
     public function updateProductMaterialWiseAdd(Request $request)
@@ -305,7 +305,7 @@ class StoreController extends Controller
                 return redirect()->back()->withInput()->with(['status' => 'error', 'msg' => $updateData['message']]);
             }
         } catch (\Exception $e) {
-            return redirect()->back()->withInput()->with(['status' => 'error', 'msg' => $e->getMessage()]);
+            return redirect()->back()->withInput()->with(['status' => 'error', 'msg' => 'Something went wrong. Please try again.']);
         }
     }
     public function generateSRstoreDept(Request $request)
@@ -350,7 +350,7 @@ class StoreController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'msg'    => $e->getMessage()
+                'msg' => 'Something went wrong. Please try again.'
             ], 500);
         }
     }
@@ -551,7 +551,7 @@ class StoreController extends Controller
                 'sentPartIds'
             ));
         } catch (\Exception $e) {
-            return redirect()->back()->with(['status' => 'error', 'msg' => $e->getMessage()]);
+            return redirect()->back()->with(['status' => 'error', 'msg' => 'Something went wrong. Please try again.']);
         }
     }
 
@@ -647,7 +647,7 @@ class StoreController extends Controller
 
         } catch (\Exception $e) {
             Log::error('storeShortageRequisition error: ' . $e->getMessage());
-            return redirect()->back()->with(['status' => 'error', 'msg' => $e->getMessage()]);
+            return redirect()->back()->with(['status' => 'error', 'msg' => 'Something went wrong. Please try again.']);
         }
     }
 
@@ -706,7 +706,7 @@ class StoreController extends Controller
 
         } catch (\Exception $e) {
             Log::error('storeAdditionalShortageRequisition error: ' . $e->getMessage());
-            return redirect()->back()->with(['status' => 'error', 'msg' => $e->getMessage()]);
+            return redirect()->back()->with(['status' => 'error', 'msg' => 'Something went wrong. Please try again.']);
         }
     }
 
@@ -841,7 +841,7 @@ class StoreController extends Controller
 
         } catch (\Exception $e) {
             Log::error('issueAvailableMaterials error: ' . $e->getMessage());
-            return redirect()->back()->with(['status' => 'error', 'msg' => $e->getMessage()]);
+            return redirect()->back()->with(['status' => 'error', 'msg' => 'Something went wrong. Please try again.']);
         }
     }
 }

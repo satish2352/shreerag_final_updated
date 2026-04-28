@@ -121,7 +121,7 @@ class RejectedChalanController extends Controller
                 }
             }
         } catch (Exception $e) {
-            return redirect('storedept/add-rejected-chalan')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+            return redirect('storedept/add-rejected-chalan')->withInput()->with(['msg' => 'Something went wrong. Please try again.', 'status' => 'error']);
         }
     }
     public function getAllRejectedChalanList()

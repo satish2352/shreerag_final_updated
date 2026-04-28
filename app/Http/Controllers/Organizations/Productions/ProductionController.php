@@ -82,7 +82,7 @@ class ProductionController extends Controller
 
             return redirect('proddept/list-final-production-completed')->with('update_data', $update_data);
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Something went wrong. Please try again.');
         }
     }
     public function editProduct($id)
@@ -103,7 +103,7 @@ class ProductionController extends Controller
                 'id' => $id
             ]);
         } catch (\Exception $e) {
-            return redirect()->back()->with(['status' => 'error', 'msg' => $e->getMessage()]);
+            return redirect()->back()->with(['status' => 'error', 'msg' => 'Something went wrong. Please try again.']);
         }
     }
     public function updateProductMaterial(Request $request)
@@ -136,7 +136,7 @@ class ProductionController extends Controller
 
             return response()->json([
                 'status' => 'error',
-                'msg' => $e->getMessage()  // FIXED: return exception message
+                'msg' => 'Something went wrong. Please try again.'  // FIXED: return exception message
             ]);
         }
     }
@@ -176,7 +176,7 @@ class ProductionController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'msg' => $e->getMessage()
+                'msg' => 'Something went wrong. Please try again.'
             ]);
         }
     }

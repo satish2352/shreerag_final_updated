@@ -68,7 +68,7 @@ class VehicleTypeController extends Controller
                 }
             }
         } catch (Exception $e) {
-            return redirect('logisticsdept/add-vehicle-type')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+            return redirect('logisticsdept/add-vehicle-type')->withInput()->with(['msg' => 'Something went wrong. Please try again.', 'status' => 'error']);
         }
     }
 
@@ -117,7 +117,7 @@ class VehicleTypeController extends Controller
         } catch (Exception $e) {
             return redirect()->back()
                 ->withInput()
-                ->with(['msg' => $e->getMessage(), 'status' => 'error']);
+                ->with(['msg' => 'Something went wrong. Please try again.', 'status' => 'error']);
         }
     }
 

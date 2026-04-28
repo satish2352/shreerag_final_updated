@@ -26,7 +26,7 @@ class FinanceController extends Controller
                 return redirect('financedept/list-sr-and-gr-genrated-business')->with('error', $update_data);
             }
         } catch (\Exception $e) {
-            return redirect('financedept/list-sr-and-gr-genrated-business')->with('error', $e->getMessage());
+            return redirect('financedept/list-sr-and-gr-genrated-business')->with('error', 'Something went wrong. Please try again.');
         }
     }
 

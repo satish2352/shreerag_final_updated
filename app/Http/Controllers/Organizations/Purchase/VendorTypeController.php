@@ -72,7 +72,7 @@ class VendorTypeController extends Controller
                 }
             }
         } catch (Exception $e) {
-            return redirect('purchase/add-vendor-type')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+            return redirect('purchase/add-vendor-type')->withInput()->with(['msg' => 'Something went wrong. Please try again.', 'status' => 'error']);
         }
     }
 
@@ -120,7 +120,7 @@ class VendorTypeController extends Controller
         } catch (Exception $e) {
             return redirect()->back()
                 ->withInput()
-                ->with(['msg' => $e->getMessage(), 'status' => 'error']);
+                ->with(['msg' => 'Something went wrong. Please try again.', 'status' => 'error']);
         }
     }
 

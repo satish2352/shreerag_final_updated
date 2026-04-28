@@ -183,7 +183,7 @@ class LeavesController extends Controller
 
             return response()->json([
                 'status' => 'error',
-                'message' => 'Error: ' . $e->getMessage()
+                'message' => 'Something went wrong. Please try again.'
             ]);
         }
     }
@@ -264,7 +264,7 @@ class LeavesController extends Controller
 
             return response()->json([
                 'status' => 'error',
-                'message' => 'Error: ' . $e->getMessage()
+                'message' => 'Something went wrong. Please try again.'
             ]);
         }
     }
@@ -530,7 +530,7 @@ class LeavesController extends Controller
         } catch (Exception $e) {
             return redirect()->back()
                 ->withInput()
-                ->with(['msg' => $e->getMessage(), 'status' => 'error']);
+                ->with(['msg' => 'Something went wrong. Please try again.', 'status' => 'error']);
         }
     }
     public function destroy($id)
@@ -543,7 +543,7 @@ class LeavesController extends Controller
             return redirect()->route('list-leaves')
                 ->with(['msg' => $delete_record['msg'], 'status' => $delete_record['status']]);
         } catch (\Exception $e) {
-            return redirect()->back()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+            return redirect()->back()->with(['msg' => 'Something went wrong. Please try again.', 'status' => 'error']);
         }
     }
 }

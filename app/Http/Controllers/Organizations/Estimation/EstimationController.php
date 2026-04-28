@@ -59,7 +59,7 @@ class EstimationController extends Controller
                 'bom_final_total'       => $bom_final_total,
             ]);
         } catch (\Exception $e) {
-            return redirect()->back()->withErrors(['msg' => $e->getMessage()]);
+            return redirect()->back()->withErrors(['msg' => 'Something went wrong. Please try again.']);
         }
     }
     public function checkEstimationAmount(Request $request)
@@ -151,7 +151,7 @@ class EstimationController extends Controller
         } catch (Exception $e) {
             return redirect()->back()
                 ->withInput()
-                ->with(['msg' => $e->getMessage(), 'status' => 'error']);
+                ->with(['msg' => 'Something went wrong. Please try again.', 'status' => 'error']);
         }
     }
 
@@ -173,7 +173,7 @@ class EstimationController extends Controller
         } catch (Exception $e) {
             return redirect()->back()
                 ->withInput()
-                ->with(['msg' => $e->getMessage(), 'status' => 'error']);
+                ->with(['msg' => 'Something went wrong. Please try again.', 'status' => 'error']);
         }
     }
     public function editRevisedEstimation($id)
@@ -232,7 +232,7 @@ class EstimationController extends Controller
                 'bom_final_total'       => $bom_final_total,
             ]);
         } catch (\Exception $e) {
-            return redirect()->back()->withErrors(['msg' => $e->getMessage()]);
+            return redirect()->back()->withErrors(['msg' => 'Something went wrong. Please try again.']);
         }
     }
 
@@ -274,7 +274,7 @@ class EstimationController extends Controller
         } catch (Exception $e) {
             return redirect()->back()
                 ->withInput()
-                ->with(['msg' => $e->getMessage(), 'status' => 'error']);
+                ->with(['msg' => 'Something went wrong. Please try again.', 'status' => 'error']);
         }
     }
 
@@ -294,7 +294,7 @@ class EstimationController extends Controller
             return redirect()->back()
                 ->withInput()
                 ->with([
-                    'msg' => $e->getMessage(),
+                    'msg' => 'Something went wrong. Please try again.',
                     'status' => 'error',
                 ]);
         }
@@ -362,7 +362,7 @@ class EstimationController extends Controller
 
             return redirect('proddept/list-final-production-completed')->with('update_data', $update_data);
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Something went wrong. Please try again.');
         }
     }
     public function editProduct($id)
@@ -381,7 +381,7 @@ class EstimationController extends Controller
                 'id' => $id
             ]);
         } catch (\Exception $e) {
-            return redirect()->back()->with(['status' => 'error', 'msg' => $e->getMessage()]);
+            return redirect()->back()->with(['status' => 'error', 'msg' => 'Something went wrong. Please try again.']);
         }
     }
     public function updateProductMaterial(Request $request)
@@ -405,7 +405,7 @@ class EstimationController extends Controller
                 return redirect()->back()->withInput()->with(['status' => 'error', 'msg' => $updateData['message']]);
             }
         } catch (\Exception $e) {
-            return redirect()->back()->withInput()->with(['status' => 'error', 'msg' => $e->getMessage()]);
+            return redirect()->back()->withInput()->with(['status' => 'error', 'msg' => 'Something went wrong. Please try again.']);
         }
     }
     public function destroyAddmoreStoreItem(Request $request)

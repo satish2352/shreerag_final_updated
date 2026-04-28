@@ -72,7 +72,7 @@ class DesignUploadController extends Controller
                 'bom_items_count'      => $bom_items_count,
             ]);
         } catch (\Exception $e) {
-            return redirect()->back()->withErrors(['msg' => $e->getMessage()]);
+            return redirect()->back()->withErrors(['msg' => 'Something went wrong. Please try again.']);
         }
     }
     public function update(Request $request)
@@ -132,7 +132,7 @@ class DesignUploadController extends Controller
         } catch (Exception $e) {
             return redirect()->back()
                 ->withInput()
-                ->with(['msg' => $e->getMessage(), 'status' => 'error']);
+                ->with(['msg' => 'Something went wrong. Please try again.', 'status' => 'error']);
         }
     }
     public function getUploadedDesignSendEstimation()
@@ -243,7 +243,7 @@ class DesignUploadController extends Controller
         } catch (Exception $e) {
             return redirect()->back()
                 ->withInput()
-                ->with(['msg' => $e->getMessage(), 'status' => 'error']);
+                ->with(['msg' => 'Something went wrong. Please try again.', 'status' => 'error']);
         }
     }
 }

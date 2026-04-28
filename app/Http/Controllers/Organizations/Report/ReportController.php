@@ -117,7 +117,7 @@ class ReportController extends Controller
                 'pagination' => $data['pagination']
             ]);
         } catch (\Exception $e) {
-            return response()->json(['status' => false, 'message' => $e->getMessage()]);
+            return response()->json(['status' => false, 'message' => 'Something went wrong. Please try again.']);
         }
     }
     public function listDesignReport(Request $request)
@@ -165,7 +165,7 @@ class ReportController extends Controller
                 'pagination' => $data['pagination']
             ]);
         } catch (\Exception $e) {
-            return response()->json(['status' => false, 'message' => $e->getMessage()]);
+            return response()->json(['status' => false, 'message' => 'Something went wrong. Please try again.']);
         }
     }
     public function getEstimationReport(Request $request)
@@ -186,7 +186,7 @@ class ReportController extends Controller
 
             return view('organizations.report.estimation-report', compact('data', 'getProjectName', 'getProductName'));
         } catch (\Exception $e) {
-            return back()->with('error', 'Something went wrong: ' . $e->getMessage());
+            return back()->with('error', 'Something went wrong. Please try again.');
         }
     }
     public function getEstimationReportAjax(Request $request)
@@ -214,7 +214,7 @@ class ReportController extends Controller
                 'pagination' => $data['pagination']
             ]);
         } catch (\Exception $e) {
-            return response()->json(['status' => false, 'message' => $e->getMessage()]);
+            return response()->json(['status' => false, 'message' => 'Something went wrong. Please try again.']);
         }
     }
 
@@ -263,7 +263,7 @@ class ReportController extends Controller
                 'pagination' => $data['pagination']
             ]);
         } catch (\Exception $e) {
-            return response()->json(['status' => false, 'message' => $e->getMessage()]);
+            return response()->json(['status' => false, 'message' => 'Something went wrong. Please try again.']);
         }
     }
     public function getGRNReport(Request $request)
@@ -305,7 +305,7 @@ class ReportController extends Controller
                 'getPurchaseOrder'
             ));
         } catch (\Exception $e) {
-            return back()->with('error', 'Something went wrong: ' . $e->getMessage());
+            return back()->with('error', 'Something went wrong. Please try again.');
         }
     }
 
@@ -336,7 +336,7 @@ class ReportController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
-                'message' => $e->getMessage()
+                'message' => 'Something went wrong. Please try again.'
             ]);
         }
     }
@@ -380,7 +380,7 @@ class ReportController extends Controller
                 'getPurchaseOrder'
             ));
         } catch (\Exception $e) {
-            return back()->with('error', 'Something went wrong: ' . $e->getMessage());
+            return back()->with('error', 'Something went wrong. Please try again.');
         }
     }
 
@@ -411,7 +411,7 @@ class ReportController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
-                'message' => $e->getMessage()
+                'message' => 'Something went wrong. Please try again.'
             ]);
         }
     }
@@ -443,7 +443,7 @@ class ReportController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
-                'message' => $e->getMessage()
+                'message' => 'Something went wrong. Please try again.'
             ]);
         }
     }
@@ -533,7 +533,7 @@ class ReportController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
-                'message' => $e->getMessage(),
+                'message' => 'Something went wrong. Please try again.',
             ]);
         }
     }
@@ -558,7 +558,7 @@ class ReportController extends Controller
                 'id' => $id
             ]);
         } catch (\Exception $e) {
-            return redirect()->back()->with(['status' => 'error', 'msg' => $e->getMessage()]);
+            return redirect()->back()->with(['status' => 'error', 'msg' => 'Something went wrong. Please try again.']);
         }
     }
     public function getProductsByProject($id)
@@ -581,7 +581,7 @@ class ReportController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
-                'message' => $e->getMessage()
+                'message' => 'Something went wrong. Please try again.'
             ]);
         }
     }
@@ -605,7 +605,7 @@ class ReportController extends Controller
                 'id' => $id
             ]);
         } catch (\Exception $e) {
-            return redirect()->back()->with(['status' => 'error', 'msg' => $e->getMessage()]);
+            return redirect()->back()->with(['status' => 'error', 'msg' => 'Something went wrong. Please try again.']);
         }
     }
     public function listItemStockReportAjax(Request $request)
@@ -633,7 +633,7 @@ class ReportController extends Controller
                 'pagination' => $data['pagination']
             ]);
         } catch (\Exception $e) {
-            return response()->json(['status' => false, 'message' => $e->getMessage()]);
+            return response()->json(['status' => false, 'message' => 'Something went wrong. Please try again.']);
         }
     }
     public function listLogisticsReport(Request $request)
@@ -654,7 +654,7 @@ class ReportController extends Controller
 
             return view('organizations.report.logistics-report', compact('data', 'getProjectName', 'getProductName'));
         } catch (\Exception $e) {
-            return back()->with('error', 'Something went wrong: ' . $e->getMessage());
+            return back()->with('error', 'Something went wrong. Please try again.');
         }
     }
     public function listLogisticsReportAjax(Request $request)
@@ -687,7 +687,7 @@ class ReportController extends Controller
                 'pagination' => $data['pagination']
             ]);
         } catch (\Exception $e) {
-            return response()->json(['status' => false, 'message' => $e->getMessage()]);
+            return response()->json(['status' => false, 'message' => 'Something went wrong. Please try again.']);
         }
     }
     public function listFinanceReport(Request $request)
@@ -707,7 +707,7 @@ class ReportController extends Controller
 
             return view('organizations.report.fianance-report', compact('data', 'getProjectName', 'getProductName'));
         } catch (\Exception $e) {
-            return back()->with('error', 'Something went wrong: ' . $e->getMessage());
+            return back()->with('error', 'Something went wrong. Please try again.');
         }
     }
     public function listFinanceReportAjax(Request $request)
@@ -740,7 +740,7 @@ class ReportController extends Controller
                 'pagination' => $data['pagination']
             ]);
         } catch (\Exception $e) {
-            return response()->json(['status' => false, 'message' => $e->getMessage()]);
+            return response()->json(['status' => false, 'message' => 'Something went wrong. Please try again.']);
         }
     }
     public function listVendorPaymentReport(Request $request)
@@ -788,7 +788,7 @@ class ReportController extends Controller
 
             return view('organizations.report.vendor-payment-report', compact('data', 'getVendorName', 'getPurchaseOrder'));
         } catch (\Exception $e) {
-            return back()->with('error', 'Something went wrong: ' . $e->getMessage());
+            return back()->with('error', 'Something went wrong. Please try again.');
         }
     }
     public function listVendorPaymentReportAjax(Request $request)
@@ -821,7 +821,7 @@ class ReportController extends Controller
                 'pagination' => $data['pagination']
             ]);
         } catch (\Exception $e) {
-            return response()->json(['status' => false, 'message' => $e->getMessage()]);
+            return response()->json(['status' => false, 'message' => 'Something went wrong. Please try again.']);
         }
     }
     public function listDispatchReport(Request $request)
@@ -842,7 +842,7 @@ class ReportController extends Controller
 
             return view('organizations.report.dispatch-report', compact('data', 'getProjectName', 'getProductName'));
         } catch (\Exception $e) {
-            return back()->with('error', 'Something went wrong: ' . $e->getMessage());
+            return back()->with('error', 'Something went wrong. Please try again.');
         }
     }
     public function listDispatchReportAjax(Request $request)
@@ -875,7 +875,7 @@ class ReportController extends Controller
                 'pagination' => $data['pagination']
             ]);
         } catch (\Exception $e) {
-            return response()->json(['status' => false, 'message' => $e->getMessage()]);
+            return response()->json(['status' => false, 'message' => 'Something went wrong. Please try again.']);
         }
     }
     public function listPendingDispatchReport(Request $request)
@@ -899,7 +899,7 @@ class ReportController extends Controller
 
             return view('organizations.report.dispatch-pending-report', compact('data', 'getProjectName', 'getProductName'));
         } catch (\Exception $e) {
-            return back()->with('error', 'Something went wrong: ' . $e->getMessage());
+            return back()->with('error', 'Something went wrong. Please try again.');
         }
     }
     public function listPendingDispatchReportAjax(Request $request)
@@ -932,7 +932,7 @@ class ReportController extends Controller
                 'pagination' => $data['pagination']
             ]);
         } catch (\Exception $e) {
-            return response()->json(['status' => false, 'message' => $e->getMessage()]);
+            return response()->json(['status' => false, 'message' => 'Something went wrong. Please try again.']);
         }
     }
     public function listDispatchBarChart(Request $request)
@@ -1008,7 +1008,7 @@ class ReportController extends Controller
                 'pagination' => $response['pagination']
             ]);
         } catch (\Exception $e) {
-            return response()->json(['status' => false, 'message' => $e->getMessage()]);
+            return response()->json(['status' => false, 'message' => 'Something went wrong. Please try again.']);
         }
     }
     public function listVendorThroughTakenMaterialVendorId(Request $request, $id)
@@ -1017,7 +1017,7 @@ class ReportController extends Controller
             $data = $this->service->listVendorThroughTakenMaterialVendorId($request, $id)['data'];
             return view('organizations.report.vendor-material-list', compact('data', 'id'));
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', $e->getMessage());
+            return redirect()->back()->with('error', 'Something went wrong. Please try again.');
         }
     }
     public function listVendorThroughTakenMaterialVendorIdAjax(Request $request, $id)
@@ -1049,7 +1049,7 @@ class ReportController extends Controller
                 'pagination' => $data['pagination']
             ]);
         } catch (\Exception $e) {
-            return response()->json(['status' => false, 'message' => $e->getMessage()]);
+            return response()->json(['status' => false, 'message' => 'Something went wrong. Please try again.']);
         }
     }
     public function getStockItem(Request $request)
@@ -1090,7 +1090,7 @@ class ReportController extends Controller
                 'pagination' => $response['pagination']
             ]);
         } catch (\Exception $e) {
-            return response()->json(['status' => false, 'message' => $e->getMessage()]);
+            return response()->json(['status' => false, 'message' => 'Something went wrong. Please try again.']);
         }
     }
     public function getStoreItemStockList(Request $request)
@@ -1134,7 +1134,7 @@ class ReportController extends Controller
                 'pagination' => $response['pagination']
             ]);
         } catch (\Exception $e) {
-            return response()->json(['status' => false, 'message' => $e->getMessage()]);
+            return response()->json(['status' => false, 'message' => 'Something went wrong. Please try again.']);
         }
     }
 
@@ -1156,7 +1156,7 @@ class ReportController extends Controller
 
             ));
         } catch (\Exception $e) {
-            return back()->with('error', 'Something went wrong: ' . $e->getMessage());
+            return back()->with('error', 'Something went wrong. Please try again.');
         }
     }
 
@@ -1196,7 +1196,7 @@ class ReportController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
-                'message' => $e->getMessage()
+                'message' => 'Something went wrong. Please try again.'
             ]);
         }
     }
@@ -1265,7 +1265,7 @@ class ReportController extends Controller
                 'totals' => $response['totals'] ?? ['received' => 0, 'issue' => 0, 'balance' => 0],
             ]);
         } catch (\Exception $e) {
-            return response()->json(['status' => false, 'message' => $e->getMessage()]);
+            return response()->json(['status' => false, 'message' => 'Something went wrong. Please try again.']);
         }
     }
     public function listItemWiseVendorRateReport(Request $request)
@@ -1330,7 +1330,7 @@ class ReportController extends Controller
                 'totals' => $response['totals'] ?? ['received' => 0, 'issue' => 0, 'balance' => 0],
             ]);
         } catch (\Exception $e) {
-            return response()->json(['status' => false, 'message' => $e->getMessage()]);
+            return response()->json(['status' => false, 'message' => 'Something went wrong. Please try again.']);
         }
     }
 
@@ -1351,7 +1351,7 @@ class ReportController extends Controller
 
             return view('organizations.report.employee-leave-report', compact('data', 'getProjectName', 'getProductName'));
         } catch (\Exception $e) {
-            return back()->with('error', 'Something went wrong: ' . $e->getMessage());
+            return back()->with('error', 'Something went wrong. Please try again.');
         }
     }
     public function listEmployeeLeaveAjax(Request $request)
@@ -1387,7 +1387,7 @@ class ReportController extends Controller
                 'pagination' => $data['pagination']
             ]);
         } catch (\Exception $e) {
-            return response()->json(['status' => false, 'message' => $e->getMessage()]);
+            return response()->json(['status' => false, 'message' => 'Something went wrong. Please try again.']);
         }
     }
 

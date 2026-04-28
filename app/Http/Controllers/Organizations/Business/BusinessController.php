@@ -95,7 +95,7 @@ class BusinessController extends Controller
                 }
             }
         } catch (Exception $e) {
-            return redirect('owner/add-business')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+            return redirect('owner/add-business')->withInput()->with(['msg' => 'Something went wrong. Please try again.', 'status' => 'error']);
         }
     }
     public function edit(Request $request)
@@ -180,7 +180,7 @@ class BusinessController extends Controller
         } catch (Exception $e) {
             return redirect()->back()
                 ->withInput()
-                ->with(['msg' => $e->getMessage(), 'status' => 'error']);
+                ->with(['msg' => 'Something went wrong. Please try again.', 'status' => 'error']);
         }
     }
     public function deleteBusiness(Request $request)
@@ -221,7 +221,7 @@ class BusinessController extends Controller
                 'msg'    => $delete['msg']
             ]);
         } catch (\Exception $e) {
-            return back()->with('status', 'error')->with('msg', $e->getMessage());
+            return back()->with('status', 'error')->with('msg', 'Something went wrong. Please try again.');
         }
     }
 
@@ -239,7 +239,7 @@ class BusinessController extends Controller
             }
             return redirect('owner/list-accept-bom-estimation')->with(compact('msg', 'status'));
         } catch (Exception $e) {
-            return ['status' => 'error', 'msg' => $e->getMessage()];
+            return ['status' => 'error', 'msg' => 'Something went wrong. Please try again.'];
         }
     }
     public function editRejectEstimation($idtoedit)
@@ -276,7 +276,7 @@ class BusinessController extends Controller
             return redirect()->back()
                 ->withInput()
                 ->with('status', 'error')
-                ->with('msg', 'Something went wrong. ' . $e->getMessage());
+                ->with('msg', 'Something went wrong. Please try again.');
         }
     }
 
@@ -348,7 +348,7 @@ class BusinessController extends Controller
 
             return redirect('owner/list-approved-purchase-orders-owner')->with(compact('msg', 'status'));
         } catch (Exception $e) {
-            return ['status' => 'error', 'msg' => $e->getMessage()];
+            return ['status' => 'error', 'msg' => 'Something went wrong. Please try again.'];
         }
     }
     public function rejectedPurchaseOrder($purchase_order_id, $business_id)
@@ -365,7 +365,7 @@ class BusinessController extends Controller
 
             return redirect('owner/list-rejected-purchase-orders-owner')->with(compact('msg', 'status'));
         } catch (Exception $e) {
-            return ['status' => 'error', 'msg' => $e->getMessage()];
+            return ['status' => 'error', 'msg' => 'Something went wrong. Please try again.'];
         }
     }
     public function acceptPurchaseOrderPaymentRelease($purchase_order_id, $business_id)
@@ -382,7 +382,7 @@ class BusinessController extends Controller
 
             return redirect('owner/list-po-recived-for-approval-payment')->with(compact('msg', 'status'));
         } catch (Exception $e) {
-            return ['status' => 'error', 'msg' => $e->getMessage()];
+            return ['status' => 'error', 'msg' => 'Something went wrong. Please try again.'];
         }
     }
 }

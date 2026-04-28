@@ -238,18 +238,12 @@
                     navigator.geolocation.getCurrentPosition(function(position) {
                         document.getElementById("latitude").value = position.coords.latitude;
                         document.getElementById("longitude").value = position.coords.longitude;
-
-                        console.log("Latitude set to:", position.coords.latitude);
-                        console.log("Longitude set to:", position.coords.longitude);
-
-                        loginForm.submit(); // Now submit with data
+                        loginForm.submit();
                     }, function(error) {
-                        console.warn("Geolocation error:", error.message);
-                        loginForm.submit(); // Still submit without coords
-                    });
+                        loginForm.submit(); // submit without coords on error/denial
+                    }, { timeout: 5000, maximumAge: 60000 }); // 5-second cap
                 } else {
-                    console.warn("Geolocation not supported.");
-                    loginForm.submit(); // Still submit without coords
+                    loginForm.submit();
                 }
             });
         });

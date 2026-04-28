@@ -94,7 +94,7 @@ class DispatchController extends Controller
                 }
             }
         } catch (Exception $e) {
-            return redirect('dispatch/dispatchdept/add-dispatch')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+            return redirect('dispatch/dispatchdept/add-dispatch')->withInput()->with(['msg' => 'Something went wrong. Please try again.', 'status' => 'error']);
         }
     }
 }

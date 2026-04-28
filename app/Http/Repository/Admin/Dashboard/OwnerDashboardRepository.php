@@ -202,6 +202,11 @@ class OwnerDashboardRepository
             ->whereIn('off_canvas_status', [23, 28, 50])
             ->count();
 
+        // 6. Total PO orders count (all non-deleted purchase orders)
+        $total_po_orders = (int) DB::table('purchase_orders')
+            ->where('is_deleted', 0)
+            ->count();
+
         return [
 
 
@@ -239,6 +244,7 @@ class OwnerDashboardRepository
                 'pending_owner_actions'     => $pending_owner_actions,
                 'products_in_progress'      => $business_inprocess_count,
                 'products_completed'        => $product_completed_count,
+                'total_po_orders'           => $total_po_orders,
             ],
 
         ];

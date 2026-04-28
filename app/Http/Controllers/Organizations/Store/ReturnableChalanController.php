@@ -192,7 +192,7 @@ class ReturnableChalanController extends Controller
                 }
             }
         } catch (Exception $e) {
-            return redirect('storedept/add-business')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+            return redirect('storedept/add-business')->withInput()->with(['msg' => 'Something went wrong. Please try again.', 'status' => 'error']);
         }
     }
     public function fetchPONumbers(Request $request)
@@ -209,7 +209,7 @@ class ReturnableChalanController extends Controller
             // Return PO numbers as a JSON response
             return response()->json(['poNumbers' => $poNumbers]);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json(['error' => 'Something went wrong. Please try again.'], 500);
         }
     }
     public function getPONumbers($vendor_id)
@@ -218,7 +218,7 @@ class ReturnableChalanController extends Controller
             $poNumbers = PurchaseOrdersModel::where('vendor_id', $vendor_id)->where('is_active', true)->get(['id', 'purchase_orders_id']);
             return response()->json(['status' => 'success', 'data' => $poNumbers]);
         } catch (\Exception $e) {
-            return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
+            return response()->json(['status' => 'error', 'message' => 'Something went wrong. Please try again.']);
         }
     }
     public function show(Request $request)
@@ -274,7 +274,7 @@ class ReturnableChalanController extends Controller
 
 
         } catch (Exception $e) {
-            return ['status' => 'error', 'msg' => $e->getMessage()];
+            return ['status' => 'error', 'msg' => 'Something went wrong. Please try again.'];
         }
     }
     public function getAllListPurchaseOrderTowardsOwnerDetails($purchase_order_id)
@@ -289,7 +289,7 @@ class ReturnableChalanController extends Controller
 
             return view('organizations.store.returnable-chalan.view-returnable-chalan-details', compact('purchase_order_id', 'purchaseOrder', 'purchaseOrderDetails', 'getOrganizationData', 'getAllRulesAndRegulations', 'business_id'));
         } catch (Exception $e) {
-            return ['status' => 'error', 'msg' => $e->getMessage()];
+            return ['status' => 'error', 'msg' => 'Something went wrong. Please try again.'];
         }
     }
 
@@ -398,7 +398,7 @@ class ReturnableChalanController extends Controller
         } catch (Exception $e) {
             return redirect()->back()
                 ->withInput()
-                ->with(['msg' => $e->getMessage(), 'status' => 'error']);
+                ->with(['msg' => 'Something went wrong. Please try again.', 'status' => 'error']);
         }
     }
 

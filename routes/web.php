@@ -79,11 +79,14 @@
 
     // ✅ Login & Register
     Route::get('/login', [LoginController::class, 'index'])->name('login');
-    Route::post('/login', [LoginController::class, 'submitLogin'])->name('login.submit');
+    Route::post('/login', [LoginController::class, 'submitLogin'])->name('login.submit')->middleware('throttle:5,1');
     Route::get('/register', [RegisterController::class, 'index'])->name('register');
 
-    // ✅ Clear cache (safe for dev only)
+    // Cache clear — only accessible from localhost (not exposed to public)
     Route::get('/clear', function () {
+        if (!in_array(request()->ip(), ['127.0.0.1', '::1'])) {
+            abort(403);
+        }
         Artisan::call('cache:clear');
         Artisan::call('config:clear');
         Artisan::call('route:clear');

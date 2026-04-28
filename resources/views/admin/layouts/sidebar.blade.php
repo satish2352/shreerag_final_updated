@@ -235,7 +235,6 @@
                     @endif
 
                     @if (session()->get('role_id') == config('constants.ROLE_ID.HIGHER_AUTHORITY'))
-                        <ul class="sidebar-menu" id="nav-accordion">
 
                             <li class="nav-item {{ request()->is('owner/dashboard') ? 'active' : '' }}">
                                 <a href="{{ route('dashboard') }}" aria-expanded="false"><i
@@ -638,7 +637,7 @@
                                         class="fa fa-history icon-wrap"></i><span class="mini-click-non">Login
                                         History</span></a>
                             </li>
-                        </ul>
+
                     @endif
                     @if (session()->get('role_id') == config('constants.ROLE_ID.PURCHASE'))
                         <li class="nav-item {{ request()->is('purchase/dashboard') ? 'active' : '' }}">

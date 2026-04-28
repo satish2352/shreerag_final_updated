@@ -444,7 +444,7 @@ class PurchaseOrderController extends Controller
 
             return response()->json(['part' => $part]);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json(['error' => 'Something went wrong. Please try again.'], 500);
         }
     }
 
@@ -502,7 +502,7 @@ class PurchaseOrderController extends Controller
             return redirect('purchase/list-purchase')->with(compact('msg', 'status'));
         } catch (\Exception $e) {
             return [
-                'msg' => $e->getMessage(),
+                'msg' => 'Something went wrong. Please try again.',
                 'status' => 'error'
             ];
         }
@@ -532,7 +532,7 @@ class PurchaseOrderController extends Controller
 
 
         } catch (Exception $e) {
-            return ['status' => 'error', 'msg' => $e->getMessage()];
+            return ['status' => 'error', 'msg' => 'Something went wrong. Please try again.'];
         }
     }
 
@@ -552,7 +552,7 @@ class PurchaseOrderController extends Controller
 
             return redirect('purchase/list-purchase-order-approved-sent-to-vendor')->with(compact('msg', 'status'));
         } catch (Exception $e) {
-            return ['status' => 'error', 'msg' => $e->getMessage()];
+            return ['status' => 'error', 'msg' => 'Something went wrong. Please try again.'];
         }
     }
 
@@ -582,7 +582,7 @@ class PurchaseOrderController extends Controller
                 'businessDetailsData'
             ));
         } catch (Exception $e) {
-            return ['status' => 'error', 'msg' => $e->getMessage()];
+            return ['status' => 'error', 'msg' => 'Something went wrong. Please try again.'];
         }
     }
 
@@ -842,7 +842,7 @@ class PurchaseOrderController extends Controller
                 ->with('msg', 'Purchase order mail sent to vendor.');
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            return response()->json(['status' => 'error', 'message' => 'An error occurred: ' . $e->getMessage()], 500);
+            return response()->json(['status' => 'error', 'message' => 'Something went wrong. Please try again.'], 500);
         }
     }
 }

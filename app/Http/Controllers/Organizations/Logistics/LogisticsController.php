@@ -92,7 +92,7 @@ class LogisticsController extends Controller
                 }
             }
         } catch (Exception $e) {
-            return redirect('logisticsdept/add-logistics')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+            return redirect('logisticsdept/add-logistics')->withInput()->with(['msg' => 'Something went wrong. Please try again.', 'status' => 'error']);
         }
     }
 

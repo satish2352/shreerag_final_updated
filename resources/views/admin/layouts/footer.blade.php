@@ -69,6 +69,56 @@
 
 <!-- ========================= FOOTER END ========================= -->
 
+<!-- Sidebar Active State Fix -->
+<script>
+(function () {
+    'use strict';
+
+    $(document).ready(function () {
+        var currentPath = window.location.pathname.replace(/\/+$/, '');
+
+        // 1. Find the sidebar link whose href best matches the current URL
+        var $best = null;
+        var bestLen = 0;
+
+        $('.left-custom-menu-adp-wrap a').each(function () {
+            var href = $(this).attr('href');
+            if (!href || href === '#' || href.startsWith('javascript')) return;
+
+            try {
+                var linkPath = new URL(href, window.location.origin).pathname.replace(/\/+$/, '');
+                if (currentPath === linkPath && linkPath.length > bestLen) {
+                    $best = $(this);
+                    bestLen = linkPath.length;
+                }
+            } catch (e) {}
+        });
+
+        if ($best) {
+            // Mark the <li> as active
+            $best.closest('li').addClass('active');
+
+            // If inside a submenu, open the parent accordion <li>
+            var $parentUl = $best.closest('ul.submenu-angle, ul.submenu');
+            if ($parentUl.length) {
+                $parentUl.show().attr('aria-expanded', 'true');
+                $parentUl.prev('a').attr('aria-expanded', 'true');
+                $parentUl.closest('li').addClass('active');
+            }
+
+            // 2. Scroll the sidebar so the active item is visible
+            var $scrollWrap = $('.comment-scrollbar');
+            if ($scrollWrap.length) {
+                var itemOffsetTop = $best.closest('li').position()
+                    ? $best.closest('li').position().top
+                    : 0;
+                var scrollTarget = $scrollWrap.scrollTop() + itemOffsetTop - 120;
+                $scrollWrap.animate({ scrollTop: Math.max(0, scrollTarget) }, 300);
+            }
+        }
+    });
+})();
+</script>
 
 <!-- ========================= YOUR FUNCTIONAL SCRIPTS ========================= -->
 

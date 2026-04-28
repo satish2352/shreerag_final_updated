@@ -270,7 +270,7 @@ class AllListController extends Controller
                 'pagination' => $data['pagination']
             ]);
         } catch (\Exception $e) {
-            return response()->json(['status' => false, 'message' => $e->getMessage()]);
+            return response()->json(['status' => false, 'message' => 'Something went wrong. Please try again.']);
         }
     }
 
@@ -316,7 +316,7 @@ class AllListController extends Controller
                 'pagination' => $response['pagination']
             ]);
         } catch (\Exception $e) {
-            return response()->json(['status' => false, 'message' => $e->getMessage()]);
+            return response()->json(['status' => false, 'message' => 'Something went wrong. Please try again.']);
         }
     }
     public function FollowUpReport(Request $request)
@@ -361,7 +361,7 @@ class AllListController extends Controller
                 'pagination' => $response['pagination']
             ]);
         } catch (\Exception $e) {
-            return response()->json(['status' => false, 'message' => $e->getMessage()]);
+            return response()->json(['status' => false, 'message' => 'Something went wrong. Please try again.']);
         }
     }
 

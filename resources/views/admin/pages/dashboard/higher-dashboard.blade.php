@@ -273,7 +273,7 @@
                                             <i class="fa-solid fa-file-alt me-1 text-primary"></i>Total PO Orders
                                         </span>
                                         <span class="h5 font-bold mb-0">
-                                            {{ $purchase_dept_counts['purchase_order_submited_by_vendor'] }}
+                                            {{ $owner_kpis['total_po_orders'] }}
                                         </span>
                                     </div>
                                     <div class="col-auto">

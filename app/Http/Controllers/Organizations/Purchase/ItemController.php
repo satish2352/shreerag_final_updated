@@ -105,7 +105,7 @@ class ItemController extends Controller
                 }
             }
         } catch (Exception $e) {
-            return redirect('purchase/add-part-item')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+            return redirect('purchase/add-part-item')->withInput()->with(['msg' => 'Something went wrong. Please try again.', 'status' => 'error']);
         }
     }
 
@@ -181,7 +181,7 @@ class ItemController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()
                 ->withInput()
-                ->with(['msg' => $e->getMessage(), 'status' => 'error']);
+                ->with(['msg' => 'Something went wrong. Please try again.', 'status' => 'error']);
         }
     }
 

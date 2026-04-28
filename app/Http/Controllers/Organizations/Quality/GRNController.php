@@ -169,7 +169,7 @@ class GRNController extends Controller
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
-                'error' => $e->getMessage(),
+                'error' => 'Something went wrong. Please try again.',
             ], 500);
         }
     }
@@ -209,7 +209,7 @@ class GRNController extends Controller
                 }
             }
         } catch (Exception $e) {
-            return redirect('quality/add-grn')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+            return redirect('quality/add-grn')->withInput()->with(['msg' => 'Something went wrong. Please try again.', 'status' => 'error']);
         }
     }
 

@@ -91,7 +91,7 @@ class AllListController extends Controller
             // Return the exception message for debugging (useful during development)
             return response()->json([
                 'message' => 'An error occurred while processing your request.',
-                'error' => $e->getMessage()
+                'error' => 'Something went wrong. Please try again.'
             ], 500);
         }
     }

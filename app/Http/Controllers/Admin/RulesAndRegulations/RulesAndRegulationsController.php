@@ -61,7 +61,7 @@ class RulesAndRegulationsController extends Controller
                 }
             }
         } catch (Exception $e) {
-            return redirect('add-rules-regulations')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+            return redirect('add-rules-regulations')->withInput()->with(['msg' => 'Something went wrong. Please try again.', 'status' => 'error']);
         }
     }
     public function show(Request $request)
@@ -113,7 +113,7 @@ class RulesAndRegulationsController extends Controller
         } catch (Exception $e) {
             return redirect()->back()
                 ->withInput()
-                ->with(['msg' => $e->getMessage(), 'status' => 'error']);
+                ->with(['msg' => 'Something went wrong. Please try again.', 'status' => 'error']);
         }
     }
     public function updateOne(Request $request)

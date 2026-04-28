@@ -105,7 +105,7 @@ class AllListController extends Controller
                 'organizations.business.list.list-material-list-from-store-to-purchase',
                 [
                     'data_output' => collect(), // safe empty collection
-                    'message' => $e->getMessage()
+                    'message' => 'Something went wrong. Please try again.'
                 ]
             );
         }
@@ -161,7 +161,8 @@ class AllListController extends Controller
                 compact('data_output')
             );
         } catch (\Exception $e) {
-            dd($e->getMessage());
+            Log::error('getAllListPurchaseOrderNeedToCheck: ' . $e->getMessage());
+            return back()->with('status', 'error')->with('msg', 'Something went wrong. Please try again.');
         }
     }
     public function getAllListApprovedPurchaseOrderOwnerlogin(Request $request)

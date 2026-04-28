@@ -105,7 +105,7 @@ class OrganizationController extends Controller
                 }
             }
         } catch (Exception $e) {
-            return redirect('add-organizations')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+            return redirect('add-organizations')->withInput()->with(['msg' => 'Something went wrong. Please try again.', 'status' => 'error']);
         }
     }
 
@@ -198,7 +198,7 @@ class OrganizationController extends Controller
         } catch (Exception $e) {
             return redirect()->back()
                 ->withInput()
-                ->with(['msg' => $e->getMessage(), 'status' => 'error']);
+                ->with(['msg' => 'Something went wrong. Please try again.', 'status' => 'error']);
         }
     }
 
@@ -243,7 +243,7 @@ class OrganizationController extends Controller
             $data = EmployeesModel::where('department_id', $roleId)->get();
             return response()->json($data);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json(['error' => 'Something went wrong. Please try again.'], 500);
         }
     }
 }

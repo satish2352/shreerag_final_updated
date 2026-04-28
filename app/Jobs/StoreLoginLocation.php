@@ -16,14 +16,15 @@ class StoreLoginLocation implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $userId, $latitude, $longitude, $ipAddress;
+    protected $userId, $latitude, $longitude, $ipAddress, $historyId;
 
-    public function __construct($userId, $latitude, $longitude, $ipAddress)
+    public function __construct($userId, $latitude, $longitude, $ipAddress, $historyId = null)
     {
-        $this->userId = $userId;
-        $this->latitude = $latitude;
+        $this->userId    = $userId;
+        $this->latitude  = $latitude;
         $this->longitude = $longitude;
         $this->ipAddress = $ipAddress;
+        $this->historyId = $historyId;
     }
 
     public function handle()
@@ -32,34 +33,32 @@ class StoreLoginLocation implements ShouldQueue
             $user = User::find($this->userId);
             if (!$user) return;
 
-            // Update lat/long
+            // Update user lat/long
             $user->update([
-                'latitude' => $this->latitude,
-                'longitude' => $this->longitude
+                'latitude'  => $this->latitude,
+                'longitude' => $this->longitude,
             ]);
 
             // Reverse geocoding
             $address = null;
             try {
-                $apiKey = "pk.1657d640f433dbcd0b009e097699adc6";
-                $url = "https://us1.locationiq.com/v1/reverse.php?key={$apiKey}&lat={$this->latitude}&lon={$this->longitude}&format=json&addressdetails=1";
-
+                $apiKey  = "pk.1657d640f433dbcd0b009e097699adc6";
+                $url     = "https://us1.locationiq.com/v1/reverse.php?key={$apiKey}&lat={$this->latitude}&lon={$this->longitude}&format=json&addressdetails=1";
                 $response = Http::timeout(4)->get($url);
-                $json = $response->json();
+                $json     = $response->json();
 
                 if (!empty($json['address'])) {
-                    $addressParts = [
+                    $parts = [
                         $json['address']['house_number'] ?? null,
-                        $json['address']['road'] ?? null,
+                        $json['address']['road']         ?? null,
                         $json['address']['neighbourhood'] ?? null,
-                        $json['address']['suburb'] ?? null,
-                        $json['address']['city'] ?? null,
-                        $json['address']['state'] ?? null,
-                        $json['address']['postcode'] ?? null,
-                        $json['address']['country'] ?? null,
+                        $json['address']['suburb']       ?? null,
+                        $json['address']['city']         ?? null,
+                        $json['address']['state']        ?? null,
+                        $json['address']['postcode']     ?? null,
+                        $json['address']['country']      ?? null,
                     ];
-
-                    $address = implode(', ', array_filter($addressParts));
+                    $address = implode(', ', array_filter($parts));
                 } else {
                     $address = $json['display_name'] ?? null;
                 }
@@ -71,14 +70,12 @@ class StoreLoginLocation implements ShouldQueue
                 Log::error("Reverse Geocoding Error: " . $e->getMessage());
             }
 
-            // Save login history
-            LoginHistory::create([
-                'user_id' => $this->userId,
-                'latitude' => $this->latitude,
-                'longitude' => $this->longitude,
-                'ip_address' => $this->ipAddress,
-                'location_address' => $address
-            ]);
+            // Update the login history record created synchronously at login time
+            if ($this->historyId) {
+                LoginHistory::where('id', $this->historyId)->update([
+                    'location_address' => $address,
+                ]);
+            }
         } catch (\Exception $e) {
             Log::error("StoreLoginLocation Job Error: " . $e->getMessage());
         }
