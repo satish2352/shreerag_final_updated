@@ -185,8 +185,16 @@ class PurchaseOrderController extends Controller
         // ============================
         $business_details_id = base64_decode($business_detailsId);
 
-        $business_id = BusinessDetails::where('id', $business_details_id)
-            ->value('business_id');
+        $businessDetails = BusinessDetails::leftJoin('businesses', 'businesses.id', '=', 'businesses_details.business_id')
+            ->where('businesses_details.id', $business_details_id)
+            ->select(
+                'businesses_details.business_id',
+                'businesses_details.product_name',
+                'businesses.project_name'
+            )
+            ->first();
+
+        $business_id = $businessDetails ? $businessDetails->business_id : null;
 
         // ============================
         // TOTAL ESTIMATION AMOUNT (SUM)
@@ -241,7 +249,8 @@ class PurchaseOrderController extends Controller
                 'used_po_amount',
                 'remaining_amount',
                 'newRequisitionItems',
-                'purchasedItems'
+                'purchasedItems',
+                'businessDetails'
             )
         );
     }

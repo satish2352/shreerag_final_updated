@@ -15,6 +15,20 @@
                             </div><br>
 
                             <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label><strong>Business Name</strong></label>
+                                    <input type="text" class="form-control"
+                                        value="{{ $businessDetails->project_name ?? 'N/A' }}" readonly>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label><strong>Product Name</strong></label>
+                                    <input type="text" class="form-control"
+                                        value="{{ $businessDetails->product_name ?? 'N/A' }}" readonly>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
                                 <div class="col-md-4">
                                     <label><strong>Grand Total Amount</strong></label>
                                     <input type="text" class="form-control"
