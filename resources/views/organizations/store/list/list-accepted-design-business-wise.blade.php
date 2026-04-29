@@ -85,9 +85,9 @@
                                                     <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->description) }}</td>
                                                     <td>{{ ucwords($data->quantity) }}</td>
-                                                       <td>{{ ucwords($data->total_estimation_amount) }}</td>
+                                                    <td>{{ ucwords($data->total_estimation_amount) }}</td>
                                                     <td>
-                                                        @if(!empty($data->design_image))
+                                                        @if (!empty($data->design_image))
                                                             <a class="img-size" target="_blank"
                                                                 href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
                                                                 alt="Design">Click to view</a>
@@ -104,7 +104,7 @@
                                                         </td>
                                                     @endif
                                                     <td>
-                                                        @if(!empty($data->design_id) && !empty($data->business_details_id))
+                                                        @if (!empty($data->design_id) && !empty($data->business_details_id))
                                                             <button type="button" class="btn btn-outline-info btn-sm"
                                                                 onclick="storeOpenBomModal({{ $data->business_details_id }}, {{ $data->design_id }})">
                                                                 <i class="fa fa-list"></i> View BOM
@@ -128,14 +128,14 @@
 
                                                             @if ($data->dispatch_status_id == 1154)
                                                                 {{-- CLOSED → BOTH BUTTONS DISABLED --}}
-                                                                <button class="btn btn-sm disabled-btn"
+                                                                {{-- <button class="btn btn-sm disabled-btn"
                                                                     style="padding: 7px;" disabled>
                                                                     Issue Product Material
-                                                                </button>
+                                                                </button> --}}
 
                                                                 <button class="btn btn-sm disabled-btn"
                                                                     style="padding: 7px; margin-left: 10px;" disabled>
-                                                                    Need To Purchase
+                                                                    Issue Product Material & Need To Purchase
                                                                 </button>
                                                             @else
                                                                 {{-- OPEN → BUTTONS ENABLED --}}
@@ -199,22 +199,22 @@
             </div>
         </div>
     </div>
-@include('organizations.common.bom-material-items-modal', [
-    'mode'              => 'view_only',
-    'businessId'        => 0,
-    'businessDetailsId' => 0,
-    'designId'          => 0,
-    'bomModalId'        => 'storeBomItemsModal',
-])
+    @include('organizations.common.bom-material-items-modal', [
+        'mode' => 'view_only',
+        'businessId' => 0,
+        'businessDetailsId' => 0,
+        'designId' => 0,
+        'bomModalId' => 'storeBomItemsModal',
+    ])
 
-@push('scripts')
-<script>
-    function storeOpenBomModal(businessDetailsId, designId) {
-        var bdEncoded = btoa(businessDetailsId);
-        var dEncoded  = btoa(designId);
-        var fetchUrl  = '{{ url("production/get-bom-material-items") }}/' + bdEncoded + '/' + dEncoded;
-        openBomModal_storeBomItemsModal(fetchUrl);
-    }
-</script>
-@endpush
+    @push('scripts')
+        <script>
+            function storeOpenBomModal(businessDetailsId, designId) {
+                var bdEncoded = btoa(businessDetailsId);
+                var dEncoded = btoa(designId);
+                var fetchUrl = '{{ url('production/get-bom-material-items') }}/' + bdEncoded + '/' + dEncoded;
+                openBomModal_storeBomItemsModal(fetchUrl);
+            }
+        </script>
+    @endpush
 @endsection
