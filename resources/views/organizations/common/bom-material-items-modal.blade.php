@@ -146,6 +146,17 @@
     background-color: #fff3cd;
     color: #856404;
 }
+.bom-company-name-{{ $modalId }} {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 16px;
+    font-weight: 700;
+    color: #212529;
+    text-align: center;
+    white-space: nowrap;
+}
 </style>
 
 <!-- BOM Material Items Modal -->
@@ -166,6 +177,7 @@
                         &mdash; <small>View Only</small>
                     @endif
                 </h5>
+                <div class="bom-company-name-{{ $modalId }}">Shreerag Engineering Pvt. Ltd</div>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>

@@ -111,6 +111,14 @@
         white-space: normal !important;
     }
 
+    .po-part-no-column {
+        font-size: 13px !important;
+        line-height: 1.25 !important;
+        white-space: normal !important;
+        word-break: break-word !important;
+        overflow-wrap: anywhere !important;
+    }
+
 
     p {
         font-size: 16px !important;
@@ -254,19 +262,29 @@
                                     schedule mentioned below</b></div>
                         </div>
                         <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+                            <colgroup>
+                                <col style="width:4%;">
+                                <col style="width:23%;">
+                                <col style="width:13%;">
+                                <col style="width:24%;">
+                                <col style="width:11%;">
+                                <col style="width:10%;">
+                                <col style="width:7%;">
+                                <col style="width:8%;">
+                            </colgroup>
                             <thead>
                                 <tr style="bold; font-family: 'Play', sans-serif!important;font-size:14px;">
                                     <th class="pdf-font-size"
-                                        style="border-top: 1px solid black; border-right: 1px solid black; border-bottom: 1px solid black; border-left:0.1px solid black; padding: 5px; font-size:14px; width: 52px;">
+                                        style="border-top: 1px solid black; border-right: 1px solid black; border-bottom: 1px solid black; border-left:0.1px solid black; padding: 5px; font-size:14px;">
                                         No.
                                     </th>
                                     <th class="pdf-font-size"
-                                        style="border: 1px solid black; padding: 5px; font-size:14px; width:20%;">
+                                        style="border: 1px solid black; padding: 5px; font-size:14px;">
                                         Description</th>
                                     <th class="pdf-font-size"
                                         style="border: 1px solid black; padding: 5px; font-size:14px;">HSN No.</th>
                                     <th class="pdf-font-size"
-                                        style="border: 1px solid black; padding: 5px; font-size:14px; width:15%;">Part No.</th>
+                                        style="border: 1px solid black; padding: 5px; font-size:14px;">Part No.</th>
                                     <th class="pdf-font-size"
                                         style="border: 1px solid black; padding: 5px; font-size:14px;">Quantity</th>
                                     <th class="pdf-font-size"
@@ -290,7 +308,7 @@
 overflow-wrap: anywhere !important;">
                                             {{ $item->item_description }}</td>
                                         <td style="border: 1px solid black; padding: 5px;">{{ $item->hsn_name }}</td>
-                                        <td style="border: 1px solid black; padding: 5px; word-break: break-word; overflow-wrap: anywhere; width:15%;">
+                                        <td class="po-part-no-column" style="border: 1px solid black; padding: 5px;">
                                             {{ $item->description }}
                                         </td>
                                         <td style="border: 1px solid black; padding: 5px; text-align: left;">
@@ -422,12 +440,7 @@ overflow-wrap: anywhere !important;">
                                     To Nashik Jurisdiction. PO Terms and Conditions As per attached PO Annexture</span>
                             </div>
                         </div> --}}
-                        @if (empty($is_pdf))
-                            <a>
-                                <button onclick="printInvoice()" style="margin: 20px;" type="button"
-                                    class="btn  print-btn m-4 print-button btn-bg-colour">Print</button>
-                            </a>
-                        @endif
+                        
                         {{-- <a>
                                 <button data-toggle="tooltip" onclick="printInvoice()" style="margin: 20px;"   type="button" class="btn btn-primary print-btn m-4 print-button" >Print</button>
                             </a> --}}

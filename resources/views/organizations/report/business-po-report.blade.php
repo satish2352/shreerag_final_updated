@@ -1,5 +1,12 @@
 @extends('admin.layouts.master')
 @section('content')
+<style>
+    .business-po-filter-actions {
+        gap: 4px;
+        justify-content: flex-end;
+        white-space: nowrap;
+    }
+</style>
 <div class="data-table-area mg-tb-15">
     <div class="container-fluid">
         <div class="row">
@@ -63,8 +70,8 @@
                                         value="{{ request('to_date') }}">
                                 </div>
 
-                                <div class="col-md-2 mb-2 d-flex align-items-end">
-                                    <button type="submit" class="btn btn-primary btn-sm mr-1 filterbg">
+                                <div class="col-md-2 mb-2 d-flex align-items-end business-po-filter-actions">
+                                    <button type="submit" class="btn btn-primary btn-sm filterbg">
                                         <i class="fa fa-search"></i> Search
                                     </button>
                                     <a href="{{ route('business-po-report') }}" class="btn btn-secondary btn-sm">Reset</a>
