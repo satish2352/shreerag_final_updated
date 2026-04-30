@@ -39,10 +39,10 @@
                                                 <th data-field="bom" data-editable="false">Action</th>
                                                 <th data-field="bom_file" data-editable="false">Requisition BOM</th>
                                                 <th data-field="project_name" data-editable="false">Project Name</th>
+                                                <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="customer_po_number" data-editable="false">PO Number</th>
                                                 <th data-field="grand_total_amount" data-editable="false">Grand Total Amount
                                                 </th>
-                                                <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="quantity" data-editable="false">Quantity</th>
                                                 <th data-field="grn_date" data-editable="false">Description</th>
                                                 <th data-field="total_estimation_amount" data-editable="false"> <span
@@ -81,9 +81,9 @@
                                                         </button>
                                                     </td>
                                                     <td>{{ ucwords($data->project_name) }}</td>
+                                                    <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->customer_po_number) }}</td>
                                                     <td><b>{{ ucwords($data->grand_total_amount) }}</b></td>
-                                                    <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->quantity) }}</td>
                                                     <td>{{ ucwords($data->description) }}</td>
                                                     <td><b>{{ ucwords($data->total_estimation_amount) }}</b></td>
@@ -93,7 +93,7 @@
                                                 </tr>
                                             @empty
                                                 <tr>
-                                                    <td colspan="9" class="text-center">
+                                                    <td colspan="11" class="text-center">
                                                         No Record Found
                                                     </td>
                                                 </tr>

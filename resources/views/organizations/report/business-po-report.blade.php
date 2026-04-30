@@ -70,18 +70,18 @@
                                         value="{{ request('to_date') }}">
                                 </div>
 
-                                <div class="col-md-2 mb-2 d-flex align-items-end business-po-filter-actions">
-                                    <button type="submit" class="btn btn-primary btn-sm filterbg">
-                                        <i class="fa fa-search"></i> Search
-                                    </button>
-                                    <a href="{{ route('business-po-report') }}" class="btn btn-secondary btn-sm">Reset</a>
-                                </div>
-
                                 <div class="col-md-4 mb-2">
                                     <label style="font-size:12px; font-weight:600; margin-bottom:3px;">Search (PO No / GRN No / Business / Product / Vendor)</label>
                                     <input type="text" name="search" class="form-control form-control-sm"
                                         placeholder="PO Number, GRN Number, Business name, Product, Vendor..."
                                         value="{{ request('search') }}">
+                                </div>
+
+                                <div class="col-md-8 mb-2 d-flex align-items-end business-po-filter-actions">
+                                    <button type="submit" class="btn btn-primary btn-sm filterbg">
+                                        <i class="fa fa-search"></i> Search
+                                    </button>
+                                    <a href="{{ route('business-po-report') }}" class="btn btn-secondary btn-sm">Reset</a>
                                 </div>
 
                             </div>

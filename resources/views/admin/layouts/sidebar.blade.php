@@ -685,18 +685,18 @@
 
                             </ul>
                         </li>
-                        <li class="{{ Request::is('list-purchase') ? 'active' : '' }}">
-                            <a class="has-arrow" href="{{ route('list-purchase') }}" aria-expanded="false"><i
+                        <li class="{{ request()->is('purchase/list-purchase') || request()->is('purchase/list-purchase-order/*') || request()->is('purchase/list-purchase-order-rejected') ? 'active' : '' }}">
+                            <a class="has-arrow" href="#" aria-expanded="false"><i
                                     class="fa fa-file-invoice icon-wrap"></i><span class="mini-click-non">Purchase
                                     Orders</span></a>
                             <ul class="submenu-angle" aria-expanded="false">
-                                <li class="nav-item {{ Request::is('list-purchase') ? 'active' : '' }}"><a
+                                <li class="nav-item {{ request()->is('purchase/list-purchase') ? 'active' : '' }}"><a
                                         href="{{ route('list-purchase') }}"><i class="fa fa-list-alt icon-wrap"></i>
                                         <span class="mini-click-non">List Purchase Orders To Be Finalize</span></a>
                                 </li>
 
                                 <li
-                                    class="nav-item {{ Request::is('list-purchase-order-rejected') ? 'active' : '' }}">
+                                    class="nav-item {{ request()->is('purchase/list-purchase-order-rejected') ? 'active' : '' }}">
                                     <a href="{{ route('list-purchase-order-rejected') }}"> <i
                                             class="fa fa-times-circle icon-wrap"></i><span
                                             class="mini-click-non">Rejected Purchase Orders List</span></a>
