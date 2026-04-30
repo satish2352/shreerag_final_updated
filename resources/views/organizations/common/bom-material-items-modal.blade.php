@@ -609,6 +609,20 @@
         _partDropState.$menu = $menu;
         _partDropState.$dropdown = $dropdown;
 
+        // Attach the search handler DIRECTLY to the search input element now that it
+        // lives in <body>.  Using a namespaced event (.bomSearch) so we can safely
+        // remove exactly this handler on close without touching anything else.
+        // This avoids any ambiguity with delegated selectors after the DOM move.
+        $search.off('input.bomSearch keyup.bomSearch').on('input.bomSearch keyup.bomSearch', function () {
+            var term      = $(this).val();
+            var $drop     = _partDropState.$dropdown;
+            if (!$drop) return;
+            clearTimeout(_searchDebounceTimer);
+            _searchDebounceTimer = setTimeout(function () {
+                searchPartItems($drop, term);
+            }, 250);
+        });
+
         // Clear the search box and focus it.
         // The click handler (on .bom-part-input) calls searchPartItems('') immediately after
         // openPartDropdown(), so we don't trigger 'input' here (that would queue a duplicate
@@ -618,6 +632,8 @@
 
     function closePartDropdown() {
         if (_partDropState.$menu) {
+            // Remove the directly-attached search handler before moving the element back
+            _partDropState.$menu.find('.bom-search-box').off('input.bomSearch keyup.bomSearch');
             // restore to original parent
             if (_partDropState.$dropdown) {
                 _partDropState.$menu.appendTo(_partDropState.$dropdown);
@@ -822,19 +838,11 @@
         searchPartItems($dropdown, '');
     });
 
-    // Search as user types — debounced 250ms to avoid hammering the server per keystroke.
-    // The menu (.bom-dropdown-options-NS) is moved to <body> while open, so we delegate
-    // from document and use _partDropState.$menu to find the live options list.
+    // Search as user types — handler is attached directly to the search <input> element
+    // inside openPartDropdown() (namespaced event: input.bomSearch / keyup.bomSearch) and
+    // removed in closePartDropdown().  Using direct attachment avoids any ambiguity with
+    // delegated selectors after the menu element is moved to <body>.
     var _searchDebounceTimer = null;
-    $(document).on('input keyup search paste', '.bom-dropdown-options-' + NS + ' .bom-search-box', function () {
-        var searchTerm = $(this).val();
-        var $dropdown  = _partDropState.$dropdown;
-        if (!$dropdown) return;
-        clearTimeout(_searchDebounceTimer);
-        _searchDebounceTimer = setTimeout(function () {
-            searchPartItems($dropdown, searchTerm);
-        }, 250);
-    });
 
     // Select an option — also auto-fills Rate from master basic_rate (user-overridable)
     $(document).on('click', '.bom-dropdown-options-' + NS + ' .bom-option', function (e) {
