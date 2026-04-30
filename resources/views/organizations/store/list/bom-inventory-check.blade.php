@@ -93,6 +93,16 @@
     }
     tr.shortage-sent-row td { background-color: #f0fff4 !important; }
     tr.shortage-new-row  td { background-color: #fff8f0 !important; }
+    .issue-validation-msg {
+        display: none;
+        margin-bottom: 10px;
+        padding: 8px 12px;
+        border: 1px solid #f5c6cb;
+        border-radius: 4px;
+        background: #f8d7da;
+        color: #721c24;
+        font-weight: 600;
+    }
 </style>
 
 <div class="data-table-area mg-tb-15">
@@ -361,6 +371,7 @@
                         </div>
 
                         <div style="margin-bottom: 30px;">
+                            <div id="issueValidationMsg" class="issue-validation-msg"></div>
                             @if($issuedExceedsEstimation)
                                 <button type="button" class="btn btn-danger" disabled style="cursor:not-allowed; opacity:0.85;">
                                     <i class="fa fa-ban"></i>
@@ -476,8 +487,10 @@
                                             <input type="hidden" name="items[{{ $ni }}][rate]"                value="{{ $item->rate }}">
                                         @endforeach
 
-                                        <button type="submit" class="btn btn-warning"
-                                                onclick="return confirm('Send {{ $notSentItems->count() }} new shortage item(s) to Purchase department?')">
+                                        <button type="submit" class="btn btn-warning shortage-confirm-btn"
+                                                data-confirm-title="Send New Shortage Items?"
+                                                data-confirm-text="Send {{ $notSentItems->count() }} new shortage item(s) to Purchase department?"
+                                                data-confirm-button="Yes, Send">
                                             <i class="fa fa-paper-plane"></i>
                                             Send {{ $notSentItems->count() }} New Item(s) to Purchase
                                         </button>
@@ -508,8 +521,10 @@
                                            class="btn btn-white" style="margin-right:10px;">
                                             Cancel
                                         </a>
-                                        <button type="submit" class="btn btn-danger"
-                                                onclick="return confirm('Submit {{ count($shortage) }} shortage item(s) as a requisition to Purchase department?')">
+                                        <button type="submit" class="btn btn-danger shortage-confirm-btn"
+                                                data-confirm-title="Send Shortage Requisition?"
+                                                data-confirm-text="Submit {{ count($shortage) }} shortage item(s) as a requisition to Purchase department?"
+                                                data-confirm-button="Yes, Send Requisition">
                                             <i class="fa fa-paper-plane"></i>
                                             Send Shortage List as Requisition to Purchase
                                         </button>
@@ -776,6 +791,102 @@
         return total;
     }
 
+    function getIssueSelectionError() {
+        var hasBomItems = {{ count($available) > 0 ? 'true' : 'false' }};
+        var hasValidExtraItem = false;
+        var hasIncompleteExtraItem = false;
+
+        document.querySelectorAll('#extraItemsBody tr').forEach(function (row) {
+            var partEl = row.querySelector('input[name*="[part_item_id]"]');
+            var qtyEl  = row.querySelector('input[name*="[quantity]"]');
+            var unitEl = row.querySelector('select[name*="[unit_id]"], input[name*="[unit_id]"]');
+            var partId = partEl ? String(partEl.value || '').trim() : '';
+            var qty    = qtyEl ? parseFloat(qtyEl.value) || 0 : 0;
+            var unitId = unitEl ? String(unitEl.value || '').trim() : '';
+            var touched = partId !== '' || qty > 0 || unitId !== '';
+
+            if (partId !== '' && qty > 0 && unitId !== '') {
+                hasValidExtraItem = true;
+            } else if (touched) {
+                hasIncompleteExtraItem = true;
+            }
+        });
+
+        if (!hasBomItems && !hasValidExtraItem) {
+            return 'Please select/add at least one material item before Issue to Production.';
+        }
+
+        if (hasIncompleteExtraItem) {
+            return 'Please complete Part Item, Quantity and Unit for additional material rows, or remove incomplete rows.';
+        }
+
+        return '';
+    }
+
+    function showIssueValidation(message) {
+        var msgEl = document.getElementById('issueValidationMsg');
+        if (!msgEl) {
+            showAlert('Validation Required', message, 'warning');
+            return;
+        }
+        msgEl.textContent = message;
+        msgEl.style.display = 'block';
+        msgEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function showAlert(title, text, icon) {
+        if (window.Swal) {
+            Swal.fire({
+                title: title,
+                text: text,
+                icon: icon || 'info',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#25385F'
+            });
+        }
+    }
+
+    function confirmWithPrompt(options, onConfirm) {
+        if (window.Swal) {
+            Swal.fire({
+                title: options.title,
+                text: options.text,
+                icon: options.icon || 'question',
+                showCancelButton: true,
+                confirmButtonText: options.confirmButtonText || 'Yes',
+                cancelButtonText: 'Cancel',
+                confirmButtonColor: '#25385F',
+                cancelButtonColor: '#6c757d',
+                reverseButtons: true
+            }).then(function (result) {
+                if (result.isConfirmed) {
+                    onConfirm();
+                }
+            });
+        }
+    }
+
+    document.querySelectorAll('#additionalReqForm, #shortageReqForm').forEach(function (form) {
+        form.addEventListener('submit', function (e) {
+            if (form.dataset.confirmed === '1') return;
+
+            e.preventDefault();
+            var btn = form.querySelector('.shortage-confirm-btn');
+            confirmWithPrompt({
+                title: btn ? btn.getAttribute('data-confirm-title') : 'Send Requisition?',
+                text: btn ? btn.getAttribute('data-confirm-text') : 'Do you want to send this requisition to Purchase department?',
+                confirmButtonText: btn ? btn.getAttribute('data-confirm-button') : 'Yes, Send'
+            }, function () {
+                form.dataset.confirmed = '1';
+                if (btn) {
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Sending...';
+                }
+                form.submit();
+            });
+        });
+    });
+
     var issueForm = document.getElementById('issueAvailableForm');
     if (issueForm) {
         issueForm.addEventListener('submit', function (e) {
@@ -784,7 +895,14 @@
 
             if (budgetExceeded) {
                 e.preventDefault();
-                alert('Issue is blocked: already issued amount exceeds the estimation amount.');
+                showAlert('Issue Blocked', 'Already issued amount exceeds the estimation amount.', 'error');
+                return false;
+            }
+
+            var selectionError = getIssueSelectionError();
+            if (selectionError) {
+                e.preventDefault();
+                showIssueValidation(selectionError);
                 return false;
             }
 
@@ -794,7 +912,17 @@
                 if (combinedTotal > estimationAmt) {
                     e.preventDefault();
                     var msg = 'Total to be issued (' + combinedTotal.toFixed(2) + ') will exceed the Estimation Amount (' + estimationAmt.toFixed(2) + ').\n\nDo you want to proceed anyway?';
-                    if (!confirm(msg)) return false;
+                    confirmWithPrompt({
+                        title: 'Estimation Amount Exceeded',
+                        text: msg,
+                        icon: 'warning',
+                        confirmButtonText: 'Yes, Proceed'
+                    }, function () {
+                        btn.disabled = true;
+                        btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Sending...';
+                        issueForm.submit();
+                    });
+                    return false;
                 }
             }
 

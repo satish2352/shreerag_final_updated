@@ -139,19 +139,19 @@
                                                                 </button>
                                                             @else
                                                                 {{-- OPEN → BUTTONS ENABLED --}}
-                                                                <a
+                                                                {{-- <a
                                                                     href="{{ route('edit-material-list-bom-wise-new-req', base64_encode($data->business_details_id)) }}">
                                                                     <button class="btn btn-sm btn-bg-colour"
                                                                         style="padding: 7px;" data-toggle="tooltip"
                                                                         title="View Details">
                                                                         Issue Product Material
                                                                     </button>
-                                                                </a>
+                                                                </a> --}}
 
                                                                 <a
                                                                     href="{{ route('bom-inventory-check', base64_encode($data->business_details_id)) }}">
                                                                     <button class="btn btn-sm btn-bg-colour"
-                                                                        style="padding: 7px; margin-left: 10px;"
+                                                                        style="padding: 7px;"
                                                                         data-toggle="tooltip" title="Need To Purchase">
                                                                         Need To Purchase
                                                                     </button>

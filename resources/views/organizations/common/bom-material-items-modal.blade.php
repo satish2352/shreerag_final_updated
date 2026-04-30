@@ -157,6 +157,10 @@
     text-align: center;
     white-space: nowrap;
 }
+.bom-modal-header-{{ $modalId }} {
+    position: relative;
+    min-height: 58px;
+}
 </style>
 
 <!-- BOM Material Items Modal -->
@@ -166,7 +170,7 @@
         <div class="modal-content">
 
             <!-- Header -->
-            <div class="modal-header">
+            <div class="modal-header bom-modal-header-{{ $modalId }}">
                 <h5 class="modal-title" id="{{ $modalId }}Label">
                     BOM Material Items
                     @if($mode === 'design_edit')
@@ -582,6 +586,8 @@
     // CUSTOM PART ITEM DROPDOWN HELPERS (matching store dept pattern)
     // ----------------------------------------------------------------
     var _partDropState = { $menu: null, $dropdown: null };
+    var _partSearchXhr = null;
+    var _partSearchSeq = 0;
 
     function openPartDropdown($dropdown) {
         // Close any existing open dropdown in this modal
@@ -629,13 +635,21 @@
         // Resolve the live options-list container from the tracked open menu
         var $menu = _partDropState.$menu;
         var $list = ($menu && $menu.length) ? $menu.find('.bom-options-list') : $dropdown.find('.bom-options-list');
+        var requestSeq = ++_partSearchSeq;
+        searchTerm = $.trim(searchTerm || '');
+
+        if (_partSearchXhr && _partSearchXhr.readyState !== 4) {
+            _partSearchXhr.abort();
+        }
+
         $list.html('<div class="bom-no-results">Searching...</div>');
 
-        $.ajax({
+        _partSearchXhr = $.ajax({
             url: getPartItemsUrl,
             type: 'GET',
             data: { search: searchTerm },
             success: function (response) {
+                if (requestSeq !== _partSearchSeq) return;
                 $list.empty();
                 if (response.status === 'success' && response.items && response.items.length > 0) {
                     $.each(response.items, function (i, item) {
@@ -651,7 +665,9 @@
                     $list.html('<div class="bom-no-results">No results found.</div>');
                 }
             },
-            error: function () {
+            error: function (xhr) {
+                if (xhr && xhr.statusText === 'abort') return;
+                if (requestSeq !== _partSearchSeq) return;
                 $list.html('<div class="bom-no-results">Search failed.</div>');
             }
         });
@@ -810,7 +826,7 @@
     // The menu (.bom-dropdown-options-NS) is moved to <body> while open, so we delegate
     // from document and use _partDropState.$menu to find the live options list.
     var _searchDebounceTimer = null;
-    $(document).on('input', '.bom-dropdown-options-' + NS + ' .bom-search-box', function () {
+    $(document).on('input keyup search paste', '.bom-dropdown-options-' + NS + ' .bom-search-box', function () {
         var searchTerm = $(this).val();
         var $dropdown  = _partDropState.$dropdown;
         if (!$dropdown) return;

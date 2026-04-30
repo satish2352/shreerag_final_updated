@@ -1106,7 +1106,7 @@
                             </ul>
                         </li>
                         <li
-                            class="nav-item {{ request()->is('storedept/list-accepted-design-from-prod') || request()->is('storedept/list-accepted-design-from-prod-business-wise/*') || request()->is('storedept/need-to-create-req/*') || request()->is('storedept/edit-material-list-bom-wise-new-req/*') ? 'active' : '' }}">
+                            class="nav-item {{ request()->is('storedept/list-accepted-design-from-prod') || request()->is('storedept/list-accepted-design-from-prod-business-wise/*') || request()->is('storedept/need-to-create-req/*') || request()->is('storedept/bom-inventory-check/*') ? 'active' : '' }}">
                             <a href="{{ route('list-accepted-design-from-prod') }}" aria-expanded="false"><i
                                     class="fa fa-tasks icon-wrap"></i><span class="mini-click-non">All
                                     New Requirements</span></a>

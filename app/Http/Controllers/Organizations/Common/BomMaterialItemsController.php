@@ -35,7 +35,11 @@ class BomMaterialItemsController extends Controller
                 ->where('is_deleted', false);
 
             if ($search !== '') {
-                $query->where('description', 'like', '%' . $search . '%');
+                $query->where(function ($q) use ($search) {
+                    $q->where('description', 'like', '%' . $search . '%')
+                        ->orWhere('extra_description', 'like', '%' . $search . '%')
+                        ->orWhere('basic_rate', 'like', '%' . $search . '%');
+                });
             }
 
             $items = $query->orderByRaw('LOWER(description) ASC')

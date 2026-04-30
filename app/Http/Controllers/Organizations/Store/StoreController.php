@@ -724,12 +724,23 @@ class StoreController extends Controller
             );
 
             if (empty($items)) {
-                return redirect()->back()->with(['status' => 'error', 'msg' => 'No items to issue.']);
+                return redirect()->back()->with(['status' => 'error', 'msg' => 'Please select/add at least one material item before Issue to Production.']);
             }
 
             $errors = [];
+            $validItems = collect($items)->filter(function ($item) {
+                $partItemId = $item['part_item_id'] ?? null;
+                $quantity   = (float) ($item['quantity'] ?? 0);
+                $unitId     = $item['unit_id'] ?? null;
 
-            DB::transaction(function () use ($business_details_id, $items, &$errors) {
+                return !empty($partItemId) && $quantity > 0 && !empty($unitId);
+            })->values()->all();
+
+            if (empty($validItems)) {
+                return redirect()->back()->with(['status' => 'error', 'msg' => 'Please select/add at least one material item before Issue to Production.']);
+            }
+
+            DB::transaction(function () use ($business_details_id, $validItems, &$errors) {
 
                 $production = ProductionModel::where('business_details_id', $business_details_id)->first();
                 if (!$production) {
@@ -739,7 +750,7 @@ class StoreController extends Controller
 
                 $bap = BusinessApplicationProcesses::where('business_details_id', $business_details_id)->first();
 
-                foreach ($items as $item) {
+                foreach ($validItems as $item) {
                     $partItemId  = $item['part_item_id']  ?? null;
                     $quantity    = (float) ($item['quantity']    ?? 0);
                     $unitId      = $item['unit_id']       ?? null;
