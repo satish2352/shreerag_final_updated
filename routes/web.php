@@ -107,6 +107,11 @@
         Route::prefix('common')->group(function () {
             Route::get('/get-part-items', [BomMaterialItemsController::class, 'getPartItems'])->name('common.get-part-items');
             Route::get('/get-units', [BomMaterialItemsController::class, 'getUnits'])->name('common.get-units');
+            // Excel BOM upload — parses the sheet, appends rows to bom_material_items,
+            // then the modal can re-fetch and show them for review/edit/save.
+            Route::post('/import-bom-excel', [BomMaterialItemsController::class, 'importExcel'])->name('common.import-bom-excel');
+            // Clear all BOM rows for a given business_details_id + design_id (soft delete).
+            Route::post('/clear-bom-items', [BomMaterialItemsController::class, 'clearItems'])->name('common.clear-bom-items');
         });
 
         // Organizations

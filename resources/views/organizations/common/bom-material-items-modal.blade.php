@@ -192,6 +192,28 @@
     overflow-y: auto;
     max-height: calc(100vh - 220px); /* leaves room for header + footer */
 }
+/* Highlight rows whose product description didn't match any active part_item
+   master row (i.e. NOT present in the store). Helps the user spot items they
+   need to add to the part-item master or pick a similar existing one. */
+#{{ $modalId }} tr.bom-row-not-in-store > td {
+    background-color: #fff4e5 !important;
+}
+#{{ $modalId }} tr.bom-row-not-in-store .bom-part-input {
+    background-color: #fff4e5 !important;
+    border-color: #ffb74d !important;
+}
+#{{ $modalId }} .bom-not-in-store-badge {
+    display: inline-block;
+    margin-top: 3px;
+    padding: 2px 7px;
+    background: #ffb74d;
+    color: #5d3a00;
+    font-size: 10px;
+    font-weight: 600;
+    border-radius: 9px;
+    line-height: 1.3;
+    white-space: nowrap;
+}
 /* Inline per-field validation (jQuery-Validate-style) for BOM rows */
 #{{ $modalId }} .bom-row-error {
     color: #dc3545;
@@ -754,12 +776,25 @@
         var unitText    = item.unit || '';
         var rateVal     = (item.rate !== null && item.rate !== undefined && item.rate !== '') ? item.rate : '';
 
+        // "Not in store" = no part_item_id → row didn't match any active master part.
+        // Shown in orange so the user can either add it to the master or pick a
+        // similar existing item from the dropdown.
+        var notInStore = !partItemId || parseInt(partItemId, 10) <= 0;
+        var rowCls     = notInStore ? ' class="bom-row-not-in-store"' : '';
+        var notInStoreBadge = notInStore
+            ? '<span class="bom-not-in-store-badge" title="This item was not found in the part-item master">' +
+                '<i class="fa fa-exclamation-triangle"></i> Not in store' +
+              '</span>'
+            : '';
+
         if (!isEditMode) {
             // View-only row: show plain text
             // Column order: Sr No | Product Desc | Length | Quantity | Total in mm | Mtr | Rate | Unit
-            return '<tr data-row-idx="' + idx + '">' +
+            return '<tr data-row-idx="' + idx + '"' + rowCls + '>' +
                 '<td>' + escHtml(srNo) + '</td>' +
-                '<td>' + escHtml(partDesc) + '</td>' +
+                '<td>' + escHtml(partDesc) +
+                    (notInStore ? '<br>' + notInStoreBadge : '') +
+                '</td>' +
                 '<td>' + escHtml(item.length !== null && item.length !== undefined ? item.length : '') + '</td>' +
                 '<td>' + escHtml(item.quantity || '') + '</td>' +
                 '<td>' + escHtml(item.total_in_mm !== null && item.total_in_mm !== undefined ? item.total_in_mm : '') + '</td>' +
@@ -769,7 +804,7 @@
                 '</tr>';
         }
 
-        // Build Part Item custom dropdown
+        // Build Part Item custom dropdown — append the "Not in store" badge below the input
         var partDropHtml =
             '<div class="bom-custom-dropdown-' + NS + '">' +
                 '<input type="hidden" class="bom-part-id" value="' + escHtml(partItemId) + '">' +
@@ -780,13 +815,14 @@
                     '<input type="text" class="form-control form-control-sm bom-search-box" placeholder="Search...">' +
                     '<div class="bom-options-list"></div>' +
                 '</div>' +
+                (notInStore ? notInStoreBadge : '') +
             '</div>';
 
         // Build Unit select
         var unitSelectHtml = buildUnitSelect(unitId, false);
 
         // Edit mode row — includes Rate input
-        return '<tr data-row-idx="' + idx + '" data-item-id="' + escHtml(itemId) + '">' +
+        return '<tr data-row-idx="' + idx + '" data-item-id="' + escHtml(itemId) + '"' + rowCls + '>' +
             '<td><input type="number" class="form-control form-control-sm bom-serial-no" value="' + escHtml(srNo) + '" min="1" style="width:60px;"></td>' +
             '<td>' + partDropHtml + '</td>' +
             '<td><input type="number" class="form-control form-control-sm bom-length" value="' + escHtml(item.length !== null && item.length !== undefined ? item.length : '') + '" step="0.001" placeholder="0.000"></td>' +
@@ -896,13 +932,16 @@
     var _searchDebounceTimer = null;
 
     // Select an option — only fills the Product Description; Rate stays as-is so the
-    // user enters it manually (per requirement: do NOT auto-populate Rate from
-    // the part-item master's basic_rate).
+    // Picking a Product Description from the dropdown — also auto-fills the Rate
+    // input from the part-master's basic_rate (data-rate set by searchPartItems).
+    // The Excel-import path already does this server-side; this handler covers
+    // the manual-pick path so the UX matches.
     $(document).on('click', '.bom-dropdown-options-' + NS + ' .bom-option', function (e) {
         e.stopPropagation();
         var $option      = $(this);
         var selectedId   = $option.attr('data-id');
         var selectedName = $option.attr('data-name') || $option.text();
+        var masterRate   = $option.attr('data-rate');   // may be '' or numeric
 
         var $dropdown = _partDropState.$dropdown;
         if (!$dropdown) {
@@ -916,6 +955,31 @@
         // Clear inline validation error on the Product Description field
         if ($partInput.hasClass('bom-input-error')) {
             clearFieldError($partInput);
+        }
+
+        // Picking a real master part removes the "Not in store" highlight + badge
+        // from this row.
+        var $row = $dropdown.closest('tr');
+        if ($row.hasClass('bom-row-not-in-store')) {
+            $row.removeClass('bom-row-not-in-store');
+            $dropdown.find('.bom-not-in-store-badge').remove();
+        }
+
+        // Auto-fill Rate from master basic_rate when:
+        //   (a) the master has a numeric rate, AND
+        //   (b) the row's Rate cell is currently empty / 0 (don't overwrite manual input)
+        var rateNum = parseFloat(masterRate);
+        if (!isNaN(rateNum) && rateNum > 0) {
+            var $rateInput = $row.find('.bom-rate');
+            if ($rateInput.length) {
+                var current = parseFloat($rateInput.val());
+                if (isNaN(current) || current === 0) {
+                    $rateInput.val(rateNum);
+                    // Also clear any inline error on the Rate field and recompute totals
+                    if ($rateInput.hasClass('bom-input-error')) clearFieldError($rateInput);
+                    if (typeof recalculateTotals === 'function') recalculateTotals();
+                }
+            }
         }
 
         closePartDropdown();

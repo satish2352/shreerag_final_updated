@@ -100,16 +100,183 @@
                                                     --}}
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 mt-4">
                                                         @if (isset($design_data) && $design_data)
-                                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3">
-                                                                <label>BOM Material Items (Structured Data)</label><br>
+                                                            @php
+                                                                $_bomFetchUrl = route('design.get-bom-material-items', [base64_encode($design_data->business_details_id), base64_encode($design_data->id)]);
+                                                            @endphp
+
+                                                            {{-- ========== STEP 1: UPLOAD BOM EXCEL ========== --}}
+                                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3"
+                                                                 style="border:1px dashed #28a745; border-radius:6px; padding:14px; background:#f6fff8;">
+                                                                <label style="font-weight:600; color:#1e7e34;">
+                                                                    Step 1 &mdash; Upload BOM Excel
+                                                                </label>
+                                                                <br>
+                                                                <button type="button" class="btn btn-success btn-sm"
+                                                                    id="bomExcelUploadBtn">
+                                                                    <i class="fa fa-file-excel"></i> Upload BOM Excel
+                                                                </button>
+                                                                <input type="file" id="bomExcelFileInput"
+                                                                    accept=".xls,.xlsx" style="display:none;">
+
+                                                                {{-- Wipe all imported BOM rows for this design so the user
+                                                                     can re-upload a different / corrected Excel file. --}}
+                                                                <button type="button" class="btn btn-outline-danger btn-sm ml-2"
+                                                                    id="bomClearAllBtn">
+                                                                    <i class="fa fa-trash"></i> Clear All
+                                                                </button>
+
+                                                                <small class="text-muted d-block mt-2">
+                                                                    Please upload an Excel file (.xls/.xlsx). Its rows
+                                                                    will be parsed and converted into BOM line items.
+                                                                    After the import finishes, click <strong>Open BOM
+                                                                    Items</strong> below to preview, edit, and save.
+                                                                    Use <strong>Clear All</strong> if you uploaded the
+                                                                    wrong file and want to start fresh.
+                                                                </small>
+                                                            </div>
+
+                                                            {{-- ========== STEP 2: OPEN BOM ITEMS MODAL ========== --}}
+                                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-4"
+                                                                 style="border:1px dashed #17a2b8; border-radius:6px; padding:14px; background:#f4fbfd;">
+                                                                <label style="font-weight:600; color:#117a8b;">
+                                                                    Step 2 &mdash; BOM Material Items (Structured Data)
+                                                                </label>
+                                                                <br>
                                                                 <button type="button" class="btn btn-info btn-sm"
-                                                                    onclick="openBomModal_bomMaterialItemsModal('{{ route('design.get-bom-material-items', [base64_encode($design_data->business_details_id), base64_encode($design_data->id)]) }}')">
+                                                                    onclick="openBomModal_bomMaterialItemsModal('{{ $_bomFetchUrl }}')">
                                                                     <i class="fa fa-list"></i> Open BOM Items
                                                                 </button>
-                                                                <small class="text-muted ml-2">Add or edit structured BOM
-                                                                    line
-                                                                    items.</small>
+                                                                <small class="text-muted d-block mt-2">
+                                                                    The BOM rows imported from your Excel file appear
+                                                                    here. Review and edit them in the modal, then click
+                                                                    <strong>Save BOM Items</strong>. You can also add
+                                                                    rows manually using <strong>+ Add More</strong>.
+                                                                </small>
                                                             </div>
+                                                            @push('scripts')
+                                                                <script>
+                                                                    (function ($) {
+                                                                        var BOM_FETCH_URL  = @json($_bomFetchUrl);
+                                                                        var BOM_IMPORT_URL = @json(route('common.import-bom-excel'));
+                                                                        var BOM_CLEAR_URL  = @json(route('common.clear-bom-items'));
+                                                                        var BOM_BUSINESS_ID         = {{ (int) $design_data->business_id }};
+                                                                        var BOM_BUSINESS_DETAILS_ID = {{ (int) $design_data->business_details_id }};
+                                                                        var BOM_DESIGN_ID           = {{ (int) $design_data->id }};
+                                                                        var BOM_DEPT_ROLE_ID        = 3; // 3 = design
+
+                                                                        $(function () {
+                                                                            $('#bomExcelUploadBtn').on('click', function () {
+                                                                                $('#bomExcelFileInput').val('').trigger('click');
+                                                                            });
+
+                                                                            // Clear All — soft-deletes every bom_material_items row for
+                                                                            // this business_details_id + design_id. Confirms first.
+                                                                            $('#bomClearAllBtn').on('click', function () {
+                                                                                var doClear = function () {
+                                                                                    var $btn = $('#bomClearAllBtn');
+                                                                                    $btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Clearing...');
+                                                                                    $.ajax({
+                                                                                        url:  BOM_CLEAR_URL,
+                                                                                        type: 'POST',
+                                                                                        data: {
+                                                                                            _token:              '{{ csrf_token() }}',
+                                                                                            business_details_id: BOM_BUSINESS_DETAILS_ID,
+                                                                                            design_id:           BOM_DESIGN_ID
+                                                                                        },
+                                                                                        success: function (resp) {
+                                                                                            $btn.prop('disabled', false).html('<i class="fa fa-trash"></i> Clear All');
+                                                                                            if (resp && resp.status === 'success') {
+                                                                                                if (typeof Swal !== 'undefined') {
+                                                                                                    Swal.fire({ icon: 'success', title: 'Cleared', text: resp.message, timer: 1400, showConfirmButton: false });
+                                                                                                } else {
+                                                                                                    alert(resp.message);
+                                                                                                }
+                                                                                            } else {
+                                                                                                alert((resp && resp.message) || 'Failed to clear BOM rows.');
+                                                                                            }
+                                                                                        },
+                                                                                        error: function (xhr) {
+                                                                                            $btn.prop('disabled', false).html('<i class="fa fa-trash"></i> Clear All');
+                                                                                            var msg = 'Failed to clear BOM rows.';
+                                                                                            try { var r = JSON.parse(xhr.responseText); if (r && r.message) msg = r.message; } catch (e) {}
+                                                                                            alert(msg);
+                                                                                        }
+                                                                                    });
+                                                                                };
+
+                                                                                if (typeof Swal !== 'undefined') {
+                                                                                    Swal.fire({
+                                                                                        icon: 'warning',
+                                                                                        title: 'Clear all BOM rows?',
+                                                                                        text: 'This will remove every imported and manually-added BOM line item for this design. You can re-upload an Excel afterwards.',
+                                                                                        showCancelButton: true,
+                                                                                        confirmButtonText: 'Yes, clear all',
+                                                                                        cancelButtonText: 'Cancel',
+                                                                                        confirmButtonColor: '#dc3545'
+                                                                                    }).then(function (r) { if (r.isConfirmed) doClear(); });
+                                                                                } else if (confirm('Clear all BOM rows for this design?')) {
+                                                                                    doClear();
+                                                                                }
+                                                                            });
+
+                                                                            $('#bomExcelFileInput').on('change', function () {
+                                                                                var file = this.files && this.files[0];
+                                                                                if (!file) return;
+
+                                                                                var fd = new FormData();
+                                                                                fd.append('excel_file',          file);
+                                                                                fd.append('business_id',         BOM_BUSINESS_ID);
+                                                                                fd.append('business_details_id', BOM_BUSINESS_DETAILS_ID);
+                                                                                fd.append('design_id',           BOM_DESIGN_ID);
+                                                                                fd.append('dept_role_id',        BOM_DEPT_ROLE_ID);
+                                                                                fd.append('_token',              '{{ csrf_token() }}');
+
+                                                                                var $btn = $('#bomExcelUploadBtn');
+                                                                                $btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Importing...');
+
+                                                                                $.ajax({
+                                                                                    url:         BOM_IMPORT_URL,
+                                                                                    type:        'POST',
+                                                                                    data:        fd,
+                                                                                    processData: false,
+                                                                                    contentType: false,
+                                                                                    success: function (resp) {
+                                                                                        $btn.prop('disabled', false).html('<i class="fa fa-file-excel"></i> Upload BOM Excel');
+                                                                                        if (resp && resp.status === 'success') {
+                                                                                            if (typeof Swal !== 'undefined') {
+                                                                                                Swal.fire({
+                                                                                                    icon: 'success',
+                                                                                                    title: 'Excel Imported',
+                                                                                                    text: resp.message,
+                                                                                                    timer: 1800,
+                                                                                                    showConfirmButton: false
+                                                                                                }).then(function () {
+                                                                                                    if (typeof openBomModal_bomMaterialItemsModal === 'function') {
+                                                                                                        openBomModal_bomMaterialItemsModal(BOM_FETCH_URL);
+                                                                                                    }
+                                                                                                });
+                                                                                            } else {
+                                                                                                alert(resp.message);
+                                                                                                if (typeof openBomModal_bomMaterialItemsModal === 'function') {
+                                                                                                    openBomModal_bomMaterialItemsModal(BOM_FETCH_URL);
+                                                                                                }
+                                                                                            }
+                                                                                        } else {
+                                                                                            alert((resp && resp.message) || 'Failed to import Excel.');
+                                                                                        }
+                                                                                    },
+                                                                                    error: function (xhr) {
+                                                                                        $btn.prop('disabled', false).html('<i class="fa fa-file-excel"></i> Upload BOM Excel');
+                                                                                        var msg = 'Failed to import Excel.';
+                                                                                        try { var r = JSON.parse(xhr.responseText); if (r && r.message) msg = r.message; } catch (e) {}
+                                                                                        alert(msg);
+                                                                                    }
+                                                                                });
+                                                                            });
+                                                                        });
+                                                                    })(jQuery);
+                                                                </script>
+                                                            @endpush
                                                         @endif
                                                     </div>
                                                 </div>
