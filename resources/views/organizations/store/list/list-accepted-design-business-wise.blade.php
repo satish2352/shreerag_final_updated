@@ -122,42 +122,20 @@
                                                         @endif
                                                     </td>
 
-                                                    {{-- ACTION BUTTONS --}}
+                                                    {{-- ACTION BUTTONS — always enabled (was previously disabled
+                                                         when dispatch_status_id == 1154 / CLOSED, but the store
+                                                         dept needs to be able to issue material / start a purchase
+                                                         requisition regardless of that status). --}}
                                                     <td>
                                                         <div style="display: flex; align-items: center;">
-
-                                                            @if ($data->dispatch_status_id == 1154)
-                                                                {{-- CLOSED → BOTH BUTTONS DISABLED --}}
-                                                                {{-- <button class="btn btn-sm disabled-btn"
-                                                                    style="padding: 7px;" disabled>
-                                                                    Issue Product Material
-                                                                </button> --}}
-
-                                                                <button class="btn btn-sm disabled-btn"
-                                                                    style="padding: 7px; margin-left: 10px;" disabled>
-                                                                    Issue Product Material & Need To Purchase
+                                                            <a
+                                                                href="{{ route('bom-inventory-check', base64_encode($data->business_details_id)) }}">
+                                                                <button class="btn btn-sm btn-bg-colour"
+                                                                    style="padding: 7px;"
+                                                                    data-toggle="tooltip" title="Issue Material and Need to Purchase">
+                                                                    Issue Material and Need to Purchase
                                                                 </button>
-                                                            @else
-                                                                {{-- OPEN → BUTTONS ENABLED --}}
-                                                                {{-- <a
-                                                                    href="{{ route('edit-material-list-bom-wise-new-req', base64_encode($data->business_details_id)) }}">
-                                                                    <button class="btn btn-sm btn-bg-colour"
-                                                                        style="padding: 7px;" data-toggle="tooltip"
-                                                                        title="View Details">
-                                                                        Issue Product Material
-                                                                    </button>
-                                                                </a> --}}
-
-                                                                <a
-                                                                    href="{{ route('bom-inventory-check', base64_encode($data->business_details_id)) }}">
-                                                                    <button class="btn btn-sm btn-bg-colour"
-                                                                        style="padding: 7px;"
-                                                                        data-toggle="tooltip" title="Issue Material and Need to Purchase">
-                                                                        Issue Material and Need to Purchase
-                                                                    </button>
-                                                                </a>
-                                                            @endif
-
+                                                            </a>
                                                         </div>
                                                     </td>
                                                     {{-- <td>
