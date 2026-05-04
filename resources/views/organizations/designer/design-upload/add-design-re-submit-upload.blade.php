@@ -112,7 +112,10 @@
                                                 @if(!empty($business_details_id) && !empty($design_id))
                                                 <div class="row" style="margin-top:16px;">
                                                     <div class="col-lg-12">
-                                                        <div class="alert alert-info" style="padding:10px 15px;">
+                                                        {{-- Use a custom class instead of Bootstrap's .alert so the global
+                                                             footer timer ($(".alert").alert('close') after 1s) does NOT
+                                                             dismiss this informational note before the user can read it. --}}
+                                                        <div class="bom-update-items-note" style="padding:10px 15px; background-color:#d1ecf1; color:#0c5460; border:1px solid #bee5eb; border-radius:4px; margin-bottom:16px;">
                                                             <strong>Update BOM Items:</strong>
                                                             If your revised design changes the bill of materials, please update the BOM items before saving. After submission, this design will be sent to the <strong>Estimation Department</strong> for review.
                                                         </div>

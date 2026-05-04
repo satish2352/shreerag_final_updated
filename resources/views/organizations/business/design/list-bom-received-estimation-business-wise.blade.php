@@ -45,7 +45,6 @@
                                                 <th data-field="description" data-editable="false">Description</th>
                                                 <th data-field="quantity" data-editable="false">Quantity</th>
                                                 <th data-field="design_image" data-editable="false">Design Layout</th>
-                                                <th data-field="bom_image" data-editable="false">Estimated BOM</th>
                                                 <th data-field="total_amount" data-editable="false">Owner Side Amount</th>
                                                 <th data-field="total_estimation_amount" data-editable="false">Estimated BOM Amount</th>
                                                 <th data-field="exceed_remark" data-editable="false">Estimator Reason</th>
@@ -64,11 +63,6 @@
                                                         <a class="img-size" target="_blank"
                                                             href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
                                                             alt="Design">Click to view</a>
-                                                    </td>
-                                                    <td>
-                                                        <a class="img-size"
-                                                            href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
-                                                            alt="bill of material">Click to download</a>
                                                     </td>
                                                     <td>{{ ucwords($data->total_amount) }}</td>
                                                     <td>{{ ucwords($data->total_estimation_amount) }}</td>

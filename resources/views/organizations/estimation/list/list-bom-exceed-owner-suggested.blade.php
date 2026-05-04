@@ -11,7 +11,10 @@
                             </div>
                         </div>
                         @if (isset($data_output) && count($data_output) > 0)
-                            <div class="alert alert-info" style="margin: 10px 0; padding: 12px 16px;">
+                            {{-- Use a custom class instead of Bootstrap's .alert so the global
+                                 footer timer ($(".alert").alert('close') after 1s) does NOT
+                                 dismiss this informational note before the user can read it. --}}
+                            <div class="bom-owner-update-note" style="margin: 10px 0; padding: 12px 16px; background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; border-radius: 4px;">
                                 <strong>Note:</strong> The owner has updated the business amount for the item(s) below.
                                 Please review the updated amount and update your estimation accordingly, then send it to the
                                 owner for approval.

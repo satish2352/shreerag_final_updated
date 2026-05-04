@@ -343,17 +343,20 @@ class DesignsRepository
                     $business_application->owner_bom_accepted = null;
                     $business_application->owner_bom_rejected = null;
                     $business_application->estimation_send_to_production = null;
-                    $business_application->off_canvas_status = 12;
+                    // Use a dedicated off_canvas_status (36) for revised/corrected designs
+                    // so the Estimation bell shows the correct "Corrected Design Received"
+                    // notification (status 12 stays reserved for first-time new designs).
+                    $business_application->off_canvas_status = 36;
                     $business_application->save();
 
                     AdminView::where('business_details_id', $business_application->business_details_id)
                         ->update([
-                            'off_canvas_status' => 12,
+                            'off_canvas_status' => 36,
                             'is_view'           => '0',
                         ]);
                     NotificationStatus::where('business_details_id', $business_application->business_details_id)
                         ->update([
-                            'off_canvas_status' => 12,
+                            'off_canvas_status' => 36,
                             'estimation_view'   => '0', // reset so bell icon shows notification to estimation dept
                         ]);
                 });

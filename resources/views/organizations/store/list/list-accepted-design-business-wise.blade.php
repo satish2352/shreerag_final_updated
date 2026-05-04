@@ -152,8 +152,8 @@
                                                                     href="{{ route('bom-inventory-check', base64_encode($data->business_details_id)) }}">
                                                                     <button class="btn btn-sm btn-bg-colour"
                                                                         style="padding: 7px;"
-                                                                        data-toggle="tooltip" title="Need To Purchase">
-                                                                        Need To Purchase
+                                                                        data-toggle="tooltip" title="Issue Material and Need to Purchase">
+                                                                        Issue Material and Need to Purchase
                                                                     </button>
                                                                 </a>
                                                             @endif

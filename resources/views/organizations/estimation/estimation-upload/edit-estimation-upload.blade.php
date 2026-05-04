@@ -44,7 +44,11 @@
 
                                 @if(isset($estimation_data) && !is_null($estimation_data) && !is_null($estimation_data->owner_suggested_amount))
                                     <div class="col-md-12">
-                                        <div class="alert alert-warning alert-dismissible" role="alert" style="border-left: 4px solid #e6a817;">
+                                        {{-- Use a custom class instead of Bootstrap's .alert so the global
+                                             footer timer ($(".alert").alert('close') after 1s) does NOT
+                                             dismiss this informational note before the user can read it. --}}
+                                        <div class="bom-owner-revised-note" role="alert"
+                                             style="border-left: 4px solid #e6a817; background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; border-radius: 4px; padding: 12px 16px; margin-bottom: 16px;">
                                             <strong>Owner Has Suggested a Revised Amount</strong><br>
                                             The owner has reviewed your exceeded estimation and suggested a revised amount of
                                             <strong>&#8377;{{ number_format($estimation_data->owner_suggested_amount, 2) }}</strong>

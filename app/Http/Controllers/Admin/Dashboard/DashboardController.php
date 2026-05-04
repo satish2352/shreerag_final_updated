@@ -612,6 +612,20 @@ class DashboardController extends Controller
                 'url' => $baseUrl . '/estimationdept/list-new-requirements-received-for-estimation'
             ];
 
+            // Corrected design + BOM re-submitted by Design Dept after production rejection.
+            // Uses a dedicated off_canvas_status (36) set in DesignsRepository::updateReUploadDesign
+            // so it is counted/labelled separately from first-time new designs (status 12).
+            $corrected_design = NotificationStatus::where('off_canvas_status', 36)
+                ->where('estimation_view', '0')
+                ->select('id')
+                ->get();
+            $corrected_design_count = $corrected_design->count();
+            $notifications[] = [
+                'admin_count' => $corrected_design_count,
+                'message' => 'Corrected Design and BOM Received from Design Dept',
+                'url' => $baseUrl . '/estimationdept/list-corrected-design-bom-received-from-design',
+            ];
+
             $estimation_accept_data = NotificationStatus::where('off_canvas_status', 32)
                 ->where('accepted_bom_estimated', '0')
                 ->select('id')
@@ -647,7 +661,7 @@ class DashboardController extends Controller
                 'url' => $baseUrl . '/estimationdept/list-bom-exceed-owner-suggested',
             ];
 
-            $count = $received_design_for_estimation + $estimation_accept_data_count + $estimation_rejected_data_count + $owner_updated_amount_count;
+            $count = $received_design_for_estimation + $corrected_design_count + $estimation_accept_data_count + $estimation_rejected_data_count + $owner_updated_amount_count;
         }
 
         /*

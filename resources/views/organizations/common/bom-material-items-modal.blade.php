@@ -68,23 +68,33 @@
     border: 1px solid #dee2e6;
     margin-bottom: 12px;
     font-size: 13px;
-    position: relative; /* anchor for the absolutely-positioned Add More button */
 }
-/* Add More button overlaid in the empty top-right corner of the context header */
-#{{ $modalId }}AddMoreBtn.bom-add-more-overlay {
-    position: absolute;
-    top: 8px;
-    right: 10px;
-    z-index: 5;
-}
+/* Title row: 3-column flex so MATERIAL INDENT stays centered while Add More
+   sits flush in the right slot (and a same-width spacer on the left keeps the
+   center true). */
 .bom-context-header-{{ $modalId }} .bom-ctx-title {
     background: #f8f9fa;
     color: #212529;
-    text-align: center;
     font-weight: bold;
     font-size: 15px;
     padding: 6px 10px;
     letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.bom-context-header-{{ $modalId }} .bom-ctx-title-text {
+    flex: 1;
+    text-align: center;
+}
+.bom-context-header-{{ $modalId }} .bom-ctx-title-spacer,
+.bom-context-header-{{ $modalId }} .bom-ctx-title-action {
+    flex: 0 0 110px;          /* same width on both sides keeps title visually centered */
+    display: flex;
+    align-items: center;
+}
+.bom-context-header-{{ $modalId }} .bom-ctx-title-action {
+    justify-content: flex-end;
 }
 .bom-context-header-{{ $modalId }} .bom-ctx-row {
     display: flex;
@@ -232,13 +242,18 @@
 
                 {{-- Context header block (Excel MATERIAL INDENT layout) --}}
                 <div class="bom-context-header-{{ $modalId }}" id="{{ $modalId }}ContextHeader" style="display:none;">
-                    @if($isEditMode)
-                        <button type="button" class="btn btn-success btn-sm bom-add-more-overlay"
-                                id="{{ $modalId }}AddMoreBtn">
-                            <i class="fa fa-plus"></i> Add More
-                        </button>
-                    @endif
-                    <div class="bom-ctx-title" id="{{ $modalId }}CtxTitle">MATERIAL INDENT</div>
+                    <div class="bom-ctx-title">
+                        <span class="bom-ctx-title-spacer"></span>
+                        <span class="bom-ctx-title-text" id="{{ $modalId }}CtxTitle">MATERIAL INDENT</span>
+                        <span class="bom-ctx-title-action">
+                            @if($isEditMode)
+                                <button type="button" class="btn btn-success btn-sm"
+                                        id="{{ $modalId }}AddMoreBtn">
+                                    <i class="fa fa-plus"></i> Add More
+                                </button>
+                            @endif
+                        </span>
+                    </div>
                     <div class="bom-ctx-row">
                         <div class="bom-ctx-cell">
                             <span id="{{ $modalId }}CtxBomRef"></span>
@@ -270,7 +285,7 @@
                                 <th style="width:110px;">Quantity <span class="text-danger">*</span></th>
                                 <th style="width:130px;">Total in mm</th>
                                 <th style="width:140px;">Mtr for 01 Nos Trolley</th>
-                                <th style="width:120px;">Rate</th>
+                                <th style="width:120px;">Rate <span class="text-danger">*</span></th>
                                 <th style="width:130px;">Unit <span class="text-danger">*</span></th>
                                 @if($isEditMode)
                                     <th style="width:60px;">Action</th>
@@ -1042,6 +1057,18 @@
             ok = false;
         }
 
+        // Rate — required, numeric, > 0
+        var $rate   = $row.find('.bom-rate');
+        var rateVal = $.trim($rate.val());
+        clearFieldError($rate);
+        if (rateVal === '') {
+            showFieldError($rate, 'Rate is required.');
+            ok = false;
+        } else if (isNaN(parseFloat(rateVal)) || parseFloat(rateVal) <= 0) {
+            showFieldError($rate, 'Must be a number greater than 0.');
+            ok = false;
+        }
+
         // Unit — required
         var $unit  = $row.find('.bom-unit-select');
         var unitId = $.trim($unit.val());
@@ -1057,6 +1084,7 @@
     // Auto-clear inline errors as the user fixes each field
     $(document).on('input change',
         MODAL_ID + ' .bom-quantity, ' +
+        MODAL_ID + ' .bom-rate, ' +
         MODAL_ID + ' .bom-unit-select',
         function () {
             if ($(this).hasClass('bom-input-error')) {
@@ -1200,9 +1228,23 @@
                     var successMsg = response.message || 'BOM items saved successfully.';
                     $(ERROR_MSG).addClass('bom-modal-success-msg')
                         .text(successMsg).show();
-                    setTimeout(function () {
-                        $(ERROR_MSG).hide().removeClass('bom-modal-success-msg');
-                    }, 5000);
+
+                    // Auto-close the modal after the user sees the success banner.
+                    // Skip this for the exceed-triggered case below — that path
+                    // shows its own Swal and closes the modal on OK click.
+                    var _exceedTriggeredFlag = isEstimationEdit && response.exceed_triggered === true;
+                    if (!_exceedTriggeredFlag) {
+                        setTimeout(function () {
+                            $(ERROR_MSG).hide().removeClass('bom-modal-success-msg');
+                            $(MODAL_ID).modal('hide');
+                        }, 1500);
+                    } else {
+                        // Exceed flow: still hide the inline banner after the usual delay
+                        // (the Swal handles modal close itself).
+                        setTimeout(function () {
+                            $(ERROR_MSG).hide().removeClass('bom-modal-success-msg');
+                        }, 5000);
+                    }
 
                     // Dispatch custom event so the parent estimation form can:
                     //   (a) update the readonly Total Estimation Amount field
@@ -1229,7 +1271,10 @@
                             }));
                         }
 
-                        // Show exceed alert when owner approval was triggered
+                        // Show exceed alert when owner approval was triggered.
+                        // Closing the BOM modal once the user dismisses the alert so
+                        // they aren't left staring at the same modal after the
+                        // approval request has already been sent.
                         if (exceedTriggered) {
                             setTimeout(function () {
                                 if (typeof Swal !== 'undefined') {
@@ -1238,9 +1283,12 @@
                                         title: 'Approval Request Sent',
                                         text:  response.message || 'BOM Final Total exceeds Business Limit. Approval request sent to Owner.',
                                         confirmButtonText: 'OK'
+                                    }).then(function () {
+                                        $(MODAL_ID).modal('hide');
                                     });
                                 } else {
                                     alert(response.message || 'BOM Final Total exceeds Business Limit. Approval request sent to Owner.');
+                                    $(MODAL_ID).modal('hide');
                                 }
                             }, 100);
                         }

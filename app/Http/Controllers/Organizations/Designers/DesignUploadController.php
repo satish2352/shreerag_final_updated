@@ -231,9 +231,9 @@ class DesignUploadController extends Controller
                 $msg = $update_data['msg'];
                 $status = $update_data['status'];
                 if ($status == 'success') {
-                    // T-2026-006: Redirect to "Designs Sent to Estimation" list because
-                    // revised design now goes back to estimation (not production directly).
-                    return redirect('designdept/list-design-upload')->with(compact('msg', 'status'));
+                    // After successfully re-submitting a rejected design, send the
+                    // designer to the "Updated Design" list (designdept/list-updated-design).
+                    return redirect()->route('list-updated-design')->with(compact('msg', 'status'));
                 } else {
                     return redirect()->back()
                         ->withInput()
