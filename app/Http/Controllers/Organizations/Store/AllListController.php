@@ -13,7 +13,8 @@ use App\Models\{
     PurchaseOrdersModel,
     GRNModel,
     NotificationStatus,
-    GrnPOQuantityTracking
+    GrnPOQuantityTracking,
+    RequisitionItem
 };
 
 class AllListController extends Controller
@@ -88,7 +89,21 @@ class AllListController extends Controller
 
         try {
             $data_output = $this->service->getAllListMaterialSentToPurchase();
-            return view('organizations.store.list.list-material-sent-to-purchase', compact('data_output'));
+
+            // Load requisition items keyed by requisition_id so the view can render
+            // the BOM Requisition modal (same pattern used by Purchase dept's
+            // list-bom-material-recived-for-purchase).
+            $reqIds = collect($data_output->items())->pluck('requistition_id')->filter()->unique()->values();
+            $requisitionItemsMap = collect();
+            if ($reqIds->isNotEmpty()) {
+                $requisitionItemsMap = RequisitionItem::with(['unitMaster', 'partItem'])
+                    ->whereIn('requisition_id', $reqIds)
+                    ->where('is_deleted', 0)
+                    ->get()
+                    ->groupBy('requisition_id');
+            }
+
+            return view('organizations.store.list.list-material-sent-to-purchase', compact('data_output', 'requisitionItemsMap'));
         } catch (\Exception $e) {
             return $e;
         }

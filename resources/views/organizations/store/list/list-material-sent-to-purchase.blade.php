@@ -62,7 +62,7 @@
                                                 <th data-field="quantity" data-editable="false">Quantity</th>
                                                 <th data-field="grn_date" data-editable="false">Description</th>
                                                 <th data-field="purchase_id" data-editable="false">Remark</th>
-                                                <th data-field="bom_image" data-editable="false">Requistion BOM</th>
+                                                <th data-field="bom_image" data-editable="false">Requisition BOM</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -79,9 +79,16 @@
                                                     <td>{{ ucwords($data->quantity) }}</td>
                                                     <td>{{ ucwords($data->description) }}</td>
                                                     <td>{{ ucwords($data->remarks) }}</td>
-                                                    <td> <a class="img-size"
-                                                            href="{{ Config::get('FileConstant.REQUISITION_VIEW') }}{{ $data['bom_file'] }}"
-                                                            alt="bill of material">Click to download</a>
+                                                    <td>
+                                                        @if(!empty($data->requistition_id))
+                                                            <button type="button" class="btn btn-sm btn-info"
+                                                                data-toggle="modal"
+                                                                data-target="#storeBomModal{{ $data->requistition_id }}">
+                                                                <i class="fa fa-list"></i> View BOM
+                                                            </button>
+                                                        @else
+                                                            <span class="text-muted">—</span>
+                                                        @endif
                                                     </td>
                                                 </tr>
                                             @empty
@@ -104,4 +111,88 @@
             </div>
         </div>
     </div>
+
+{{-- BOM Requisition Modals — same pattern reused from Purchase dept's
+     list-bom-material-recived-for-purchase.blade.php (without the PO Created /
+     Not Ordered status badges since the store dept doesn't create POs). --}}
+@foreach ($data_output as $data)
+    @php
+        $reqItems = $requisitionItemsMap[$data->requistition_id] ?? collect();
+    @endphp
+    @if(!empty($data->requistition_id))
+    <div class="modal fade" id="storeBomModal{{ $data->requistition_id }}" tabindex="-1" role="dialog"
+         aria-labelledby="storeBomModalLabel{{ $data->requistition_id }}" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document" style="max-width:95%; margin:30px auto;">
+            <div class="modal-content">
+                <div class="modal-header" style="background:#1a3a6b; color:#fff;">
+                    <h5 class="modal-title" id="storeBomModalLabel{{ $data->requistition_id }}">
+                        <i class="fa fa-list"></i>
+                        BOM Requisition — {{ ucwords($data->product_name) }}
+                        <small style="font-size:13px; opacity:0.85;">({{ ucwords($data->customer_project_name) }})</small>
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="max-height:70vh; overflow-y:auto; padding:12px;">
+                    @if($reqItems->isEmpty())
+                        <div class="alert alert-warning">No BOM items found for this requisition.</div>
+                    @else
+                        <div style="overflow-x:auto; width:100%;">
+                        <table class="table table-bordered table-hover table-sm" style="min-width:800px; width:100%; font-size:13px;">
+                            <thead style="background:#1a3a6b; color:#fff;">
+                                <tr>
+                                    <th style="width:40px; white-space:nowrap;">Sr.</th>
+                                    <th style="min-width:180px;">Product Description</th>
+                                    <th style="white-space:nowrap;">Required Qty</th>
+                                    <th style="white-space:nowrap;">Available Stock</th>
+                                    <th style="white-space:nowrap;">Shortage Qty</th>
+                                    <th style="white-space:nowrap;">Unit</th>
+                                    <th style="white-space:nowrap;">Rate</th>
+                                    <th style="white-space:nowrap;">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php $modalTotal = 0; @endphp
+                                @foreach($reqItems as $ri => $ritem)
+                                    @php
+                                        $rTotal      = (float)($ritem->shortage_quantity ?? 0) * (float)($ritem->rate ?? 0);
+                                        $modalTotal += $rTotal;
+                                    @endphp
+                                    <tr>
+                                        <td>{{ $ri + 1 }}</td>
+                                        <td>{{ $ritem->product_description ?? (optional($ritem->partItem)->description ?? '—') }}</td>
+                                        <td>{{ number_format($ritem->required_quantity, 3) }}</td>
+                                        <td>{{ number_format($ritem->available_quantity, 3) }}</td>
+                                        <td><strong style="color:#dc3545;">{{ number_format($ritem->shortage_quantity, 3) }}</strong></td>
+                                        <td>{{ optional($ritem->unitMaster)->name ?? '—' }}</td>
+                                        <td>{{ $ritem->rate !== null ? number_format((float)$ritem->rate, 3) : '—' }}</td>
+                                        <td><strong>{{ number_format($rTotal, 2) }}</strong></td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                            <tfoot>
+                                <tr style="background:#f0f0f0; font-weight:700;">
+                                    <td colspan="7" style="text-align:right; padding-right:12px;">Grand Total</td>
+                                    <td><strong>{{ number_format($modalTotal, 2) }}</strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        </div>
+                    @endif
+                </div>
+                <div class="modal-footer">
+                    @if(!empty($data->bom_file))
+                    <a href="{{ Config::get('FileConstant.REQUISITION_VIEW') }}{{ $data->bom_file }}"
+                       class="btn btn-secondary btn-sm" target="_blank">
+                        <i class="fa fa-download"></i> Download File
+                    </a>
+                    @endif
+                    <button type="button" class="btn btn-dark btn-sm" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+@endforeach
 @endsection

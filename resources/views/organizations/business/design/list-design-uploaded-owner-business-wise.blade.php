@@ -28,7 +28,6 @@
                                                 <th data-field="bom_image" data-editable="false">BOM</th>
                                                 <th data-field="design_image_re" data-editable="false">Revised Design Layout
                                                 </th>
-                                                <th data-field="re_bom_image" data-editable="false">Estimation BOM</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -61,20 +60,6 @@
                                                                     href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['re_design_image'] }}"
                                                                     alt="Design">Click to view</a>
                                                             </td>
-@endif
-                                                            @if ($data->remark_by_estimation == '')
-                                                                <td>-</td>
-                                                            @else
-                                                                <td>
-                                                                    @if(!empty($data->design_id) && !empty($data->business_details_id))
-                                                                        <button type="button" class="btn btn-outline-info btn-sm"
-                                                                            onclick="openDesignSentEstimationBomModal({{ $data->business_details_id }}, {{ $data->design_id }})">
-                                                                            <i class="fa fa-list"></i> View BOM
-                                                                        </button>
-                                                                    @else
-                                                                        <span class="text-muted">—</span>
-                                                                    @endif
-                                                                </td>
                                                         @endif
                                                 </tr>
                                             @endforeach

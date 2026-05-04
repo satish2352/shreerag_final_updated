@@ -425,6 +425,7 @@ class AllListRepository
                 businesses_details.description,
                 SUM(businesses_details.quantity) as quantity,
                 MAX(businesses.remarks) as remarks,
+                MAX(requisition.id) as requistition_id,
                 MAX(requisition.bom_file) as bom_file,
                 MAX(businesses.updated_at) as updated_at,
                 MAX(businesses.created_at) as created_at

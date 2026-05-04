@@ -265,6 +265,7 @@
                                                                 <option value="">Select Description</option>
                                                                 @foreach ($dataOutputPartItem as $data)
                                                                     <option value="{{ $data['id'] }}"
+                                                                        data-part-number="{{ $data['part_number'] }}"
                                                                         {{ $data['id'] == $ritem->part_item_id ? 'selected' : '' }}>
                                                                         {{ $data['description'] }}
                                                                     </option>
@@ -279,15 +280,24 @@
                                                                 style="min-width:100px">
                                                         </td>
                                                         <td>
+                                                            {{-- "Part No." column — shows the actual part_number from the
+                                                                 part-item master (tbl_part_item.part_number). The form field
+                                                                 name stays "description" to keep the existing controller /
+                                                                 DB save logic unchanged. --}}
                                                             <input class="form-control description"
                                                                 name="addmore[{{ $ri }}][description]" type="text"
                                                                 style="min-width:100px"
-                                                                value="{{ $ritem->product_description ?? '' }}">
+                                                                value="{{ optional($ritem->partItem)->part_number ?? '' }}">
                                                         </td>
                                                         <td>
+                                                            {{-- Strip trailing decimal zeros so 1.000 → "1", 1.500 → "1.5".
+                                                                 Avoids the "Please enter only digits" validation error that
+                                                                 fires when the rendered value contains an unnecessary "."
+                                                                 with all-zero fractional part. --}}
                                                             <input class="form-control quantity"
                                                                 name="addmore[{{ $ri }}][quantity]" style="width:100%"
-                                                                type="text" value="{{ $ritem->shortage_quantity ?? '' }}">
+                                                                type="text"
+                                                                value="{{ $ritem->shortage_quantity !== null && $ritem->shortage_quantity !== '' ? +$ritem->shortage_quantity : '' }}">
                                                         </td>
                                                         <td>
                                                             <select class="form-control mb-2 unit"
@@ -339,7 +349,8 @@
                                                                 name="addmore[0][part_no_id]" style="width:100%">
                                                                 <option value="" default>Select Description</option>
                                                                 @foreach ($dataOutputPartItem as $data)
-                                                                    <option value="{{ $data['id'] }}">
+                                                                    <option value="{{ $data['id'] }}"
+                                                                        data-part-number="{{ $data['part_number'] }}">
                                                                         {{ $data['description'] }}</option>
                                                                 @endforeach
                                                             </select>
@@ -712,7 +723,8 @@
                                     });
                                     $(context).find('.quantity').rules("add", {
                                         required: true,
-                                        digits: true
+                                        number: true,
+                                        min: 0.001
                                     });
                                     $(context).find('.unit').rules("add", {
                                         required: true
@@ -743,7 +755,7 @@
                     <select class="form-control part_no_id select2 mb-2" name="addmore[${i}][part_no_id]" id="" required style="width:100%">
                         <option value="" default>Select Description</option>
                         @foreach ($dataOutputPartItem as $data)
-                            <option value="{{ $data['id'] }}">{{ $data['description'] }}</option>
+                            <option value="{{ $data['id'] }}" data-part-number="{{ $data['part_number'] }}">{{ $data['description'] }}</option>
                         @endforeach
                     </select>
                 </td>
@@ -883,18 +895,41 @@
                                     });
                                 }
 
+                                // When the user picks a part from the Description dropdown, push
+                                // the matching part_number (data-part-number on the option) into
+                                // the Part No. cell (.description input) of the same row.
+                                function fillPartNumber($select) {
+                                    var partNumber = $select.find('option:selected').data('part-number') || '';
+                                    $select.closest('tr').find('.description').val(partNumber);
+                                }
+
                                 $(document).on('change', '.part_no_id', function(e) {
-                                    fetchHsn($(this).val(), $(this).closest('tr'));
+                                    var $select = $(this);
+                                    fetchHsn($select.val(), $select.closest('tr'));
+                                    fillPartNumber($select);
                                 });
 
-                                // Auto-fetch HSN for pre-filled rows on page load
+                                // Auto-fetch HSN + Part No. for pre-filled rows on page load
                                 $('#purchase_order_table tbody tr').each(function() {
-                                    var partId = $(this).find('.part_no_id').val();
-                                    if (partId) fetchHsn(partId, $(this));
+                                    var $row = $(this);
+                                    var $select = $row.find('.part_no_id');
+                                    var partId = $select.val();
+                                    if (partId) {
+                                        fetchHsn(partId, $row);
+                                        // Only overwrite the Part No. cell when it's empty,
+                                        // so any value loaded server-side wins on first paint.
+                                        if (!$row.find('.description').val()) {
+                                            fillPartNumber($select);
+                                        }
+                                    }
                                 });
 
-                                // Trigger initial amount calculation for pre-filled rows
-                                $(document).trigger('keyup');
+                                // Trigger initial amount calculation for pre-filled rows.
+                                // Triggering 'keyup' on $(document) doesn't fire the delegated
+                                // handler bound to '.quantity, .rate, .discount' because the
+                                // event target wouldn't match. Trigger 'change' on the actual
+                                // .quantity inputs so the bubbled event reaches the handler.
+                                $('#purchase_order_table tbody tr .quantity').trigger('change');
 
                             });
                         </script>

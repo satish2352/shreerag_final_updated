@@ -604,6 +604,18 @@
                                                                                     class="form-control" readonly>
                                                                             </td>
                                                                         </tr>
+                                                                        {{-- Inline exceed warning shown when PO grand total >
+                                                                             remaining estimation amount. Toggled by
+                                                                             calculateGrandTotal() in the same view. --}}
+                                                                        <tr id="po_exceed_warning_row" style="display:none;">
+                                                                            <td colspan="11" style="border-top:0;">
+                                                                                <div id="po_exceed_warning_msg"
+                                                                                     style="background:#f8d7da; color:#721c24; border:1px solid #f5c6cb; border-radius:4px; padding:10px 14px; margin-top:8px; font-size:13px;">
+                                                                                    <strong><i class="fa fa-exclamation-triangle"></i> Exceeded Estimation Amount</strong>
+                                                                                    <span id="po_exceed_warning_text"></span>
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>
                                                                     </tfoot>
                                                                 </table>
                                                             </div>
@@ -711,6 +723,17 @@
                 if (grandTotal > remaining) {
                     $('.login-submit-cs').prop('disabled', true);
 
+                    // Inline warning under the Grand Total row — stays visible
+                    // for the user to read after the Swal is dismissed.
+                    var over = (grandTotal - remaining).toFixed(2);
+                    $('#po_exceed_warning_text').html(
+                        ' &mdash; PO Amount <strong>&#8377;' + grandTotal.toFixed(2) + '</strong> ' +
+                        'exceeds the remaining estimation amount <strong>&#8377;' + remaining.toFixed(2) + '</strong> ' +
+                        'by <strong>&#8377;' + over + '</strong>. ' +
+                        'Reduce quantities, rates, or discounts to stay within the limit.'
+                    );
+                    $('#po_exceed_warning_row').show();
+
                     if (!alertShown) {
                         alertShown = true;
                         Swal.fire({
@@ -725,6 +748,7 @@
                     }
                 } else {
                     $('.login-submit-cs').prop('disabled', false);
+                    $('#po_exceed_warning_row').hide();
                     alertShown = false;
                 }
             }

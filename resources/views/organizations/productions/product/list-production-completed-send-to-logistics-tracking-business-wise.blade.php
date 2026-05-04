@@ -52,8 +52,23 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody style="overflow: scroll;">
+                                                    @php
+                                                        $grandTotal = 0; // accumulated across all groups
+                                                    @endphp
                                                     @foreach ($dataGroupedById as $key => $items)
-                                                        @foreach ($items as $index => $item)
+                                                        @php
+                                                            // Skip the placeholder ProductionDetails row created
+                                                            // when estimation first sends a design to production
+                                                            // (part_item_id / quantity / unit are all NULL on that row).
+                                                            // Re-index the surviving rows so Sr. No. starts at 1.
+                                                            $realItems = collect($items)->filter(function ($it) {
+                                                                return !empty($it->part_item_id) || !empty($it->quantity);
+                                                            })->values();
+                                                        @endphp
+                                                        @foreach ($realItems as $index => $item)
+                                                            @php
+                                                                $grandTotal += (float) $item->basic_rate * (float) $item->quantity;
+                                                            @endphp
                                                             <tr>
                                                                 <td>
                                                                     <input type="text" class="form-control" readonly value="{{ $index + 1 }}">
@@ -106,7 +121,18 @@
                                                         @endforeach
                                                     @endforeach
                                                 </tbody>
-                                                
+                                                <tfoot>
+                                                    <tr style="background:#f8f9fa; font-weight:700;">
+                                                        <td colspan="5" class="text-right" style="padding-right:14px;">
+                                                            Grand Total:
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" class="form-control" readonly
+                                                                   style="font-weight:700; background:#fff;"
+                                                                   value="{{ number_format($grandTotal, 2) }}">
+                                                        </td>
+                                                    </tr>
+                                                </tfoot>
                                             </table>
                                         </div>
                                     </form>

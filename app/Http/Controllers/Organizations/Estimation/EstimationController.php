@@ -264,7 +264,10 @@ class EstimationController extends Controller
             } else {
                 $update_data = $this->service->updateRevisedEstimation($request);
                 if ($update_data['status'] == 'success') {
-                    return redirect('estimationdept/list-new-requirements-received-for-estimation')->with($update_data);
+                    // After re-submitting a previously-rejected estimation, send the
+                    // estimator to "Updated Estimation Sent to Owner" — the page that
+                    // actually lists this re-submitted item awaiting owner approval.
+                    return redirect()->route('list-updated-estimation-send-to-owner')->with($update_data);
                 } else {
                     return redirect()->back()
                         ->withInput()

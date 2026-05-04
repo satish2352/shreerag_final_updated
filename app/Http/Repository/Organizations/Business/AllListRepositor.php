@@ -871,7 +871,11 @@ class AllListRepositor
         })
         ->whereIn('business_application_processes.bom_estimation_send_to_owner', [$array_to_be_check, 1300])
         ->whereNull('business_application_processes.owner_bom_accepted')
-        ->where('business_application_processes.design_status_id', '!=', config('constants.DESIGN_DEPARTMENT.DESIGN_REVISED_SENT_TO_ESTIMATION'))
+        // NOTE: previously also excluded rows with design_status_id == DESIGN_REVISED_SENT_TO_ESTIMATION,
+        // but that hid corrected estimations (production-rejected → designer re-uploaded → estimator
+        // submitted) from the owner's accept/reject list. The bom_estimation_send_to_owner check above
+        // is sufficient — it only fires after the estimator actually submits, so the row only appears
+        // when it should.
         ->where('businesses.is_active', true)
         ->where('businesses.is_deleted', 0)
         ->select(
@@ -925,7 +929,9 @@ class AllListRepositor
         ->where('businesses_details.business_id', $decoded_business_id)
         ->whereIn('business_application_processes.bom_estimation_send_to_owner', [$normal_status, $exceed_status])
         ->whereNull('business_application_processes.owner_bom_accepted')
-        ->where('business_application_processes.design_status_id', '!=', config('constants.DESIGN_DEPARTMENT.DESIGN_REVISED_SENT_TO_ESTIMATION'))
+        // NOTE: previously also excluded rows with design_status_id == DESIGN_REVISED_SENT_TO_ESTIMATION,
+        // but that hid corrected estimations from the owner's accept/reject list. See sibling
+        // loadDesignSubmittedForEstimation() for the full reasoning.
         ->where('businesses_details.is_active', true)
         ->where('businesses_details.is_deleted', 0)
         ->select(

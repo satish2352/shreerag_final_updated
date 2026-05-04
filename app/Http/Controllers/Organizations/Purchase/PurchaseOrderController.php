@@ -213,8 +213,11 @@ class PurchaseOrderController extends Controller
         // ============================
         $remaining_amount = $grand_total_amount - $used_po_amount;
 
-        // Fetch all requisition items for this requisition
-        $requisitionItems = RequisitionItem::where('requisition_id', $requistitionId)
+        // Fetch all requisition items for this requisition (eager-load partItem so
+        // the view can fall back to the part-master description when the
+        // requisition row's product_description is null).
+        $requisitionItems = RequisitionItem::with('partItem')
+            ->where('requisition_id', $requistitionId)
             ->where('is_deleted', 0)
             ->get();
 

@@ -567,6 +567,13 @@ class BusinessRepository
 
             if ($business_application) {
                 $business_application->owner_bom_rejected = config('constants.HIGHER_AUTHORITY.OWNER_BOM_ESTIMATION_REJECTED');
+                // The Rejected BOM List query (AllListRepositor::getRejectEstimationBOM)
+                // requires owner_bom_accepted IS NULL AND resend_bom_estimation_send_to_owner IS NULL.
+                // Without resetting these here, a re-submitted-then-rejected estimation
+                // never reappears in the Rejected BOM List because
+                // resend_bom_estimation_send_to_owner stays set from the previous re-submit.
+                $business_application->owner_bom_accepted = null;
+                $business_application->resend_bom_estimation_send_to_owner = null;
                 $business_application->off_canvas_status = 30;
                 $business_application->save();
             }
