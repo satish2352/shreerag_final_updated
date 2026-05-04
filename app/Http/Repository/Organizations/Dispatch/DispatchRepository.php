@@ -49,9 +49,18 @@ class DispatchRepository
 
                 if ($dataOutput) {
 
-                    // Track the completed quantity for the given business_details_id
-                    //   $quantity_tracking = CustomerProductQuantityTracking::where( 'business_details_id', $business_application->business_details_id )->first();
-                    $quantity_tracking = CustomerProductQuantityTracking::where('id', $dataOutput->id)->first();
+                    // Track the completed quantity for the given business_details_id.
+                    // $dataOutput is a Dispatch row — its primary key is NOT the same as
+                    // customer_product_quantity_tracking.id. The dispatch row carries the
+                    // FK in `quantity_tracking_id`, so we look up by THAT (which also
+                    // equals $request->id used on line 25 to load the dispatch row).
+                    $quantity_tracking = CustomerProductQuantityTracking::where('id', $dataOutput->quantity_tracking_id)->first();
+                    if (!$quantity_tracking) {
+                        return response()->json([
+                            'status'  => 'error',
+                            'message' => 'Quantity tracking record not found for dispatch id ' . $dataOutput->id . '.',
+                        ], 404);
+                    }
                     $quantity_tracking->quantity_tracking_status = config('constants.DISPATCH_DEPARTMENT.SUBMITTED_COMPLETED_QUANLTITY_DISPATCH_DEPT');
                     $quantity_tracking->save();
 
