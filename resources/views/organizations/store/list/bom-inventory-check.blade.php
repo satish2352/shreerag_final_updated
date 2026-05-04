@@ -241,6 +241,15 @@
                     </div>
                     @endif
 
+                    {{-- Closed-product banner: page becomes preview-only (no Add / Issue / Send Requisition). --}}
+                    @if($isClosed ?? false)
+                    <div style="background:#fff3cd; color:#856404; border:1px solid #ffeeba; border-left:5px solid #e6a817; border-radius:4px; padding:12px 16px; margin-bottom:16px;">
+                        <strong><i class="fa fa-eye"></i> Preview Only</strong> &mdash;
+                        This product is <strong>CLOSED</strong>. Materials and shortage list are shown for reference;
+                        adding/editing items, issuing to production, and sending purchase requisitions are disabled.
+                    </div>
+                    @endif
+
                     {{-- Budget exceeded banner --}}
                     @if($issuedExceedsEstimation)
                     <div class="alert alert-danger" style="border-left:5px solid #a71d2a; border-radius:4px; margin-bottom:16px;">
@@ -327,9 +336,11 @@
                                         <th>Unit</th>
                                         <th>Rate</th>
                                         <th>
-                                            <button type="button" class="btn btn-sm btn-light" id="addExtraRow">
-                                                <i class="fa fa-plus"></i> Add
-                                            </button>
+                                            @if(!($isClosed ?? false))
+                                                <button type="button" class="btn btn-sm btn-light" id="addExtraRow">
+                                                    <i class="fa fa-plus"></i> Add
+                                                </button>
+                                            @endif
                                         </th>
                                     </tr>
                                 </thead>
@@ -372,7 +383,9 @@
 
                         <div style="margin-bottom: 30px;">
                             <div id="issueValidationMsg" class="issue-validation-msg"></div>
-                            @if($issuedExceedsEstimation)
+                            @if($isClosed ?? false)
+                                {{-- Production CLOSED: preview only — no Issue/Save action --}}
+                            @elseif($issuedExceedsEstimation)
                                 <button type="button" class="btn btn-danger" disabled style="cursor:not-allowed; opacity:0.85;">
                                     <i class="fa fa-ban"></i>
                                     Issue Blocked — Estimation Amount Exceeded
@@ -519,15 +532,17 @@
                                     <div class="login-horizental cancel-wp">
                                         <a href="{{ route('list-accepted-design-from-prod') }}"
                                            class="btn btn-white" style="margin-right:10px;">
-                                            Cancel
+                                            @if($isClosed ?? false) Back @else Cancel @endif
                                         </a>
-                                        <button type="submit" class="btn btn-danger shortage-confirm-btn"
-                                                data-confirm-title="Send Shortage Requisition?"
-                                                data-confirm-text="Submit {{ count($shortage) }} shortage item(s) as a requisition to Purchase department?"
-                                                data-confirm-button="Yes, Send Requisition">
-                                            <i class="fa fa-paper-plane"></i>
-                                            Send Shortage List as Requisition to Purchase
-                                        </button>
+                                        @if(!($isClosed ?? false))
+                                            <button type="submit" class="btn btn-danger shortage-confirm-btn"
+                                                    data-confirm-title="Send Shortage Requisition?"
+                                                    data-confirm-text="Submit {{ count($shortage) }} shortage item(s) as a requisition to Purchase department?"
+                                                    data-confirm-button="Yes, Send Requisition">
+                                                <i class="fa fa-paper-plane"></i>
+                                                Send Shortage List as Requisition to Purchase
+                                            </button>
+                                        @endif
                                     </div>
                                 </div>
                             </form>

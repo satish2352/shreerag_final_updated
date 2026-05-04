@@ -1420,16 +1420,16 @@
                             <a href="{{ route('dashboard') }}"><i class="fa fa-tachometer-alt icon-wrap"></i><span
                                     class="mini-click-non">Dashboard</span></a>
                         </li>
-                        <li class="{{ Request::is('list-dispatch-report') ? 'active' : '' }}">
+                        <li class="{{ Request::is('designdept/list-dispatch-report') || Request::is('designdept/dispatch-pending-report') ? 'active' : '' }}">
                             <a class="has-arrow" href="{{ route('list-dispatch-report') }}"
                                 aria-expanded="false"><i class="fa fa-chart-line icon-wrap"></i><span
                                     class="mini-click-non">Report</span></a>
                             <ul class="submenu-angle" aria-expanded="false">
-                                <li class="nav-item {{ Request::is('list-dispatch-report') ? 'active' : '' }}"><a
+                                <li class="nav-item {{ Request::is('designdept/list-dispatch-report') ? 'active' : '' }}"><a
                                         href="{{ route('list-dispatch-report') }}"> <i
                                             class="fa fa-list-alt icon-wrap"></i> <span
                                             class="mini-click-non">Completed Dispatch Report</span></a></li>
-                                <li class="{{ Request::is('dispatch-pending-report') ? 'active' : '' }}"><a
+                                <li class="{{ Request::is('designdept/dispatch-pending-report') ? 'active' : '' }}"><a
                                         href="{{ route('dispatch-pending-report') }}" aria-expanded="false"><i
                                             class="fa fa-users icon-wrap"></i><span class="mini-click-non">Pending
                                             Dispatch Report</span></a></li>

@@ -527,6 +527,11 @@ class StoreController extends Controller
             $bap = \App\Models\BusinessApplicationProcesses::where('business_details_id', $decoded_id)->first();
             $requisitionSent = $bap && $bap->store_status_id == config('constants.STORE_DEPARTMENT.LIST_REQUEST_NOTE_SENT_FROM_STORE_DEPT_FOR_PURCHASE');
 
+            // When the production/dispatch is CLOSED (dispatch_status_id == 1154),
+            // the page becomes preview-only — no Add row, no "Issue to Production",
+            // no "Send Shortage List as Requisition to Purchase".
+            $isClosed = $bap && (int) $bap->dispatch_status_id === 1154;
+
             // Fetch part_item_ids that were included in the sent requisition (for per-row badge in shortage table)
             $sentPartIds = [];
             if ($requisitionSent && $bap && $bap->requisition_id) {
@@ -548,7 +553,8 @@ class StoreController extends Controller
                 'partItems',
                 'unitMasters',
                 'requisitionSent',
-                'sentPartIds'
+                'sentPartIds',
+                'isClosed'
             ));
         } catch (\Exception $e) {
             return redirect()->back()->with(['status' => 'error', 'msg' => 'Something went wrong. Please try again.']);
