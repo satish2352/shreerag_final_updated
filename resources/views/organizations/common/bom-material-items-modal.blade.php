@@ -68,6 +68,14 @@
     border: 1px solid #dee2e6;
     margin-bottom: 12px;
     font-size: 13px;
+    position: relative; /* anchor for the absolutely-positioned Add More button */
+}
+/* Add More button overlaid in the empty top-right corner of the context header */
+#{{ $modalId }}AddMoreBtn.bom-add-more-overlay {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    z-index: 5;
 }
 .bom-context-header-{{ $modalId }} .bom-ctx-title {
     background: #f8f9fa;
@@ -161,12 +169,40 @@
     position: relative;
     min-height: 58px;
 }
+/* Make the modal body scroll internally when many rows are added —
+   header and footer stay pinned, only the rows area scrolls. */
+#{{ $modalId }} .modal-dialog-scrollable {
+    max-height: calc(100vh - 60px);
+}
+#{{ $modalId }} .modal-dialog-scrollable .modal-content {
+    max-height: calc(100vh - 60px);
+    overflow: hidden;
+}
+#{{ $modalId }} .modal-dialog-scrollable .modal-body {
+    overflow-y: auto;
+    max-height: calc(100vh - 220px); /* leaves room for header + footer */
+}
+/* Inline per-field validation (jQuery-Validate-style) for BOM rows */
+#{{ $modalId }} .bom-row-error {
+    color: #dc3545;
+    font-size: 11px;
+    font-weight: 500;
+    margin-top: 3px;
+    display: block;
+    line-height: 1.3;
+}
+#{{ $modalId }} .bom-input-error,
+#{{ $modalId }} input.bom-input-error,
+#{{ $modalId }} select.bom-input-error {
+    border-color: #dc3545 !important;
+    box-shadow: 0 0 0 0.1rem rgba(220, 53, 69, 0.25) !important;
+}
 </style>
 
 <!-- BOM Material Items Modal -->
 <div class="modal fade" id="{{ $modalId }}" tabindex="-1" role="dialog"
      aria-labelledby="{{ $modalId }}Label" aria-hidden="true">
-    <div class="modal-dialog modal-xl" role="document" style="max-width:95%;">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable modal-dialog-centered" role="document" style="max-width:95%;">
         <div class="modal-content">
 
             <!-- Header -->
@@ -196,6 +232,12 @@
 
                 {{-- Context header block (Excel MATERIAL INDENT layout) --}}
                 <div class="bom-context-header-{{ $modalId }}" id="{{ $modalId }}ContextHeader" style="display:none;">
+                    @if($isEditMode)
+                        <button type="button" class="btn btn-success btn-sm bom-add-more-overlay"
+                                id="{{ $modalId }}AddMoreBtn">
+                            <i class="fa fa-plus"></i> Add More
+                        </button>
+                    @endif
                     <div class="bom-ctx-title" id="{{ $modalId }}CtxTitle">MATERIAL INDENT</div>
                     <div class="bom-ctx-row">
                         <div class="bom-ctx-cell">
@@ -313,12 +355,6 @@
                 </div>
                 @endif
 
-                @if($isEditMode)
-                    <button type="button" class="btn btn-success btn-sm mt-2"
-                            id="{{ $modalId }}AddMoreBtn">
-                        <i class="fa fa-plus"></i> Add More
-                    </button>
-                @endif
             </div>
 
             <!-- Footer -->
@@ -597,14 +633,17 @@
         var $input  = $dropdown.find('.bom-part-input');
         var $search = $menu.find('.bom-search-box');
 
-        // Position the menu absolutely under the input
+        // Position the menu fixed (relative to viewport) so it escapes the
+        // table-responsive horizontal-scroll container without being clipped.
+        // We deliberately do NOT appendTo('body') — Bootstrap 4's modal focus
+        // trap would then yank focus out of the search box, breaking typing.
         var offset = $input.offset();
         $menu.css({
             top:  (offset.top + $input.outerHeight()) + 'px',
             left: offset.left + 'px',
             width: Math.max($input.outerWidth(), 260) + 'px',
             position: 'fixed'
-        }).appendTo('body').addClass('dropdown-opened');
+        }).addClass('dropdown-opened');
 
         _partDropState.$menu = $menu;
         _partDropState.$dropdown = $dropdown;
@@ -632,12 +671,9 @@
 
     function closePartDropdown() {
         if (_partDropState.$menu) {
-            // Remove the directly-attached search handler before moving the element back
+            // Remove the directly-attached search handler
             _partDropState.$menu.find('.bom-search-box').off('input.bomSearch keyup.bomSearch');
-            // restore to original parent
-            if (_partDropState.$dropdown) {
-                _partDropState.$menu.appendTo(_partDropState.$dropdown);
-            }
+            // Reset positioning back to CSS defaults (menu was never moved out of its parent)
             _partDropState.$menu.removeClass('dropdown-opened').hide().css({position: '', top: '', left: '', width: ''});
         }
         _partDropState.$menu = null;
@@ -844,13 +880,14 @@
     // delegated selectors after the menu element is moved to <body>.
     var _searchDebounceTimer = null;
 
-    // Select an option — also auto-fills Rate from master basic_rate (user-overridable)
+    // Select an option — only fills the Product Description; Rate stays as-is so the
+    // user enters it manually (per requirement: do NOT auto-populate Rate from
+    // the part-item master's basic_rate).
     $(document).on('click', '.bom-dropdown-options-' + NS + ' .bom-option', function (e) {
         e.stopPropagation();
         var $option      = $(this);
         var selectedId   = $option.attr('data-id');
         var selectedName = $option.attr('data-name') || $option.text();
-        var masterRate   = $option.attr('data-rate'); // may be '' or a numeric string
 
         var $dropdown = _partDropState.$dropdown;
         if (!$dropdown) {
@@ -858,18 +895,12 @@
         }
 
         $dropdown.find('.bom-part-id').val(selectedId);
-        $dropdown.find('.bom-part-input').val(selectedName);
+        var $partInput = $dropdown.find('.bom-part-input');
+        $partInput.val(selectedName);
 
-        // Auto-fill Rate: find .bom-rate in the same <tr>
-        if (isEditMode) {
-            var $row = $dropdown.closest('tr');
-            var $rateInput = $row.find('.bom-rate');
-            if ($rateInput.length) {
-                var rateNum = parseFloat(masterRate);
-                $rateInput.val(isNaN(rateNum) ? '' : rateNum);
-                // Trigger recalc so Final Total updates immediately
-                recalculateTotals();
-            }
+        // Clear inline validation error on the Product Description field
+        if ($partInput.hasClass('bom-input-error')) {
+            clearFieldError($partInput);
         }
 
         closePartDropdown();
@@ -883,8 +914,24 @@
         }
     });
 
-    // Reposition menu on scroll/resize
+    // Reposition menu on viewport scroll/resize
     $(window).on('scroll resize', function () {
+        if (_partDropState.$dropdown && _partDropState.$menu) {
+            var $input = _partDropState.$dropdown.find('.bom-part-input');
+            if ($input.length) {
+                var offset = $input.offset();
+                _partDropState.$menu.css({
+                    top:  (offset.top + $input.outerHeight()) + 'px',
+                    left: offset.left + 'px'
+                });
+            }
+        }
+    });
+
+    // The modal body now scrolls internally (modal-dialog-scrollable). Reposition
+    // the part-item dropdown menu so it tracks the input as the user scrolls
+    // inside the modal — fixed-position elements don't follow inner scrollers.
+    $(MODAL_ID).on('scroll', '.modal-body', function () {
         if (_partDropState.$dropdown && _partDropState.$menu) {
             var $input = _partDropState.$dropdown.find('.bom-part-input');
             if ($input.length) {
@@ -952,6 +999,73 @@
     });
 
     // ----------------------------------------------------------------
+    // INLINE FIELD VALIDATION (jQuery-Validate-style per-field errors)
+    // ----------------------------------------------------------------
+    function clearFieldError($field) {
+        $field.removeClass('bom-input-error');
+        $field.closest('td').find('.bom-row-error').remove();
+    }
+
+    function showFieldError($field, msg) {
+        $field.addClass('bom-input-error');
+        var $cell = $field.closest('td');
+        var $existing = $cell.find('.bom-row-error');
+        if ($existing.length === 0) {
+            $cell.append($('<span>').addClass('bom-row-error').text(msg));
+        } else {
+            $existing.text(msg);
+        }
+    }
+
+    function validateRow($row) {
+        var ok = true;
+
+        // Product Description (Part Item) — validate via the visible input;
+        // the value comes from the hidden .bom-part-id companion.
+        var $partInput = $row.find('.bom-part-input');
+        var partItemId = $.trim($row.find('.bom-part-id').val());
+        clearFieldError($partInput);
+        if (partItemId === '' || parseInt(partItemId, 10) <= 0) {
+            showFieldError($partInput, 'Product Description is required.');
+            ok = false;
+        }
+
+        // Quantity — required, numeric, > 0
+        var $qty   = $row.find('.bom-quantity');
+        var qtyVal = $.trim($qty.val());
+        clearFieldError($qty);
+        if (qtyVal === '') {
+            showFieldError($qty, 'Quantity is required.');
+            ok = false;
+        } else if (isNaN(parseFloat(qtyVal)) || parseFloat(qtyVal) <= 0) {
+            showFieldError($qty, 'Must be a number greater than 0.');
+            ok = false;
+        }
+
+        // Unit — required
+        var $unit  = $row.find('.bom-unit-select');
+        var unitId = $.trim($unit.val());
+        clearFieldError($unit);
+        if (unitId === '' || parseInt(unitId, 10) <= 0) {
+            showFieldError($unit, 'Unit is required.');
+            ok = false;
+        }
+
+        return ok;
+    }
+
+    // Auto-clear inline errors as the user fixes each field
+    $(document).on('input change',
+        MODAL_ID + ' .bom-quantity, ' +
+        MODAL_ID + ' .bom-unit-select',
+        function () {
+            if ($(this).hasClass('bom-input-error')) {
+                clearFieldError($(this));
+            }
+        }
+    );
+
+    // ----------------------------------------------------------------
     // SAVE ITEMS
     // ----------------------------------------------------------------
     $(document).on('click', SAVE_BTN, function () {
@@ -959,36 +1073,46 @@
 
         var items   = [];
         var isValid = true;
-        var firstErrorMsg = '';
+        var $firstInvalid = null;
 
+        // Run inline validation on every row first — collect results across ALL rows
+        // (don't bail on the first error like the old banner did) so the user sees
+        // every field that needs fixing in one pass.
+        $(TBODY_ID).find('tr[data-row-idx]').each(function () {
+            var $row = $(this);
+            if (!validateRow($row)) {
+                isValid = false;
+                if (!$firstInvalid) {
+                    $firstInvalid = $row.find('.bom-input-error').first();
+                }
+            }
+        });
+
+        if (!isValid) {
+            $(ERROR_MSG).text('Please fix the highlighted fields before saving.').show();
+            if ($firstInvalid && $firstInvalid.length) {
+                // Scroll the modal so the first error is visible, then focus it.
+                var $modalEl = $(MODAL_ID);
+                var fieldTop = $firstInvalid.offset().top;
+                var modalTop = $modalEl.offset().top;
+                $modalEl.animate({ scrollTop: $modalEl.scrollTop() + (fieldTop - modalTop) - 80 }, 200);
+                try { $firstInvalid.focus(); } catch (e) {}
+            }
+            return;
+        }
+
+        $(ERROR_MSG).hide();
+
+        // Collect the (now-validated) row payloads
         $(TBODY_ID).find('tr[data-row-idx]').each(function (i) {
-            var $row      = $(this);
-            var itemId    = $row.data('item-id');
-
+            var $row        = $(this);
+            var itemId      = $row.data('item-id');
             var partItemId  = $.trim($row.find('.bom-part-id').val());
             var partDesc    = $.trim($row.find('.bom-part-input').val());
             var $unitSelect = $row.find('.bom-unit-select');
             var unitId      = $.trim($unitSelect.val());
             var unitText    = $unitSelect.find('option:selected').text();
             var quantity    = $.trim($row.find('.bom-quantity').val());
-
-            if (partItemId === '' || parseInt(partItemId, 10) <= 0) {
-                isValid = false;
-                firstErrorMsg = 'Row ' + (i + 1) + ': Product Description (Part Item) is required.';
-                return false; // break
-            }
-
-            if (unitId === '' || parseInt(unitId, 10) <= 0) {
-                isValid = false;
-                firstErrorMsg = 'Row ' + (i + 1) + ': Unit is required.';
-                return false;
-            }
-
-            if (quantity === '' || isNaN(parseFloat(quantity)) || parseFloat(quantity) <= 0) {
-                isValid = false;
-                firstErrorMsg = 'Row ' + (i + 1) + ': Quantity must be a number greater than 0.';
-                return false;
-            }
 
             var rateRaw = $row.find('.bom-rate').val();
             items.push({
@@ -1005,13 +1129,6 @@
                 unit:                    unitText !== '-- Unit --' ? unitText : '',
             });
         });
-
-        if (!isValid) {
-            $(ERROR_MSG).text(firstErrorMsg).show();
-            return;
-        }
-
-        $(ERROR_MSG).hide();
 
         // Exceed-reason validation (estimation_edit only): required when total > limit
         var exceedReason = null;

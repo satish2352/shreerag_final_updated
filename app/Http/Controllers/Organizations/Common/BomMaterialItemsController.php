@@ -44,7 +44,6 @@ class BomMaterialItemsController extends Controller
 
             $items = $query->orderByRaw('LOWER(description) ASC')
                 ->select('id', 'description as name', 'basic_rate')
-                ->limit(50)
                 ->get();
 
             return response()->json(['status' => 'success', 'items' => $items]);

@@ -6,7 +6,6 @@
             overflow-y: hidden;
             width: 100%;
             display: block;
-            white-space: nowrap;
         }
 
         .form-display-center .col-lg-6,
@@ -21,6 +20,48 @@
             resize: vertical;
             min-height: 90px;
             margin-bottom: 15px;
+        }
+
+        #purchase_order_table {
+            table-layout: fixed;
+            width: 100%;
+        }
+
+        #purchase_order_table th,
+        #purchase_order_table td {
+            padding: 4px 6px;
+            vertical-align: middle;
+            word-wrap: break-word;
+        }
+
+        #purchase_order_table .col-srno   { width: 5%; }
+        #purchase_order_table .col-pname  { width: 22%; }
+        #purchase_order_table .col-desc   { width: 25%; }
+        #purchase_order_table .col-qty    { width: 11%; }
+        #purchase_order_table .col-rate   { width: 12%; }
+        #purchase_order_table .col-total  { width: 14%; }
+        #purchase_order_table .col-action { width: 11%; text-align: center; }
+
+        #purchase_order_table .form-control {
+            min-width: 0 !important;
+            width: 100%;
+            padding: 4px 6px;
+            font-size: 13px;
+        }
+
+        #purchase_order_table label.error {
+            font-size: 11px;
+            display: block;
+            white-space: normal;
+        }
+
+        /* jQuery Validate error labels — force red across the whole form */
+        #addEmployeeForm label.error,
+        #addEmployeeForm label.error.text-danger {
+            color: #dc3545 !important;
+            font-weight: 500;
+            margin-top: 4px;
+            display: block;
         }
     </style>
     <div class="container-fluid business-form">
@@ -121,15 +162,13 @@
                                                                         id="purchase_order_table">
                                                                         <thead>
                                                                             <tr>
-                                                                                <th>Sr. No.</th>
-                                                                                <th class="col-sm-3">Product Name
-                                                                                </th>
-                                                                                <th class="col-md-3">Description
-                                                                                </th>
-                                                                                <th class="col-md-2">Quantity</th>
-                                                                                <th class="col-md-2">Rate</th>
-                                                                                <th class="col-md-2">Total</th>
-                                                                                <th>
+                                                                                <th class="col-srno">Sr. No.</th>
+                                                                                <th class="col-pname">Product Name</th>
+                                                                                <th class="col-desc">Description</th>
+                                                                                <th class="col-qty">Quantity</th>
+                                                                                <th class="col-rate">Rate</th>
+                                                                                <th class="col-total">Total</th>
+                                                                                <th class="col-action">
                                                                                     <button type="button"
                                                                                         class="btn btn-sm font-18 mr-1 btn-bg-colour"
                                                                                         id="add_more_btn" title="Add"
@@ -140,57 +179,65 @@
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody>
-                                                                            <tr>
-                                                                                <td>
-                                                                                    <input type="text" name="id"
-                                                                                        class="form-control"
-                                                                                        style="min-width:50px" readonly
-                                                                                        value="1">
-                                                                                    <input type="hidden" id="i_id"
-                                                                                        class="form-control"
-                                                                                        style="min-width:50px" readonly
-                                                                                        value="0">
-                                                                                </td>
-                                                                                <td>
-                                                                                    <input
-                                                                                        class="form-control product_name"
-                                                                                        name="addmore[0][product_name]"
-                                                                                        type="text"
-                                                                                        style="min-width:150px">
-                                                                                </td>
+                                                                            @php
+                                                                                $oldRows = old('addmore', [['product_name' => '', 'description' => '', 'quantity' => '', 'rate' => '', 'total' => '']]);
+                                                                            @endphp
+                                                                            @foreach ($oldRows as $idx => $row)
+                                                                                <tr>
+                                                                                    <td class="col-srno">
+                                                                                        <input type="text" name="id"
+                                                                                            class="form-control" readonly
+                                                                                            value="{{ $idx + 1 }}">
+                                                                                        @if ($idx === 0)
+                                                                                            <input type="hidden" id="i_id"
+                                                                                                class="form-control" readonly
+                                                                                                value="0">
+                                                                                        @endif
+                                                                                    </td>
+                                                                                    <td class="col-pname">
+                                                                                        <input
+                                                                                            class="form-control product_name"
+                                                                                            name="addmore[{{ $idx }}][product_name]"
+                                                                                            type="text"
+                                                                                            value="{{ $row['product_name'] ?? '' }}">
+                                                                                    </td>
 
-                                                                                <td>
-                                                                                    <input class="form-control description"
-                                                                                        name="addmore[0][description]"
-                                                                                        type="text"
-                                                                                        style="min-width:150px">
-                                                                                </td>
-                                                                                <td>
-                                                                                    <input class="form-control quantity"
-                                                                                        name="addmore[0][quantity]"
-                                                                                        type="text">
-                                                                                </td>
-                                                                                <td>
-                                                                                    <input class="form-control rate"
-                                                                                        name="addmore[0][rate]"
-                                                                                        type="text">
-                                                                                </td>
+                                                                                    <td class="col-desc">
+                                                                                        <input class="form-control description"
+                                                                                            name="addmore[{{ $idx }}][description]"
+                                                                                            type="text"
+                                                                                            value="{{ $row['description'] ?? '' }}">
+                                                                                    </td>
+                                                                                    <td class="col-qty">
+                                                                                        <input class="form-control quantity"
+                                                                                            name="addmore[{{ $idx }}][quantity]"
+                                                                                            type="text"
+                                                                                            value="{{ $row['quantity'] ?? '' }}">
+                                                                                    </td>
+                                                                                    <td class="col-rate">
+                                                                                        <input class="form-control rate"
+                                                                                            name="addmore[{{ $idx }}][rate]"
+                                                                                            type="text"
+                                                                                            value="{{ $row['rate'] ?? '' }}">
+                                                                                    </td>
 
-                                                                                <td>
-                                                                                    <input
-                                                                                        class="form-control total_amount"
-                                                                                        name="addmore[0][total]"
-                                                                                        type="text" readonly>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <button type="button"
-                                                                                        class="btn btn-sm btn-danger font-18 ml-2 remove-row"
-                                                                                        title="Delete"
-                                                                                        data-repeater-delete>
-                                                                                        <i class="fa fa-trash"></i>
-                                                                                    </button>
-                                                                                </td>
-                                                                            </tr>
+                                                                                    <td class="col-total">
+                                                                                        <input
+                                                                                            class="form-control total_amount"
+                                                                                            name="addmore[{{ $idx }}][total]"
+                                                                                            type="text" readonly
+                                                                                            value="{{ $row['total'] ?? '' }}">
+                                                                                    </td>
+                                                                                    <td class="col-action">
+                                                                                        <button type="button"
+                                                                                            class="btn btn-sm btn-danger font-18 remove-row"
+                                                                                            title="Delete"
+                                                                                            data-repeater-delete>
+                                                                                            <i class="fa fa-trash"></i>
+                                                                                        </button>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            @endforeach
 
                                                                         </tbody>
                                                                     </table>
@@ -236,14 +283,16 @@
                                                                 </div>
 
                                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                                    <label for="business_pdf">Upload File :<span
-                                                                            class="text-danger">*</span></label>
-                                                                    <input type="file" class="form-control"
-                                                                        accept="application/pdf" id="business_pdf"
-                                                                        name="business_pdf">
-                                                                    @if ($errors->has('business_pdf'))
-                                                                        <span class="red-text"><?php echo $errors->first('business_pdf', ':message'); ?></span>
-                                                                    @endif
+                                                                    <div class="form-group">
+                                                                        <label for="business_pdf">Upload File :<span
+                                                                                class="text-danger">*</span></label>
+                                                                        <input type="file" class="form-control"
+                                                                            accept="application/pdf" id="business_pdf"
+                                                                            name="business_pdf">
+                                                                        @if ($errors->has('business_pdf'))
+                                                                            <span class="red-text"><?php echo $errors->first('business_pdf', ':message'); ?></span>
+                                                                        @endif
+                                                                    </div>
                                                                 </div>
 
                                                             </div>
@@ -290,6 +339,22 @@
                         $('#po_validity').attr('min', todayDate);
                     }
                     setMinDate();
+                    // `extension` and `pattern` live in jquery-validate's additional-methods.js
+                    // which is NOT loaded globally. Without these, jQuery Validate silently
+                    // breaks and the form submits unchecked to the server.
+                    $.validator.addMethod("extension", function(value, element, param) {
+                        param = typeof param === "string" ? param.replace(/,/g, "|") : "png|jpe?g|gif";
+                        return this.optional(element) || value.match(new RegExp("\\.(" + param + ")$", "i"));
+                    }, $.validator.format("Please enter a value with a valid extension."));
+
+                    $.validator.addMethod("pattern", function(value, element, param) {
+                        if (this.optional(element)) return true;
+                        if (typeof param === "string") {
+                            param = new RegExp("^(?:" + param + ")$");
+                        }
+                        return param.test(value);
+                    }, "Invalid format.");
+
                     $.validator.addMethod("filesize", function(value, element, param) {
                         if (element.files.length === 0) return true;
                         return element.files[0].size <= param;
@@ -406,6 +471,12 @@
                         }
                     });
 
+                    // File inputs don't fire `keyup`/`focusout`, so re-validate on `change`
+                    // to give immediate feedback when the user picks a file.
+                    $('#business_pdf').on('change', function() {
+                        $(this).valid();
+                    });
+
                     // Attach validation to the default row
                     initializeValidation($("#purchase_order_table tbody tr"));
 
@@ -453,29 +524,30 @@
 
                     // Add more rows when the "Add More" button is clicked
                     $("#add_more_btn").click(function() {
-                        var i = $("#purchase_order_table tbody tr").length + 1;
+                        var idx = $("#purchase_order_table tbody tr").length; // 0-based array index
+                        var srno = idx + 1;                                    // 1-based display
                         var newRow = `
                     <tr>
-                        <td>
-                            <input type="text" name="id" class="form-control" style="min-width:50px" readonly value="${i}">
+                        <td class="col-srno">
+                            <input type="text" name="id" class="form-control" readonly value="${srno}">
                         </td>
-                        <td>
-                            <input class="form-control product_name" name="addmore[${i}][product_name]" type="text" style="min-width:150px">
+                        <td class="col-pname">
+                            <input class="form-control product_name" name="addmore[${idx}][product_name]" type="text">
                         </td>
-                        <td>
-                            <input class="form-control description" name="addmore[${i}][description]" type="text" style="min-width:150px">
+                        <td class="col-desc">
+                            <input class="form-control description" name="addmore[${idx}][description]" type="text">
                         </td>
-                        <td>
-                            <input class="form-control quantity" name="addmore[${i}][quantity]" type="text">
+                        <td class="col-qty">
+                            <input class="form-control quantity" name="addmore[${idx}][quantity]" type="text">
                         </td>
-                        <td>
-                            <input class="form-control rate" name="addmore[${i}][rate]" type="text">
+                        <td class="col-rate">
+                            <input class="form-control rate" name="addmore[${idx}][rate]" type="text">
                         </td>
-                        <td>
-                            <input class="form-control total_amount" name="addmore[${i}][total]" type="text" readonly>
+                        <td class="col-total">
+                            <input class="form-control total_amount" name="addmore[${idx}][total]" type="text" readonly>
                         </td>
-                        <td>
-                            <button type="button" class="btn btn-sm btn-danger font-18 ml-2 remove-row" title="Delete" data-repeater-delete>
+                        <td class="col-action">
+                            <button type="button" class="btn btn-sm btn-danger font-18 remove-row" title="Delete" data-repeater-delete>
                                 <i class="fa fa-trash"></i>
                             </button>
                         </td>
@@ -526,6 +598,13 @@
                         });
 
                     });
+
+                    // After server-side validation error, rows are restored from old() —
+                    // recompute each row's total and the grand total so the UI matches.
+                    $("#purchase_order_table tbody tr").each(function() {
+                        calculateRowTotal($(this));
+                    });
+                    calculateGrandTotal();
                 });
             </script>
 
