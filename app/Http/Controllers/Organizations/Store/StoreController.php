@@ -376,21 +376,8 @@ class StoreController extends Controller
             $estimationAmount = EstimationModel::where('business_details_id', $decoded_id)
                 ->value('total_estimation_amount');
 
-            // One-time cleanup: soft-delete stale pending rows where a 'done' row already exists
-            $donePartIds = ProductionDetails::where('business_details_id', $decoded_id)
-                ->where('material_send_production', 1)
-                ->where('quantity_minus_status', 'done')
-                ->where('is_deleted', 0)
-                ->pluck('part_item_id')
-                ->toArray();
-
-            if (!empty($donePartIds)) {
-                ProductionDetails::where('business_details_id', $decoded_id)
-                    ->where('quantity_minus_status', 'pending')
-                    ->where('is_deleted', 0)
-                    ->whereIn('part_item_id', $donePartIds)
-                    ->update(['is_deleted' => 1]);
-            }
+            // NOTE: No cleanup/mutation runs here. GET handlers must be idempotent.
+            // Pending production_details rows survive page reloads unchanged.
 
             // Fetch BOM items for this business_details_id
             $bomItems = BomMaterialItem::where('business_details_id', $decoded_id)
@@ -464,13 +451,6 @@ class StoreController extends Controller
                 $alreadyIssued[]           = $norm;
             }
 
-            // Collect all part_item_ids already placed from BOM to avoid duplicates
-            $bomPlacedIds = array_unique(array_merge(
-                array_map(fn($i) => $i->part_item_id, $available),
-                array_map(fn($i) => $i->part_item_id, $shortage),
-                array_map(fn($i) => $i->part_item_id, $alreadyIssued),
-            ));
-
             // Fetch pending material requests added manually by Production department.
             // quantity_minus_status='pending' is the authoritative signal — do NOT filter
             // on material_send_production here because stale rows may have it set to 1.
@@ -484,11 +464,12 @@ class StoreController extends Controller
                 ->get();
 
             foreach ($pendingRows as $pitem) {
-                // Skip if already issued or already covered by BOM
-                if (in_array($pitem->part_item_id, $alreadyIssuedIds) ||
-                    in_array($pitem->part_item_id, $bomPlacedIds)) {
-                    continue;
-                }
+                // Each pending production_details row stands alone — show ALL pending
+                // requests regardless of whether the same part_item_id already appears in
+                // BOM or was previously issued. Production dept intentionally added new
+                // requests for more material; silently hiding them is incorrect.
+                // (pendingRows query already guards quantity_minus_status='pending' +
+                //  is_deleted=0 + quantity>0, so $alreadyIssuedIds can never overlap.)
 
                 $stockQty = (float) ItemStock::where('part_item_id', $pitem->part_item_id)
                     ->where('is_active', 1)
@@ -500,6 +481,7 @@ class StoreController extends Controller
 
                 // Normalise to same shape as BOM items so blade template works unchanged
                 $norm = new \stdClass();
+                $norm->pd_id              = $pitem->id;     // unique identifier for this request row
                 $norm->part_item_id       = $pitem->part_item_id;
                 $norm->product_description = optional($pitem->partItemRelation)->description ?? '';
                 $norm->required_quantity   = $reqQty;
@@ -532,19 +514,107 @@ class StoreController extends Controller
             // no "Send Shortage List as Requisition to Purchase".
             $isClosed = $bap && (int) $bap->dispatch_status_id === 1154;
 
-            // Fetch part_item_ids that were included in the sent requisition (for per-row badge in shortage table)
-            $sentPartIds = [];
-            if ($requisitionSent && $bap && $bap->requisition_id) {
-                $sentPartIds = RequisitionItem::where('requisition_id', $bap->requisition_id)
+            // Build a row-level map: requisition_item_id => is_sent_to_purchase (and part_item_id => row record)
+            // for all requisition_items belonging to this business_details_id's requisition.
+            // This replaces the old flat $sentPartIds array so each shortage row carries its own sent/draft flag.
+            $sentPartIds  = [];  // kept for backward compat with BOM-derived shortage badge logic below
+            $reqItemsMap  = [];  // part_item_id (string) => RequisitionItem Eloquent model
+            $hasDraftRows = false; // true when any requisition_items row has is_sent_to_purchase = 0
+            $requisitionId = $bap ? $bap->requisition_id : null;
+
+            if ($requisitionId) {
+                $allReqItems = RequisitionItem::where('requisition_id', $requisitionId)
+                    ->where('is_active', 1)
+                    ->where('is_deleted', 0)
                     ->whereNotNull('part_item_id')
+                    ->with(['partItem', 'unitMaster'])
+                    ->get();
+
+                foreach ($allReqItems as $ri) {
+                    $key = (string) $ri->part_item_id;
+                    // Keep the first occurrence; if multiple rows exist for same part, prefer sent (=1) over draft (=0)
+                    if (!isset($reqItemsMap[$key]) || (int) $ri->is_sent_to_purchase === 1) {
+                        $reqItemsMap[$key] = $ri;
+                    }
+                    if ((int) $ri->is_sent_to_purchase === 1) {
+                        $sentPartIds[] = $key; // used by BOM-derived shortage rows for badge
+                    }
+                    if ((int) $ri->is_sent_to_purchase === 0) {
+                        $hasDraftRows = true;
+                    }
+                }
+                $sentPartIds = array_unique($sentPartIds);
+            }
+
+            // Mark BOM-derived shortage rows with their per-row is_sent_to_purchase value
+            foreach ($shortage as $sItem) {
+                $key = (string) ($sItem->part_item_id ?? '');
+                if (isset($reqItemsMap[$key])) {
+                    $ri = $reqItemsMap[$key];
+                    $sItem->is_sent_to_purchase = (int) $ri->is_sent_to_purchase;
+                    $sItem->requisition_item_id  = $ri->id;
+                } else {
+                    $sItem->is_sent_to_purchase = null; // not in requisition at all
+                    $sItem->requisition_item_id  = null;
+                }
+            }
+
+            // Surface manual-shortage rows (added via +Add More) in the shortage display list.
+            // These rows exist in requisition_items but are NOT derived from BOM or production_details.
+            // Now they carry is_sent_to_purchase per row: 0 = draft (orange badge), 1 = sent (green badge).
+            if ($requisitionId) {
+                // Collect part_item_ids already covered by BOM/production-derived shortage + available + issued
+                // Use collect()->pluck() because $shortage/$available/$alreadyIssued may contain Eloquent
+                // models (from BOM loop) or stdClass objects (from production_details loop). Both support
+                // property access, and collect() handles both for pluck().
+                $coveredPartIds = collect(array_merge($shortage, $available, $alreadyIssued))
                     ->pluck('part_item_id')
+                    ->filter()
                     ->map(fn($id) => (string) $id)
                     ->toArray();
+
+                foreach ($reqItemsMap as $key => $mri) {
+                    // Only add rows whose part_item_id is NOT already in BOM/production-derived lists
+                    if (in_array($key, $coveredPartIds)) {
+                        continue;
+                    }
+                    $norm = new \stdClass();
+                    $norm->requisition_item_id = $mri->id;
+                    $norm->part_item_id        = $mri->part_item_id;
+                    $norm->product_description = $mri->product_description ?? (optional($mri->partItem)->description ?? '');
+                    $norm->required_quantity   = (float) $mri->required_quantity;
+                    $norm->available_stock     = (float) $mri->available_quantity;
+                    $norm->shortage_quantity   = (float) $mri->shortage_quantity;
+                    $norm->unit_id             = $mri->unit_id;
+                    $norm->rate                = $mri->rate;
+                    $norm->partItem            = $mri->partItem;
+                    $norm->unitMaster          = $mri->unitMaster;
+                    $norm->created_at          = $mri->created_at;
+                    $norm->source              = 'manual_shortage';
+                    $norm->is_sent_to_purchase = (int) $mri->is_sent_to_purchase;
+                    $shortage[]                = $norm;
+                    // Track this part_item_id as covered so duplicates in reqItemsMap are not added twice
+                    $coveredPartIds[] = $key;
+                }
             }
+
+            // Split $shortage into sent (=1 or null — formal requisition rows) and draft (=0 — manually added, not yet sent).
+            // BOM/production-derived rows have is_sent_to_purchase=null (not in requisition) or =1 (sent).
+            // Manual +Add More rows have is_sent_to_purchase=0 (draft) or =1 (sent).
+            // Only is_sent_to_purchase=0 rows go into $shortageDraft; everything else stays in $shortageSent.
+            $shortageSent  = array_values(array_filter($shortage, function ($r) {
+                return !isset($r->is_sent_to_purchase) || (int) $r->is_sent_to_purchase !== 0;
+            }));
+            $shortageDraft = array_values(array_filter($shortage, function ($r) {
+                return isset($r->is_sent_to_purchase) && (int) $r->is_sent_to_purchase === 0;
+            }));
+            $hasDraftRows = count($shortageDraft) > 0;
 
             return view('organizations.store.list.bom-inventory-check', compact(
                 'available',
                 'shortage',
+                'shortageSent',
+                'shortageDraft',
                 'alreadyIssued',
                 'availableFromProduction',
                 'productDetails',
@@ -554,7 +624,9 @@ class StoreController extends Controller
                 'unitMasters',
                 'requisitionSent',
                 'sentPartIds',
-                'isClosed'
+                'isClosed',
+                'hasDraftRows',
+                'requisitionId'
             ));
         } catch (\Exception $e) {
             return redirect()->back()->with(['status' => 'error', 'msg' => 'Something went wrong. Please try again.']);
@@ -580,13 +652,14 @@ class StoreController extends Controller
             if ($alreadySent) {
                 return redirect()->back()->with(['status' => 'error', 'msg' => 'Requisition already sent to Purchase department.']);
             }
-            $items               = $request->input('items', []);
+            $items           = $request->input('items', []);
+            $manual_shortage = $request->input('manual_shortage', []);
 
-            if (empty($items)) {
+            if (empty($items) && empty($manual_shortage)) {
                 return redirect()->back()->with(['status' => 'error', 'msg' => 'No shortage items to submit.']);
             }
 
-            DB::transaction(function () use ($business_details_id, $business_id, $design_id, $items) {
+            DB::transaction(function () use ($business_details_id, $business_id, $design_id, $items, $manual_shortage) {
 
                 // 3 first: fetch BAP to get authoritative design_id and production_id
                 $business_application = BusinessApplicationProcesses::where('business_details_id', $business_details_id)->first();
@@ -611,7 +684,7 @@ class StoreController extends Controller
                     $requisition->save();
                 }
 
-                // 2. Create requisition_items for each shortage item
+                // 2. Create requisition_items for each BOM shortage item
                 // Remove old items for idempotency (re-submit scenario)
                 RequisitionItem::where('requisition_id', $requisition->id)->delete();
 
@@ -628,6 +701,45 @@ class StoreController extends Controller
                         'rate'                => isset($itemData['rate']) && $itemData['rate'] !== '' ? (float) $itemData['rate'] : null,
                         'is_active'           => 1,
                         'is_deleted'          => 0,
+                        'is_sent_to_purchase' => 1, // BOM-derived shortage: part of the official requisition send
+                    ]);
+                }
+
+                // 2b. Create requisition_items for each manually-added shortage row.
+                // These are submitted together with the initial BOM requisition, so they ARE
+                // part of the official send → is_sent_to_purchase = 1.
+                foreach ($manual_shortage as $ms) {
+                    $msPartItemId = ($ms['part_item_id'] ?? '') !== '' ? (int) $ms['part_item_id'] : null;
+                    if (!$msPartItemId) continue; // skip rows with no part selected
+                    $msQty = (float) ($ms['required_quantity'] ?? 0);
+                    if ($msQty <= 0) continue;   // skip rows with no quantity
+                    $msUnitId = ($ms['unit_id'] ?? '') !== '' ? (int) $ms['unit_id'] : null;
+                    if (!$msUnitId) continue;     // skip rows with no unit
+
+                    $msAvailQty    = (float) ($ms['available_quantity'] ?? 0);
+                    $msShortageQty = max(0, $msQty - $msAvailQty);
+                    $msRate        = isset($ms['rate']) && $ms['rate'] !== '' ? (float) $ms['rate'] : null;
+                    $msDesc        = $ms['product_description'] ?? null;
+
+                    // Dedup: skip if this part_item is already in the requisition
+                    if (RequisitionItem::where('requisition_id', $requisition->id)
+                            ->where('part_item_id', $msPartItemId)->exists()) {
+                        continue;
+                    }
+
+                    RequisitionItem::create([
+                        'requisition_id'      => $requisition->id,
+                        'business_details_id' => $business_details_id,
+                        'part_item_id'        => $msPartItemId,
+                        'product_description' => $msDesc,
+                        'required_quantity'   => $msQty,
+                        'available_quantity'  => $msAvailQty,
+                        'shortage_quantity'   => $msShortageQty,
+                        'unit_id'             => $msUnitId,
+                        'rate'                => $msRate,
+                        'is_active'           => 1,
+                        'is_deleted'          => 0,
+                        'is_sent_to_purchase' => 1, // submitted together with initial requisition → already sent
                     ]);
                 }
 
@@ -665,7 +777,11 @@ class StoreController extends Controller
     {
         try {
             $business_details_id = $request->input('business_details_id');
-            $items               = $request->input('items', []);
+            // Accept either items[] (from BOM not-sent form) or manual_shortage[] (from +Add More form), or both
+            $items = array_merge(
+                $request->input('items', []),
+                $request->input('manual_shortage', [])
+            );
 
             if (empty($items)) {
                 return redirect()->back()->with(['status' => 'error', 'msg' => 'No additional items to submit.']);
@@ -679,40 +795,120 @@ class StoreController extends Controller
 
             DB::transaction(function () use ($requisition, $business_details_id, $items) {
                 foreach ($items as $itemData) {
-                    $partItemId = ($itemData['part_item_id'] ?? '') !== '' ? $itemData['part_item_id'] : null;
+                    $partItemId = ($itemData['part_item_id'] ?? '') !== '' ? (int) $itemData['part_item_id'] : null;
+                    if (!$partItemId) continue; // skip rows without a part selected
+                    $qty = (float) ($itemData['required_quantity'] ?? $itemData['quantity'] ?? 0);
+                    if ($qty <= 0) continue;    // skip rows with no quantity
+                    $unitId = ($itemData['unit_id'] ?? '') !== '' ? (int) $itemData['unit_id'] : null;
 
-                    // Skip if this part_item is already in the requisition
-                    if ($partItemId && RequisitionItem::where('requisition_id', $requisition->id)
+                    // Skip if this part_item is already in the requisition as a sent row.
+                    // Allow insert if the existing row is a draft (user may be re-adding a draft with
+                    // different qty — this is unusual, so we skip duplicates entirely for simplicity).
+                    if (RequisitionItem::where('requisition_id', $requisition->id)
                             ->where('part_item_id', $partItemId)->exists()) {
                         continue;
                     }
+
+                    $availQty    = (float) ($itemData['available_quantity'] ?? 0);
+                    $shortageQty = (float) ($itemData['shortage_quantity'] ?? max(0, $qty - $availQty));
 
                     RequisitionItem::create([
                         'requisition_id'      => $requisition->id,
                         'business_details_id' => $business_details_id,
                         'part_item_id'        => $partItemId,
                         'product_description' => $itemData['product_description'] ?? null,
-                        'required_quantity'   => (float) ($itemData['required_quantity'] ?? 0),
-                        'available_quantity'  => (float) ($itemData['available_quantity'] ?? 0),
-                        'shortage_quantity'   => (float) ($itemData['shortage_quantity'] ?? 0),
-                        'unit_id'             => ($itemData['unit_id'] ?? '') !== '' ? $itemData['unit_id'] : null,
+                        'required_quantity'   => $qty,
+                        'available_quantity'  => $availQty,
+                        'shortage_quantity'   => $shortageQty,
+                        'unit_id'             => $unitId,
                         'rate'                => isset($itemData['rate']) && $itemData['rate'] !== '' ? (float) $itemData['rate'] : null,
                         'is_active'           => 1,
                         'is_deleted'          => 0,
+                        'is_sent_to_purchase' => 0,      // draft — user must explicitly send via "Send Pending to Purchase"
+                        'source'              => 'manual_shortage', // explicitly added via +Add More by Store user
                     ]);
                 }
 
-                // Notify purchase department of the updated requisition
-                NotificationStatus::where('business_details_id', $business_details_id)
-                    ->update(['purchase_is_view' => 0]);
+                // NOTE: Do NOT notify purchase yet — rows are drafts until user clicks "Send Pending to Purchase".
             });
 
-            return redirect()->back()
-                ->with(['status' => 'success', 'msg' => 'Additional shortage items appended to the existing requisition and sent to Purchase department.']);
+            $successMsg = 'New shortage items saved as draft. Click "Send Pending to Purchase" to formally send them to the Purchase department.';
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json(['status' => 'success', 'msg' => $successMsg]);
+            }
+            return redirect()->back()->with(['status' => 'success', 'msg' => $successMsg]);
 
         } catch (\Exception $e) {
             Log::error('storeAdditionalShortageRequisition error: ' . $e->getMessage());
-            return redirect()->back()->with(['status' => 'error', 'msg' => 'Something went wrong. Please try again.']);
+            $errMsg = 'Something went wrong. Please try again.';
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json(['status' => 'error', 'msg' => $errMsg], 500);
+            }
+            return redirect()->back()->with(['status' => 'error', 'msg' => $errMsg]);
+        }
+    }
+
+    /**
+     * Update an existing draft requisition_item (is_sent_to_purchase=0).
+     * Sent rows (is_sent_to_purchase=1) are immutable — returns 403.
+     *
+     * POST /update-draft-shortage-item
+     * Body JSON: { requisition_item_id, required_quantity, unit_id, rate }
+     */
+    public function updateDraftShortageItem(Request $request)
+    {
+        try {
+            $reqItemId   = $request->input('requisition_item_id');
+            $requiredQty = $request->input('required_quantity');
+            $unitId      = $request->input('unit_id');
+            $rate        = $request->input('rate');
+
+            if (!$reqItemId || !is_numeric($requiredQty) || (float) $requiredQty <= 0) {
+                return response()->json(['status' => 'error', 'msg' => 'Invalid input: requisition_item_id and required_quantity > 0 are required.'], 422);
+            }
+
+            $item = RequisitionItem::find($reqItemId);
+            if (!$item) {
+                return response()->json(['status' => 'error', 'msg' => 'Item not found.'], 404);
+            }
+
+            if ((int) $item->is_sent_to_purchase === 1) {
+                return response()->json(['status' => 'error', 'msg' => 'Cannot update an item that has already been sent to Purchase.'], 403);
+            }
+
+            $requiredQty = (float) $requiredQty;
+
+            // Recompute available_quantity and shortage_quantity from live stock
+            $availableQty = (float) ItemStock::where('part_item_id', $item->part_item_id)
+                ->where('is_active', 1)
+                ->where('is_deleted', 0)
+                ->sum('quantity');
+
+            $shortageQty = max(0, $requiredQty - $availableQty);
+
+            DB::transaction(function () use ($item, $requiredQty, $unitId, $rate, $availableQty, $shortageQty) {
+                $item->required_quantity  = $requiredQty;
+                $item->available_quantity = $availableQty;
+                $item->shortage_quantity  = $shortageQty;
+                if ($unitId !== null && $unitId !== '') {
+                    $item->unit_id = (int) $unitId;
+                }
+                if ($rate !== null && $rate !== '') {
+                    $item->rate = (float) $rate;
+                }
+                $item->save();
+            });
+
+            return response()->json([
+                'status'        => 'success',
+                'msg'           => 'Draft item updated successfully.',
+                'available_qty' => $availableQty,
+                'shortage_qty'  => $shortageQty,
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('updateDraftShortageItem error: ' . $e->getMessage());
+            return response()->json(['status' => 'error', 'msg' => 'Something went wrong. Please try again.'], 500);
         }
     }
 
@@ -859,6 +1055,95 @@ class StoreController extends Controller
         } catch (\Exception $e) {
             Log::error('issueAvailableMaterials error: ' . $e->getMessage());
             return redirect()->back()->with(['status' => 'error', 'msg' => 'Something went wrong. Please try again.']);
+        }
+    }
+
+    /**
+     * Flip all draft requisition_items (is_sent_to_purchase = 0) for the given business_details_id
+     * to is_sent_to_purchase = 1, then notify the Purchase department.
+     *
+     * POST /send-pending-shortage-to-purchase
+     */
+    public function sendPendingShortageToPurchase(Request $request)
+    {
+        try {
+            $business_details_id = $request->input('business_details_id');
+            if (!$business_details_id) {
+                return response()->json(['status' => 'error', 'msg' => 'Invalid request.'], 422);
+            }
+
+            $bap = \App\Models\BusinessApplicationProcesses::where('business_details_id', $business_details_id)->first();
+            if (!$bap || !$bap->requisition_id) {
+                return response()->json(['status' => 'error', 'msg' => 'No requisition found for this project.'], 422);
+            }
+
+            $updated = 0;
+            DB::transaction(function () use ($bap, $business_details_id, &$updated) {
+                $updated = RequisitionItem::where('requisition_id', $bap->requisition_id)
+                    ->where('is_sent_to_purchase', 0)
+                    ->where('is_active', 1)
+                    ->where('is_deleted', 0)
+                    ->update(['is_sent_to_purchase' => 1]);
+
+                if ($updated > 0) {
+                    // Touch the requisition's updated_at so downstream timestamps refresh
+                    Requisition::where('id', $bap->requisition_id)->touch();
+
+                    // Notify purchase department
+                    NotificationStatus::where('business_details_id', $business_details_id)
+                        ->update(['purchase_is_view' => 0]);
+                }
+            });
+
+            if ($updated === 0) {
+                return response()->json(['status' => 'info', 'msg' => 'No pending rows to send.', 'updated' => 0]);
+            }
+
+            return response()->json([
+                'status'  => 'success',
+                'msg'     => $updated . ' pending item(s) sent to Purchase department successfully.',
+                'updated' => $updated,
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('sendPendingShortageToPurchase error: ' . $e->getMessage());
+            return response()->json(['status' => 'error', 'msg' => 'Something went wrong. Please try again.'], 500);
+        }
+    }
+
+    /**
+     * Delete a draft requisition_item (is_sent_to_purchase = 0 only).
+     * Sent rows (is_sent_to_purchase = 1) are immutable and cannot be deleted.
+     *
+     * POST /delete-draft-shortage-item
+     */
+    public function deleteDraftShortageItem(Request $request)
+    {
+        try {
+            $requisition_item_id = $request->input('requisition_item_id');
+            if (!$requisition_item_id) {
+                return response()->json(['status' => 'error', 'msg' => 'Invalid request.'], 422);
+            }
+
+            $item = RequisitionItem::find($requisition_item_id);
+            if (!$item) {
+                return response()->json(['status' => 'error', 'msg' => 'Item not found.'], 404);
+            }
+
+            if ((int) $item->is_sent_to_purchase === 1) {
+                return response()->json(['status' => 'error', 'msg' => 'Cannot delete an item that has already been sent to Purchase.'], 403);
+            }
+
+            // Soft-delete: consistent with the is_deleted pattern used throughout the codebase
+            $item->is_deleted = 1;
+            $item->is_active  = 0;
+            $item->save();
+
+            return response()->json(['status' => 'success', 'msg' => 'Draft item deleted successfully.']);
+
+        } catch (\Exception $e) {
+            Log::error('deleteDraftShortageItem error: ' . $e->getMessage());
+            return response()->json(['status' => 'error', 'msg' => 'Something went wrong. Please try again.'], 500);
         }
     }
 }

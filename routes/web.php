@@ -497,6 +497,9 @@
         Route::get('/bom-inventory-check/{business_details_id}', [StoreController::class, 'showBomInventoryCheck'])->name('bom-inventory-check');
         Route::post('/store-shortage-requisition', [StoreController::class, 'storeShortageRequisition'])->name('store-shortage-requisition');
         Route::post('/store-additional-shortage-requisition', [StoreController::class, 'storeAdditionalShortageRequisition'])->name('store-additional-shortage-requisition');
+        Route::post('/send-pending-shortage-to-purchase', [StoreController::class, 'sendPendingShortageToPurchase'])->name('send-pending-shortage-to-purchase');
+        Route::post('/delete-draft-shortage-item', [StoreController::class, 'deleteDraftShortageItem'])->name('delete-draft-shortage-item');
+        Route::post('/update-draft-shortage-item', [StoreController::class, 'updateDraftShortageItem'])->name('update-draft-shortage-item');
         Route::post('/issue-available-materials', [StoreController::class, 'issueAvailableMaterials'])->name('issue-available-materials');
         Route::post('/generate-sr-store-dept', [StoreController::class, 'generateSRstoreDept'])->name('generate-sr-store-dept');
         Route::get('/accepted-store-material-sent-to-production/{purchase_orders_id}/{business_id}', [StoreController::class, 'genrateStoreReciptAndForwardMaterialToTheProduction'])->name('accepted-store-material-sent-to-production');

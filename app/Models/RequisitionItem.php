@@ -24,6 +24,8 @@ class RequisitionItem extends Model
         'rate',
         'is_active',
         'is_deleted',
+        'is_sent_to_purchase',
+        'source',
     ];
 
     public function requisition()

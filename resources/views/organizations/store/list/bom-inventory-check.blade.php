@@ -157,7 +157,7 @@
                             <div class="col-md-2">
                                 <span class="info-label">Items:</span>
                                 {{ count($available) }} available,
-                                {{ count($shortage) }} shortage,
+                                {{ count($shortageSent) + count($shortageDraft) }} shortage,
                                 {{ count($alreadyIssued) }} issued
                             </div>
                         </div>
@@ -402,19 +402,26 @@
                     {{-- ========================
                          TABLE 2 — Shortage Items
                          ======================== --}}
-                    <div class="bom-check-section-title">
-                        <i class="fa fa-exclamation-triangle text-danger"></i>
-                        Shortage Materials
-                        @if($requisitionSent)
-                            <span style="background:#28a745;color:#fff;padding:3px 10px;border-radius:4px;font-size:12px;">
-                                <i class="fa fa-check"></i> Requisition Sent to Purchase
-                            </span>
-                        @else
-                            <span class="badge-shortage">Need to purchase</span>
+                    <div class="bom-check-section-title" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px;">
+                        <span>
+                            <i class="fa fa-exclamation-triangle text-danger"></i>
+                            Shortage Materials
+                            @if($requisitionSent)
+                                <span style="background:#28a745;color:#fff;padding:3px 10px;border-radius:4px;font-size:12px;">
+                                    <i class="fa fa-check"></i> Requisition Sent to Purchase
+                                </span>
+                            @else
+                                <span class="badge-shortage">Need to purchase</span>
+                            @endif
+                        </span>
+                        @if(!($isClosed ?? false))
+                            <button type="button" class="btn btn-sm btn-danger" id="addShortageManualRow" style="white-space:nowrap;">
+                                <i class="fa fa-plus"></i> Add More
+                            </button>
                         @endif
                     </div>
 
-                    @if (count($shortage) > 0)
+                    @if (count($shortageSent) > 0)
                         <div class="table-responsive" style="margin-bottom: 20px;">
                             <table class="table table-bordered table-hover table-shortage">
                                 <thead>
@@ -430,24 +437,24 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($shortage as $i => $item)
+                                    @foreach ($shortageSent as $i => $item)
                                         @php
-                                            $isSentToPurchase = $requisitionSent && in_array((string)($item->part_item_id ?? ''), $sentPartIds);
-                                            $rowClass = $requisitionSent ? ($isSentToPurchase ? 'shortage-sent-row' : 'shortage-new-row') : 'shortage-row';
+                                            // Rows in $shortageSent: is_sent_to_purchase=1 (sent) or null (BOM-derived, not yet in requisition)
+                                            $isSent   = isset($item->is_sent_to_purchase) && (int) $item->is_sent_to_purchase === 1;
+                                            $rowClass = $isSent ? 'shortage-sent-row' : 'shortage-row';
+                                            $reqItemId = $item->requisition_item_id ?? null;
                                         @endphp
-                                        <tr class="{{ $rowClass }}">
+                                        <tr class="{{ $rowClass }}" id="shortage-row-{{ $reqItemId ?? 'bom-' . $i }}">
                                             <td style="width:45px;">{{ $i + 1 }}</td>
                                             <td style="white-space:nowrap; font-size:12px; color:#555;">
                                                 {{ ($item->created_at ?? null) ? \Carbon\Carbon::parse($item->created_at)->format('d M Y, h:i A') : '—' }}
                                             </td>
                                             <td>
                                                 {{ $item->product_description ?? (optional($item->partItem)->description ?? '—') }}
-                                                @if($requisitionSent)
-                                                    @if($isSentToPurchase)
-                                                        <span class="badge-sent-purchase"><i class="fa fa-check"></i> Sent to Purchase</span>
-                                                    @else
-                                                        <span class="badge-not-sent"><i class="fa fa-exclamation"></i> Not in Requisition</span>
-                                                    @endif
+                                                @if($isSent)
+                                                    <span class="badge-sent-purchase"><i class="fa fa-check"></i> Sent to Purchase</span>
+                                                @elseif($requisitionSent)
+                                                    <span class="badge-not-sent"><i class="fa fa-exclamation"></i> Not in Requisition</span>
                                                 @endif
                                             </td>
                                             <td>{{ number_format($item->required_quantity, 3) }}</td>
@@ -462,13 +469,114 @@
                         </div>
 
                         {{-- ========================
+                             Additional Storage Items (manually added + production requests)
+                             — draft rows from +Add More AND production-derived shortage drafts
+                             ======================== --}}
+                        @php $showManualSection = count($shortageDraft) > 0; @endphp
+                        @if(!($isClosed ?? false))
+                        <div id="manualShortageSection" style="margin-top:14px;{{ $showManualSection ? '' : ' display:none;' }}">
+                            <div style="font-weight:600; font-size:14px; color:#dc3545; margin-bottom:6px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                                <span><i class="fa fa-plus-circle"></i> Additional Storage Items (manually added)</span>
+                                @if(count($shortageDraft) > 0)
+                                    <span style="background:#fd7e14;color:#fff;border-radius:4px;padding:2px 8px;font-size:12px;">
+                                        <span id="pendingDraftCount">{{ count($shortageDraft) }}</span> pending
+                                    </span>
+                                @else
+                                    <span id="pendingDraftCountBadge" style="background:#fd7e14;color:#fff;border-radius:4px;padding:2px 8px;font-size:12px;display:none;">
+                                        <span id="pendingDraftCount">0</span> pending
+                                    </span>
+                                @endif
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="manualShortageTable">
+                                    <thead style="background:#dc3545; color:#fff;">
+                                        <tr>
+                                            <th style="width:40px;">Sr.</th>
+                                            <th style="min-width:260px;">Part Item</th>
+                                            <th style="width:120px;">Required Qty</th>
+                                            <th style="width:120px;">Available Stock</th>
+                                            <th style="width:120px;">Shortage Qty</th>
+                                            <th style="width:120px;">Unit</th>
+                                            <th style="width:110px;">Rate</th>
+                                            <th style="width:40px;"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="manualShortageBody">
+                                        {{-- Pre-rendered draft rows (is_sent_to_purchase=0) — editable --}}
+                                        @foreach ($shortageDraft as $di => $ditem)
+                                        <tr id="draft_row_{{ $ditem->requisition_item_id }}"
+                                            class="shortage-new-row"
+                                            data-req-item-id="{{ $ditem->requisition_item_id }}">
+                                            <td style="vertical-align:middle;">{{ $di + 1 }}</td>
+                                            <td style="vertical-align:middle; min-width:260px;">
+                                                <input type="text" class="form-control"
+                                                       value="{{ $ditem->product_description ?? (optional($ditem->partItem)->description ?? '—') }}"
+                                                       readonly style="background:#f8f9fa;">
+                                                <input type="hidden" class="sm-part-id" value="{{ $ditem->part_item_id }}">
+                                                <input type="hidden" class="sm-desc" value="{{ $ditem->product_description ?? (optional($ditem->partItem)->description ?? '') }}">
+                                            </td>
+                                            <td style="vertical-align:middle;">
+                                                <input type="number" class="form-control sm-qty-input"
+                                                       step="0.001" min="0.001" style="width:110px;"
+                                                       value="{{ $ditem->required_quantity }}">
+                                            </td>
+                                            <td style="vertical-align:middle;">
+                                                <input type="number" class="form-control sm-avail-stock"
+                                                       step="0.001" readonly style="width:110px; background:#f8f9fa;"
+                                                       value="{{ $ditem->available_stock }}">
+                                            </td>
+                                            <td style="vertical-align:middle;">
+                                                <input type="number" class="form-control sm-shortage-qty"
+                                                       step="0.001" readonly style="width:110px; background:#f8f9fa;"
+                                                       value="{{ $ditem->shortage_quantity }}">
+                                            </td>
+                                            <td style="vertical-align:middle;">
+                                                <select class="form-control sm-unit-select" style="min-width:100px;">
+                                                    <option value="">Select Unit</option>
+                                                    @foreach ($unitMasters as $u)
+                                                        <option value="{{ $u->id }}" {{ $u->id == $ditem->unit_id ? 'selected' : '' }}>{{ $u->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                            <td style="vertical-align:middle;">
+                                                <input type="number" class="form-control sm-rate-input"
+                                                       step="0.001" min="0" style="width:100px;"
+                                                       value="{{ $ditem->rate ?? 0 }}">
+                                            </td>
+                                            <td style="vertical-align:middle;">
+                                                <button type="button" class="btn btn-danger btn-sm delete-draft-btn"
+                                                        data-id="{{ $ditem->requisition_item_id }}"
+                                                        title="Delete this draft item">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                        {{-- JS-added new rows appended here --}}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div id="shortageManualValidationMsg" class="issue-validation-msg"></div>
+                            <div style="margin-top:8px;">
+                                <button type="button" class="btn btn-danger" id="sendManualShortageBtn">
+                                    <i class="fa fa-paper-plane"></i>
+                                    Send <span id="sendPendingCountLabel">{{ count($shortageDraft) }}</span> New Item(s) to Purchase
+                                </button>
+                            </div>
+                        </div>
+                        @endif
+
+                        {{-- ========================
                              Shortage Requisition Form / Sent Notice
                              ======================== --}}
                         @if($requisitionSent)
-                            {{-- Main requisition already sent. Show status + option to send newly-added items. --}}
+                            {{-- Main requisition already sent. Show status + "Send Pending" button for draft rows. --}}
                             @php
-                                $notSentItems = collect($shortage)->filter(function($item) use ($sentPartIds) {
-                                    return !in_array((string)($item->part_item_id ?? ''), $sentPartIds);
+                                // notSentItems: BOM/production shortage rows in $shortageSent with NO requisition_items record at all
+                                // (is_sent_to_purchase === null means not in any requisition yet)
+                                $notSentItems = collect($shortageSent)->filter(function($item) use ($sentPartIds) {
+                                    return !in_array((string)($item->part_item_id ?? ''), $sentPartIds)
+                                        && !(isset($item->is_sent_to_purchase) && (int)$item->is_sent_to_purchase === 1);
                                 })->values();
                             @endphp
 
@@ -478,6 +586,14 @@
                                     <i class="fa fa-check-circle"></i>
                                     Requisition Already Sent to Purchase
                                 </button>
+                                @if(($hasDraftRows ?? false) && !($isClosed ?? false))
+                                    <button type="button" class="btn btn-warning" id="sendPendingBtn"
+                                            data-bd="{{ $productDetails->id }}"
+                                            style="font-weight:600;">
+                                        <i class="fa fa-paper-plane"></i>
+                                        Send Pending to Purchase
+                                    </button>
+                                @endif
                             </div>
 
                             @if($notSentItems->count() > 0)
@@ -510,15 +626,24 @@
                                     </form>
                                 </div>
                             @endif
+
+                            {{-- Hidden form for manual shortage rows when requisition already sent --}}
+                            @if(!($isClosed ?? false))
+                            <form action="{{ route('store-additional-shortage-requisition') }}" method="POST" id="manualAddMoreForm" style="display:none;">
+                                @csrf
+                                <input type="hidden" name="business_details_id" value="{{ $productDetails->id }}">
+                                {{-- manual_shortage[] hidden inputs injected by JS before submit --}}
+                            </form>
+                            @endif
                         @else
-                            @php $design_id_for_form = $shortage[0]->design_id ?? null; @endphp
+                            @php $design_id_for_form = $shortageSent[0]->design_id ?? ($shortage[0]->design_id ?? null); @endphp
                             <form action="{{ route('store-shortage-requisition') }}" method="POST" id="shortageReqForm">
                                 @csrf
                                 <input type="hidden" name="business_details_id" value="{{ $productDetails->id }}">
                                 <input type="hidden" name="business_id"         value="{{ $productDetails->business_id }}">
                                 <input type="hidden" name="design_id"           value="{{ $design_id_for_form }}">
 
-                                @foreach ($shortage as $i => $item)
+                                @foreach ($shortageSent as $i => $item)
                                     <input type="hidden" name="items[{{ $i }}][part_item_id]"        value="{{ $item->part_item_id }}">
                                     <input type="hidden" name="items[{{ $i }}][product_description]" value="{{ $item->product_description ?? (optional($item->partItem)->description ?? '') }}">
                                     <input type="hidden" name="items[{{ $i }}][required_quantity]"   value="{{ $item->required_quantity }}">
@@ -527,6 +652,7 @@
                                     <input type="hidden" name="items[{{ $i }}][unit_id]"             value="{{ $item->unit_id }}">
                                     <input type="hidden" name="items[{{ $i }}][rate]"                value="{{ $item->rate }}">
                                 @endforeach
+                                {{-- manual_shortage[] hidden inputs injected by JS before shortageReqForm submit --}}
 
                                 <div class="login-btn-inner" style="margin-top:10px;">
                                     <div class="login-horizental cancel-wp">
@@ -537,7 +663,7 @@
                                         @if(!($isClosed ?? false))
                                             <button type="submit" class="btn btn-danger shortage-confirm-btn"
                                                     data-confirm-title="Send Shortage Requisition?"
-                                                    data-confirm-text="Submit {{ count($shortage) }} shortage item(s) as a requisition to Purchase department?"
+                                                    data-confirm-text="Submit {{ count($shortageSent) }} shortage item(s) as a requisition to Purchase department?"
                                                     data-confirm-button="Yes, Send Requisition">
                                                 <i class="fa fa-paper-plane"></i>
                                                 Send Shortage List as Requisition to Purchase
@@ -549,6 +675,117 @@
                         @endif
 
                     @else
+                        {{-- No BOM-derived shortage items, but user can still add manual shortage items / has drafts --}}
+                        @php $showManualSectionNoSent = count($shortageDraft) > 0; @endphp
+                        @if(!($isClosed ?? false))
+                        <div id="manualShortageSection" style="margin-top:14px;{{ $showManualSectionNoSent ? '' : ' display:none;' }}">
+                            <div style="font-weight:600; font-size:14px; color:#dc3545; margin-bottom:6px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                                <span><i class="fa fa-plus-circle"></i> Additional Storage Items (manually added)</span>
+                                @if(count($shortageDraft) > 0)
+                                    <span style="background:#fd7e14;color:#fff;border-radius:4px;padding:2px 8px;font-size:12px;">
+                                        <span id="pendingDraftCount">{{ count($shortageDraft) }}</span> pending
+                                    </span>
+                                @else
+                                    <span id="pendingDraftCountBadge" style="background:#fd7e14;color:#fff;border-radius:4px;padding:2px 8px;font-size:12px;display:none;">
+                                        <span id="pendingDraftCount">0</span> pending
+                                    </span>
+                                @endif
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="manualShortageTable">
+                                    <thead style="background:#dc3545; color:#fff;">
+                                        <tr>
+                                            <th style="width:40px;">Sr.</th>
+                                            <th style="min-width:260px;">Part Item</th>
+                                            <th style="width:120px;">Required Qty</th>
+                                            <th style="width:120px;">Available Stock</th>
+                                            <th style="width:120px;">Shortage Qty</th>
+                                            <th style="width:120px;">Unit</th>
+                                            <th style="width:110px;">Rate</th>
+                                            <th style="width:40px;"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="manualShortageBody">
+                                        {{-- Pre-rendered draft rows (is_sent_to_purchase=0) --}}
+                                        @foreach ($shortageDraft as $di => $ditem)
+                                        <tr id="draft_row_{{ $ditem->requisition_item_id }}"
+                                            class="shortage-new-row"
+                                            data-req-item-id="{{ $ditem->requisition_item_id }}">
+                                            <td style="vertical-align:middle;">{{ $di + 1 }}</td>
+                                            <td style="vertical-align:middle; min-width:260px;">
+                                                <input type="text" class="form-control"
+                                                       value="{{ $ditem->product_description ?? (optional($ditem->partItem)->description ?? '—') }}"
+                                                       readonly style="background:#f8f9fa;">
+                                                <input type="hidden" class="sm-part-id" value="{{ $ditem->part_item_id }}">
+                                                <input type="hidden" class="sm-desc" value="{{ $ditem->product_description ?? (optional($ditem->partItem)->description ?? '') }}">
+                                            </td>
+                                            <td style="vertical-align:middle;">
+                                                <input type="number" class="form-control sm-qty-input"
+                                                       step="0.001" min="0.001" style="width:110px;"
+                                                       value="{{ $ditem->required_quantity }}">
+                                            </td>
+                                            <td style="vertical-align:middle;">
+                                                <input type="number" class="form-control sm-avail-stock"
+                                                       step="0.001" readonly style="width:110px; background:#f8f9fa;"
+                                                       value="{{ $ditem->available_stock }}">
+                                            </td>
+                                            <td style="vertical-align:middle;">
+                                                <input type="number" class="form-control sm-shortage-qty"
+                                                       step="0.001" readonly style="width:110px; background:#f8f9fa;"
+                                                       value="{{ $ditem->shortage_quantity }}">
+                                            </td>
+                                            <td style="vertical-align:middle;">
+                                                <select class="form-control sm-unit-select" style="min-width:100px;">
+                                                    <option value="">Select Unit</option>
+                                                    @foreach ($unitMasters as $u)
+                                                        <option value="{{ $u->id }}" {{ $u->id == $ditem->unit_id ? 'selected' : '' }}>{{ $u->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                            <td style="vertical-align:middle;">
+                                                <input type="number" class="form-control sm-rate-input"
+                                                       step="0.001" min="0" style="width:100px;"
+                                                       value="{{ $ditem->rate ?? 0 }}">
+                                            </td>
+                                            <td style="vertical-align:middle;">
+                                                <button type="button" class="btn btn-danger btn-sm delete-draft-btn"
+                                                        data-id="{{ $ditem->requisition_item_id }}"
+                                                        title="Delete this draft item">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                        {{-- JS-added new rows appended here --}}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div id="shortageManualValidationMsg" class="issue-validation-msg"></div>
+                            <div style="margin-top:8px;">
+                                <button type="button" class="btn btn-danger" id="sendManualShortageBtn">
+                                    <i class="fa fa-paper-plane"></i>
+                                    Send <span id="sendPendingCountLabel">{{ count($shortageDraft) }}</span> New Item(s) to Purchase
+                                </button>
+                            </div>
+                        </div>
+
+                        {{-- Form for manual shortage when no BOM shortage exists yet --}}
+                        @if($requisitionSent)
+                            <form action="{{ route('store-additional-shortage-requisition') }}" method="POST" id="manualAddMoreForm" style="display:none;">
+                                @csrf
+                                <input type="hidden" name="business_details_id" value="{{ $productDetails->id }}">
+                            </form>
+                        @else
+                            <form action="{{ route('store-shortage-requisition') }}" method="POST" id="shortageReqForm" style="display:none;">
+                                @csrf
+                                <input type="hidden" name="business_details_id" value="{{ $productDetails->id }}">
+                                <input type="hidden" name="business_id"         value="{{ $productDetails->business_id }}">
+                                <input type="hidden" name="design_id"           value="{{ null }}">
+                                {{-- manual_shortage[] hidden inputs injected by JS before submit --}}
+                            </form>
+                        @endif
+                        @endif
+
                         <div class="alert alert-success">
                             <i class="fa fa-check-circle"></i>
                             All BOM items are available in stock. No purchase requisition is needed.
@@ -783,6 +1020,383 @@
 
     document.getElementById('addExtraRow').addEventListener('click', addExtraRow);
 
+    // ── Manual Shortage Rows (Add More) ──────────────────────────────────
+    var shortageManualRowCount = 0;
+    var requisitionSentFlag = {{ $requisitionSent ? 'true' : 'false' }};
+
+    // Count of pre-rendered draft rows (from server — is_sent_to_purchase=0)
+    var preRenderedDraftCount = {{ count($shortageDraft) }};
+
+    // Update the pending count badge in the section header and send button label
+    function updateDraftCount() {
+        var total = document.querySelectorAll('#manualShortageBody tr').length;
+        var countEl = document.getElementById('pendingDraftCount');
+        if (countEl) countEl.textContent = total;
+        var sendLabelEl = document.getElementById('sendPendingCountLabel');
+        if (sendLabelEl) sendLabelEl.textContent = total;
+        // Show/hide the badge for the no-draft initial state
+        var badge = document.getElementById('pendingDraftCountBadge');
+        if (badge) badge.style.display = total > 0 ? '' : 'none';
+    }
+
+    // Wire qty-change on pre-rendered draft rows (recompute shortage qty on input)
+    document.querySelectorAll('#manualShortageBody tr[data-req-item-id]').forEach(function (row) {
+        var qtyInput   = row.querySelector('.sm-qty-input');
+        var availInput = row.querySelector('.sm-avail-stock');
+        var shortInput = row.querySelector('.sm-shortage-qty');
+        if (qtyInput) {
+            qtyInput.addEventListener('input', function () {
+                var qty   = parseFloat(this.value) || 0;
+                var avail = parseFloat(availInput ? availInput.value : 0) || 0;
+                if (shortInput) shortInput.value = Math.max(0, qty - avail).toFixed(3);
+            });
+        }
+    });
+
+    function buildShortageMenu(rowIndex) {
+        var menu = document.createElement('div');
+        menu.className = 'ei-dropdown-menu';
+        menu.setAttribute('data-srow', rowIndex);
+        menu.innerHTML =
+            '<div class="ei-search-box"><input type="text" class="form-control form-control-sm ei-search-input" placeholder="Search part..."></div>' +
+            '<div class="ei-options-list"></div>';
+
+        var list = menu.querySelector('.ei-options-list');
+        partData.forEach(function (p) {
+            var opt = document.createElement('div');
+            opt.className   = 'ei-option';
+            opt.textContent = p.label;
+            opt.setAttribute('data-id',   p.id);
+            opt.setAttribute('data-rate', p.rate);
+            list.appendChild(opt);
+        });
+
+        menu.querySelector('.ei-search-input').addEventListener('input', function () {
+            filterOptions(menu, this.value);
+        });
+
+        menu.addEventListener('click', function (e) {
+            var opt = e.target.closest('.ei-option');
+            if (!opt) return;
+            var rowEl = document.getElementById('shortage_manual_row_' + rowIndex);
+            if (!rowEl) return;
+            rowEl.querySelector('.sm-trigger').textContent  = opt.textContent;
+            rowEl.querySelector('.sm-part-id').value        = opt.getAttribute('data-id');
+            rowEl.querySelector('.sm-rate-input').value     = opt.getAttribute('data-rate');
+            rowEl.querySelector('.sm-desc').value           = opt.textContent;
+            closeActiveMenu();
+            checkShortageStock(rowIndex);
+        });
+
+        document.body.appendChild(menu);
+        return menu;
+    }
+
+    function checkShortageStock(rowIndex) {
+        var rowEl = document.getElementById('shortage_manual_row_' + rowIndex);
+        if (!rowEl) return;
+        var partItemId = rowEl.querySelector('.sm-part-id').value;
+        var quantity   = rowEl.querySelector('.sm-qty-input').value;
+        var availInput = rowEl.querySelector('.sm-avail-stock');
+        var shortInput = rowEl.querySelector('.sm-shortage-qty');
+
+        if (!partItemId) {
+            if (availInput) availInput.value = '0';
+            if (shortInput) shortInput.value = '0';
+            return;
+        }
+
+        var qty = parseFloat(quantity) || 0;
+
+        fetch(checkStockUrl + '?part_item_id=' + encodeURIComponent(partItemId) +
+              '&quantity=1&material_send_production=0&quantity_minus_status=pending')
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                var avail = (data.available_quantity !== undefined) ? parseFloat(data.available_quantity) : 0;
+                if (availInput) availInput.value = avail.toFixed(3);
+                var shortage = Math.max(0, qty - avail);
+                if (shortInput) shortInput.value = shortage.toFixed(3);
+            })
+            .catch(function () {
+                if (availInput) availInput.value = '0';
+                var shortage = Math.max(0, parseFloat(quantity) || 0);
+                if (shortInput) shortInput.value = shortage.toFixed(3);
+            });
+    }
+
+    function addShortageManualRow() {
+        var i = shortageManualRowCount++;
+        var row =
+            '<tr id="shortage_manual_row_' + i + '">' +
+            '<td style="vertical-align:middle;">' + (i + 1) + '</td>' +
+            '<td style="vertical-align:middle; min-width:260px;">' +
+                '<div class="ei-dropdown">' +
+                    '<button type="button" class="btn btn-default form-control sm-trigger" style="text-align:left;">-- Select Part Item --</button>' +
+                '</div>' +
+                '<input type="hidden" class="sm-part-id" value="">' +
+                '<input type="hidden" class="sm-desc" value="">' +
+            '</td>' +
+            '<td style="vertical-align:middle;">' +
+                '<input type="number" class="form-control sm-qty-input" step="0.001" min="0.001" style="width:110px;" placeholder="0">' +
+            '</td>' +
+            '<td style="vertical-align:middle;">' +
+                '<input type="number" class="form-control sm-avail-stock" step="0.001" min="0" value="0" readonly style="width:110px; background:#f8f9fa;">' +
+            '</td>' +
+            '<td style="vertical-align:middle;">' +
+                '<input type="number" class="form-control sm-shortage-qty" step="0.001" min="0" value="0" readonly style="width:110px; background:#f8f9fa;">' +
+            '</td>' +
+            '<td style="vertical-align:middle;">' +
+                '<select class="form-control sm-unit-select" style="min-width:100px;">' + unitOptions + '</select>' +
+            '</td>' +
+            '<td style="vertical-align:middle;">' +
+                '<input type="number" class="form-control sm-rate-input" step="0.001" min="0" value="0" style="width:100px;">' +
+            '</td>' +
+            '<td style="vertical-align:middle;">' +
+                '<button type="button" class="btn btn-danger btn-sm" onclick="removeShortageManualRow(' + i + ')"><i class="fa fa-trash"></i></button>' +
+            '</td>' +
+            '</tr>';
+
+        document.getElementById('manualShortageBody').insertAdjacentHTML('beforeend', row);
+
+        // Show the section
+        var section = document.getElementById('manualShortageSection');
+        if (section) section.style.display = '';
+
+        updateDraftCount();
+
+        var rowEl = document.getElementById('shortage_manual_row_' + i);
+        var menu  = buildShortageMenu(i);
+
+        rowEl.querySelector('.sm-trigger').addEventListener('click', function (e) {
+            e.stopPropagation();
+            openMenu(this, menu);
+        });
+
+        rowEl.querySelector('.sm-qty-input').addEventListener('input', function () {
+            var availInput = rowEl.querySelector('.sm-avail-stock');
+            var shortInput = rowEl.querySelector('.sm-shortage-qty');
+            var qty = parseFloat(this.value) || 0;
+            var avail = parseFloat(availInput ? availInput.value : 0) || 0;
+            if (shortInput) shortInput.value = Math.max(0, qty - avail).toFixed(3);
+            checkShortageStock(i);
+        });
+    }
+
+    window.removeShortageManualRow = function (i) {
+        var menu = document.querySelector('.ei-dropdown-menu[data-srow="' + i + '"]');
+        if (menu) menu.remove();
+        var row = document.getElementById('shortage_manual_row_' + i);
+        if (row) row.remove();
+        updateDraftCount();
+        var body = document.getElementById('manualShortageBody');
+        var section = document.getElementById('manualShortageSection');
+        if (body && section && body.children.length === 0 && preRenderedDraftCount === 0) {
+            section.style.display = 'none';
+        }
+    };
+
+    function hasIncompleteShortageRow() {
+        var incomplete = false;
+        document.querySelectorAll('#manualShortageBody tr').forEach(function (row) {
+            var partId = row.querySelector('.sm-part-id') ? row.querySelector('.sm-part-id').value.trim() : '';
+            var qty    = parseFloat(row.querySelector('.sm-qty-input') ? row.querySelector('.sm-qty-input').value : 0) || 0;
+            var unitId = row.querySelector('.sm-unit-select') ? row.querySelector('.sm-unit-select').value.trim() : '';
+            if (!partId || qty <= 0 || !unitId) { incomplete = true; }
+        });
+        return incomplete;
+    }
+
+    function prepareManualShortageInputs(formEl) {
+        // Remove any previously injected manual_shortage inputs
+        formEl.querySelectorAll('input[name^="manual_shortage"]').forEach(function (el) { el.remove(); });
+        var rows = document.querySelectorAll('#manualShortageBody tr');
+        rows.forEach(function (row, idx) {
+            var partId      = row.querySelector('.sm-part-id').value;
+            var desc        = row.querySelector('.sm-desc').value;
+            var qty         = row.querySelector('.sm-qty-input').value;
+            var availStock  = row.querySelector('.sm-avail-stock').value || '0';
+            var shortageQty = row.querySelector('.sm-shortage-qty').value || '0';
+            var unitId      = row.querySelector('.sm-unit-select').value;
+            var rate        = row.querySelector('.sm-rate-input').value || '0';
+
+            function addHidden(name, val) {
+                var inp = document.createElement('input');
+                inp.type = 'hidden'; inp.name = name; inp.value = val;
+                formEl.appendChild(inp);
+            }
+            addHidden('manual_shortage[' + idx + '][part_item_id]',        partId);
+            addHidden('manual_shortage[' + idx + '][product_description]',  desc);
+            addHidden('manual_shortage[' + idx + '][required_quantity]',    qty);
+            addHidden('manual_shortage[' + idx + '][available_quantity]',   availStock);
+            addHidden('manual_shortage[' + idx + '][shortage_quantity]',    shortageQty);
+            addHidden('manual_shortage[' + idx + '][unit_id]',              unitId);
+            addHidden('manual_shortage[' + idx + '][rate]',                 rate);
+        });
+    }
+
+    // Wire +Add More button for shortage
+    var addShortageBtn = document.getElementById('addShortageManualRow');
+    if (addShortageBtn) {
+        addShortageBtn.addEventListener('click', addShortageManualRow);
+    }
+
+    // Helper to get CSRF token
+    function getCsrfToken() {
+        var metaTag = document.querySelector('meta[name="csrf-token"]');
+        if (metaTag) return metaTag.getAttribute('content');
+        var tokenInput = document.querySelector('input[name="_token"]');
+        return tokenInput ? tokenInput.value : '';
+    }
+
+    // Wire Send Manual Shortage button — combined update-existing-drafts + insert-new-rows + sendPending chain
+    var sendManualBtn = document.getElementById('sendManualShortageBtn');
+    if (sendManualBtn) {
+        sendManualBtn.addEventListener('click', function () {
+            var allRows = document.querySelectorAll('#manualShortageBody tr');
+            var msgEl   = document.getElementById('shortageManualValidationMsg');
+            if (msgEl) { msgEl.style.display = 'none'; }
+
+            if (allRows.length === 0) {
+                showAlert('Validation', 'Please add at least one shortage item row before sending.', 'warning');
+                return;
+            }
+            if (hasIncompleteShortageRow()) {
+                if (msgEl) {
+                    msgEl.textContent = 'Please complete Part Item, Required Qty (> 0), and Unit for all rows.';
+                    msgEl.style.display = 'block';
+                    msgEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                } else {
+                    showAlert('Validation', 'Please complete Part Item, Required Qty, and Unit for all rows.', 'warning');
+                }
+                return;
+            }
+
+            // State 1: No requisition sent yet — delegate to shortageReqForm which handles BOM + manual rows together
+            if (!requisitionSentFlag) {
+                var reqForm = document.getElementById('shortageReqForm');
+                if (reqForm) {
+                    reqForm.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+                } else {
+                    showAlert('Error', 'Form not found. Please reload the page.', 'error');
+                }
+                return;
+            }
+
+            // State 2: Requisition already sent — AJAX chain: update existing drafts + insert new rows + sendPending
+            // Separate existing draft rows (have data-req-item-id) from new rows (do not)
+            var existingDraftRows = [];
+            var newRows           = [];
+
+            allRows.forEach(function (row) {
+                var reqItemId   = row.getAttribute('data-req-item-id') || '';
+                var partId      = row.querySelector('.sm-part-id')     ? row.querySelector('.sm-part-id').value.trim()     : '';
+                var qty         = parseFloat(row.querySelector('.sm-qty-input')    ? row.querySelector('.sm-qty-input').value    : 0) || 0;
+                var unitId      = row.querySelector('.sm-unit-select') ? row.querySelector('.sm-unit-select').value.trim() : '';
+                var rate        = parseFloat(row.querySelector('.sm-rate-input')   ? row.querySelector('.sm-rate-input').value   : 0) || 0;
+                var avail       = parseFloat(row.querySelector('.sm-avail-stock')  ? row.querySelector('.sm-avail-stock').value  : 0) || 0;
+                var shortage    = parseFloat(row.querySelector('.sm-shortage-qty') ? row.querySelector('.sm-shortage-qty').value : 0) || 0;
+                var desc        = row.querySelector('.sm-desc')        ? row.querySelector('.sm-desc').value                : '';
+
+                if (!partId || qty <= 0 || !unitId) return; // skip incomplete (already validated above)
+
+                if (reqItemId) {
+                    existingDraftRows.push({ requisition_item_id: reqItemId, required_quantity: qty, unit_id: unitId, rate: rate });
+                } else {
+                    newRows.push({ part_item_id: partId, product_description: desc, required_quantity: qty,
+                                   available_quantity: avail, shortage_quantity: shortage, unit_id: unitId, rate: rate });
+                }
+            });
+
+            var totalCount = existingDraftRows.length + newRows.length;
+            var bdId       = '{{ $productDetails->id }}';
+            var csrfToken  = getCsrfToken();
+
+            confirmWithPrompt({
+                title: 'Send to Purchase?',
+                text:  'Send ' + totalCount + ' shortage item(s) to the Purchase department?',
+                icon:  'question',
+                confirmButtonText: 'Yes, Send'
+            }, function () {
+                sendManualBtn.disabled = true;
+                sendManualBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Sending...';
+
+                // Step 1: Update existing draft rows via updateDraftShortageItem
+                var updatePromises = existingDraftRows.map(function (row) {
+                    return fetch('{{ route("update-draft-shortage-item") }}', {
+                        method:  'POST',
+                        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' },
+                        body:    JSON.stringify(row)
+                    }).then(function (r) { return r.json(); });
+                });
+
+                Promise.all(updatePromises).then(function (updateResults) {
+                    var updateFailed = updateResults.some(function (r) { return r && r.status !== 'success'; });
+                    if (updateFailed) {
+                        var failMsg = updateResults.filter(function (r) { return r && r.status !== 'success'; })
+                                                   .map(function (r) { return r.msg || 'Update failed'; }).join('; ');
+                        showAlert('Error', 'Could not update draft items: ' + failMsg, 'error');
+                        sendManualBtn.disabled = false;
+                        sendManualBtn.innerHTML = '<i class="fa fa-paper-plane"></i> Send <span id="sendPendingCountLabel">' + totalCount + '</span> New Item(s) to Purchase';
+                        return Promise.reject('update_failed');
+                    }
+
+                    // Step 2: Insert new rows via storeAdditionalShortageRequisition (AJAX)
+                    if (newRows.length === 0) {
+                        return Promise.resolve({ status: 'success' });
+                    }
+
+                    var formData = new FormData();
+                    formData.append('_token', csrfToken);
+                    formData.append('business_details_id', bdId);
+                    newRows.forEach(function (row, idx) {
+                        Object.keys(row).forEach(function (key) {
+                            formData.append('manual_shortage[' + idx + '][' + key + ']', row[key]);
+                        });
+                    });
+
+                    return fetch('{{ route("store-additional-shortage-requisition") }}', {
+                        method:  'POST',
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                        body:    formData
+                    }).then(function (r) { return r.json(); });
+
+                }).then(function (insertResult) {
+                    if (!insertResult || insertResult.status !== 'success') {
+                        var errMsg = insertResult ? (insertResult.msg || 'Failed to save new items.') : 'No response from server.';
+                        showAlert('Error', errMsg, 'error');
+                        sendManualBtn.disabled = false;
+                        sendManualBtn.innerHTML = '<i class="fa fa-paper-plane"></i> Send <span id="sendPendingCountLabel">' + totalCount + '</span> New Item(s) to Purchase';
+                        return Promise.reject('insert_failed');
+                    }
+
+                    // Step 3: Flip all drafts to sent
+                    return fetch('{{ route("send-pending-shortage-to-purchase") }}', {
+                        method:  'POST',
+                        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' },
+                        body:    JSON.stringify({ business_details_id: bdId })
+                    }).then(function (r) { return r.json(); });
+
+                }).then(function (sendResult) {
+                    if (!sendResult) return;
+                    if (sendResult.status === 'success' || sendResult.status === 'info') {
+                        showAlert('Success', sendResult.msg || 'Items sent to Purchase.', 'success');
+                        setTimeout(function () { location.reload(); }, 1500);
+                    } else {
+                        showAlert('Error', sendResult.msg || 'Something went wrong.', 'error');
+                        sendManualBtn.disabled = false;
+                        sendManualBtn.innerHTML = '<i class="fa fa-paper-plane"></i> Send <span id="sendPendingCountLabel">' + totalCount + '</span> New Item(s) to Purchase';
+                    }
+                }).catch(function (reason) {
+                    if (reason !== 'update_failed' && reason !== 'insert_failed') {
+                        showAlert('Error', 'Network error. Please try again.', 'error');
+                        sendManualBtn.disabled = false;
+                        sendManualBtn.innerHTML = '<i class="fa fa-paper-plane"></i> Send <span id="sendPendingCountLabel">' + totalCount + '</span> New Item(s) to Purchase';
+                    }
+                });
+            });
+        });
+    }
+
     // Budget validation + double-submit guard
     var estimationAmt  = {{ (float)($estimationAmount ?? 0) }};
     var issuedTotal    = {{ $issuedGrandTotal }};
@@ -886,6 +1500,25 @@
             if (form.dataset.confirmed === '1') return;
 
             e.preventDefault();
+
+            // For shortageReqForm: validate and include any manually-added shortage rows
+            if (form.id === 'shortageReqForm') {
+                if (typeof hasIncompleteShortageRow === 'function' && hasIncompleteShortageRow()) {
+                    var smMsgEl = document.getElementById('shortageManualValidationMsg');
+                    if (smMsgEl) {
+                        smMsgEl.textContent = 'Please complete Part Item, Required Qty (> 0), and Unit for all manually-added rows, or remove them.';
+                        smMsgEl.style.display = 'block';
+                        smMsgEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    } else {
+                        showAlert('Validation', 'Please complete or remove the incomplete manually-added shortage rows.', 'warning');
+                    }
+                    return;
+                }
+                if (typeof prepareManualShortageInputs === 'function') {
+                    prepareManualShortageInputs(form);
+                }
+            }
+
             var btn = form.querySelector('.shortage-confirm-btn');
             confirmWithPrompt({
                 title: btn ? btn.getAttribute('data-confirm-title') : 'Send Requisition?',
@@ -958,6 +1591,123 @@
             if (toggle) toggle.setAttribute('aria-expanded', 'false');
         });
     }
+
+    // ── Send Pending to Purchase ──────────────────────────────────────────
+    var sendPendingBtn = document.getElementById('sendPendingBtn');
+    if (sendPendingBtn) {
+        sendPendingBtn.addEventListener('click', function () {
+            var bd = sendPendingBtn.getAttribute('data-bd');
+            confirmWithPrompt({
+                title: 'Send Pending Items?',
+                text: 'Send all pending (draft) shortage items to the Purchase department?',
+                icon: 'question',
+                confirmButtonText: 'Yes, Send'
+            }, function () {
+                sendPendingBtn.disabled = true;
+                sendPendingBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Sending...';
+
+                var csrfToken = document.querySelector('meta[name="csrf-token"]')
+                    ? document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    : (document.querySelector('input[name="_token"]') ? document.querySelector('input[name="_token"]').value : '');
+
+                fetch('{{ route("send-pending-shortage-to-purchase") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ business_details_id: bd })
+                })
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    if (data.status === 'success') {
+                        showAlert('Success', data.msg, 'success');
+                        setTimeout(function () { location.reload(); }, 1500);
+                    } else if (data.status === 'info') {
+                        showAlert('Nothing to Send', data.msg, 'info');
+                        sendPendingBtn.disabled = false;
+                        sendPendingBtn.innerHTML = '<i class="fa fa-paper-plane"></i> Send Pending to Purchase';
+                    } else {
+                        showAlert('Error', data.msg || 'Something went wrong.', 'error');
+                        sendPendingBtn.disabled = false;
+                        sendPendingBtn.innerHTML = '<i class="fa fa-paper-plane"></i> Send Pending to Purchase';
+                    }
+                })
+                .catch(function () {
+                    showAlert('Error', 'Network error. Please try again.', 'error');
+                    sendPendingBtn.disabled = false;
+                    sendPendingBtn.innerHTML = '<i class="fa fa-paper-plane"></i> Send Pending to Purchase';
+                });
+            });
+        });
+    }
+
+    // ── Delete Draft Shortage Item ────────────────────────────────────────
+    document.addEventListener('click', function (e) {
+        var btn = e.target.closest('.delete-draft-btn');
+        if (!btn) return;
+        var reqItemId = btn.getAttribute('data-id');
+        // Row may be in the main shortage table (shortage-row-N) OR in the draft section (draft_row_N)
+        var rowEl = document.getElementById('shortage-row-' + reqItemId) ||
+                    document.getElementById('draft_row_' + reqItemId);
+
+        confirmWithPrompt({
+            title: 'Delete Draft Item?',
+            text: 'Remove this pending shortage item? It has not been sent to Purchase yet.',
+            icon: 'warning',
+            confirmButtonText: 'Yes, Delete'
+        }, function () {
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
+
+            var csrfToken = getCsrfToken();
+
+            fetch('{{ route("delete-draft-shortage-item") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ requisition_item_id: reqItemId })
+            })
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                if (data.status === 'success') {
+                    if (rowEl) rowEl.remove();
+                    // Decrement preRenderedDraftCount if this was a server-side draft row
+                    if (preRenderedDraftCount > 0) preRenderedDraftCount--;
+                    updateDraftCount();
+                    // If no draft rows remain, hide section (only if no pre-rendered either)
+                    var remainingDraft = document.querySelectorAll('#manualShortageBody tr');
+                    if (remainingDraft.length === 0 && preRenderedDraftCount === 0) {
+                        var section = document.getElementById('manualShortageSection');
+                        if (section) section.style.display = 'none';
+                    }
+                    // Hide the legacy "Send Pending" button if it exists and no drafts left
+                    var remainingBtns = document.querySelectorAll('.delete-draft-btn');
+                    if (remainingBtns.length === 0) {
+                        var spBtn = document.getElementById('sendPendingBtn');
+                        if (spBtn) spBtn.style.display = 'none';
+                    }
+                } else if (data.status === 'error' && data.msg && data.msg.indexOf('already been sent') !== -1) {
+                    showAlert('Cannot Delete', data.msg, 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa fa-trash"></i>';
+                } else {
+                    showAlert('Error', data.msg || 'Something went wrong.', 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa fa-trash"></i>';
+                }
+            })
+            .catch(function () {
+                showAlert('Error', 'Network error. Please try again.', 'error');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa fa-trash"></i>';
+            });
+        });
+    });
 })();
 </script>
 @endpush

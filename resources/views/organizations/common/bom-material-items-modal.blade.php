@@ -1099,12 +1099,17 @@
     function validateRow($row) {
         var ok = true;
 
-        // Product Description (Part Item) — validate via the visible input;
-        // the value comes from the hidden .bom-part-id companion.
+        // T-2026-019: Product Description validation — accept the row if EITHER:
+        //   (a) a valid part_item_id is set (matched to an existing master record), OR
+        //   (b) the visible product description text is non-empty (auto-create path).
+        // Rows imported from Excel that didn't match any tbl_part_item master arrive with
+        // part_item_id empty but product_description filled; the backend will auto-create
+        // the master record on save — so these rows are valid and must not be blocked here.
         var $partInput = $row.find('.bom-part-input');
         var partItemId = $.trim($row.find('.bom-part-id').val());
+        var partDesc   = $.trim($partInput.val());
         clearFieldError($partInput);
-        if (partItemId === '' || parseInt(partItemId, 10) <= 0) {
+        if ((partItemId === '' || parseInt(partItemId, 10) <= 0) && partDesc === '') {
             showFieldError($partInput, 'Product Description is required.');
             ok = false;
         }
@@ -1121,26 +1126,21 @@
             ok = false;
         }
 
-        // Rate — required, numeric, > 0
+        // Rate — required, numeric, >= 0 (allow 0 for items whose rate is unknown at upload time)
         var $rate   = $row.find('.bom-rate');
         var rateVal = $.trim($rate.val());
         clearFieldError($rate);
         if (rateVal === '') {
             showFieldError($rate, 'Rate is required.');
             ok = false;
-        } else if (isNaN(parseFloat(rateVal)) || parseFloat(rateVal) <= 0) {
-            showFieldError($rate, 'Must be a number greater than 0.');
+        } else if (isNaN(parseFloat(rateVal)) || parseFloat(rateVal) < 0) {
+            showFieldError($rate, 'Must be a number 0 or greater.');
             ok = false;
         }
 
-        // Unit — required
-        var $unit  = $row.find('.bom-unit-select');
-        var unitId = $.trim($unit.val());
-        clearFieldError($unit);
-        if (unitId === '' || parseInt(unitId, 10) <= 0) {
-            showFieldError($unit, 'Unit is required.');
-            ok = false;
-        }
+        // Unit — optional; backend falls back to NOS (unit_id=1) when not selected.
+        // We do NOT block save for missing unit so Excel rows without a unit column still save.
+        // (No showFieldError for unit here — it was previously blocking "Not in store" rows.)
 
         return ok;
     }
@@ -1207,10 +1207,12 @@
             var quantity    = $.trim($row.find('.bom-quantity').val());
 
             var rateRaw = $row.find('.bom-rate').val();
+            // T-2026-019: send 0 when no part_item_id is set so the backend auto-creates the PartItem
+            var resolvedPartItemId = (partItemId !== '' && !isNaN(parseInt(partItemId, 10))) ? parseInt(partItemId, 10) : 0;
             items.push({
                 id:                      (itemId && parseInt(itemId, 10) > 0) ? parseInt(itemId, 10) : null,
                 serial_no:               parseInt($row.find('.bom-serial-no').val(), 10) || (i + 1),
-                part_item_id:            parseInt(partItemId, 10),
+                part_item_id:            resolvedPartItemId,
                 product_description:     partDesc,
                 length:                  $row.find('.bom-length').val() !== '' ? $row.find('.bom-length').val() : '',
                 quantity:                quantity,

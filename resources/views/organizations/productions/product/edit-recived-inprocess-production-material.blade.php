@@ -358,6 +358,11 @@
                                                                     </td>
                                                                     <td>
                                                                         <div class="custom-dropdown">
+                                                                            {{-- Row identity: sent so the repo can UPDATE this specific row by PK
+                                                                                 instead of matching by part_item_id (which swallows duplicate part rows) --}}
+                                                                            <input type="hidden"
+                                                                                name="addmore[{{ $index }}][item_id]"
+                                                                                value="{{ $item->pd_id ?? '' }}">
                                                                             <input type="hidden"
                                                                                 name="addmore[{{ $index }}][part_item_id]"
                                                                                 class="part_no"
@@ -630,7 +635,7 @@
                 </td>
                 <td style="vertical-align:middle;">
                     <span class="src-badge src-badge-prod">Production Request</span>
-                    <input type="hidden" name="addmore[${rowCount}][material_send_production]" value="1">
+                    <input type="hidden" name="addmore[${rowCount}][material_send_production]" value="0">
                 </td>
                 <td style="vertical-align:middle;">
                     <span class="text-muted">—</span>
@@ -704,6 +709,29 @@
                     return false;
                 }
 
+                // Validate: every row with a quantity must have a part item selected
+                let hasIncompleteRow = false;
+                $('#purchase_order_table tbody tr').each(function() {
+                    let partId = $(this).find('.part_no').val();
+                    let qty = parseFloat($(this).find('.quantity').val()) || 0;
+                    if (qty > 0 && (!partId || partId === '')) {
+                        hasIncompleteRow = true;
+                        return false; // break $.each
+                    }
+                });
+                if (hasIncompleteRow) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Part Item Not Selected',
+                        html: 'One or more rows have a quantity but no part item selected.<br><br>'
+                            + '<strong>How to select a part item:</strong><br>'
+                            + '1. Click the "Select Part Item..." box to open the dropdown.<br>'
+                            + '2. Type to search, then <strong>click</strong> the item name in the list.<br>'
+                            + '3. The box will show the selected item name — then save.',
+                        confirmButtonText: 'OK'
+                    });
+                    return false;
+                }
 
                 let form = $(this);
                 let formData = new FormData(form[0]);
@@ -736,10 +764,9 @@
                                     text: res.msg,
                                     timer: 1500,
                                     showConfirmButton: false
+                                }).then(function() {
+                                    location.reload();
                                 });
-
-                                // Reload table without leaving page
-
 
                             } else {
                                 Swal.fire("Error!", res.msg, "error");

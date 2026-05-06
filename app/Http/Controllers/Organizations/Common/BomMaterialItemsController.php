@@ -86,16 +86,17 @@ class BomMaterialItemsController extends Controller
                 }
                 return null;
             };
-            $cSerial = $col(['number', 'sr', 'sr.', 'sr no', 'sr. no.']);
-            $cDesc   = $col(['product description']);
-            $cLen    = $col(['length']);
-            $cQty    = $col(['quantity', 'qty']);
-            $cTotMm  = $col(['total in mm', 'total mm']);
-            $cMtr    = $col(['mtr for 01 nos trolley', 'mtr for 01 nos', 'mtr for 1 nos trolley', 'mtr per trolley']);
-            $cUnit   = $col(['unit']);
-            $cRate   = $col(['rate']);
+            $cSerial  = $col(['number', 'sr', 'sr.', 'sr no', 'sr. no.']);
+            $cDesc    = $col(['product description']);
+            $cLen     = $col(['length']);
+            $cQty     = $col(['quantity', 'qty']);
+            $cTotQty  = $col(['total quantity', 'total qty', 'total quantity ']);
+            $cTotMm   = $col(['total in mm', 'total mm']);
+            $cMtr     = $col(['mtr for 01 nos trolley', 'mtr for 01 nos', 'mtr for 1 nos trolley', 'mtr per trolley']);
+            $cUnit    = $col(['unit']);
+            $cRate    = $col(['rate']);
 
-            if ($cDesc === null || $cQty === null) {
+            if ($cDesc === null || ($cQty === null && $cTotQty === null)) {
                 return response()->json([
                     'status'  => 'error',
                     'message' => 'Excel must contain at least Product Description and Quantity columns.',
@@ -170,7 +171,7 @@ class BomMaterialItemsController extends Controller
             $skipped  = 0;
 
             DB::transaction(function () use (
-                $rows, $headerIdx, $cSerial, $cDesc, $cLen, $cQty, $cTotMm, $cMtr, $cUnit, $cRate,
+                $rows, $headerIdx, $cSerial, $cDesc, $cLen, $cQty, $cTotQty, $cTotMm, $cMtr, $cUnit, $cRate,
                 $partLookup, $unitLookup, $businessId, $businessDetailsId, $designId,
                 $userId, $deptRoleId, &$inserted, &$merged, &$skipped, &$nextSerial,
                 $existingByKey, $mergeKey, $normalize, $stripMs
@@ -186,13 +187,22 @@ class BomMaterialItemsController extends Controller
                 $lastMtr       = null;
 
                 for ($i = $headerIdx + 1; $i < count($rows); $i++) {
-                    $row  = $rows[$i];
-                    $desc = trim((string) ($row[$cDesc] ?? ''));
-                    $qtyR = $row[$cQty] ?? null;
-                    $qty  = is_numeric($qtyR) ? (float) $qtyR : null;
+                    $row     = $rows[$i];
+                    $desc    = trim((string) ($row[$cDesc] ?? ''));
+                    $qtyR    = $cQty    !== null ? ($row[$cQty]    ?? null) : null;
+                    $totQtyR = $cTotQty !== null ? ($row[$cTotQty] ?? null) : null;
+                    $qty     = is_numeric($qtyR) ? (float) $qtyR : null;
 
-                    // Skip blank / no-quantity rows
-                    if ($desc === '' || $qty === null || $qty <= 0) {
+                    // Fall back to "total Quantity" (column E) when column D is blank/zero.
+                    if (($qty === null || $qty <= 0) && is_numeric($totQtyR) && (float) $totQtyR > 0) {
+                        $qty = (float) $totQtyR;
+                    }
+
+                    // Skip rows that have no description, or that have a description
+                    // but no usable quantity in either quantity column (D or E).
+                    // Non-BOM footer rows like "Prepared By:-" have null in both columns
+                    // and should not appear in the modal.
+                    if ($desc === '' || $qty === null) {
                         $skipped++;
                         continue;
                     }
@@ -208,7 +218,9 @@ class BomMaterialItemsController extends Controller
                     //    the longest matching master key to avoid spurious matches
                     //    on short generic words. Comparison is on the normalised
                     //    (lowercase + alphanumeric-only) form, so casing differences
-                    //    are inherently ignored.
+                    //    are inherently inherited.
+                    // NOTE: Use $pKey/$pRow (not $key/$row) in the foreach to avoid
+                    // shadowing the outer $key (merge-key) and $row (current Excel row).
                     $nDesc   = $normalize($desc);
                     $partRow = $partLookup->get($nDesc);
                     if (!$partRow) {
@@ -220,15 +232,15 @@ class BomMaterialItemsController extends Controller
                     if (!$partRow && $nDesc !== '') {
                         $bestKey = null;
                         $bestLen = 0;
-                        foreach ($partLookup as $key => $row) {
+                        foreach ($partLookup as $pKey => $pRow) {
                             // Require key length >= 7 so generic short masters like
                             // "SHEET", "PLIER", "MS ROD" don't false-match into
                             // every BOM line that mentions those words.
-                            if (strlen($key) < 7) continue;
-                            if (strlen($key) <= $bestLen) continue;  // already have a longer match
-                            if (strpos($nDesc, $key) !== false) {
-                                $bestKey = $key;
-                                $bestLen = strlen($key);
+                            if (strlen($pKey) < 7) continue;
+                            if (strlen($pKey) <= $bestLen) continue;  // already have a longer match
+                            if (strpos($nDesc, $pKey) !== false) {
+                                $bestKey = $pKey;
+                                $bestLen = strlen($pKey);
                             }
                         }
                         if ($bestKey !== null) {
@@ -663,30 +675,38 @@ class BomMaterialItemsController extends Controller
         foreach ($items as $index => $item) {
             $rowNum = $index + 1;
 
-            // part_item_id is required and must exist in the master
+            // T-2026-019: part_item_id is now optional — if missing/zero the repository will
+            // auto-create a new tbl_part_item row from product_description.
+            // We only require that EITHER part_item_id > 0 (existing master row) OR
+            // product_description is non-empty (auto-create path).
             $partItemId = isset($item['part_item_id']) ? (int) $item['part_item_id'] : 0;
-            if ($partItemId <= 0) {
-                return "Row {$rowNum}: Product Description (Part Item) is required.";
+            $productDescription = trim($item['product_description'] ?? '');
+            if ($partItemId <= 0 && $productDescription === '') {
+                return "Row {$rowNum}: Product Description is required.";
             }
-            $partItemExists = PartItem::where('id', $partItemId)
-                ->where('is_active', true)
-                ->where('is_deleted', false)
-                ->exists();
-            if (!$partItemExists) {
-                return "Row {$rowNum}: Selected Part Item does not exist or is inactive.";
+            // If part_item_id is provided, verify it exists (existing-master path).
+            // If it is 0/empty, the repository will create it — skip existence check here.
+            if ($partItemId > 0) {
+                $partItemExists = PartItem::where('id', $partItemId)
+                    ->where('is_active', true)
+                    ->where('is_deleted', false)
+                    ->exists();
+                if (!$partItemExists) {
+                    return "Row {$rowNum}: Selected Part Item does not exist or is inactive.";
+                }
             }
 
-            // unit_id is required and must exist in the master
+            // unit_id: optional — if missing/zero the repository falls back to unit_id=1 (NOS).
+            // Validate only when explicitly provided.
             $unitId = isset($item['unit_id']) ? (int) $item['unit_id'] : 0;
-            if ($unitId <= 0) {
-                return "Row {$rowNum}: Unit is required.";
-            }
-            $unitExists = UnitMaster::where('id', $unitId)
-                ->where('is_active', true)
-                ->where('is_deleted', false)
-                ->exists();
-            if (!$unitExists) {
-                return "Row {$rowNum}: Selected Unit does not exist or is inactive.";
+            if ($unitId > 0) {
+                $unitExists = UnitMaster::where('id', $unitId)
+                    ->where('is_active', true)
+                    ->where('is_deleted', false)
+                    ->exists();
+                if (!$unitExists) {
+                    return "Row {$rowNum}: Selected Unit does not exist or is inactive.";
+                }
             }
 
             if (!isset($item['quantity']) || !is_numeric($item['quantity'])) {
