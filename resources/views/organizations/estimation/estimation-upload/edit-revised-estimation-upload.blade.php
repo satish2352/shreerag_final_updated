@@ -100,6 +100,27 @@
                                                         </button>
                                                         <small class="text-muted ml-2">Review and edit structured BOM line items.</small>
                                                     </div>
+                                                    {{-- T-2026-035: Yellow exceed warning shown on main form (alert only — textarea is inside the BOM modal).
+                                                         The alert is shown/hidden by the modal's updateExceedUI() JS and pre-rendered
+                                                         server-side when $bom_final_total > business total_amount.
+                                                         The "Reason for Excess Amount" textarea lives exclusively inside the BOM modal. --}}
+                                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-2">
+                                                        @php
+                                                            $bomExceedsOnLoad = isset($bom_final_total) && $bom_final_total > 0
+                                                                && isset($business_details_data) && $business_details_data->total_amount > 0
+                                                                && $bom_final_total > $business_details_data->total_amount;
+                                                            $bomTotalFmt  = number_format($bom_final_total ?? 0, 2);
+                                                            $bizLimitFmt  = number_format($business_details_data->total_amount ?? 0, 2);
+                                                            $availableFmt = number_format(max(0, ($business_details_data->total_amount ?? 0) - ($bom_final_total ?? 0)), 2);
+                                                        @endphp
+                                                        <div id="bomMaterialItemsModalExceedWarning"
+                                                             class="bom-modal-warning-msg"
+                                                             style="{{ $bomExceedsOnLoad ? '' : 'display:none;' }}">
+                                                            <strong><i class="fa fa-exclamation-triangle"></i> Amount Exceeds Business Limit</strong><br>
+                                                            <span id="bomMaterialItemsModalExceedWarningText">@if($bomExceedsOnLoad)BOM Total &#8377;{{ $bomTotalFmt }} exceeds Business Limit &#8377;{{ $bizLimitFmt }}. Available limit: &#8377;{{ $availableFmt }}.@endif</span><br>
+                                                            Saving will automatically send an approval request to the Owner.
+                                                        </div>
+                                                    </div>
                                                     @endif
 
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 mt-4">

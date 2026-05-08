@@ -75,6 +75,13 @@
     .bom-check-section-title[aria-expanded="true"] .accordion-chevron-issued {
         transform: rotate(180deg);
     }
+    .accordion-chevron-avail {
+        transition: transform 0.25s ease;
+    }
+    /* Default (closed): chevron points down. When open, rotate to up. */
+    #availMatHeading[aria-expanded="true"] .accordion-chevron-avail {
+        transform: rotate(180deg);
+    }
     .badge-sent-purchase {
         background-color: #28a745;
         color: #fff;
@@ -261,30 +268,37 @@
                     @endif
 
                     {{-- ========================
-                         TABLE 1 — Available Items
+                         TABLE 1 — Available Items (collapsible accordion, default CLOSED)
+                         T-2026-037: wrapped in Bootstrap collapse; starts closed on every page load.
                          ======================== --}}
-                    <div class="bom-check-section-title">
-                        <i class="fa fa-check-circle text-success"></i>
-                        Available Materials
-                        <span class="badge-available">Can be issued from stock</span>
+
+                    {{-- Accordion header — clickable, starts closed (aria-expanded="false") --}}
+                    <div class="bom-check-section-title"
+                         id="availMatHeading"
+                         style="cursor:pointer; display:flex; align-items:center; justify-content:space-between;"
+                         data-toggle="collapse"
+                         data-target="#availMatBody"
+                         aria-expanded="false"
+                         aria-controls="availMatBody">
+                        <span>
+                            <i class="fa fa-check-circle text-success"></i>
+                            Available Materials
+                            <span class="badge-available">Can be issued from stock</span>
+                        </span>
+                        <span style="font-size:13px; color:#28a745;">
+                            <i class="fa fa-chevron-down accordion-chevron-avail"></i>
+                        </span>
                     </div>
 
-                    <form action="{{ route('issue-available-materials') }}" method="POST" id="issueAvailableForm">
-                        @csrf
-                        <input type="hidden" name="business_details_id" value="{{ $productDetails->id }}">
+                    {{-- Accordion body — default CLOSED (no "show" class) --}}
+                    <div class="collapse" id="availMatBody">
 
-                        {{-- Hidden inputs for BOM available items --}}
-                        @foreach ($available as $i => $item)
-                            <input type="hidden" name="items[{{ $i }}][part_item_id]"        value="{{ $item->part_item_id }}">
-                            <input type="hidden" name="items[{{ $i }}][product_description]" value="{{ $item->product_description ?? (optional($item->partItem)->description ?? '') }}">
-                            <input type="hidden" name="items[{{ $i }}][quantity]"            value="{{ $item->required_quantity }}">
-                            <input type="hidden" name="items[{{ $i }}][unit_id]"             value="{{ $item->unit_id }}">
-                            <input type="hidden" name="items[{{ $i }}][rate]"                value="{{ $item->rate ?? 0 }}">
-                        @endforeach
+                        {{-- T-2026-036 note: BOM available items are pre-filled as editable rows in the blue grid below.
+                             This table is read-only display only — summary reference. --}}
 
-                        {{-- BOM Available items (read-only display) --}}
+                        {{-- BOM Available items (read-only display — summary reference) --}}
                         @if (count($available) > 0)
-                            <div class="table-responsive" style="margin-bottom: 10px;">
+                            <div class="table-responsive" style="margin-bottom: 10px; margin-top: 10px;">
                                 <table class="table table-bordered table-hover table-available">
                                     <thead>
                                         <tr>
@@ -311,17 +325,26 @@
                                 </table>
                             </div>
                         @else
-                            <div class="alert alert-info" style="margin-bottom: 10px;">
+                            <div class="alert alert-info" style="margin-bottom: 10px; margin-top: 10px;">
                                 No BOM items are fully available in stock.
                             </div>
                         @endif
 
-                        {{-- Additional Items to Issue (pre-filled with production requests + manual add) --}}
+                    </div>{{-- /#availMatBody (accordion body closes here — editable grid and form are OUTSIDE) --}}
+
+                    <form action="{{ route('issue-available-materials') }}" method="POST" id="issueAvailableForm">
+                        @csrf
+                        <input type="hidden" name="business_details_id" value="{{ $productDetails->id }}">
+
+                        {{-- Additional Items to Issue (pre-filled with BOM available + production requests + manual add) --}}
+                        {{-- T-2026-036: $available BOM items now appear as editable rows (indices 0..N-1).
+                             $availableFromProduction rows follow (indices N..N+M-1). JS-added rows start at N+M. --}}
+                        @php $totalPrefilled = count($available) + count($availableFromProduction); @endphp
                         <div class="bom-check-section-title" style="margin-top: 10px;">
                             <i class="fa fa-plus-circle text-primary"></i>
                             Additional Items to Issue
-                            @if(count($availableFromProduction) > 0)
-                                <small class="text-muted">({{ count($availableFromProduction) }} production request(s) pre-filled — add more if needed)</small>
+                            @if($totalPrefilled > 0)
+                                <small class="text-muted">({{ $totalPrefilled }} item(s) pre-filled — adjust quantities or remove items as needed)</small>
                             @else
                                 <small class="text-muted">(optional — add items not in BOM)</small>
                             @endif
@@ -345,23 +368,53 @@
                                     </tr>
                                 </thead>
                                 <tbody id="extraItemsBody">
+                                    {{-- Pre-filled rows for BOM available items (T-2026-036) --}}
+                                    @foreach ($available as $ai => $item)
+                                        <tr id="extra_row_{{ $ai }}" style="background:#f0fff4;">
+                                            <td style="vertical-align:middle;">{{ $ai + 1 }}</td>
+                                            <td style="vertical-align:middle; min-width:300px;">
+                                                <input type="text" class="form-control" value="{{ $item->product_description ?? (optional($item->partItem)->description ?? '—') }}" readonly style="background:#f8f9fa;">
+                                                <input type="hidden" name="extra_items[{{ $ai }}][part_item_id]"        value="{{ $item->part_item_id }}">
+                                                <input type="hidden" name="extra_items[{{ $ai }}][product_description]" value="{{ $item->product_description ?? (optional($item->partItem)->description ?? '') }}">
+                                                <small style="color:#28a745;font-size:11px;">&#10004; BOM Available</small>
+                                            </td>
+                                            <td style="vertical-align:middle;">
+                                                <input type="number" name="extra_items[{{ $ai }}][quantity]" class="form-control" step="0.001" min="0.001" value="{{ $item->required_quantity }}" style="width:110px;">
+                                                <small style="color:green;font-size:11px;">&#10004; Stock: {{ number_format($item->available_stock, 3) }}</small>
+                                            </td>
+                                            <td style="vertical-align:middle;">
+                                                <select name="extra_items[{{ $ai }}][unit_id]" class="form-control" style="min-width:100px;">
+                                                    <option value="">Select Unit</option>
+                                                    @foreach ($unitMasters as $u)
+                                                        <option value="{{ $u->id }}" {{ $u->id == $item->unit_id ? 'selected' : '' }}>{{ $u->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                            <td style="vertical-align:middle;">
+                                                <input type="number" name="extra_items[{{ $ai }}][rate]" class="form-control" step="0.001" min="0" value="{{ $item->rate ?? 0 }}" style="width:100px;" readonly>
+                                            </td>
+                                            <td style="vertical-align:middle;">
+                                                <button type="button" class="btn btn-danger btn-sm" onclick="removeExtraRow({{ $ai }})"><i class="fa fa-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                     {{-- Pre-filled rows for production-requested available items --}}
                                     @foreach ($availableFromProduction as $pi => $pitem)
-                                        <tr id="extra_row_{{ $pi }}" style="background:#fff8f0;">
-                                            <td style="vertical-align:middle;">{{ $pi + 1 }}</td>
+                                        @php $pIdx = count($available) + $pi; @endphp
+                                        <tr id="extra_row_{{ $pIdx }}" style="background:#fff8f0;">
+                                            <td style="vertical-align:middle;">{{ $pIdx + 1 }}</td>
                                             <td style="vertical-align:middle; min-width:300px;">
                                                 <input type="text" class="form-control" value="{{ $pitem->product_description }}" readonly style="background:#f8f9fa;">
-                                                <input type="hidden" name="extra_items[{{ $pi }}][part_item_id]"        value="{{ $pitem->part_item_id }}">
-                                                <input type="hidden" name="extra_items[{{ $pi }}][product_description]" value="{{ $pitem->product_description }}">
-                                                <input type="hidden" name="extra_items[{{ $pi }}][rate]"                value="{{ $pitem->rate ?? 0 }}">
+                                                <input type="hidden" name="extra_items[{{ $pIdx }}][part_item_id]"        value="{{ $pitem->part_item_id }}">
+                                                <input type="hidden" name="extra_items[{{ $pIdx }}][product_description]" value="{{ $pitem->product_description }}">
                                                 <small style="color:#fd7e14;font-size:11px;"><i class="fa fa-industry"></i> Production Request</small>
                                             </td>
                                             <td style="vertical-align:middle;">
-                                                <input type="number" name="extra_items[{{ $pi }}][quantity]" class="form-control" step="0.001" min="0.001" value="{{ $pitem->required_quantity }}" style="width:110px;">
+                                                <input type="number" name="extra_items[{{ $pIdx }}][quantity]" class="form-control" step="0.001" min="0.001" value="{{ $pitem->required_quantity }}" style="width:110px;">
                                                 <small style="color:green;font-size:11px;">&#10004; Stock: {{ number_format($pitem->available_stock, 3) }}</small>
                                             </td>
                                             <td style="vertical-align:middle;">
-                                                <select name="extra_items[{{ $pi }}][unit_id]" class="form-control" style="min-width:100px;">
+                                                <select name="extra_items[{{ $pIdx }}][unit_id]" class="form-control" style="min-width:100px;">
                                                     <option value="">Select Unit</option>
                                                     @foreach ($unitMasters as $u)
                                                         <option value="{{ $u->id }}" {{ $u->id == $pitem->unit_id ? 'selected' : '' }}>{{ $u->name }}</option>
@@ -369,10 +422,10 @@
                                                 </select>
                                             </td>
                                             <td style="vertical-align:middle;">
-                                                <input type="number" name="extra_items[{{ $pi }}][rate]" class="form-control" step="0.001" min="0" value="{{ $pitem->rate ?? 0 }}" style="width:100px;" readonly>
+                                                <input type="number" name="extra_items[{{ $pIdx }}][rate]" class="form-control" step="0.001" min="0" value="{{ $pitem->rate ?? 0 }}" style="width:100px;" readonly>
                                             </td>
                                             <td style="vertical-align:middle;">
-                                                <button type="button" class="btn btn-danger btn-sm" onclick="removeExtraRow({{ $pi }})"><i class="fa fa-trash"></i></button>
+                                                <button type="button" class="btn btn-danger btn-sm" onclick="removeExtraRow({{ $pIdx }})"><i class="fa fa-trash"></i></button>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -846,8 +899,8 @@
 </style>
 <script>
 (function () {
-    // Start after Blade-pre-rendered production-request rows
-    var extraRowCount = {{ count($availableFromProduction) }};
+    // Start after all Blade-pre-rendered rows (BOM available + production requests). T-2026-036.
+    var extraRowCount = {{ count($available) + count($availableFromProduction) }};
 
     // Build part items data array for the custom dropdown
     var partData = [];

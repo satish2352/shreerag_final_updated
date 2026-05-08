@@ -218,6 +218,76 @@
                                 </div>
                                 @endif
 
+                                {{-- Requisition reference panel: shows pending requisition items not yet ordered.
+                                     Read-only — user picks items manually from the editable grid below. --}}
+                                @if($newRequisitionItems->count() > 0)
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        {{-- Bootstrap 4 accordion: open by default (show class), collapsible via header click --}}
+                                        <div style="border:1px solid #17a2b8; border-radius:6px; overflow:hidden;">
+                                            <div id="reqRefPanelHeading"
+                                                 style="background:#17a2b8; padding:10px 16px; cursor:pointer;"
+                                                 data-toggle="collapse"
+                                                 data-target="#reqRefPanelBody"
+                                                 aria-expanded="true"
+                                                 aria-controls="reqRefPanelBody">
+                                                <strong style="color:#fff;">
+                                                    <i class="fa fa-info-circle"></i>
+                                                    Requisition Items &mdash; Not Yet Ordered ({{ $newRequisitionItems->count() }} item(s) &mdash; add manually below)
+                                                </strong>
+                                                <span class="float-right" style="color:#fff;">
+                                                    <i class="fa fa-chevron-up req-ref-chevron"></i>
+                                                </span>
+                                            </div>
+                                            <div id="reqRefPanelBody"
+                                                 class="collapse show"
+                                                 aria-labelledby="reqRefPanelHeading">
+                                                <div style="background:#e8f4fd; padding:12px 16px;">
+                                                    <table class="table table-sm table-bordered mt-1 mb-0" style="background:#fff;">
+                                                        <thead style="background:#17a2b8; color:#fff;">
+                                                            <tr>
+                                                                <th>Sr.</th>
+                                                                <th>Product Description</th>
+                                                                <th>Shortage Qty</th>
+                                                                <th>Unit</th>
+                                                                <th>Rate</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach($newRequisitionItems as $pi => $pitem)
+                                                            <tr>
+                                                                <td>{{ $pi + 1 }}</td>
+                                                                <td>{{ $pitem->product_description ?? optional($pitem->partItem)->description ?? '—' }}</td>
+                                                                <td>{{ number_format((float)$pitem->shortage_quantity, 3) }}</td>
+                                                                <td>{{ optional(\App\Models\UnitMaster::find($pitem->unit_id))->name ?? $pitem->unit_id ?? '—' }}</td>
+                                                                <td>{{ $pitem->rate !== null ? number_format((float)$pitem->rate, 3) : '—' }}</td>
+                                                            </tr>
+                                                            @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {{-- Flip chevron direction on collapse/expand --}}
+                                        <script>
+                                            (function () {
+                                                var el = document.getElementById('reqRefPanelBody');
+                                                if (el) {
+                                                    el.addEventListener('hide.bs.collapse', function () {
+                                                        var icon = document.querySelector('.req-ref-chevron');
+                                                        if (icon) { icon.classList.remove('fa-chevron-up'); icon.classList.add('fa-chevron-down'); }
+                                                    });
+                                                    el.addEventListener('show.bs.collapse', function () {
+                                                        var icon = document.querySelector('.req-ref-chevron');
+                                                        if (icon) { icon.classList.remove('fa-chevron-down'); icon.classList.add('fa-chevron-up'); }
+                                                    });
+                                                }
+                                            })();
+                                        </script>
+                                    </div>
+                                </div>
+                                @endif
+
                                 <div class="row">
                                     <div class="col-md-12 col-sm-12">
                                         <div class="table-responsive">
@@ -246,99 +316,11 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @php
-                                                        $reqRows   = $newRequisitionItems->count();
-                                                        $iIdStart  = max(0, $reqRows - 1);
-                                                    @endphp
-                                                    {{-- Hidden counter for "Add More" JS --}}
-                                                    <input type="hidden" id="i_id" value="{{ $iIdStart }}">
+                                                    {{-- Hidden counter for "Add More" JS — always starts at 0 (one blank row at index 0) --}}
+                                                    <input type="hidden" id="i_id" value="0">
 
-                                                    @forelse($newRequisitionItems as $ri => $ritem)
-                                                    <tr>
-                                                        <td>
-                                                            <input type="text" name="id" class="form-control"
-                                                                style="min-width:15px" readonly value="{{ $ri + 1 }}">
-                                                        </td>
-                                                        <td class="reverse-label">
-                                                            <select class="form-control mb-2 part_no_id select2"
-                                                                name="addmore[{{ $ri }}][part_no_id]" style="width:100%">
-                                                                <option value="">Select Description</option>
-                                                                @foreach ($dataOutputPartItem as $data)
-                                                                    <option value="{{ $data['id'] }}"
-                                                                        data-part-number="{{ $data['part_number'] }}"
-                                                                        {{ $data['id'] == $ritem->part_item_id ? 'selected' : '' }}>
-                                                                        {{ $data['description'] }}
-                                                                    </option>
-                                                                @endforeach
-                                                            </select>
-                                                        </td>
-                                                        <td>
-                                                            <input class="form-control hsn_name" type="text"
-                                                                style="min-width:100px" disabled>
-                                                            <input type="hidden" class="form-control hsn_id"
-                                                                name="addmore[{{ $ri }}][hsn_id]" type="text"
-                                                                style="min-width:100px">
-                                                        </td>
-                                                        <td>
-                                                            {{-- "Part No." column — shows the actual part_number from the
-                                                                 part-item master (tbl_part_item.part_number). The form field
-                                                                 name stays "description" to keep the existing controller /
-                                                                 DB save logic unchanged. --}}
-                                                            <input class="form-control description"
-                                                                name="addmore[{{ $ri }}][description]" type="text"
-                                                                style="min-width:100px"
-                                                                value="{{ optional($ritem->partItem)->part_number ?? '' }}">
-                                                        </td>
-                                                        <td>
-                                                            {{-- Strip trailing decimal zeros so 1.000 → "1", 1.500 → "1.5".
-                                                                 Avoids the "Please enter only digits" validation error that
-                                                                 fires when the rendered value contains an unnecessary "."
-                                                                 with all-zero fractional part. --}}
-                                                            <input class="form-control quantity"
-                                                                name="addmore[{{ $ri }}][quantity]" style="width:100%"
-                                                                type="text"
-                                                                value="{{ $ritem->shortage_quantity !== null && $ritem->shortage_quantity !== '' ? +$ritem->shortage_quantity : '' }}">
-                                                        </td>
-                                                        <td>
-                                                            <select class="form-control mb-2 unit"
-                                                                name="addmore[{{ $ri }}][unit]" style="min-width:100px">
-                                                                <option value="">Select Unit</option>
-                                                                @foreach ($dataOutputUnitMaster as $data)
-                                                                    <option value="{{ $data['id'] }}"
-                                                                        {{ $data['id'] == $ritem->unit_id ? 'selected' : '' }}>
-                                                                        {{ $data['name'] }}
-                                                                    </option>
-                                                                @endforeach
-                                                            </select>
-                                                        </td>
-                                                        <td>
-                                                            <input class="form-control rate"
-                                                                name="addmore[{{ $ri }}][rate]" style="min-width:100px"
-                                                                type="text" value="{{ $ritem->rate ?? '' }}">
-                                                        </td>
-                                                        <td>
-                                                            <select class="form-control discount"
-                                                                name="addmore[{{ $ri }}][discount]" style="width:80px">
-                                                                @for($d = 0; $d <= 50; $d++)
-                                                                    <option value="{{ $d }}">{{ $d }} %</option>
-                                                                @endfor
-                                                            </select>
-                                                        </td>
-                                                        <td>
-                                                            <input class="form-control total_amount"
-                                                                name="addmore[{{ $ri }}][amount]" readonly
-                                                                style="width:150px" type="text">
-                                                        </td>
-                                                        <td>
-                                                            <button type="button"
-                                                                class="btn btn-sm btn-danger font-18 ml-2 remove-row"
-                                                                title="Delete" data-repeater-delete>
-                                                                <i class="fa fa-trash"></i>
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                    @empty
-                                                    {{-- Fallback: one empty row when no requisition items --}}
+                                                    {{-- Item grid always opens empty (one blank row).
+                                                         See the requisition reference panel above for pending items. --}}
                                                     <tr>
                                                         <td>
                                                             <input type="text" name="id" class="form-control"
@@ -407,7 +389,6 @@
                                                             </button>
                                                         </td>
                                                     </tr>
-                                                    @endforelse
                                                 <tfoot>
                                                     <tr class="grand-total-row">
                                                         <td colspan="8" class="text-end"><strong>Grand Total:</strong>

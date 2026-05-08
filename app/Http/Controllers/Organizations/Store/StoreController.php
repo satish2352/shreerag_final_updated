@@ -963,19 +963,10 @@ class StoreController extends Controller
                         continue;
                     }
 
-                    // Idempotency: skip if already issued for this part+business_details (prevents double-submit)
-                    $alreadyIssued = ProductionDetails::where('business_details_id', $business_details_id)
-                        ->where('part_item_id', $partItemId)
-                        ->where('material_send_production', 1)
-                        ->where('quantity_minus_status', 'done')
-                        ->where('is_deleted', 0)
-                        ->exists();
-
-                    if ($alreadyIssued) {
-                        continue; // already sent — skip silently
-                    }
-
-                    // Check live stock
+                    // Check live stock — skip row with error if insufficient.
+                    // NOTE: No idempotency/dedup check by part_item_id here. The BOM legitimately
+                    // lists the same part_item_id on multiple rows (different quantities / usages),
+                    // and each submitted grid row must become its own production_details row.
                     $stock = ItemStock::where('part_item_id', $partItemId)
                         ->where('is_active', 1)
                         ->where('is_deleted', 0)
@@ -988,21 +979,14 @@ class StoreController extends Controller
                         continue;
                     }
 
-                    // Find pending row (any pending — including stale send=1 rows) or create new
-                    $detail = ProductionDetails::where('business_details_id', $business_details_id)
-                        ->where('part_item_id', $partItemId)
-                        ->where('quantity_minus_status', 'pending')
-                        ->where('is_deleted', 0)
-                        ->first();
-
-                    if (!$detail) {
-                        $detail = new ProductionDetails();
-                        $detail->business_id         = $production->business_id;
-                        $detail->business_details_id = $business_details_id;
-                        $detail->design_id           = $bap->design_id ?? null;
-                        $detail->production_id       = $production->id;
-                    }
-
+                    // Always INSERT a fresh row — each submitted grid row is an independent
+                    // issuance event. Never upsert or find-or-create by part_item_id because
+                    // doing so would collapse duplicate part_item_id rows into one DB record.
+                    $detail = new ProductionDetails();
+                    $detail->business_id              = $production->business_id;
+                    $detail->business_details_id      = $business_details_id;
+                    $detail->design_id                = $bap->design_id ?? null;
+                    $detail->production_id            = $production->id;
                     $detail->part_item_id             = $partItemId;
                     $detail->quantity                 = $quantity;
                     $detail->unit                     = $unitId;
@@ -1011,14 +995,6 @@ class StoreController extends Controller
                     $detail->quantity_minus_status    = 'done';
                     $detail->material_send_production = 1;
                     $detail->save();
-
-                    // Soft-delete any remaining stale pending rows for same item (duplicates from old buggy saves)
-                    ProductionDetails::where('business_details_id', $business_details_id)
-                        ->where('part_item_id', $partItemId)
-                        ->where('quantity_minus_status', 'pending')
-                        ->where('is_deleted', 0)
-                        ->where('id', '!=', $detail->id)
-                        ->update(['is_deleted' => 1]);
 
                     // Deduct stock
                     $stock->quantity -= $quantity;

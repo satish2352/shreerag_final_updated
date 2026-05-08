@@ -119,6 +119,27 @@
                                                         </button>
                                                         <small class="text-muted ml-2">Review and edit structured BOM line items from the design department.</small>
                                                     </div>
+                                                    {{-- T-2026-035: Yellow exceed warning shown on main form (alert only — textarea is inside the BOM modal).
+                                                         The alert is shown/hidden by the modal's updateExceedUI() JS and pre-rendered
+                                                         server-side when $bom_final_total > business total_amount.
+                                                         The "Reason for Excess Amount" textarea lives exclusively inside the BOM modal. --}}
+                                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-2">
+                                                        @php
+                                                            $bomExceedsOnLoad = isset($bom_final_total) && $bom_final_total > 0
+                                                                && isset($business_details_data) && $business_details_data->total_amount > 0
+                                                                && $bom_final_total > $business_details_data->total_amount;
+                                                            $bomTotalFmt  = number_format($bom_final_total ?? 0, 2);
+                                                            $bizLimitFmt  = number_format($business_details_data->total_amount ?? 0, 2);
+                                                            $availableFmt = number_format(max(0, ($business_details_data->total_amount ?? 0) - ($bom_final_total ?? 0)), 2);
+                                                        @endphp
+                                                        <div id="bomMaterialItemsModalExceedWarning"
+                                                             class="bom-modal-warning-msg"
+                                                             style="{{ $bomExceedsOnLoad ? '' : 'display:none;' }}">
+                                                            <strong><i class="fa fa-exclamation-triangle"></i> Amount Exceeds Business Limit</strong><br>
+                                                            <span id="bomMaterialItemsModalExceedWarningText">@if($bomExceedsOnLoad)BOM Total &#8377;{{ $bomTotalFmt }} exceeds Business Limit &#8377;{{ $bizLimitFmt }}. Available limit: &#8377;{{ $availableFmt }}.@endif</span><br>
+                                                            Saving will automatically send an approval request to the Owner.
+                                                        </div>
+                                                    </div>
                                                     @endif
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 mt-4">
                                                         <label for="total_estimation_amount">Total Estimation Amount <span
@@ -144,16 +165,6 @@
                                                                 class="text-danger">*</span></label>
                                                         <input type="text" class="form-control" id="remark_by_estimation"
                                                             name="remark_by_estimation" >
-                                                    </div>
-                                                    {{-- T-2026-005: Exceed-remark block removed from this form.
-                                                         The exceed flow is now triggered automatically when BOM items are saved
-                                                         in the BOM modal (when Final Total > business limit). The reason textarea
-                                                         has been moved inside the BOM modal. This block is hidden and kept only
-                                                         as a compatibility stub in case any JS references it.
-                                                    --}}
-                                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3" id="exceed_remark_block" style="display:none;">
-                                                        {{-- STUB: exceed flow now handled by BOM modal. This block is intentionally hidden. --}}
-                                                        <input type="hidden" id="exceed_remark" name="exceed_remark" value="">
                                                     </div>
                                                 </div>
                                                 <div class="login-btn-inner">

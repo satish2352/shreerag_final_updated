@@ -352,69 +352,80 @@ class ProductionRepository
                 ];
             }
 
-            // Using distinct to avoid duplicates
-            $dataOutputByid = BusinessApplicationProcesses::leftJoin('production', function ($join) {
-                $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
-            })
-                ->leftJoin('designs', function ($join) {
-                    $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
-                })
-                ->leftJoin('businesses_details', function ($join) {
-                    $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
-                })
-                ->leftJoin('design_revision_for_prod', function ($join) {
-                    $join->on('business_application_processes.business_details_id', '=', 'design_revision_for_prod.business_details_id');
-                })
-                ->leftJoin('purchase_orders', function ($join) {
-                    $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
-                })
-                ->leftJoin('production_details as pd', function ($join) {
-                    $join->on('business_application_processes.business_details_id', '=', 'pd.business_details_id');
-                })
-                ->leftJoin('estimation', function ($join) {
-                    $join->on('business_application_processes.business_details_id', '=', 'estimation.business_details_id');
-                })
+            // ── Query 1: Product header (one row, no production_details join) ──────
+            // Separate from production_details to avoid duplicate-row explosion caused
+            // by 1:many joins (purchase_orders, design_revision_for_prod, etc.).
+            $productDetails = DB::table('businesses_details')
+                ->leftJoin('estimation', 'businesses_details.id', '=', 'estimation.business_details_id')
+                ->leftJoin('designs', 'businesses_details.id', '=', 'designs.business_details_id')
+                ->leftJoin('business_application_processes', 'businesses_details.id', '=', 'business_application_processes.business_details_id')
+                ->where('businesses_details.id', $id)
+                ->where('businesses_details.is_active', 1)
+                ->select(
+                    'businesses_details.id',
+                    'businesses_details.product_name',
+                    'businesses_details.description',
+                    'estimation.total_estimation_amount',
+                    'designs.bom_image',
+                    'designs.design_image',
+                    'business_application_processes.store_material_sent_date'
+                )
+                ->first();
+
+            if (!$productDetails) {
+                return [
+                    'status' => 'error',
+                    'msg' => 'Product not found.'
+                ];
+            }
+
+            // ── Query 2: All production_details rows for this business ────────────
+            // Direct query — no cross-joins that can multiply rows.
+            // Returns EVERY row the store issued (material_send_production=1 /
+            // quantity_minus_status=done) plus any production-dept-added pending rows.
+            $allDetails = DB::table('production_details as pd')
                 ->leftJoin('tbl_unit', 'pd.unit', '=', 'tbl_unit.id')
                 ->leftJoin('tbl_part_item', 'pd.part_item_id', '=', 'tbl_part_item.id')
-                ->where('businesses_details.id', $id)
-                ->where('businesses_details.is_active', true)
+                ->where('pd.business_details_id', $id)
                 ->where('pd.is_deleted', 0)
                 ->whereNotNull('pd.part_item_id')
                 ->where('pd.part_item_id', '!=', '')
                 ->where('pd.quantity', '>', 0)
                 ->select(
-                    'businesses_details.id',
                     'pd.id as pd_id',
-                    'businesses_details.product_name',
-                    'businesses_details.description',
                     'pd.part_item_id',
                     'pd.quantity',
                     'pd.unit',
-                    'tbl_unit.name as unit_name',
                     'pd.business_details_id',
                     'pd.material_send_production',
                     'pd.quantity_minus_status',
                     'pd.basic_rate',
                     'pd.updated_at',
-                    'tbl_part_item.description as part_description',
-                    'designs.bom_image',
-                    'designs.design_image',
-                    'business_application_processes.store_material_sent_date',
-                    'estimation.total_estimation_amount'
+                    'tbl_unit.name as unit_name',
+                    'tbl_part_item.description as part_description'
                 )
-                ->distinct()
                 ->get();
 
-            // Extract product details
-            $productDetails = $dataOutputByid->first();
+            // Split: store-issued rows (green badge) vs production-request rows (orange badge)
+            $storeRows = $allDetails->filter(function ($row) {
+                return $row->material_send_production == 1
+                    || $row->quantity_minus_status === 'done';
+            })->values();
 
-            // Group data by business_details_id
-            $dataGroupedById = $dataOutputByid->groupBy('business_details_id');
+            $prodRows = $allDetails->filter(function ($row) {
+                return $row->material_send_production != 1
+                    && $row->quantity_minus_status !== 'done';
+            })->values();
+
+            // Keep $dataGroupedById for backward-compat with any other blade references.
+            $dataGroupedById = $allDetails->groupBy('business_details_id');
 
             return [
-                'status' => 'success',
-                'productDetails' => $productDetails,
-                'dataGroupedById' => $dataGroupedById
+                'status'          => 'success',
+                'productDetails'  => $productDetails,
+                'dataGroupedById' => $dataGroupedById,
+                'storeRows'       => $storeRows,
+                'prodRows'        => $prodRows,
             ];
         } catch (\Exception $e) {
             // Log the error for debugging
@@ -706,6 +717,13 @@ class ProductionRepository
                 // Mark production record so Store tracking list can see pending material requests
                 ProductionModel::where('business_details_id', $baseDetail->business_details_id)
                     ->update(['store_status_quantity_tracking' => 'incomplete-store']);
+
+                // Notify Store department: production has submitted a tracking material request.
+                // Sets issue_material_send_req_to_store=0 so the Store bell (off_canvas_status=17)
+                // lights up — mirrors the pattern used in issueAvailableMaterials() and
+                // storeShortageRequisition() for other department-to-department notifications.
+                NotificationStatus::where('business_details_id', $baseDetail->business_details_id)
+                    ->update(['off_canvas_status' => 17, 'issue_material_send_req_to_store' => '0']);
 
                 return [
                     'status'  => 'success',

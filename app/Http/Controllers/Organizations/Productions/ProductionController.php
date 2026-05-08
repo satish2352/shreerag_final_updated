@@ -95,9 +95,11 @@ class ProductionController extends Controller
             // $dataOutputUser = User::where('is_active', true)->get();
             $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
             return view('organizations.productions.product.edit-recived-inprocess-production-material', [
-                'productDetails' => $editData['productDetails'],
-                'dataGroupedById' => $editData['dataGroupedById'],
-                'dataOutputPartItem' => $dataOutputPartItem,
+                'productDetails'      => $editData['productDetails'],
+                'dataGroupedById'     => $editData['dataGroupedById'],
+                'storeRows'           => $editData['storeRows'],
+                'prodRows'            => $editData['prodRows'],
+                'dataOutputPartItem'  => $dataOutputPartItem,
                 'dataOutputUnitMaster' => $dataOutputUnitMaster,
                 // 'dataOutputUser'=>$dataOutputUser,
                 'id' => $id

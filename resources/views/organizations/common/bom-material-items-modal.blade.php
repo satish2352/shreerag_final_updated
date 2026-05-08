@@ -371,22 +371,32 @@
                 </div>
                 @endif
 
-                @if($isEditMode && $mode === 'estimation_edit')
-                {{-- Exceed warning banner: only visible on estimation_edit mode when Final Total > business limit --}}
-                <div class="bom-modal-warning-msg" id="{{ $modalId }}ExceedWarning" style="display:none;">
+                @if($mode === 'estimation_edit')
+                {{-- T-2026-035: Exceed warning + reason textarea inside the modal.
+                     Alert uses InModal suffix (bomMaterialItemsModalExceedWarningInModal) to avoid duplicate-ID
+                     collision with the main-form alert (#bomMaterialItemsModalExceedWarning).
+                     Textarea uses canonical IDs (bomMaterialItemsModalExceedReasonBlock / bomMaterialItemsModalExceedReason /
+                     bomMaterialItemsModalExceedReasonError) — these match the JS selectors (EXCEED_REASON_BLK, EXCEED_REASON,
+                     EXCEED_REASON_ERR) so the Save handler and updateExceedUI() operate directly on the modal textarea.
+                     No syncExceedToModal() needed — updateExceedUI() controls both the main-form alert and the modal alert directly. --}}
+                <div id="bomMaterialItemsModalExceedWarningInModal"
+                     class="bom-modal-warning-msg mt-2"
+                     style="display:none;">
                     <strong><i class="fa fa-exclamation-triangle"></i> Amount Exceeds Business Limit</strong><br>
-                    <span id="{{ $modalId }}ExceedWarningText"></span><br>
+                    <span id="bomMaterialItemsModalExceedWarningTextInModal"></span><br>
                     Saving will automatically send an approval request to the Owner.
                 </div>
-                <div class="form-group mt-2" id="{{ $modalId }}ExceedReasonBlock" style="display:none;">
-                    <label for="{{ $modalId }}ExceedReason">
-                        Reason for Exceed Amount <span class="text-danger">*</span>
+                <div class="form-group mt-2" id="bomMaterialItemsModalExceedReasonBlock"
+                     style="display:none;">
+                    <label for="bomMaterialItemsModalExceedReason">
+                        Reason for Excess Amount <span class="text-danger">*</span>
                         <small class="text-muted">(required when total exceeds business limit)</small>
                     </label>
-                    <textarea class="form-control" id="{{ $modalId }}ExceedReason"
-                        rows="2" placeholder="Explain why the BOM total exceeds the business limit..."
+                    <textarea class="form-control" id="bomMaterialItemsModalExceedReason"
+                        rows="2"
+                        placeholder="Explain why the BOM total exceeds the business limit..."
                         maxlength="1000"></textarea>
-                    <span class="text-danger" id="{{ $modalId }}ExceedReasonError" style="display:none;">
+                    <span class="text-danger" id="bomMaterialItemsModalExceedReasonError" style="display:none;">
                         Please provide a reason for the exceeded amount.
                     </span>
                 </div>
@@ -541,7 +551,8 @@
 
     // ----------------------------------------------------------------
     // EXCEED WARNING UI (estimation_edit only)
-    // Shows/hides the exceed warning banner and reason textarea.
+    // Shows/hides the exceed warning banners (main form + modal) and reason textarea (modal only).
+    // T-2026-035: textarea is now exclusively inside the modal; main form shows alert only.
     // ----------------------------------------------------------------
     function updateExceedUI(finalTotal) {
         if (!isEstimationEdit || _businessLimit === null) return;
@@ -550,11 +561,20 @@
             var warningText = 'Final Total ' + fmtInr(finalTotal)
                 + ' exceeds Business Limit ' + fmtInr(_businessLimit)
                 + ' (available limit: ' + fmtInr(_businessLimit) + ').';
-            $(EXCEED_WARN_TEXT).text(warningText);
+            // Main form alert
+            $('#bomMaterialItemsModalExceedWarningText').text(warningText);
             $(EXCEED_WARNING).show();
+            // Modal alert (InModal suffix to avoid duplicate ID with main form alert)
+            $('#bomMaterialItemsModalExceedWarningTextInModal').text(warningText);
+            $('#bomMaterialItemsModalExceedWarningInModal').show();
+            // Reason textarea block (lives inside the modal, uses canonical IDs)
             $(EXCEED_REASON_BLK).show();
         } else {
+            // Main form alert
             $(EXCEED_WARNING).hide();
+            // Modal alert
+            $('#bomMaterialItemsModalExceedWarningInModal').hide();
+            // Reason block + error (modal)
             $(EXCEED_REASON_BLK).hide();
             $(EXCEED_REASON_ERR).hide();
         }
@@ -867,6 +887,7 @@
         // Reset exceed UI and delta line
         if (isEstimationEdit) {
             $(EXCEED_WARNING).hide();
+            $('#bomMaterialItemsModalExceedWarningInModal').hide();
             $(EXCEED_REASON_BLK).hide();
             $(EXCEED_REASON).val('');
             $(EXCEED_REASON_ERR).hide();
@@ -1412,6 +1433,7 @@
         // Reset exceed UI and delta line
         if (isEstimationEdit) {
             $(EXCEED_WARNING).hide();
+            $('#bomMaterialItemsModalExceedWarningInModal').hide();
             $(EXCEED_REASON_BLK).hide();
             $(EXCEED_REASON).val('');
             $(EXCEED_REASON_ERR).hide();
