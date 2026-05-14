@@ -294,6 +294,14 @@
                             <span class="bom-ctx-label">TOTAL QTY:</span>
                             <span id="{{ $modalId }}CtxTotalQty"></span>
                         </div>
+                        <div class="bom-ctx-cell">
+                            <span class="bom-ctx-label">TROLLEY QTY:</span>
+                            @if($isEditMode)
+                                <input type="number" id="{{ $modalId }}TrolleyQty" min="1" max="9999" step="1" value="1" style="width:60px; display:inline-block;">
+                            @else
+                                <span id="{{ $modalId }}TrolleyQty">1</span>
+                            @endif
+                        </div>
                     </div>
                 </div>
 
@@ -307,8 +315,10 @@
                                 <th style="width:110px;">Quantity <span class="text-danger">*</span></th>
                                 <th style="width:130px;">Total in mm</th>
                                 <th style="width:140px;">Mtr for 01 Nos Trolley</th>
+                                <th style="width:140px;">Mtr/Nos for N Trolleys</th>
                                 <th style="width:120px;">Rate <span class="text-danger">*</span></th>
                                 <th style="width:130px;">Unit <span class="text-danger">*</span></th>
+                                <th style="width:110px;">Total</th>
                                 @if($isEditMode)
                                     <th style="width:60px;">Action</th>
                                 @endif
@@ -317,7 +327,7 @@
                         <tbody id="{{ $modalId }}Tbody">
                             {{-- Rows are rendered/managed by JS --}}
                             <tr id="{{ $modalId }}EmptyRow">
-                                <td colspan="{{ $isEditMode ? 9 : 8 }}" class="text-center text-muted">
+                                <td colspan="{{ $isEditMode ? 11 : 10 }}" class="text-center text-muted">
                                     No BOM items found.
                                 </td>
                             </tr>
@@ -329,8 +339,13 @@
                                 <td id="{{ $modalId }}TotalQty" class="text-center">0</td>
                                 <td id="{{ $modalId }}TotalInMm" class="text-center">0</td>
                                 <td id="{{ $modalId }}TotalMtrTrolley" class="text-center">0</td>
+                                <td></td>{{-- Mtr/Nos for N Trolleys — no aggregate sum --}}
                                 <td></td>{{-- Rate column — no sum shown in totals row --}}
-                                <td colspan="{{ $isEditMode ? 2 : 1 }}"></td>
+                                <td></td>{{-- Unit column — no sum shown in totals row --}}
+                                <td id="{{ $modalId }}TotalRowAmount" style="font-weight:bold;">₹0.00</td>{{-- Total (Rate × Qty) sum --}}
+                                @if($isEditMode)
+                                    <td></td>{{-- Action column --}}
+                                @endif
                             </tr>
                         </tfoot>
                     </table>
@@ -455,6 +470,7 @@
     var TOTAL_QTY         = '#{{ $modalId }}TotalQty';
     var TOTAL_IN_MM       = '#{{ $modalId }}TotalInMm';
     var TOTAL_MTR_TROLLEY = '#{{ $modalId }}TotalMtrTrolley';
+    var TOTAL_ROW_AMOUNT  = '#{{ $modalId }}TotalRowAmount';
 
     // Estimation amount selectors
     var EST_AMT_BLOCK     = '#{{ $modalId }}EstimationAmountBlock';
@@ -505,30 +521,13 @@
         var totalMtrTrolley = 0;
         var finalTotal      = 0;
 
-        $(TBODY_ID).find('tr[data-row-idx]').each(function () {
-            var $row = $(this);
-            // Skip rows locally marked for deletion (they are removed from DOM immediately,
-            // but this guard is belt-and-suspenders)
-            if ($row.data('deleted')) return;
-
-            if (isEditMode) {
-                var qty  = parseFloat($row.find('.bom-quantity').val())    || 0;
-                var rate = parseFloat($row.find('.bom-rate').val())         || 0;
-                totalQty        += qty;
-                totalInMm       += parseFloat($row.find('.bom-total-mm').val())    || 0;
-                totalMtrTrolley += parseFloat($row.find('.bom-mtr-trolley').val()) || 0;
-                finalTotal      += rate * qty;
-            } else {
-                // view_only: read from td text content (set in buildRow)
-                // Column order: Sr No(0) | Product Desc(1) | Length(2) | Quantity(3) | Total in mm(4) | Mtr(5) | Rate(6) | Unit(7)
-                var qty  = parseFloat($row.find('td').eq(3).text()) || 0;
-                var rate = parseFloat($row.find('td').eq(6).text()) || 0;
-                totalQty        += qty;
-                totalInMm       += parseFloat($row.find('td').eq(4).text()) || 0;
-                totalMtrTrolley += parseFloat($row.find('td').eq(5).text()) || 0;
-                finalTotal      += rate * qty;
-            }
-        });
+        // Read current trolley quantity from modal header field (edit: input; view: span)
+        @if($isEditMode)
+        var trolleyQty = parseInt($('#{{ $modalId }}TrolleyQty').val(), 10) || 1;
+        @else
+        var trolleyQty = parseInt($('#{{ $modalId }}TrolleyQty').text(), 10) || 1;
+        @endif
+        if (trolleyQty < 1) trolleyQty = 1;
 
         // Format: strip trailing zeros but keep at most 3 decimal places
         function fmt(n) {
@@ -537,9 +536,47 @@
             return s.replace(/\.?0+$/, '');
         }
 
+        $(TBODY_ID).find('tr[data-row-idx]').each(function () {
+            var $row = $(this);
+            // Skip rows locally marked for deletion (they are removed from DOM immediately,
+            // but this guard is belt-and-suspenders)
+            if ($row.data('deleted')) return;
+
+            if (isEditMode) {
+                var qty      = parseFloat($row.find('.bom-quantity').val())    || 0;
+                var rate     = parseFloat($row.find('.bom-rate').val())         || 0;
+                var mtr      = parseFloat($row.find('.bom-mtr-trolley').val()) || 0;
+                var unitName = $row.find('.bom-unit-select option:selected').text();
+                var nTrolley = computeNTrolleyDisplay(qty, mtr, unitName, trolleyQty);
+                var rowTotal = computeRowTotal(rate, qty, mtr, unitName, trolleyQty);
+                totalQty        += qty;
+                totalInMm       += parseFloat($row.find('.bom-total-mm').val())    || 0;
+                totalMtrTrolley += mtr;
+                finalTotal      += rowTotal;
+                $row.find('.bom-mtr-n-trolley').val(fmt(nTrolley));
+                $row.find('.bom-row-total').text(fmtInr(rowTotal));
+            } else {
+                // view_only: read from td text content (set in buildRow)
+                // Column order: Sr No(0) | Desc(1) | Length(2) | Qty(3) | TotalMm(4) | Mtr(5) | NTrolley(6) | Rate(7) | Unit(8) | Total(9)
+                var qty      = parseFloat($row.find('td').eq(3).text()) || 0;
+                var rate     = parseFloat($row.find('td').eq(7).text()) || 0;
+                var mtr      = parseFloat($row.find('td').eq(5).text()) || 0;
+                var unitName = $row.find('td').eq(8).text();
+                var nTrolley = computeNTrolleyDisplay(qty, mtr, unitName, trolleyQty);
+                var rowTotal = computeRowTotal(rate, qty, mtr, unitName, trolleyQty);
+                totalQty        += qty;
+                totalInMm       += parseFloat($row.find('td').eq(4).text()) || 0;
+                totalMtrTrolley += mtr;
+                finalTotal      += rowTotal;
+                $row.find('.bom-mtr-n-trolley').text(fmt(nTrolley));
+                $row.find('.bom-row-total').text(fmtInr(rowTotal));
+            }
+        });
+
         $(TOTAL_QTY).text(fmt(totalQty));
         $(TOTAL_IN_MM).text(fmt(totalInMm));
         $(TOTAL_MTR_TROLLEY).text(fmt(totalMtrTrolley));
+        $(TOTAL_ROW_AMOUNT).text(fmtInr(finalTotal));
         $(FINAL_TOTAL_VAL).text(fmtInr(finalTotal));
 
         // Update exceed warning banner and delta line (estimation_edit only)
@@ -609,6 +646,32 @@
     }
 
     // ----------------------------------------------------------------
+    // UNIT-AWARE ROW TOTAL
+    // Piece-based units (NOS, PCS, SET, EACH): row total = Rate × Quantity.
+    // All other units (METER, FEET, MM, INCH, KG, LITER, etc.): row total = Rate × Mtr-for-01-Nos-Trolley.
+    // ----------------------------------------------------------------
+    var PIECE_UNITS = ['NOS', 'PCS', 'SET', 'EACH'];
+    function isPieceUnit(unitName) {
+        if (!unitName) return false;
+        return PIECE_UNITS.indexOf(String(unitName).trim().toUpperCase()) !== -1;
+    }
+    function computeNTrolleyDisplay(qty, mtr, unitName, trolleyQty) {
+        var t = parseFloat(trolleyQty) || 1;
+        var baseMultiplier = isPieceUnit(unitName)
+            ? (parseFloat(qty) || 0)
+            : (parseFloat(mtr) || 0);
+        return baseMultiplier * t;
+    }
+    function computeRowTotal(rate, qty, mtr, unitName, trolleyQty) {
+        var r = parseFloat(rate) || 0;
+        var t = parseFloat(trolleyQty) || 1;
+        var baseMultiplier = isPieceUnit(unitName)
+            ? (parseFloat(qty) || 0)
+            : (parseFloat(mtr) || 0);
+        return r * baseMultiplier * t;
+    }
+
+    // ----------------------------------------------------------------
     // POPULATE CONTEXT HEADER FROM API response.context
     // Also stores business_limit for exceed detection (estimation_edit only).
     // ----------------------------------------------------------------
@@ -620,6 +683,14 @@
         $(CTX_CUSTOMER).text(context.customer_name || '');
         $(CTX_DATE).text(context.date || '');
         $(CTX_TOTAL_QTY).text(context.total_qty !== null && context.total_qty !== undefined ? context.total_qty : '');
+        // Set trolley qty from context (parsed from designs.trolley_qty; default 1)
+        var trolQty = parseInt(context.trolley_qty, 10) || 1;
+        if (trolQty < 1) trolQty = 1;
+        @if($isEditMode)
+        $('#{{ $modalId }}TrolleyQty').val(trolQty);
+        @else
+        $('#{{ $modalId }}TrolleyQty').text(trolQty);
+        @endif
         $(CTX_HEADER).show();
 
         // Estimation amount
@@ -785,6 +856,10 @@
     // ----------------------------------------------------------------
     // BUILD A TABLE ROW
     // ----------------------------------------------------------------
+    // Format n (float) to at most 3 decimal places, stripping trailing zeros.
+    // Shared between buildRow branches and recalculateTotals.
+    function fmtN(n) { if (n === 0) return '0'; var s = (+n).toFixed(3); return s.replace(/\.?0+$/, ''); }
+
     function buildRow(item) {
         rowCounter++;
         var idx         = rowCounter;
@@ -809,7 +884,15 @@
 
         if (!isEditMode) {
             // View-only row: show plain text
-            // Column order: Sr No | Product Desc | Length | Quantity | Total in mm | Mtr | Rate | Unit
+            // Column order: Sr No | Desc | Length | Qty | TotalMm | Mtr | NTrolley | Rate | Unit | Total
+            @if($isEditMode)
+            var _buildTrolleyQty = parseInt($('#{{ $modalId }}TrolleyQty').val(), 10) || 1;
+            @else
+            var _buildTrolleyQty = parseInt($('#{{ $modalId }}TrolleyQty').text(), 10) || 1;
+            @endif
+            if (_buildTrolleyQty < 1) _buildTrolleyQty = 1;
+            var nTrolleyView = computeNTrolleyDisplay(item.quantity, item.mtr_for_01_nos_trolley, unitText, _buildTrolleyQty);
+            var rowTotalView = fmtInr(computeRowTotal(rateVal, item.quantity, item.mtr_for_01_nos_trolley, unitText, _buildTrolleyQty));
             return '<tr data-row-idx="' + idx + '"' + rowCls + '>' +
                 '<td>' + escHtml(srNo) + '</td>' +
                 '<td>' + escHtml(partDesc) +
@@ -819,8 +902,10 @@
                 '<td>' + escHtml(item.quantity || '') + '</td>' +
                 '<td>' + escHtml(item.total_in_mm !== null && item.total_in_mm !== undefined ? item.total_in_mm : '') + '</td>' +
                 '<td>' + escHtml(item.mtr_for_01_nos_trolley !== null && item.mtr_for_01_nos_trolley !== undefined ? item.mtr_for_01_nos_trolley : '') + '</td>' +
+                '<td class="bom-mtr-n-trolley">' + fmtN(nTrolleyView) + '</td>' +
                 '<td>' + escHtml(rateVal) + '</td>' +
                 '<td>' + escHtml(unitText) + '</td>' +
+                '<td class="bom-row-total">' + rowTotalView + '</td>' +
                 '</tr>';
         }
 
@@ -841,7 +926,11 @@
         // Build Unit select
         var unitSelectHtml = buildUnitSelect(unitId, false);
 
-        // Edit mode row — includes Rate input
+        // Edit mode row — includes Rate input. recalculateTotals() fires after buildRow()
+        // so the bom-mtr-n-trolley cell is immediately overwritten with the correct value.
+        var _editTrolleyQty = parseInt($('#{{ $modalId }}TrolleyQty').val(), 10) || 1;
+        if (_editTrolleyQty < 1) _editTrolleyQty = 1;
+        var rowTotalEdit = fmtInr(computeRowTotal(rateVal, item.quantity, item.mtr_for_01_nos_trolley, unitText, _editTrolleyQty));
         return '<tr data-row-idx="' + idx + '" data-item-id="' + escHtml(itemId) + '"' + rowCls + '>' +
             '<td><input type="number" class="form-control form-control-sm bom-serial-no" value="' + escHtml(srNo) + '" min="1" style="width:60px;"></td>' +
             '<td>' + partDropHtml + '</td>' +
@@ -849,8 +938,10 @@
             '<td><input type="number" class="form-control form-control-sm bom-quantity" value="' + escHtml(item.quantity || '') + '" step="0.001" min="0.001" placeholder="0.000" required></td>' +
             '<td><input type="number" class="form-control form-control-sm bom-total-mm" value="' + escHtml(item.total_in_mm !== null && item.total_in_mm !== undefined ? item.total_in_mm : '') + '" step="0.001" placeholder="0.000"></td>' +
             '<td><input type="number" class="form-control form-control-sm bom-mtr-trolley" value="' + escHtml(item.mtr_for_01_nos_trolley !== null && item.mtr_for_01_nos_trolley !== undefined ? item.mtr_for_01_nos_trolley : '') + '" step="0.001" placeholder="0.000"></td>' +
+            '<td><input type="text" class="form-control form-control-sm bom-mtr-n-trolley" value="0.000" readonly tabindex="-1" style="background:#f3f4f6;cursor:not-allowed;"></td>' +
             '<td><input type="number" class="form-control form-control-sm bom-rate" value="' + escHtml(rateVal) + '" step="0.001" min="0" placeholder="0.000"></td>' +
             '<td>' + unitSelectHtml + '</td>' +
+            '<td class="bom-row-total">' + rowTotalEdit + '</td>' +
             '<td><button type="button" class="btn btn-danger btn-sm bom-delete-row" title="Remove row"><i class="fa fa-trash"></i></button></td>' +
             '</tr>';
     }
@@ -915,7 +1006,7 @@
                             $(TBODY_ID).html(html);
                         } else {
                             $(TBODY_ID).html(
-                                '<tr><td colspan="{{ $isEditMode ? 9 : 8 }}" class="text-center text-muted">No BOM items found. Use "Add More" to add rows.</td></tr>'
+                                '<tr><td colspan="{{ $isEditMode ? 11 : 10 }}" class="text-center text-muted">No BOM items found. Use "Add More" to add rows.</td></tr>'
                             );
                         }
 
@@ -1046,16 +1137,25 @@
 
     // ----------------------------------------------------------------
     // LIVE RECALC: triggered by qty/total_in_mm/mtr/rate field input/change
+    // Also triggered by unit dropdown change (unit-aware formula depends on unit).
     // ----------------------------------------------------------------
     $(document).on('input change',
         MODAL_ID + ' .bom-quantity, ' +
         MODAL_ID + ' .bom-total-mm, ' +
         MODAL_ID + ' .bom-mtr-trolley, ' +
-        MODAL_ID + ' .bom-rate',
+        MODAL_ID + ' .bom-rate, ' +
+        MODAL_ID + ' .bom-unit-select',
         function () {
             recalculateTotals();
         }
     );
+
+    @if($isEditMode)
+    // Trolley qty header field: live-recalc all rows when edited
+    $(document).on('input change', '#{{ $modalId }}TrolleyQty', function () {
+        recalculateTotals();
+    });
+    @endif
 
     // ----------------------------------------------------------------
     // ADD MORE ROW
@@ -1090,7 +1190,7 @@
         // If no rows left, show empty state
         if ($(TBODY_ID).find('tr[data-row-idx]').length === 0) {
             $(TBODY_ID).html(
-                '<tr><td colspan="{{ $isEditMode ? 9 : 8 }}" class="text-center text-muted">No BOM items. Use "Add More" to add rows.</td></tr>'
+                '<tr><td colspan="{{ $isEditMode ? 11 : 10 }}" class="text-center text-muted">No BOM items. Use "Add More" to add rows.</td></tr>'
             );
         }
 
@@ -1249,11 +1349,16 @@
         var exceedReason = null;
         if (isEstimationEdit && _businessLimit !== null) {
             // Compute current final total from DOM (authoritative pre-save value)
+            // Uses the same unit-aware formula as recalculateTotals() — includes trolley_qty.
             var currentFinalTotal = 0;
+            var _preSaveTrolleyQty = parseInt($('#{{ $modalId }}TrolleyQty').val(), 10) || 1;
+            if (_preSaveTrolleyQty < 1) _preSaveTrolleyQty = 1;
             $(TBODY_ID).find('tr[data-row-idx]').each(function () {
-                var qty  = parseFloat($(this).find('.bom-quantity').val()) || 0;
-                var rate = parseFloat($(this).find('.bom-rate').val())     || 0;
-                currentFinalTotal += rate * qty;
+                var qty      = parseFloat($(this).find('.bom-quantity').val()) || 0;
+                var rate     = parseFloat($(this).find('.bom-rate').val())     || 0;
+                var mtr      = parseFloat($(this).find('.bom-mtr-trolley').val()) || 0;
+                var unitName = $(this).find('.bom-unit-select option:selected').text();
+                currentFinalTotal += computeRowTotal(rate, qty, mtr, unitName, _preSaveTrolleyQty);
             });
             if (currentFinalTotal > _businessLimit) {
                 var reason = $.trim($(EXCEED_REASON).val());
@@ -1274,6 +1379,7 @@
             design_id:           designId,
             items:               items,
             deleted_ids:         deletedIds,
+            trolley_qty:         parseInt($('#{{ $modalId }}TrolleyQty').val(), 10) || 1,
         };
 
         // Include exceed_reason in payload when provided

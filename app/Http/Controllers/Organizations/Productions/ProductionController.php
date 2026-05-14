@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\Validator;
 use Exception;
 use App\Models\{
     PartItem,
-    UnitMaster
+    UnitMaster,
+    DesignModel
 };
 
 class ProductionController extends Controller
@@ -94,6 +95,13 @@ class ProductionController extends Controller
             $dataOutputPartItem = PartItem::where('is_active', true)->get();
             // $dataOutputUser = User::where('is_active', true)->get();
             $dataOutputUnitMaster = UnitMaster::where('is_active', true)->get();
+
+            // Fetch trolley_qty for this order from designs table (default 1 if not set)
+            $trolleyQty = (int) (DesignModel::where('business_details_id', $id)
+                ->where('is_deleted', 0)
+                ->where('is_active', 1)
+                ->value('trolley_qty') ?: 1);
+
             return view('organizations.productions.product.edit-recived-inprocess-production-material', [
                 'productDetails'      => $editData['productDetails'],
                 'dataGroupedById'     => $editData['dataGroupedById'],
@@ -102,7 +110,8 @@ class ProductionController extends Controller
                 'dataOutputPartItem'  => $dataOutputPartItem,
                 'dataOutputUnitMaster' => $dataOutputUnitMaster,
                 // 'dataOutputUser'=>$dataOutputUser,
-                'id' => $id
+                'id'          => $id,
+                'trolleyQty'  => $trolleyQty,
             ]);
         } catch (\Exception $e) {
             return redirect()->back()->with(['status' => 'error', 'msg' => 'Something went wrong. Please try again.']);

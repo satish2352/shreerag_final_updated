@@ -223,26 +223,41 @@
                                 @if($newRequisitionItems->count() > 0)
                                 <div class="row mb-3">
                                     <div class="col-md-12">
-                                        {{-- Bootstrap 4 accordion: open by default (show class), collapsible via header click --}}
+                                        {{-- Bootstrap 4 accordion: COLLAPSED by default; user clicks header to expand --}}
                                         <div style="border:1px solid #17a2b8; border-radius:6px; overflow:hidden;">
                                             <div id="reqRefPanelHeading"
                                                  style="background:#17a2b8; padding:10px 16px; cursor:pointer;"
                                                  data-toggle="collapse"
                                                  data-target="#reqRefPanelBody"
-                                                 aria-expanded="true"
+                                                 aria-expanded="false"
                                                  aria-controls="reqRefPanelBody">
                                                 <strong style="color:#fff;">
                                                     <i class="fa fa-info-circle"></i>
                                                     Requisition Items &mdash; Not Yet Ordered ({{ $newRequisitionItems->count() }} item(s) &mdash; add manually below)
                                                 </strong>
                                                 <span class="float-right" style="color:#fff;">
-                                                    <i class="fa fa-chevron-up req-ref-chevron"></i>
+                                                    <i class="fa fa-chevron-down req-ref-chevron"></i>
                                                 </span>
                                             </div>
                                             <div id="reqRefPanelBody"
-                                                 class="collapse show"
+                                                 class="collapse"
                                                  aria-labelledby="reqRefPanelHeading">
                                                 <div style="background:#e8f4fd; padding:12px 16px;">
+                                                    @php
+                                                        // Helper closures for the trolley columns. Piece-units (NOS / PCS /
+                                                        // SET / EACH) multiply quantity × trolley_qty; other units multiply
+                                                        // mtr_for_01_nos_trolley × trolley_qty. Matches the convention used
+                                                        // on the store BOM-inventory-check screen.
+                                                        $PIECE_UNITS_PO = ['NOS', 'PCS', 'SET', 'EACH'];
+                                                        $computeMtrN_PO = function ($mtr, $qty, $unitName, $trolleyQty) use ($PIECE_UNITS_PO) {
+                                                            $t = (int) ($trolleyQty ?: 1);
+                                                            $isPiece = in_array(strtoupper(trim((string) $unitName)), $PIECE_UNITS_PO, true);
+                                                            if ($isPiece) return (float) ($qty ?? 0) * $t;
+                                                            if ($mtr === null || $mtr === '') return null;
+                                                            return (float) $mtr * $t;
+                                                        };
+                                                        $fmt_PO = fn($n) => ($n === null || $n === '') ? '—' : rtrim(rtrim(number_format((float) $n, 3, '.', ''), '0'), '.');
+                                                    @endphp
                                                     <table class="table table-sm table-bordered mt-1 mb-0" style="background:#fff;">
                                                         <thead style="background:#17a2b8; color:#fff;">
                                                             <tr>
@@ -250,16 +265,25 @@
                                                                 <th>Product Description</th>
                                                                 <th>Shortage Qty</th>
                                                                 <th>Unit</th>
+                                                                <th>Mtr for 01 Nos Trolley</th>
+                                                                <th>Mtr/Nos for {{ $trolleyQty }} Trolley(s)</th>
                                                                 <th>Rate</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             @foreach($newRequisitionItems as $pi => $pitem)
+                                                            @php
+                                                                $unitNamePO = optional(\App\Models\UnitMaster::find($pitem->unit_id))->name;
+                                                                $mtr1PO = $pitem->mtr_for_01_nos_trolley ?? null;
+                                                                $mtrNPO = $computeMtrN_PO($mtr1PO, $pitem->shortage_quantity ?? null, $unitNamePO, $trolleyQty);
+                                                            @endphp
                                                             <tr>
                                                                 <td>{{ $pi + 1 }}</td>
                                                                 <td>{{ $pitem->product_description ?? optional($pitem->partItem)->description ?? '—' }}</td>
                                                                 <td>{{ number_format((float)$pitem->shortage_quantity, 3) }}</td>
-                                                                <td>{{ optional(\App\Models\UnitMaster::find($pitem->unit_id))->name ?? $pitem->unit_id ?? '—' }}</td>
+                                                                <td>{{ $unitNamePO ?? $pitem->unit_id ?? '—' }}</td>
+                                                                <td>{{ $fmt_PO($mtr1PO) }}</td>
+                                                                <td>{{ $fmt_PO($mtrNPO) }}</td>
                                                                 <td>{{ $pitem->rate !== null ? number_format((float)$pitem->rate, 3) : '—' }}</td>
                                                             </tr>
                                                             @endforeach

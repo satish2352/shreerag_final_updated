@@ -1,5 +1,19 @@
 @extends('admin.layouts.master')
 @section('content')
+@php
+    // Trolley column helpers — mirrors bom-inventory-check.blade.php pattern (T-2026-043/T-2026-044).
+    $PIECE_UNITS = ['NOS', 'PCS', 'SET', 'EACH'];
+    $computeMtrN = function ($mtr, $qty, $unitName, $trolleyQty) use ($PIECE_UNITS) {
+        $t = (int) ($trolleyQty ?: 1);
+        $isPiece = in_array(strtoupper(trim((string) $unitName)), $PIECE_UNITS, true);
+        if ($isPiece) {
+            return (float) ($qty ?? 0) * $t;
+        }
+        if ($mtr === null || $mtr === '') return null;
+        return (float) $mtr * $t;
+    };
+    $fmt = fn($n) => ($n === null || $n === '') ? '—' : rtrim(rtrim(number_format((float) $n, 3, '.', ''), '0'), '.');
+@endphp
     <style>
         label {
             margin-top: 20px;
@@ -189,6 +203,8 @@
                                                             <th>Basic Rate</th>
                                                             <th>Quantity</th>
                                                             <th>Unit</th>
+                                                            <th>Mtr for 01 Nos Trolley</th>
+                                                            <th>Mtr/Nos for {{ $trolleyQty }} Trolley(s)</th>
                                                             <th>Status</th>
                                                             <th>Received</th>
                                                             <th>
@@ -246,13 +262,19 @@
                                                                         value="{{ ($sitem->basic_rate ?? 0) * ($sitem->quantity ?? 0) }}">
                                                                 </td>
                                                                 <td>
+                                                                    {{-- Store-received rows: Quantity is set by Store and not editable here. --}}
                                                                     <input class="form-control quantity"
                                                                         name="addmore[{{ $si }}][quantity]"
                                                                         type="number" step="any"
-                                                                        value="{{ $sitem->quantity ?? '' }}">
+                                                                        value="{{ $sitem->quantity ?? '' }}"
+                                                                        readonly
+                                                                        style="background:#e9ecef;cursor:not-allowed;">
                                                                 </td>
                                                                 <td>
-                                                                    <select class="form-control" name="addmore[{{ $si }}][unit]">
+                                                                    {{-- Store-received rows: Unit is set by Store. Disable the select but
+                                                                         keep the value posted via a hidden input under the same name. --}}
+                                                                    <select class="form-control" disabled
+                                                                            style="background:#e9ecef;cursor:not-allowed;">
                                                                         <option value="">Select Unit</option>
                                                                         @foreach ($dataOutputUnitMaster as $unit)
                                                                             <option value="{{ $unit->id }}"
@@ -261,7 +283,16 @@
                                                                             </option>
                                                                         @endforeach
                                                                     </select>
+                                                                    <input type="hidden"
+                                                                        name="addmore[{{ $si }}][unit]"
+                                                                        value="{{ $sitem->unit ?? '' }}">
                                                                 </td>
+                                                                @php
+                                                                    $mtr1S = $sitem->mtr_for_01_nos_trolley ?? null;
+                                                                    $mtrNS = $computeMtrN($mtr1S, $sitem->quantity ?? null, $sitem->unit_name ?? null, $trolleyQty);
+                                                                @endphp
+                                                                <td style="vertical-align:middle; white-space:nowrap;">{{ $fmt($mtr1S) }}</td>
+                                                                <td style="vertical-align:middle; white-space:nowrap;">{{ $fmt($mtrNS) }}</td>
                                                                 <td style="vertical-align:middle;">
                                                                     <span class="src-badge src-badge-store">Received from Store</span>
                                                                     <input type="hidden"
@@ -341,6 +372,24 @@
                                                                         @endforeach
                                                                     </select>
                                                                 </td>
+                                                                @php
+                                                                    $mtr1P = $pitem->mtr_for_01_nos_trolley ?? null;
+                                                                    $mtrNP = $computeMtrN($mtr1P, $pitem->quantity ?? null, $pitem->unit_name ?? null, $trolleyQty);
+                                                                @endphp
+                                                                <td style="vertical-align:middle;">
+                                                                    <input type="number" class="form-control prod-mtr1"
+                                                                        name="addmore[{{ $pIdx }}][mtr_for_01_nos_trolley]"
+                                                                        value="{{ $mtr1P !== null ? (float) $mtr1P : '' }}"
+                                                                        step="any" min="0" placeholder="0.000"
+                                                                        data-trolley-qty="{{ (int) $trolleyQty }}"
+                                                                        style="min-width:90px;">
+                                                                </td>
+                                                                <td style="vertical-align:middle;">
+                                                                    <input type="text" class="form-control prod-mtrN"
+                                                                        value="{{ $mtrNP !== null ? rtrim(rtrim(number_format((float) $mtrNP, 3, '.', ''), '0'), '.') : '' }}"
+                                                                        readonly tabindex="-1"
+                                                                        style="background:#f3f4f6;cursor:not-allowed;min-width:90px;">
+                                                                </td>
                                                                 <td style="vertical-align:middle;">
                                                                     <span class="src-badge src-badge-prod">Production Request</span>
                                                                     <input type="hidden"
@@ -403,6 +452,8 @@
                                                                         @endforeach
                                                                     </select>
                                                                 </td>
+                                                                <td style="vertical-align:middle;">—</td>
+                                                                <td style="vertical-align:middle;">—</td>
                                                                 <td style="vertical-align:middle;">
                                                                     <span class="src-badge src-badge-prod">Production Request</span>
                                                                     <input type="hidden"
@@ -429,7 +480,7 @@
                                                                 <input type="text" id="grand_total"
                                                                     class="form-control" readonly value="0">
                                                             </td>
-                                                            <td colspan="2"></td>
+                                                            <td colspan="5"></td>
                                                         </tr>
                                                     </tfoot>
 
@@ -589,6 +640,18 @@
                     </select>
                 </td>
                 <td style="vertical-align:middle;">
+                    <input type="number" class="form-control prod-mtr1"
+                        name="addmore[${rowCount}][mtr_for_01_nos_trolley]"
+                        value="" step="any" min="0" placeholder="0.000"
+                        data-trolley-qty="{{ (int) $trolleyQty }}"
+                        style="min-width:90px;">
+                </td>
+                <td style="vertical-align:middle;">
+                    <input type="text" class="form-control prod-mtrN" value=""
+                        readonly tabindex="-1"
+                        style="background:#f3f4f6;cursor:not-allowed;min-width:90px;">
+                </td>
+                <td style="vertical-align:middle;">
                     <span class="src-badge src-badge-prod">Production Request</span>
                     <input type="hidden" name="addmore[${rowCount}][material_send_production]" value="0">
                 </td>
@@ -605,6 +668,20 @@
                 // Remove row
                 table.on("click", ".remove-row", function() {
                     $(this).closest("tr").remove();
+                });
+
+                // ========================
+                //  Live recompute: Mtr/Nos for N Trolleys = Mtr for 01 Nos Trolley × trolley_qty.
+                //  Fires for both Blade-prefilled production-request rows AND JS-added rows.
+                // ========================
+                table.on("input change", ".prod-mtr1", function() {
+                    var $input = $(this);
+                    var $row   = $input.closest("tr");
+                    var mtr1   = parseFloat($input.val()) || 0;
+                    var tQty   = parseInt($input.data("trolley-qty"), 10) || 1;
+                    var mtrN   = mtr1 * tQty;
+                    var formatted = mtrN === 0 ? "" : mtrN.toFixed(3).replace(/\.?0+$/, "");
+                    $row.find(".prod-mtrN").val(formatted);
                 });
 
                 // ========================

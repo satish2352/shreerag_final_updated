@@ -182,10 +182,20 @@
                     @endif
                 </div>
                 <div class="modal-footer">
+                    {{-- Use {{ }} (auto HTML-escape) so the double quotes inside
+                         json_encode become &quot; and don't terminate the onclick attribute early. --}}
+                    <button type="button" class="btn btn-info btn-sm"
+                            onclick="printBomReq('storeBomModal{{ $data->requistition_id }}', {{ json_encode(ucwords($data->product_name)) }}, {{ json_encode(ucwords($data->customer_project_name ?? '')) }})">
+                        <i class="fa fa-print"></i> Print
+                    </button>
+                    <button type="button" class="btn btn-success btn-sm"
+                            onclick="downloadBomReqCsv('storeBomModal{{ $data->requistition_id }}', {{ json_encode('BOM_Requisition_' . preg_replace('/[^A-Za-z0-9_-]/', '_', $data->product_name) . '.csv') }})">
+                        <i class="fa fa-download"></i> Download CSV
+                    </button>
                     @if(!empty($data->bom_file))
                     <a href="{{ Config::get('FileConstant.REQUISITION_VIEW') }}{{ $data->bom_file }}"
                        class="btn btn-secondary btn-sm" target="_blank">
-                        <i class="fa fa-download"></i> Download File
+                        <i class="fa fa-file"></i> Original BOM File
                     </a>
                     @endif
                     <button type="button" class="btn btn-dark btn-sm" data-dismiss="modal">Close</button>
@@ -195,4 +205,82 @@
     </div>
     @endif
 @endforeach
+
+{{-- Print + CSV-download helpers for the BOM Requisition modals. --}}
+<script>
+    // Open a print-friendly window with just the requisition table and trigger
+    // the browser print dialog. User can choose "Save as PDF" inside the dialog.
+    function printBomReq(modalId, productName, projectName) {
+        var modal = document.getElementById(modalId);
+        if (!modal) return;
+        var tableHtml = (modal.querySelector('.modal-body table') || {}).outerHTML || '';
+        if (!tableHtml) {
+            alert('No table data to print.');
+            return;
+        }
+        var title = 'BOM Requisition — ' + (productName || '');
+        var w = window.open('', '_blank', 'width=1100,height=800');
+        if (!w) {
+            alert('Please allow pop-ups for this site to print.');
+            return;
+        }
+        w.document.write(
+            '<!doctype html><html><head><title>' + title + '</title>' +
+            '<style>' +
+                'body{font-family:Arial,Helvetica,sans-serif;padding:20px;color:#222;}' +
+                'h1{font-size:20px;margin:0 0 4px;}' +
+                'h2{font-size:14px;margin:0 0 16px;color:#555;font-weight:normal;}' +
+                'table{width:100%;border-collapse:collapse;font-size:12px;}' +
+                'th,td{border:1px solid #444;padding:6px 8px;text-align:left;}' +
+                'thead{background:#1a3a6b;color:#fff;}' +
+                'tfoot{font-weight:bold;background:#f0f0f0;}' +
+                '@media print{button{display:none;}}' +
+            '</style></head><body>' +
+            '<h1>' + escapeHtml(title) + '</h1>' +
+            (projectName ? '<h2>' + escapeHtml(projectName) + '</h2>' : '') +
+            tableHtml +
+            '<script>window.onload=function(){window.print();};<\/script>' +
+            '</body></html>'
+        );
+        w.document.close();
+    }
+
+    // Generate CSV from the modal's requisition table and trigger download.
+    function downloadBomReqCsv(modalId, filename) {
+        var modal = document.getElementById(modalId);
+        if (!modal) return;
+        var table = modal.querySelector('.modal-body table');
+        if (!table) {
+            alert('No table data to download.');
+            return;
+        }
+        var rows = [];
+        table.querySelectorAll('tr').forEach(function (tr) {
+            var cells = [];
+            tr.querySelectorAll('th, td').forEach(function (cell) {
+                var text = (cell.innerText || cell.textContent || '').replace(/\s+/g, ' ').trim();
+                if (/[",\n]/.test(text)) text = '"' + text.replace(/"/g, '""') + '"';
+                cells.push(text);
+            });
+            if (cells.length) rows.push(cells.join(','));
+        });
+        // Add a UTF-8 BOM (U+FEFF) so Excel opens it with correct encoding for ₹ etc.
+        var csv = '﻿' + rows.join('\r\n');
+        var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        var url  = URL.createObjectURL(blob);
+        var a    = document.createElement('a');
+        a.href = url;
+        a.download = filename || 'BOM_Requisition.csv';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+    }
+
+    function escapeHtml(s) {
+        return String(s == null ? '' : s)
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+</script>
 @endsection

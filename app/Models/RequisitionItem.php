@@ -22,6 +22,7 @@ class RequisitionItem extends Model
         'shortage_quantity',
         'unit_id',
         'rate',
+        'mtr_for_01_nos_trolley',
         'is_active',
         'is_deleted',
         'is_sent_to_purchase',

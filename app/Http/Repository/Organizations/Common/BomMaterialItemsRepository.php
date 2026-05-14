@@ -61,7 +61,8 @@ class BomMaterialItemsRepository
 
     /**
      * Fetch contextual header data for the BOM modal.
-     * Joins businesses_details -> businesses -> estimation (LEFT JOIN).
+     * Joins businesses_details -> businesses -> estimation (LEFT JOIN)
+     * and LEFT JOIN designs to retrieve trolley_qty.
      *
      * Returns:
      *   title              — always "MATERIAL INDENT"
@@ -69,8 +70,9 @@ class BomMaterialItemsRepository
      *   customer_name      — businesses.title
      *   project_name       — businesses.project_name
      *   date               — today's date in DD-MM-YYYY
-     *   total_qty          — businesses_details.quantity
+     *   total_qty          — businesses_details.quantity (business order qty, NOT trolley count)
      *   estimation_amount  — estimation.total_estimation_amount (null if no estimation row)
+     *   trolley_qty        — designs.trolley_qty (default 1 for old rows without a value)
      */
     public function getContext(int $businessDetailsId): array
     {
@@ -78,6 +80,10 @@ class BomMaterialItemsRepository
             $row = DB::table('businesses_details as bd')
                 ->join('businesses as b', 'b.id', '=', 'bd.business_id')
                 ->leftJoin('estimation as e', 'e.business_details_id', '=', 'bd.id')
+                ->leftJoin('designs as d', function ($join) {
+                    $join->on('d.business_details_id', '=', 'bd.id')
+                         ->where('d.is_deleted', '=', 0);
+                })
                 ->where('bd.id', $businessDetailsId)
                 ->where('bd.is_deleted', 0)
                 ->select([
@@ -87,6 +93,7 @@ class BomMaterialItemsRepository
                     'b.title as customer_name',
                     'b.project_name',
                     'e.total_estimation_amount',
+                    DB::raw('COALESCE(d.trolley_qty, 1) as trolley_qty'),
                 ])
                 ->first();
 
@@ -100,6 +107,7 @@ class BomMaterialItemsRepository
                     'total_qty'          => '',
                     'estimation_amount'  => null,
                     'business_limit'     => null,
+                    'trolley_qty'        => 1,
                 ];
             }
 
@@ -112,6 +120,7 @@ class BomMaterialItemsRepository
                 'total_qty'          => $row->parent_quantity ?? '',
                 'estimation_amount'  => $row->total_estimation_amount,
                 'business_limit'     => $row->business_limit,
+                'trolley_qty'        => (int) ($row->trolley_qty ?? 1),
             ];
         } catch (\Exception $e) {
             Log::error('BomMaterialItemsRepository::getContext error: ' . $e->getMessage());

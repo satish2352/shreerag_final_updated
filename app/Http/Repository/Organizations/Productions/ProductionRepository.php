@@ -402,7 +402,16 @@ class ProductionRepository
                     'pd.basic_rate',
                     'pd.updated_at',
                     'tbl_unit.name as unit_name',
-                    'tbl_part_item.description as part_description'
+                    'tbl_part_item.description as part_description',
+                    // Correlated subquery — avoids row-multiplication when bom_material_items
+                    // has multiple rows per (business_details_id, part_item_id).
+                    DB::raw('(SELECT bmi.mtr_for_01_nos_trolley
+                               FROM bom_material_items bmi
+                               WHERE bmi.part_item_id = pd.part_item_id
+                                 AND bmi.business_details_id = pd.business_details_id
+                                 AND bmi.is_deleted = 0
+                                 AND bmi.is_active = 1
+                               LIMIT 1) AS mtr_for_01_nos_trolley')
                 )
                 ->get();
 

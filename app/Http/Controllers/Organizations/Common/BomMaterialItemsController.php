@@ -34,6 +34,12 @@ class BomMaterialItemsController extends Controller
      *                          Total in mm | Mtr for 01 Nos Trolley | Unit | Rate
      *   - Data rows below the header
      *
+     * Recognises common header variants:
+     *   - "Mtr for 01 Nos Trolley" / "QTY FOR SINGLE TROLLEY" / "Mtr per Trolley"
+     *   - "Unit" / "UOM"
+     * Unit synonym resolution: "MTR" matches a master unit named "METER" and vice versa.
+     * Part-item description matching is fuzzy and bidirectional (master ⊆ excel OR excel ⊆ master).
+     *
      * Returns JSON with the inserted row count so the caller can refresh the modal.
      */
     public function importExcel(Request $request)
@@ -58,10 +64,14 @@ class BomMaterialItemsController extends Controller
             $rows        = $sheet->toArray(null, true, true, false); // 0-indexed
 
             // ---- Locate the header row by scanning for "Product Description" ----
+            // Header cells can be multi-line ("L in mm\n(Approx)") — collapse any
+            // whitespace runs (newlines, tabs, multi-space) into a single space so
+            // the alias lookup below is forgiving.
             $headerIdx   = -1;
             $colMap      = [];
+            $normFn      = fn($v) => trim((string) preg_replace('/\s+/u', ' ', strtolower((string) $v)));
             foreach ($rows as $i => $row) {
-                $normalized = array_map(fn($v) => strtolower(trim((string) $v)), $row);
+                $normalized = array_map($normFn, $row);
                 if (in_array('product description', $normalized, true)) {
                     $headerIdx = $i;
                     foreach ($normalized as $cIdx => $label) {
@@ -91,10 +101,33 @@ class BomMaterialItemsController extends Controller
             $cLen     = $col(['length']);
             $cQty     = $col(['quantity', 'qty']);
             $cTotQty  = $col(['total quantity', 'total qty', 'total quantity ']);
-            $cTotMm   = $col(['total in mm', 'total mm']);
-            $cMtr     = $col(['mtr for 01 nos trolley', 'mtr for 01 nos', 'mtr for 1 nos trolley', 'mtr per trolley']);
-            $cUnit    = $col(['unit']);
+            $cTotMm   = $col([
+                'total in mm', 'total mm',
+                'l in mm', 'l in mm (approx)',
+                'length in mm', 'length mm',
+                'len in mm', 'l mm',
+            ]);
+            $cMtr     = $col([
+                'mtr for 01 nos trolley',
+                'mtr for 01 nos',
+                'mtr for 1 nos trolley',
+                'mtr per trolley',
+                'qty for single trolley',
+                'qty for 1 trolley',
+                'qty for 01 trolley',
+                'qty for 1 nos trolley',
+                'qty for 01 nos trolley',
+                'quantity for single trolley',
+                'mtr/nos for single trolley',
+                'mtr/nos per trolley',
+                'mtr per single trolley',
+            ]);
+            $cUnit    = $col(['unit', 'uom', 'u.o.m', 'u.o.m.']);
             $cRate    = $col(['rate']);
+
+            // Column G is the column immediately after $cMtr — contains the N-trolley total.
+            // Its header text contains the trolley count, e.g. "QTY FOR 08 NOS TROLLEY" → 8.
+            $cNTrolley = ($cMtr !== null) ? $cMtr + 1 : null;
 
             if ($cDesc === null || ($cQty === null && $cTotQty === null)) {
                 return response()->json([
@@ -140,6 +173,42 @@ class BomMaterialItemsController extends Controller
                 ->get()
                 ->keyBy(fn($u) => strtolower(trim($u->name)));
 
+            // ---- Unit synonym resolver ----
+            // Excel templates often write short abbreviations ("MTR", "NOS") while the
+            // master table stores full words ("METER", "NUMBERS"). This helper tries a
+            // direct lookup, then expands the Excel value to its synonyms, then checks
+            // whether the Excel value itself IS a synonym of a master name.
+            $UNIT_SYNONYMS = [
+                'mtr'    => ['meter', 'metre', 'mtrs', 'meters'],
+                'meter'  => ['mtr', 'metre', 'mtrs', 'meters'],
+                'metre'  => ['mtr', 'meter', 'mtrs', 'meters'],
+                'nos'    => ['no', 'nos.', 'numbers', 'pcs', 'pieces', 'each'],
+                'pcs'    => ['piece', 'pieces', 'nos'],
+                'kg'     => ['kgs', 'kilogram', 'kilograms'],
+                'kgs'    => ['kg', 'kilogram', 'kilograms'],
+                'ft'     => ['feet', 'foot'],
+                'feet'   => ['ft', 'foot'],
+            ];
+            $resolveUnitId = function (string $txt) use ($unitLookup, $UNIT_SYNONYMS): ?int {
+                $key = strtolower(trim($txt));
+                if ($key === '') return null;
+                // 1) direct match
+                if ($u = $unitLookup->get($key)) return (int) $u->id;
+                // 2) synonym expansion — try each synonym of the Excel value
+                if (isset($UNIT_SYNONYMS[$key])) {
+                    foreach ($UNIT_SYNONYMS[$key] as $syn) {
+                        if ($u = $unitLookup->get($syn)) return (int) $u->id;
+                    }
+                }
+                // 3) reverse synonym — Excel text appears in the synonym list of some master
+                foreach ($UNIT_SYNONYMS as $canon => $syns) {
+                    if (in_array($key, $syns, true) && ($u = $unitLookup->get($canon))) {
+                        return (int) $u->id;
+                    }
+                }
+                return null;
+            };
+
             // Existing serial_no max so appended rows continue numbering
             $maxSerial = (int) BomMaterialItem::where('business_details_id', $businessDetailsId)
                 ->where('design_id', $designId)
@@ -170,9 +239,50 @@ class BomMaterialItemsController extends Controller
             $merged   = 0;
             $skipped  = 0;
 
+            // ---- Parse trolley count from spreadsheet ----
+            // Primary source: the column G (cNTrolley) header cell text.
+            //   Pattern: /(\d+)\s*(?:nos\s+)?trolley/i  e.g. "QTY FOR 08 NOS TROLLEY" → 8
+            // Fallback: scan rows ABOVE the header for metadata matching "TROLLEY QTY:- 08 NOS".
+            //   Pattern: /trolley\s*(?:qty|quantity)\s*[:\-]*\s*(\d+)/i
+            // Default: 1 (single-trolley — preserves backward-compatible behaviour).
+            $trolleyQty = 1;
+
+            // Primary: column G header cell text
+            if ($cNTrolley !== null && isset($rows[$headerIdx][$cNTrolley])) {
+                $headerCellText = strtolower(trim((string) $rows[$headerIdx][$cNTrolley]));
+                if (preg_match('/(\d+)\s*(?:nos\s+)?trolley/i', $headerCellText, $m)) {
+                    $parsedQty = (int) $m[1];
+                    if ($parsedQty >= 1) {
+                        $trolleyQty = $parsedQty;
+                    }
+                }
+            }
+
+            // Fallback: scan rows above the header for trolley metadata
+            if ($trolleyQty === 1 && $headerIdx > 0) {
+                for ($fi = 0; $fi < $headerIdx; $fi++) {
+                    foreach ($rows[$fi] as $cellVal) {
+                        if ($cellVal === null || $cellVal === '') continue;
+                        $cellTxt = strtolower(trim((string) $cellVal));
+                        if (preg_match('/trolley\s*(?:qty|quantity)\s*[:\-]*\s*(\d+)/i', $cellTxt, $m2)) {
+                            $parsedQty2 = (int) $m2[1];
+                            if ($parsedQty2 >= 1) {
+                                $trolleyQty = $parsedQty2;
+                                break 2;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if ($trolleyQty < 1) {
+                $trolleyQty = 1;
+                Log::warning('BomMaterialItemsController::importExcel: trolley count parse yielded < 1, defaulting to 1.');
+            }
+
             DB::transaction(function () use (
                 $rows, $headerIdx, $cSerial, $cDesc, $cLen, $cQty, $cTotQty, $cTotMm, $cMtr, $cUnit, $cRate,
-                $partLookup, $unitLookup, $businessId, $businessDetailsId, $designId,
+                $partLookup, $unitLookup, $resolveUnitId, $businessId, $businessDetailsId, $designId,
                 $userId, $deptRoleId, &$inserted, &$merged, &$skipped, &$nextSerial,
                 $existingByKey, $mergeKey, $normalize, $stripMs
             ) {
@@ -233,12 +343,18 @@ class BomMaterialItemsController extends Controller
                         $bestKey = null;
                         $bestLen = 0;
                         foreach ($partLookup as $pKey => $pRow) {
-                            // Require key length >= 7 so generic short masters like
-                            // "SHEET", "PLIER", "MS ROD" don't false-match into
-                            // every BOM line that mentions those words.
+                            // Skip very short generic master keys ("ROD", "NUT", "BAR", etc.)
+                            // to avoid false-positive matches on every BOM line that contains
+                            // those common words.
                             if (strlen($pKey) < 7) continue;
-                            if (strlen($pKey) <= $bestLen) continue;  // already have a longer match
-                            if (strpos($nDesc, $pKey) !== false) {
+                            // Excel desc must also be substantial to participate in containment.
+                            if (strlen($nDesc) < 7) break;
+                            // Bidirectional containment: master ⊆ excel OR excel ⊆ master.
+                            // Pick the LONGEST master key matched so we prefer the most-specific
+                            // master (e.g. "mssqpipe40x40x3mm" beats "sqpipe" if both match).
+                            $contained = (strpos($nDesc, $pKey) !== false)
+                                      || (strpos($pKey, $nDesc) !== false);
+                            if ($contained && strlen($pKey) > $bestLen) {
                                 $bestKey = $pKey;
                                 $bestLen = strlen($pKey);
                             }
@@ -275,8 +391,9 @@ class BomMaterialItemsController extends Controller
                         if ($mtr     === null) $lastMtr   = null;
                     }
 
-                    // Resolve unit_id from the (possibly forward-filled) unit text
-                    $unitId = $unitTxt !== '' ? ($unitLookup->get(strtolower($unitTxt))?->id) : null;
+                    // Resolve unit_id from the (possibly forward-filled) unit text.
+                    // Uses synonym resolution so "MTR" matches a master named "METER" and vice versa.
+                    $unitId = $unitTxt !== '' ? $resolveUnitId($unitTxt) : null;
 
                     // Fall back to tbl_part_item.basic_rate when the Excel Rate is blank/0
                     // and we matched the description to a part master.
@@ -335,6 +452,10 @@ class BomMaterialItemsController extends Controller
                 }
             });
 
+            // Persist the parsed trolley_qty to the designs row (outside the BOM transaction
+            // so it takes effect even if the transaction had nothing to insert/merge).
+            DB::table('designs')->where('id', $designId)->update(['trolley_qty' => $trolleyQty]);
+
             // Build a human-friendly summary line.
             $parts = [];
             if ($inserted > 0) $parts[] = "{$inserted} new";
@@ -343,11 +464,12 @@ class BomMaterialItemsController extends Controller
             $summary = $parts ? implode(', ', $parts) : 'no rows';
 
             return response()->json([
-                'status'   => 'success',
-                'message'  => "Excel imported: {$summary}. Review the BOM Items modal and click Save when ready.",
-                'inserted' => $inserted,
-                'merged'   => $merged,
-                'skipped'  => $skipped,
+                'status'      => 'success',
+                'message'     => "Excel imported: {$summary}. Review the BOM Items modal and click Save when ready.",
+                'inserted'    => $inserted,
+                'merged'      => $merged,
+                'skipped'     => $skipped,
+                'trolley_qty' => $trolleyQty,
             ]);
         } catch (\Exception $e) {
             Log::error('BomMaterialItemsController::importExcel: ' . $e->getMessage(), [
@@ -492,6 +614,13 @@ class BomMaterialItemsController extends Controller
 
         try {
             $userId = (int) session('user_id');
+
+            // Save trolley_qty if provided (default 1, clamped 1-9999)
+            $trolleyQty = (int) ($request->input('trolley_qty') ?: 1);
+            if ($trolleyQty < 1)    $trolleyQty = 1;
+            if ($trolleyQty > 9999) $trolleyQty = 9999;
+            DB::table('designs')->where('id', (int) $request->input('design_id'))->update(['trolley_qty' => $trolleyQty]);
+
             $items  = $this->service->saveItems(
                 (int) $request->input('business_id'),
                 (int) $request->input('business_details_id'),
@@ -504,9 +633,10 @@ class BomMaterialItemsController extends Controller
             );
 
             return response()->json([
-                'status'  => 'success',
-                'message' => 'BOM items saved.',
-                'items'   => $items,
+                'status'      => 'success',
+                'message'     => 'BOM items saved.',
+                'items'       => $items,
+                'trolley_qty' => $trolleyQty,
             ]);
         } catch (\Exception $e) {
             Log::error('BomMaterialItemsController::designSaveItems: ' . $e->getMessage());
@@ -567,6 +697,12 @@ class BomMaterialItemsController extends Controller
             $bdId         = (int) $request->input('business_details_id');
             $estimationId = null;
 
+            // Save trolley_qty if provided (default 1, clamped 1-9999)
+            $trolleyQty = (int) ($request->input('trolley_qty') ?: 1);
+            if ($trolleyQty < 1)    $trolleyQty = 1;
+            if ($trolleyQty > 9999) $trolleyQty = 9999;
+            DB::table('designs')->where('id', (int) $request->input('design_id'))->update(['trolley_qty' => $trolleyQty]);
+
             // Fetch estimation record to populate estimation_id
             $estimation = EstimationModel::where('business_details_id', $bdId)->first();
             if ($estimation) {
@@ -593,6 +729,7 @@ class BomMaterialItemsController extends Controller
                 'bom_final_total'  => $result['bom_final_total'],
                 'business_limit'   => $result['business_limit'],
                 'exceed_triggered' => $result['exceed_triggered'],
+                'trolley_qty'      => $trolleyQty,
             ]);
         } catch (\Exception $e) {
             Log::error('BomMaterialItemsController::estimationSaveItems: ' . $e->getMessage());

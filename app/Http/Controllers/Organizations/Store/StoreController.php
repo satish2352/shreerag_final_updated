@@ -379,6 +379,12 @@ class StoreController extends Controller
             // NOTE: No cleanup/mutation runs here. GET handlers must be idempotent.
             // Pending production_details rows survive page reloads unchanged.
 
+            // Fetch trolley_qty for this order from designs table (default 1 if not set)
+            $trolleyQty = (int) (\App\Models\DesignModel::where('business_details_id', $decoded_id)
+                ->where('is_deleted', 0)
+                ->where('is_active', 1)
+                ->value('trolley_qty') ?: 1);
+
             // Fetch BOM items for this business_details_id
             $bomItems = BomMaterialItem::where('business_details_id', $decoded_id)
                 ->where('is_active', 1)
@@ -626,7 +632,8 @@ class StoreController extends Controller
                 'sentPartIds',
                 'isClosed',
                 'hasDraftRows',
-                'requisitionId'
+                'requisitionId',
+                'trolleyQty'
             ));
         } catch (\Exception $e) {
             return redirect()->back()->with(['status' => 'error', 'msg' => 'Something went wrong. Please try again.']);
@@ -690,18 +697,19 @@ class StoreController extends Controller
 
                 foreach ($items as $itemData) {
                     RequisitionItem::create([
-                        'requisition_id'      => $requisition->id,
-                        'business_details_id' => $business_details_id,
-                        'part_item_id'        => ($itemData['part_item_id'] ?? '') !== '' ? $itemData['part_item_id'] : null,
-                        'product_description' => $itemData['product_description'] ?? null,
-                        'required_quantity'   => (float) ($itemData['required_quantity'] ?? 0),
-                        'available_quantity'  => (float) ($itemData['available_quantity'] ?? 0),
-                        'shortage_quantity'   => (float) ($itemData['shortage_quantity'] ?? 0),
-                        'unit_id'             => ($itemData['unit_id'] ?? '') !== '' ? $itemData['unit_id'] : null,
-                        'rate'                => isset($itemData['rate']) && $itemData['rate'] !== '' ? (float) $itemData['rate'] : null,
-                        'is_active'           => 1,
-                        'is_deleted'          => 0,
-                        'is_sent_to_purchase' => 1, // BOM-derived shortage: part of the official requisition send
+                        'requisition_id'         => $requisition->id,
+                        'business_details_id'    => $business_details_id,
+                        'part_item_id'           => ($itemData['part_item_id'] ?? '') !== '' ? $itemData['part_item_id'] : null,
+                        'product_description'    => $itemData['product_description'] ?? null,
+                        'required_quantity'      => (float) ($itemData['required_quantity'] ?? 0),
+                        'available_quantity'     => (float) ($itemData['available_quantity'] ?? 0),
+                        'shortage_quantity'      => (float) ($itemData['shortage_quantity'] ?? 0),
+                        'unit_id'                => ($itemData['unit_id'] ?? '') !== '' ? $itemData['unit_id'] : null,
+                        'rate'                   => isset($itemData['rate']) && $itemData['rate'] !== '' ? (float) $itemData['rate'] : null,
+                        'mtr_for_01_nos_trolley' => isset($itemData['mtr_for_01_nos_trolley']) && $itemData['mtr_for_01_nos_trolley'] !== '' ? (float) $itemData['mtr_for_01_nos_trolley'] : null,
+                        'is_active'              => 1,
+                        'is_deleted'             => 0,
+                        'is_sent_to_purchase'    => 1, // BOM-derived shortage: part of the official requisition send
                     ]);
                 }
 
@@ -727,19 +735,22 @@ class StoreController extends Controller
                         continue;
                     }
 
+                    $msMtr1 = isset($ms['mtr_for_01_nos_trolley']) && $ms['mtr_for_01_nos_trolley'] !== '' ? (float) $ms['mtr_for_01_nos_trolley'] : null;
+
                     RequisitionItem::create([
-                        'requisition_id'      => $requisition->id,
-                        'business_details_id' => $business_details_id,
-                        'part_item_id'        => $msPartItemId,
-                        'product_description' => $msDesc,
-                        'required_quantity'   => $msQty,
-                        'available_quantity'  => $msAvailQty,
-                        'shortage_quantity'   => $msShortageQty,
-                        'unit_id'             => $msUnitId,
-                        'rate'                => $msRate,
-                        'is_active'           => 1,
-                        'is_deleted'          => 0,
-                        'is_sent_to_purchase' => 1, // submitted together with initial requisition → already sent
+                        'requisition_id'         => $requisition->id,
+                        'business_details_id'    => $business_details_id,
+                        'part_item_id'           => $msPartItemId,
+                        'product_description'    => $msDesc,
+                        'required_quantity'      => $msQty,
+                        'available_quantity'     => $msAvailQty,
+                        'shortage_quantity'      => $msShortageQty,
+                        'unit_id'                => $msUnitId,
+                        'rate'                   => $msRate,
+                        'mtr_for_01_nos_trolley' => $msMtr1,
+                        'is_active'              => 1,
+                        'is_deleted'             => 0,
+                        'is_sent_to_purchase'    => 1, // submitted together with initial requisition → already sent
                     ]);
                 }
 
@@ -813,19 +824,20 @@ class StoreController extends Controller
                     $shortageQty = (float) ($itemData['shortage_quantity'] ?? max(0, $qty - $availQty));
 
                     RequisitionItem::create([
-                        'requisition_id'      => $requisition->id,
-                        'business_details_id' => $business_details_id,
-                        'part_item_id'        => $partItemId,
-                        'product_description' => $itemData['product_description'] ?? null,
-                        'required_quantity'   => $qty,
-                        'available_quantity'  => $availQty,
-                        'shortage_quantity'   => $shortageQty,
-                        'unit_id'             => $unitId,
-                        'rate'                => isset($itemData['rate']) && $itemData['rate'] !== '' ? (float) $itemData['rate'] : null,
-                        'is_active'           => 1,
-                        'is_deleted'          => 0,
-                        'is_sent_to_purchase' => 0,      // draft — user must explicitly send via "Send Pending to Purchase"
-                        'source'              => 'manual_shortage', // explicitly added via +Add More by Store user
+                        'requisition_id'         => $requisition->id,
+                        'business_details_id'    => $business_details_id,
+                        'part_item_id'           => $partItemId,
+                        'product_description'    => $itemData['product_description'] ?? null,
+                        'required_quantity'      => $qty,
+                        'available_quantity'     => $availQty,
+                        'shortage_quantity'      => $shortageQty,
+                        'unit_id'                => $unitId,
+                        'rate'                   => isset($itemData['rate']) && $itemData['rate'] !== '' ? (float) $itemData['rate'] : null,
+                        'mtr_for_01_nos_trolley' => isset($itemData['mtr_for_01_nos_trolley']) && $itemData['mtr_for_01_nos_trolley'] !== '' ? (float) $itemData['mtr_for_01_nos_trolley'] : null,
+                        'is_active'              => 1,
+                        'is_deleted'             => 0,
+                        'is_sent_to_purchase'    => 0,      // draft — user must explicitly send via "Send Pending to Purchase"
+                        'source'                 => 'manual_shortage', // explicitly added via +Add More by Store user
                     ]);
                 }
 
@@ -853,7 +865,7 @@ class StoreController extends Controller
      * Sent rows (is_sent_to_purchase=1) are immutable — returns 403.
      *
      * POST /update-draft-shortage-item
-     * Body JSON: { requisition_item_id, required_quantity, unit_id, rate }
+     * Body JSON: { requisition_item_id, required_quantity, unit_id, rate, mtr_for_01_nos_trolley? }
      */
     public function updateDraftShortageItem(Request $request)
     {
@@ -862,6 +874,7 @@ class StoreController extends Controller
             $requiredQty = $request->input('required_quantity');
             $unitId      = $request->input('unit_id');
             $rate        = $request->input('rate');
+            $mtr1        = $request->input('mtr_for_01_nos_trolley');
 
             if (!$reqItemId || !is_numeric($requiredQty) || (float) $requiredQty <= 0) {
                 return response()->json(['status' => 'error', 'msg' => 'Invalid input: requisition_item_id and required_quantity > 0 are required.'], 422);
@@ -886,7 +899,7 @@ class StoreController extends Controller
 
             $shortageQty = max(0, $requiredQty - $availableQty);
 
-            DB::transaction(function () use ($item, $requiredQty, $unitId, $rate, $availableQty, $shortageQty) {
+            DB::transaction(function () use ($item, $requiredQty, $unitId, $rate, $mtr1, $availableQty, $shortageQty) {
                 $item->required_quantity  = $requiredQty;
                 $item->available_quantity = $availableQty;
                 $item->shortage_quantity  = $shortageQty;
@@ -895,6 +908,9 @@ class StoreController extends Controller
                 }
                 if ($rate !== null && $rate !== '') {
                     $item->rate = (float) $rate;
+                }
+                if ($mtr1 !== null && $mtr1 !== '') {
+                    $item->mtr_for_01_nos_trolley = (float) $mtr1;
                 }
                 $item->save();
             });

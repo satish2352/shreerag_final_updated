@@ -197,13 +197,14 @@ class PurchaseOrderController extends Controller
         $business_id = $businessDetails ? $businessDetails->business_id : null;
 
         // ============================
-        // TOTAL ESTIMATION AMOUNT (SUM)
+        // TOTAL ESTIMATION AMOUNT — scoped to the WHOLE business (all products under
+        // this business_id). This is the project-level budget cap shown on the form.
         // ============================
         $grand_total_amount = EstimationModel::where('business_id', $business_id)
             ->sum('total_estimation_amount');
 
         // ============================
-        // USED PO AMOUNT
+        // USED PO AMOUNT — same scope (business-wide).
         // ============================
         $used_po_amount = PurchaseOrdersModel::where('business_id', $business_id)
             ->sum('po_grand_total_amount');
@@ -235,6 +236,12 @@ class PurchaseOrderController extends Controller
         $newRequisitionItems  = $requisitionItems->filter(fn($i) => !in_array((string)$i->part_item_id, $purchasedPartIds))->values();
         $purchasedItems       = $requisitionItems->filter(fn($i) =>  in_array((string)$i->part_item_id, $purchasedPartIds))->values();
 
+        // Trolley count for this design (used by the Requisition Items accordion to
+        // render the "Mtr/Nos for N Trolley(s)" column). Default 1 if no design row.
+        $trolleyQty = (int) (\App\Models\DesignModel::where('business_details_id', $business_details_id)
+            ->where('is_deleted', 0)
+            ->value('trolley_qty') ?: 1);
+
         return view(
             'organizations.purchase.addpurchasedetails.add-purchase-orders',
             compact(
@@ -253,7 +260,8 @@ class PurchaseOrderController extends Controller
                 'remaining_amount',
                 'newRequisitionItems',
                 'purchasedItems',
-                'businessDetails'
+                'businessDetails',
+                'trolleyQty'
             )
         );
     }
@@ -376,15 +384,15 @@ class PurchaseOrderController extends Controller
             ->value('business_id');
 
         // ============================
-        // TOTAL ESTIMATION AMOUNT (SUM)
+        // TOTAL ESTIMATION AMOUNT — business-wide (matches the form display).
         // ============================
         $grand_total_amount = EstimationModel::where('business_id', $business_id)
             ->sum('total_estimation_amount');
 
         // ============================
-        // USED PO AMOUNT
+        // USED PO AMOUNT — business-wide so the cap math matches the form.
         // ============================
-        $used_po_amount = PurchaseOrdersModel::where('requisition_id', $requistitionId)
+        $used_po_amount = PurchaseOrdersModel::where('business_id', $business_id)
             ->sum('po_grand_total_amount');
 
         // ============================
