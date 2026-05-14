@@ -236,6 +236,17 @@
                                                     Requisition Items &mdash; Not Yet Ordered ({{ $newRequisitionItems->count() }} item(s) &mdash; add manually below)
                                                 </strong>
                                                 <span class="float-right" style="color:#fff;">
+                                                    {{-- stopPropagation so clicking Print/Download doesn't toggle the accordion --}}
+                                                    <button type="button" class="btn btn-light btn-sm mr-1"
+                                                            style="padding:2px 8px; font-size:12px;"
+                                                            onclick="event.stopPropagation(); printPoRequisition();">
+                                                        <i class="fa fa-print"></i> Print
+                                                    </button>
+                                                    <button type="button" class="btn btn-light btn-sm mr-2"
+                                                            style="padding:2px 8px; font-size:12px;"
+                                                            onclick="event.stopPropagation(); downloadPoRequisitionCsv();">
+                                                        <i class="fa fa-download"></i> CSV
+                                                    </button>
                                                     <i class="fa fa-chevron-down req-ref-chevron"></i>
                                                 </span>
                                             </div>
@@ -307,6 +318,52 @@
                                                     });
                                                 }
                                             })();
+
+                                            // Print + Download helpers for the Requisition Items accordion table.
+                                            function printPoRequisition() {
+                                                var table = document.querySelector('#reqRefPanelBody table');
+                                                if (!table) { alert('No table data to print.'); return; }
+                                                var w = window.open('', '_blank', 'width=1100,height=800');
+                                                if (!w) { alert('Please allow pop-ups for this site to print.'); return; }
+                                                w.document.write(
+                                                    '<!doctype html><html><head><title>Requisition Items — Not Yet Ordered</title>' +
+                                                    '<style>' +
+                                                        'body{font-family:Arial,Helvetica,sans-serif;padding:20px;color:#222;}' +
+                                                        'h1{font-size:18px;margin:0 0 12px;}' +
+                                                        'table{width:100%;border-collapse:collapse;font-size:12px;}' +
+                                                        'th,td{border:1px solid #444;padding:6px 8px;text-align:left;}' +
+                                                        'thead{background:#17a2b8;color:#fff;}' +
+                                                        '@media print{button{display:none;}}' +
+                                                    '</style></head><body>' +
+                                                    '<h1>Requisition Items — Not Yet Ordered</h1>' +
+                                                    table.outerHTML +
+                                                    '<script>window.onload=function(){window.print();};<\/script>' +
+                                                    '</body></html>'
+                                                );
+                                                w.document.close();
+                                            }
+
+                                            function downloadPoRequisitionCsv() {
+                                                var table = document.querySelector('#reqRefPanelBody table');
+                                                if (!table) { alert('No table data to download.'); return; }
+                                                var rows = [];
+                                                table.querySelectorAll('tr').forEach(function (tr) {
+                                                    var cells = [];
+                                                    tr.querySelectorAll('th, td').forEach(function (cell) {
+                                                        var text = (cell.innerText || cell.textContent || '').replace(/\s+/g, ' ').trim();
+                                                        if (/[",\n]/.test(text)) text = '"' + text.replace(/"/g, '""') + '"';
+                                                        cells.push(text);
+                                                    });
+                                                    if (cells.length) rows.push(cells.join(','));
+                                                });
+                                                var csv = '﻿' + rows.join('\r\n');
+                                                var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                                                var url  = URL.createObjectURL(blob);
+                                                var a    = document.createElement('a');
+                                                a.href = url; a.download = 'Requisition_Items_Not_Yet_Ordered.csv';
+                                                document.body.appendChild(a); a.click(); document.body.removeChild(a);
+                                                setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+                                            }
                                         </script>
                                     </div>
                                 </div>

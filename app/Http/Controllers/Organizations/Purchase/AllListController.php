@@ -79,7 +79,21 @@ class AllListController extends Controller
                 }
             }
 
-            return view('organizations.purchase.list.list-bom-material-recived-for-purchase', compact('data_output', 'requisitionItemsMap', 'poCreatedPartsMap'));
+            // Trolley count per requisition (read from designs.trolley_qty for the
+            // requisition's business_details_id). Used by the modal to label the
+            // "Mtr/Nos for N Trolley(s)" column and compute its per-row value.
+            $trolleyQtyMap = [];
+            foreach ($data_output->items() as $row) {
+                $reqId = $row->requistition_id ?? null;
+                $bdId  = $row->business_details_id ?? null;
+                if ($reqId === null || $bdId === null || isset($trolleyQtyMap[$reqId])) continue;
+                $tq = \App\Models\DesignModel::where('business_details_id', $bdId)
+                    ->where('is_deleted', 0)
+                    ->value('trolley_qty');
+                $trolleyQtyMap[$reqId] = (int) ($tq ?: 1);
+            }
+
+            return view('organizations.purchase.list.list-bom-material-recived-for-purchase', compact('data_output', 'requisitionItemsMap', 'poCreatedPartsMap', 'trolleyQtyMap'));
         } catch (\Exception $e) {
             // dd($e->getMessage());
             $e->getMessage(); // debugging

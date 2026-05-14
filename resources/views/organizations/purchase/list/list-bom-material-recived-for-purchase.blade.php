@@ -113,10 +113,25 @@
     </div>
 
 {{-- BOM Requisition Modals --}}
+@php
+    // Shared helpers for the trolley columns. Piece-units (NOS / PCS / SET /
+    // EACH) multiply quantity × trolley_qty; other units multiply
+    // mtr_for_01_nos_trolley × trolley_qty. Matches the Store BOM screen.
+    $PIECE_UNITS_BOM = ['NOS', 'PCS', 'SET', 'EACH'];
+    $computeMtrN_BOM = function ($mtr, $qty, $unitName, $tQty) use ($PIECE_UNITS_BOM) {
+        $t = (int) ($tQty ?: 1);
+        $isPiece = in_array(strtoupper(trim((string) $unitName)), $PIECE_UNITS_BOM, true);
+        if ($isPiece) return (float) ($qty ?? 0) * $t;
+        if ($mtr === null || $mtr === '') return null;
+        return (float) $mtr * $t;
+    };
+    $fmt_BOM = fn($n) => ($n === null || $n === '') ? '—' : rtrim(rtrim(number_format((float) $n, 3, '.', ''), '0'), '.');
+@endphp
 @foreach ($data_output as $data)
     @php
-        $reqItems      = $requisitionItemsMap[$data->requistition_id] ?? collect();
+        $reqItems       = $requisitionItemsMap[$data->requistition_id] ?? collect();
         $poCreatedParts = $poCreatedPartsMap[$data->requistition_id] ?? [];
+        $tQtyForModal   = $trolleyQtyMap[$data->requistition_id] ?? 1;
     @endphp
     <div class="modal fade" id="bomModal{{ $data->requistition_id }}" tabindex="-1" role="dialog"
          aria-labelledby="bomModalLabel{{ $data->requistition_id }}" aria-hidden="true">
@@ -146,6 +161,8 @@
                                     <th style="white-space:nowrap;">Available Stock</th>
                                     <th style="white-space:nowrap;">Shortage Qty</th>
                                     <th style="white-space:nowrap;">Unit</th>
+                                    <th style="white-space:nowrap;">Mtr for 01 Nos Trolley</th>
+                                    <th style="white-space:nowrap;">Mtr/Nos for {{ $tQtyForModal }} Trolley(s)</th>
                                     <th style="white-space:nowrap;">Rate</th>
                                     <th style="white-space:nowrap;">Total</th>
                                     <th style="white-space:nowrap;">Status</th>
@@ -160,13 +177,20 @@
                                         $partStr      = (string)($ritem->part_item_id ?? '');
                                         $hasPO        = in_array($partStr, $poCreatedParts);
                                     @endphp
+                                    @php
+                                        $unitNameBOM = optional($ritem->unitMaster)->name;
+                                        $mtr1BOM = $ritem->mtr_for_01_nos_trolley ?? null;
+                                        $mtrNBOM = $computeMtrN_BOM($mtr1BOM, $ritem->shortage_quantity ?? null, $unitNameBOM, $tQtyForModal);
+                                    @endphp
                                     <tr style="{{ $hasPO ? 'background:#f0fff4;' : '' }}">
                                         <td>{{ $ri + 1 }}</td>
                                         <td>{{ $ritem->product_description ?? (optional($ritem->partItem)->description ?? '—') }}</td>
                                         <td>{{ number_format($ritem->required_quantity, 3) }}</td>
                                         <td>{{ number_format($ritem->available_quantity, 3) }}</td>
                                         <td><strong style="color:#dc3545;">{{ number_format($ritem->shortage_quantity, 3) }}</strong></td>
-                                        <td>{{ optional($ritem->unitMaster)->name ?? '—' }}</td>
+                                        <td>{{ $unitNameBOM ?? '—' }}</td>
+                                        <td>{{ $fmt_BOM($mtr1BOM) }}</td>
+                                        <td>{{ $fmt_BOM($mtrNBOM) }}</td>
                                         <td>{{ $ritem->rate !== null ? number_format((float)$ritem->rate, 3) : '—' }}</td>
                                         <td><strong>{{ number_format($rTotal, 2) }}</strong></td>
                                         <td style="white-space:nowrap;">
@@ -185,7 +209,7 @@
                             </tbody>
                             <tfoot>
                                 <tr style="background:#f0f0f0; font-weight:700;">
-                                    <td colspan="7" style="text-align:right; padding-right:12px;">Grand Total</td>
+                                    <td colspan="9" style="text-align:right; padding-right:12px;">Grand Total</td>
                                     <td><strong>{{ number_format($modalTotal, 2) }}</strong></td>
                                     <td></td>
                                 </tr>
@@ -195,10 +219,19 @@
                     @endif
                 </div>
                 <div class="modal-footer">
+                    {{-- {{ }} auto-escapes the JSON's double quotes so they don't terminate the onclick attribute. --}}
+                    <button type="button" class="btn btn-info btn-sm"
+                            onclick="printBomReq('bomModal{{ $data->requistition_id }}', {{ json_encode(ucwords($data->product_name)) }}, {{ json_encode(ucwords($data->project_name ?? '')) }})">
+                        <i class="fa fa-print"></i> Print
+                    </button>
+                    <button type="button" class="btn btn-success btn-sm"
+                            onclick="downloadBomReqCsv('bomModal{{ $data->requistition_id }}', {{ json_encode('BOM_Requisition_' . preg_replace('/[^A-Za-z0-9_-]/', '_', $data->product_name) . '.csv') }})">
+                        <i class="fa fa-download"></i> Download CSV
+                    </button>
                     @if(!empty($data->bom_file))
                     <a href="{{ Config::get('FileConstant.REQUISITION_VIEW') }}{{ $data->bom_file }}"
                        class="btn btn-secondary btn-sm" target="_blank">
-                        <i class="fa fa-download"></i> Download File
+                        <i class="fa fa-file"></i> Original BOM File
                     </a>
                     @endif
                     <button type="button" class="btn btn-dark btn-sm" data-dismiss="modal">Close</button>
@@ -207,4 +240,66 @@
         </div>
     </div>
 @endforeach
+
+{{-- Print + CSV-download helpers (mirror of the helpers on the Store BOM Requisition modal). --}}
+<script>
+    function printBomReq(modalId, productName, projectName) {
+        var modal = document.getElementById(modalId);
+        if (!modal) return;
+        var tableHtml = (modal.querySelector('.modal-body table') || {}).outerHTML || '';
+        if (!tableHtml) { alert('No table data to print.'); return; }
+        var title = 'BOM Requisition — ' + (productName || '');
+        var w = window.open('', '_blank', 'width=1100,height=800');
+        if (!w) { alert('Please allow pop-ups for this site to print.'); return; }
+        w.document.write(
+            '<!doctype html><html><head><title>' + title + '</title>' +
+            '<style>' +
+                'body{font-family:Arial,Helvetica,sans-serif;padding:20px;color:#222;}' +
+                'h1{font-size:20px;margin:0 0 4px;}' +
+                'h2{font-size:14px;margin:0 0 16px;color:#555;font-weight:normal;}' +
+                'table{width:100%;border-collapse:collapse;font-size:12px;}' +
+                'th,td{border:1px solid #444;padding:6px 8px;text-align:left;}' +
+                'thead{background:#1a3a6b;color:#fff;}' +
+                'tfoot{font-weight:bold;background:#f0f0f0;}' +
+                '@media print{button{display:none;}}' +
+            '</style></head><body>' +
+            '<h1>' + escapeHtmlBom(title) + '</h1>' +
+            (projectName ? '<h2>' + escapeHtmlBom(projectName) + '</h2>' : '') +
+            tableHtml +
+            '<script>window.onload=function(){window.print();};<\/script>' +
+            '</body></html>'
+        );
+        w.document.close();
+    }
+
+    function downloadBomReqCsv(modalId, filename) {
+        var modal = document.getElementById(modalId);
+        if (!modal) return;
+        var table = modal.querySelector('.modal-body table');
+        if (!table) { alert('No table data to download.'); return; }
+        var rows = [];
+        table.querySelectorAll('tr').forEach(function (tr) {
+            var cells = [];
+            tr.querySelectorAll('th, td').forEach(function (cell) {
+                var text = (cell.innerText || cell.textContent || '').replace(/\s+/g, ' ').trim();
+                if (/[",\n]/.test(text)) text = '"' + text.replace(/"/g, '""') + '"';
+                cells.push(text);
+            });
+            if (cells.length) rows.push(cells.join(','));
+        });
+        var csv = '﻿' + rows.join('\r\n');
+        var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        var url  = URL.createObjectURL(blob);
+        var a    = document.createElement('a');
+        a.href = url; a.download = filename || 'BOM_Requisition.csv';
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+    }
+
+    function escapeHtmlBom(s) {
+        return String(s == null ? '' : s)
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+</script>
 @endsection

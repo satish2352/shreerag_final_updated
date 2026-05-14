@@ -955,6 +955,10 @@ class AllListRepository
                'vendors.id', '=', 'purchase_orders.vendor_id')
         ->leftJoin('tbl_unit as u',
                'u.id', '=', 'purchase_order_details.unit')
+        // Join the part-item master so we can fall back to its description when
+        // purchase_order_details.description was entered as a bad value (e.g. "1")
+        ->leftJoin('tbl_part_item as pi',
+               'pi.id', '=', 'purchase_order_details.part_no_id')
         ->where('businesses.is_active',  1)
         ->where('businesses.is_deleted', 0)
         ->where('grn_tbl.is_deleted',    0)
@@ -1005,7 +1009,11 @@ class AllListRepository
           'vendors.vendor_company_name',
           'grn_tbl.grn_no_generate',
           'grn_tbl.grn_date',
-          'purchase_order_details.description              as material_description',
+          // Prefer the part-item master description; fall back to the PO line
+          // description only when there is no master row (legacy / free-text rows).
+          // This fixes rows where someone typed a stray value like "1" into the
+          // description but the part_no_id correctly points at the master.
+          DB::raw("COALESCE(NULLIF(TRIM(pi.description), ''), purchase_order_details.description) as material_description"),
           'purchase_order_details.quantity                 as po_quantity',
           'u.name                                          as unit_name',
           'purchase_order_details.rate',
