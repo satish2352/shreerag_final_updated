@@ -709,7 +709,10 @@ class BomMaterialItemsController extends Controller
                 $estimationId = $estimation->id;
             }
 
-            // Use the exceed-check variant — auto-triggers owner notification when needed
+            // Use the exceed-check variant — auto-triggers owner notification when needed.
+            // T-2026-046: pass $trolleyQty explicitly so the repository can compute the
+            // correct unit-aware BOM total (BomTotalCalculator). $trolleyQty was already
+            // clamped (>=1) and saved to designs.trolley_qty just above.
             $result = $this->service->saveItemsWithExceedCheck(
                 (int) $request->input('business_id'),
                 $bdId,
@@ -719,7 +722,8 @@ class BomMaterialItemsController extends Controller
                 15,  // created_dept_role_id = 15 (estimation)
                 $request->input('items', []),
                 array_filter(array_map('intval', $request->input('deleted_ids', []))),
-                $exceedReason
+                $exceedReason,
+                $trolleyQty
             );
 
             return response()->json([

@@ -8,6 +8,7 @@ use App\Http\Services\Organizations\Estimation\EstimationServices;
 use App\Http\Controllers\Organizations\Estimation\AllListController;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Exception;
 use App\Models\{
     PartItem,
@@ -17,6 +18,7 @@ use App\Models\{
     EstimationModel,
     BomMaterialItem
 };
+use App\Support\BomTotalCalculator;
 
 class EstimationController extends Controller
 {
@@ -37,19 +39,27 @@ class EstimationController extends Controller
                 ->where('is_deleted', 0)
                 ->first();
 
-            // T-2026-010: Compute BOM Final Total (SUM of rate × quantity) from
-            // bom_material_items for the design linked to this estimation row.
-            // This is the authoritative value shown in the Total Estimation Amount field —
-            // it must NOT be owner_suggested_amount (which is informational only).
+            // T-2026-046: Compute BOM Final Total using the unit-aware formula that
+            // mirrors the JS modal logic:
+            //   piece units (NOS/PCS/SET/EACH) → rate × quantity × trolley_qty
+            //   length units (MTR/METER/etc.)   → rate × mtr_for_01_nos_trolley × trolley_qty
+            // Previously used the naive rate × quantity (T-2026-010) which ignored
+            // trolley_qty and the unit-aware multiplier — causing the Total Estimation
+            // Amount readonly field to show the wrong number.
             $bom_final_total = 0.0;
             if ($estimation_data && $estimation_data->design_id) {
                 $activeItems = BomMaterialItem::where('business_details_id', (int) $addData)
                     ->where('design_id', (int) $estimation_data->design_id)
                     ->where('is_deleted', 0)
                     ->get();
-                $bom_final_total = $activeItems->sum(function ($item) {
-                    return floatval($item->rate ?? 0) * floatval($item->quantity ?? 0);
-                });
+                // Look up trolley_qty from designs table; fall back to 1 if missing.
+                $trolleyQty = (int) (DB::table('designs')
+                    ->where('id', (int) $estimation_data->design_id)
+                    ->value('trolley_qty') ?? 1);
+                if ($trolleyQty < 1) {
+                    $trolleyQty = 1;
+                }
+                $bom_final_total = BomTotalCalculator::finalTotal($activeItems, $trolleyQty);
             }
 
             return view('organizations.estimation.estimation-upload.edit-estimation-upload', [
@@ -212,18 +222,22 @@ class EstimationController extends Controller
                 return redirect()->back()->withErrors(['msg' => 'No matching business details found.']);
             }
 
-            // T-2026-011: Compute BOM Final Total (SUM of rate × quantity) from
-            // bom_material_items for the design linked to this estimation row.
-            // Same pattern as editEstimation() (T-2026-010).
+            // T-2026-046: Compute BOM Final Total using the unit-aware formula
+            // (same fix as editEstimation — previously T-2026-011 used naive rate × quantity).
             $bom_final_total = 0.0;
             if ($business_details_data->design_id) {
                 $activeItems = BomMaterialItem::where('business_details_id', (int) $addData)
                     ->where('design_id', (int) $business_details_data->design_id)
                     ->where('is_deleted', 0)
                     ->get();
-                $bom_final_total = $activeItems->sum(function ($item) {
-                    return floatval($item->rate ?? 0) * floatval($item->quantity ?? 0);
-                });
+                // Look up trolley_qty from designs table; fall back to 1 if missing.
+                $trolleyQty = (int) (DB::table('designs')
+                    ->where('id', (int) $business_details_data->design_id)
+                    ->value('trolley_qty') ?? 1);
+                if ($trolleyQty < 1) {
+                    $trolleyQty = 1;
+                }
+                $bom_final_total = BomTotalCalculator::finalTotal($activeItems, $trolleyQty);
             }
 
             return view('organizations.estimation.estimation-upload.edit-revised-estimation-upload', [

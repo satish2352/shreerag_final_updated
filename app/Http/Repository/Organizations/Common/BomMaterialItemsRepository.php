@@ -12,6 +12,7 @@ use App\Models\BusinessDetails;
 use App\Models\BusinessApplicationProcesses;
 use App\Models\AdminView;
 use App\Models\NotificationStatus;
+use App\Support\BomTotalCalculator;
 
 class BomMaterialItemsRepository
 {
@@ -337,10 +338,14 @@ class BomMaterialItemsRepository
      *
      * Returns an extended array:
      *   items            — saved BomMaterialItem rows
-     *   bom_final_total  — float: SUM(rate × quantity) of active rows
+     *   bom_final_total  — float: unit-aware SUM across active rows (T-2026-046)
      *   business_limit   — float|null: businesses_details.total_amount
      *   exceed_triggered — bool: whether the exceed flow was fired
      *   message          — human-readable summary string
+     *
+     * T-2026-046: Added $trolleyQty parameter so the BOM total is computed with
+     * the unit-aware formula (BomTotalCalculator) instead of the naive rate × quantity.
+     * Previously persisted value was wrong; rows self-heal on next BOM save.
      *
      * @param int        $businessId
      * @param int        $businessDetailsId
@@ -351,6 +356,7 @@ class BomMaterialItemsRepository
      * @param array      $items
      * @param array      $deletedIds
      * @param string|null $exceedReason      optional reason provided by estimator in modal
+     * @param int        $trolleyQty         from designs.trolley_qty (already saved by controller before this call)
      * @return array
      */
     public function saveItemsWithExceedCheck(
@@ -362,7 +368,8 @@ class BomMaterialItemsRepository
         int $deptRoleId,
         array $items,
         array $deletedIds,
-        ?string $exceedReason = null
+        ?string $exceedReason = null,
+        int $trolleyQty = 1
     ): array {
         return DB::transaction(function () use (
             $businessId,
@@ -373,7 +380,8 @@ class BomMaterialItemsRepository
             $deptRoleId,
             $items,
             $deletedIds,
-            $exceedReason
+            $exceedReason,
+            $trolleyQty
         ) {
             // ----------------------------------------------------------------
             // 1. Save items (same logic as saveItems, inline to share transaction)
@@ -477,9 +485,12 @@ class BomMaterialItemsRepository
                 ->where('is_deleted', 0)
                 ->get();
 
-            $bomFinalTotal = $allActiveItems->sum(function ($i) {
-                return floatval($i->rate ?? 0) * floatval($i->quantity ?? 0);
-            });
+            // T-2026-046: Use unit-aware formula matching the JS modal.
+            // piece units (NOS/PCS/SET/EACH) → rate × quantity × trolleyQty
+            // length units (MTR/METER/etc.)   → rate × mtr_for_01_nos_trolley × trolleyQty
+            // $trolleyQty was already clamped (>=1) and saved to designs.trolley_qty
+            // by BomMaterialItemsController::estimationSaveItems() before this call.
+            $bomFinalTotal = BomTotalCalculator::finalTotal($allActiveItems, $trolleyQty);
 
             // ----------------------------------------------------------------
             // 3. Fetch business limit and estimation row

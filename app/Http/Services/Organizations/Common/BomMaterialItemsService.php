@@ -55,6 +55,9 @@ class BomMaterialItemsService
      *
      * Returns extended response: items, bom_final_total, business_limit,
      * exceed_triggered, message.
+     *
+     * T-2026-046: Added $trolleyQty so the repository can compute the correct
+     * unit-aware BOM total (BomTotalCalculator) instead of naive rate × quantity.
      */
     public function saveItemsWithExceedCheck(
         int $businessId,
@@ -65,7 +68,8 @@ class BomMaterialItemsService
         int $deptRoleId,
         array $items,
         array $deletedIds,
-        ?string $exceedReason = null
+        ?string $exceedReason = null,
+        int $trolleyQty = 1
     ): array {
         return $this->repo->saveItemsWithExceedCheck(
             $businessId,
@@ -76,7 +80,8 @@ class BomMaterialItemsService
             $deptRoleId,
             $items,
             $deletedIds,
-            $exceedReason
+            $exceedReason,
+            $trolleyQty
         );
     }
 }
