@@ -229,11 +229,17 @@
     border-color: #dc3545 !important;
     box-shadow: 0 0 0 0.1rem rgba(220, 53, 69, 0.25) !important;
 }
+/* Hide Rate column in design_edit mode — CSS approach keeps col-index refs intact */
+#{{ $modalId }}.bom-modal-design-mode .bom-rate-col {
+    display: none !important;
+}
 </style>
 
 <!-- BOM Material Items Modal -->
-<div class="modal fade" id="{{ $modalId }}" tabindex="-1" role="dialog"
-     aria-labelledby="{{ $modalId }}Label" aria-hidden="true">
+<div class="modal fade{{ $mode === 'design_edit' ? ' bom-modal-design-mode' : '' }}"
+     id="{{ $modalId }}" tabindex="-1" role="dialog"
+     aria-labelledby="{{ $modalId }}Label" aria-hidden="true"
+     data-bom-mode="{{ $mode }}">
     <div class="modal-dialog modal-xl modal-dialog-scrollable modal-dialog-centered" role="document" style="max-width:95%;">
         <div class="modal-content">
 
@@ -316,7 +322,7 @@
                                 <th style="width:130px;">Total in mm</th>
                                 <th style="width:140px;">Mtr for 01 Nos Trolley</th>
                                 <th style="width:140px;">Mtr/Nos for N Trolleys</th>
-                                <th style="width:120px;">Rate <span class="text-danger">*</span></th>
+                                <th style="width:120px;" class="bom-rate-col">Rate <span class="text-danger">*</span></th>
                                 <th style="width:130px;">Unit <span class="text-danger">*</span></th>
                                 <th style="width:110px;">Total</th>
                                 @if($isEditMode)
@@ -340,7 +346,7 @@
                                 <td id="{{ $modalId }}TotalInMm" class="text-center">0</td>
                                 <td id="{{ $modalId }}TotalMtrTrolley" class="text-center">0</td>
                                 <td></td>{{-- Mtr/Nos for N Trolleys — no aggregate sum --}}
-                                <td></td>{{-- Rate column — no sum shown in totals row --}}
+                                <td class="bom-rate-col"></td>{{-- Rate column — no sum shown in totals row --}}
                                 <td></td>{{-- Unit column — no sum shown in totals row --}}
                                 <td id="{{ $modalId }}TotalRowAmount" style="font-weight:bold;">₹0.00</td>{{-- Total (Rate × Qty) sum --}}
                                 @if($isEditMode)
@@ -903,7 +909,7 @@
                 '<td>' + escHtml(item.total_in_mm !== null && item.total_in_mm !== undefined ? item.total_in_mm : '') + '</td>' +
                 '<td>' + escHtml(item.mtr_for_01_nos_trolley !== null && item.mtr_for_01_nos_trolley !== undefined ? item.mtr_for_01_nos_trolley : '') + '</td>' +
                 '<td class="bom-mtr-n-trolley">' + fmtN(nTrolleyView) + '</td>' +
-                '<td>' + escHtml(rateVal) + '</td>' +
+                '<td class="bom-rate-col">' + escHtml(rateVal) + '</td>' +
                 '<td>' + escHtml(unitText) + '</td>' +
                 '<td class="bom-row-total">' + rowTotalView + '</td>' +
                 '</tr>';
@@ -939,7 +945,7 @@
             '<td><input type="number" class="form-control form-control-sm bom-total-mm" value="' + escHtml(item.total_in_mm !== null && item.total_in_mm !== undefined ? item.total_in_mm : '') + '" step="0.001" placeholder="0.000"></td>' +
             '<td><input type="number" class="form-control form-control-sm bom-mtr-trolley" value="' + escHtml(item.mtr_for_01_nos_trolley !== null && item.mtr_for_01_nos_trolley !== undefined ? item.mtr_for_01_nos_trolley : '') + '" step="0.001" placeholder="0.000"></td>' +
             '<td><input type="text" class="form-control form-control-sm bom-mtr-n-trolley" value="0.000" readonly tabindex="-1" style="background:#f3f4f6;cursor:not-allowed;"></td>' +
-            '<td><input type="number" class="form-control form-control-sm bom-rate" value="' + escHtml(rateVal) + '" step="0.001" min="0" placeholder="0.000"></td>' +
+            '<td class="bom-rate-col"><input type="number" class="form-control form-control-sm bom-rate" value="' + escHtml(rateVal) + '" step="0.001" min="0" placeholder="0.000"></td>' +
             '<td>' + unitSelectHtml + '</td>' +
             '<td class="bom-row-total">' + rowTotalEdit + '</td>' +
             '<td><button type="button" class="btn btn-danger btn-sm bom-delete-row" title="Remove row"><i class="fa fa-trash"></i></button></td>' +
@@ -1248,7 +1254,12 @@
         }
 
         // Rate — required, numeric, >= 0 (allow 0 for items whose rate is unknown at upload time)
+        // In design_edit mode the Rate column is hidden; auto-fill with '0' so the designer
+        // is never blocked by an invisible "Rate is required" validation error.
         var $rate   = $row.find('.bom-rate');
+        if (mode === 'design_edit' && $.trim($rate.val()) === '') {
+            $rate.val('0');
+        }
         var rateVal = $.trim($rate.val());
         clearFieldError($rate);
         if (rateVal === '') {
