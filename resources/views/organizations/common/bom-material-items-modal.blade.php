@@ -233,6 +233,14 @@
 #{{ $modalId }}.bom-modal-design-mode .bom-rate-col {
     display: none !important;
 }
+/* Hide Total column in design_edit mode */
+#{{ $modalId }}.bom-modal-design-mode .bom-total-col {
+    display: none !important;
+}
+/* Hide Final Total Amount and Estimation Amount summary blocks in design_edit mode */
+#{{ $modalId }}.bom-modal-design-mode .bom-design-summary-hide {
+    display: none !important;
+}
 </style>
 
 <!-- BOM Material Items Modal -->
@@ -324,7 +332,7 @@
                                 <th style="width:140px;">Mtr/Nos for N Trolleys</th>
                                 <th style="width:120px;" class="bom-rate-col">Rate <span class="text-danger">*</span></th>
                                 <th style="width:130px;">Unit <span class="text-danger">*</span></th>
-                                <th style="width:110px;">Total</th>
+                                <th style="width:110px;" class="bom-total-col">Total</th>
                                 @if($isEditMode)
                                     <th style="width:60px;">Action</th>
                                 @endif
@@ -348,7 +356,7 @@
                                 <td></td>{{-- Mtr/Nos for N Trolleys — no aggregate sum --}}
                                 <td class="bom-rate-col"></td>{{-- Rate column — no sum shown in totals row --}}
                                 <td></td>{{-- Unit column — no sum shown in totals row --}}
-                                <td id="{{ $modalId }}TotalRowAmount" style="font-weight:bold;">₹0.00</td>{{-- Total (Rate × Qty) sum --}}
+                                <td id="{{ $modalId }}TotalRowAmount" class="bom-total-col" style="font-weight:bold;">₹0.00</td>{{-- Total (Rate × Qty) sum --}}
                                 @if($isEditMode)
                                     <td></td>{{-- Action column --}}
                                 @endif
@@ -384,10 +392,10 @@
                 </div>
                 @else
                 {{-- design_edit and any other mode: generic labels --}}
-                <div class="bom-final-total-{{ $modalId }}" id="{{ $modalId }}FinalTotalBlock">
+                <div class="bom-final-total-{{ $modalId }} bom-design-summary-hide" id="{{ $modalId }}FinalTotalBlock">
                     Final Total Amount: <span id="{{ $modalId }}FinalTotalVal">₹0.00</span>
                 </div>
-                <div class="bom-estimation-amount-{{ $modalId }}" id="{{ $modalId }}EstimationAmountBlock" style="display:none;">
+                <div class="bom-estimation-amount-{{ $modalId }} bom-design-summary-hide" id="{{ $modalId }}EstimationAmountBlock" style="display:none;">
                     Estimation Amount: <span id="{{ $modalId }}EstimationAmountVal">—</span>
                 </div>
                 @endif
@@ -911,7 +919,7 @@
                 '<td class="bom-mtr-n-trolley">' + fmtN(nTrolleyView) + '</td>' +
                 '<td class="bom-rate-col">' + escHtml(rateVal) + '</td>' +
                 '<td>' + escHtml(unitText) + '</td>' +
-                '<td class="bom-row-total">' + rowTotalView + '</td>' +
+                '<td class="bom-total-col bom-row-total">' + rowTotalView + '</td>' +
                 '</tr>';
         }
 
@@ -947,7 +955,7 @@
             '<td><input type="text" class="form-control form-control-sm bom-mtr-n-trolley" value="0.000" readonly tabindex="-1" style="background:#f3f4f6;cursor:not-allowed;"></td>' +
             '<td class="bom-rate-col"><input type="number" class="form-control form-control-sm bom-rate" value="' + escHtml(rateVal) + '" step="0.001" min="0" placeholder="0.000"></td>' +
             '<td>' + unitSelectHtml + '</td>' +
-            '<td class="bom-row-total">' + rowTotalEdit + '</td>' +
+            '<td class="bom-total-col bom-row-total">' + rowTotalEdit + '</td>' +
             '<td><button type="button" class="btn btn-danger btn-sm bom-delete-row" title="Remove row"><i class="fa fa-trash"></i></button></td>' +
             '</tr>';
     }
