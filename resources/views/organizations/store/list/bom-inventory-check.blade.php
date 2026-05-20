@@ -635,7 +635,7 @@
                                         <tr style="background:#e8f5e9; font-weight:bold;">
                                             <td colspan="7" style="text-align:right; padding-right:12px;">Grand Total:
                                             </td>
-                                            <td style="white-space:nowrap; font-size:15px; color:#155724;">
+                                            <td id="extraGrandTotalCell" style="white-space:nowrap; font-size:15px; color:#155724;">
                                                 &#8377;{{ number_format($extraGrandTotal, 2) }}</td>
                                             <td></td>
                                         </tr>
@@ -1111,6 +1111,11 @@
                         rowEl.querySelector('.extra-desc').value = opt.textContent;
                         closeActiveMenu();
                         checkStock(rowIndex);
+                        // Manually-added rows: refresh merged-cell + Total + Grand Total
+                        // since selecting a part item populates the Rate.
+                        if (rowEl.classList.contains('extra-row-manual')) {
+                            updateManualRowComputed(rowEl);
+                        }
                     });
 
                     document.body.appendChild(menu);
@@ -1152,10 +1157,45 @@
                 }
 
                 // ── Add row ───────────────────────────────────────────────────────
+                // Manually-added rows have no BOM trolley context. The two trolley columns
+                // ("Mtr for 01 Nos Trolley" + "Mtr/Nos for N Trolley(s)") are merged into one
+                // cell that shows the Quantity, and Total = Quantity × Rate.
+                var serverExtraGrandTotal = {{ $extraGrandTotal ?? 0 }};
+
+                function fmtInrAmount(n) {
+                    return '₹' + Number(n).toLocaleString('en-IN', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    });
+                }
+
+                function recomputeExtraGrandTotal() {
+                    var jsTotal = 0;
+                    document.querySelectorAll('#extraItemsBody tr.extra-row-manual').forEach(function(r) {
+                        var mtrInput = r.querySelector('.extra-mtr-input');
+                        var mtrVal   = mtrInput ? (parseFloat(mtrInput.value) || 0) : 0;
+                        var rate     = parseFloat(r.querySelector('.extra-rate-input').value) || 0;
+                        jsTotal += mtrVal * rate;
+                    });
+                    var cell = document.getElementById('extraGrandTotalCell');
+                    if (cell) cell.innerHTML = fmtInrAmount(serverExtraGrandTotal + jsTotal);
+                }
+
+                function updateManualRowComputed(rowEl) {
+                    var mtrInput = rowEl.querySelector('.extra-mtr-input');
+                    var mtrVal   = mtrInput ? (parseFloat(mtrInput.value) || 0) : 0;
+                    var rate     = parseFloat(rowEl.querySelector('.extra-rate-input').value) || 0;
+                    var totalCell = rowEl.querySelector('.extra-row-total');
+                    if (totalCell) {
+                        totalCell.innerHTML = (mtrVal > 0 && rate > 0) ? fmtInrAmount(mtrVal * rate) : '—';
+                    }
+                    recomputeExtraGrandTotal();
+                }
+
                 function addExtraRow() {
                     var i = extraRowCount++;
                     var row =
-                        '<tr id="extra_row_' + i + '">' +
+                        '<tr id="extra_row_' + i + '" class="extra-row-manual">' +
                         '<td style="vertical-align:middle;">' + (i + 1) + '</td>' +
                         '<td style="vertical-align:middle; min-width:300px;">' +
                         '<div class="ei-dropdown">' +
@@ -1175,8 +1215,10 @@
                         '<select name="extra_items[' + i +
                         '][unit_id]" class="form-control" required style="min-width:100px;">' + unitOptions + '</select>' +
                         '</td>' +
-                        '<td style="vertical-align:middle; white-space:nowrap;">&mdash;</td>' +
-                        '<td style="vertical-align:middle; white-space:nowrap;">&mdash;</td>' +
+                        '<td colspan="2" class="extra-mtr-merged" style="vertical-align:middle; white-space:nowrap; text-align:center;">' +
+                        '<input type="number" name="extra_items[' + i +
+                        '][mtr_for_01_nos_trolley]" class="form-control extra-mtr-input" step="any" min="0" placeholder="0" style="width:120px; margin:0 auto;" value="">' +
+                        '</td>' +
                         '<td style="vertical-align:middle;">' +
                         '<input type="number" name="extra_items[' + i +
                         '][rate]" class="form-control extra-rate-input" step="0.001" min="0" style="width:100px;" value="0" readonly>' +
@@ -1201,6 +1243,15 @@
                     rowEl.querySelector('.extra-qty-input').addEventListener('input', function() {
                         checkStock(i);
                     });
+
+                    // Manually-entered "value" input in the merged trolley column.
+                    // Total = entered value × Rate; updates live on input.
+                    var mtrInputEl = rowEl.querySelector('.extra-mtr-input');
+                    if (mtrInputEl) {
+                        mtrInputEl.addEventListener('input', function() {
+                            updateManualRowComputed(rowEl);
+                        });
+                    }
                 }
 
                 window.removeExtraRow = function(i) {
@@ -1209,6 +1260,7 @@
                     if (menu) menu.remove();
                     var row = document.getElementById('extra_row_' + i);
                     if (row) row.remove();
+                    recomputeExtraGrandTotal();
                 };
 
                 document.getElementById('addExtraRow').addEventListener('click', addExtraRow);

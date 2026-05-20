@@ -609,9 +609,12 @@
         if (!isEstimationEdit || _businessLimit === null) return;
 
         if (finalTotal > _businessLimit) {
+            var differenceAmt = Math.max(0, finalTotal - _businessLimit);
+            var availableAmt  = Math.max(0, _businessLimit - finalTotal);
             var warningText = 'Final Total ' + fmtInr(finalTotal)
                 + ' exceeds Business Limit ' + fmtInr(_businessLimit)
-                + ' (available limit: ' + fmtInr(_businessLimit) + ').';
+                + '. Difference Amount: ' + fmtInr(differenceAmt)
+                + '. Available limit: ' + fmtInr(availableAmt) + '.';
             // Main form alert
             $('#bomMaterialItemsModalExceedWarningText').text(warningText);
             $(EXCEED_WARNING).show();

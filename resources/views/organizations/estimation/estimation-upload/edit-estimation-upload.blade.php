@@ -128,15 +128,16 @@
                                                             $bomExceedsOnLoad = isset($bom_final_total) && $bom_final_total > 0
                                                                 && isset($business_details_data) && $business_details_data->total_amount > 0
                                                                 && $bom_final_total > $business_details_data->total_amount;
-                                                            $bomTotalFmt  = number_format($bom_final_total ?? 0, 2);
-                                                            $bizLimitFmt  = number_format($business_details_data->total_amount ?? 0, 2);
-                                                            $availableFmt = number_format(max(0, ($business_details_data->total_amount ?? 0) - ($bom_final_total ?? 0)), 2);
+                                                            $bomTotalFmt   = number_format($bom_final_total ?? 0, 2);
+                                                            $bizLimitFmt   = number_format($business_details_data->total_amount ?? 0, 2);
+                                                            $availableFmt  = number_format(max(0, ($business_details_data->total_amount ?? 0) - ($bom_final_total ?? 0)), 2);
+                                                            $differenceFmt = number_format(max(0, ($bom_final_total ?? 0) - ($business_details_data->total_amount ?? 0)), 2);
                                                         @endphp
                                                         <div id="bomMaterialItemsModalExceedWarning"
                                                              class="bom-modal-warning-msg"
                                                              style="{{ $bomExceedsOnLoad ? '' : 'display:none;' }}">
                                                             <strong><i class="fa fa-exclamation-triangle"></i> Amount Exceeds Business Limit</strong><br>
-                                                            <span id="bomMaterialItemsModalExceedWarningText">@if($bomExceedsOnLoad)BOM Total &#8377;{{ $bomTotalFmt }} exceeds Business Limit &#8377;{{ $bizLimitFmt }}. Available limit: &#8377;{{ $availableFmt }}.@endif</span><br>
+                                                            <span id="bomMaterialItemsModalExceedWarningText">@if($bomExceedsOnLoad)BOM Total &#8377;{{ $bomTotalFmt }} exceeds Business Limit &#8377;{{ $bizLimitFmt }}. Difference Amount: &#8377;{{ $differenceFmt }}. Available limit: &#8377;{{ $availableFmt }}.@endif</span><br>
                                                             Saving will automatically send an approval request to the Owner.
                                                         </div>
                                                     </div>
