@@ -86,13 +86,13 @@ class ItemRepository
 
             $last_insert_id = $dataOutput->id;
 
-            // Create unique image name
-            $ImageName = $last_insert_id . '_' . rand(100000, 999999) . '_image.' . $request->image->extension();
-
-            // Update image name in the record
-            $finalOutput = PartItem::find($last_insert_id);
-            $finalOutput->image = $ImageName;
-            $finalOutput->save();
+            // Image is optional — only generate a name and store it when a file was uploaded
+            $ImageName = null;
+            if ($request->hasFile('image')) {
+                $ImageName = $last_insert_id . '_' . rand(100000, 999999) . '_image.' . $request->file('image')->extension();
+                $dataOutput->image = $ImageName;
+                $dataOutput->save();
+            }
 
             // Insert into ItemStock
             $itemStock = new ItemStock();
@@ -106,9 +106,10 @@ class ItemRepository
             $itemStockHistory->quantity = $dataOutput->opening_stock;
             $itemStockHistory->save();
 
-            // Return both status and ImageName
+            // Return status, the new id and the (optional) image name
             return [
                 'status' => 'success',
+                'last_insert_id' => $last_insert_id,
                 'ImageName' => $ImageName
             ];
         } catch (\Exception $e) {

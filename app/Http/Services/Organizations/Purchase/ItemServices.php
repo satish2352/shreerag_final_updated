@@ -45,15 +45,19 @@ class ItemServices
     {
         try {
             $last_id = $this->repo->addAll($request);
-            $path = Config::get('DocumentConstant.PART_ITEM_ADD');
-            $ImageName = $last_id['ImageName'];
-            uploadImage($request, 'image', $path, $ImageName);
 
-            if ($last_id) {
-                return ['status' => 'success', 'msg' => 'Data Added Successfully'];
-            } else {
-                return ['status' => 'error', 'msg' => ' Data get Not Added.'];
+            // Bubble up any error from the repository instead of reporting success
+            if (!is_array($last_id) || ($last_id['status'] ?? '') !== 'success') {
+                return ['status' => 'error', 'msg' => $last_id['msg'] ?? 'Data Not Added.'];
             }
+
+            // Image is optional — only move the uploaded file when one was provided
+            if ($request->hasFile('image') && !empty($last_id['ImageName'])) {
+                $path = Config::get('DocumentConstant.PART_ITEM_ADD');
+                uploadImage($request, 'image', $path, $last_id['ImageName']);
+            }
+
+            return ['status' => 'success', 'msg' => 'Data Added Successfully'];
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }
