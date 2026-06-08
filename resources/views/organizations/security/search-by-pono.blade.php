@@ -55,6 +55,7 @@
                                             <th>Purchase Order</th>
                                             <th>Count</th>
                                             <th>Generate Gate Pass</th>
+                                            <th>Close PO</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -76,10 +77,18 @@
                                                         <button class="btn btn-sm btn-bg-colour">Generate Gate Pass</button>
                                                     </a>
                                                 </td>
+                                                <td>
+                                                    <form method="POST" action="{{ route('close-po') }}"
+                                                          onsubmit="return confirm('Mark PO {{ $data->purchase_orders_id }} as CLOSED? It will no longer appear on this page and no more gate passes can be generated from here.');">
+                                                        @csrf
+                                                        <input type="hidden" name="purchase_orders_id" value="{{ $data->purchase_orders_id }}">
+                                                        <button type="submit" class="btn btn-sm btn-danger">Close PO</button>
+                                                    </form>
+                                                </td>
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="8" class="text-center">No Record Found</td>
+                                                <td colspan="9" class="text-center">No Record Found</td>
                                             </tr>
                                         @endforelse
                                     </tbody>

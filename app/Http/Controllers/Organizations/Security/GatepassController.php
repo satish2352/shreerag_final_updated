@@ -49,6 +49,7 @@ class GatepassController extends Controller
                 })
                 ->whereIn('purchase_orders.purchase_status_from_owner', $array_to_be_check_security)
                 ->whereIn('purchase_orders.purchase_status_from_purchase', $array_to_be_purchase)
+                ->where('purchase_orders.is_po_closed', 0)
                 ->when($searchPoNo, function ($query) use ($searchPoNo) {
                     $query->where('purchase_orders.purchase_orders_id', 'like', '%' . $searchPoNo . '%');
                 })
@@ -56,6 +57,7 @@ class GatepassController extends Controller
                 ->select(
                     'purchase_orders.purchase_orders_id',
                     'purchase_orders.id as gatepass_id',
+                    'purchase_orders.is_po_closed',
                     'businesses_details.id as business_details_id',
                     'businesses.title',
                     'businesses_details.product_name',
@@ -69,6 +71,7 @@ class GatepassController extends Controller
                 ->groupBy(
                     'purchase_orders.purchase_orders_id',
                     'purchase_orders.id',
+                    'purchase_orders.is_po_closed',
                     'businesses_details.id',
                     'businesses.title',
                     'businesses_details.product_name',
@@ -78,7 +81,6 @@ class GatepassController extends Controller
                     'production.business_id',
                     'production.id'
                 )
-                ->havingRaw('COUNT(gatepass.id) = 0')
                 ->get();
 
             if ($data_output->isNotEmpty()) {
@@ -352,6 +354,20 @@ class GatepassController extends Controller
             return $e;
         }
     }
+    public function closePO(Request $request)
+    {
+        try {
+            $purchase_orders_id = trim($request->input('purchase_orders_id', ''));
+            if (empty($purchase_orders_id)) {
+                return redirect()->route('search-by-po-no')->with(['msg' => 'Invalid PO number.', 'status' => 'error']);
+            }
+            $result = $this->service->closePO($purchase_orders_id);
+            return redirect()->route('search-by-po-no')->with(['msg' => $result['msg'], 'status' => $result['status']]);
+        } catch (\Exception $e) {
+            return redirect()->route('search-by-po-no')->with(['msg' => 'Something went wrong. Please try again.', 'status' => 'error']);
+        }
+    }
+
     public function update(Request $request)
     {
         $id = $request->edit_id;

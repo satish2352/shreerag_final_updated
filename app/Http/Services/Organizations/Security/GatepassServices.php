@@ -60,6 +60,16 @@ class GatepassServices
             return ['status' => 'error', 'msg' => $e->getMessage()];
         }
     }
+    public function closePO($purchase_orders_id)
+    {
+        try {
+            $result = $this->repo->closePO($purchase_orders_id);
+            return $result;
+        } catch (\Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
+        }
+    }
+
     public function deleteById($id)
     {
         try {

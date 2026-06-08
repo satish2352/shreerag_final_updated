@@ -226,6 +226,21 @@ class GatepassRepository
         }
     }
 
+    public function closePO($purchase_orders_id)
+    {
+        try {
+            $updated = \App\Models\PurchaseOrdersModel::where('purchase_orders_id', $purchase_orders_id)
+                ->update(['is_po_closed' => 1]);
+            if ($updated) {
+                return ['status' => 'success', 'msg' => 'PO ' . $purchase_orders_id . ' has been marked as closed.'];
+            } else {
+                return ['status' => 'error', 'msg' => 'PO not found or already closed.'];
+            }
+        } catch (\Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
+        }
+    }
+
     public function deleteById($id)
     {
         try {

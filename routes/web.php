@@ -706,6 +706,7 @@
         Route::post('/update-gatepass', [GatepassController::class, 'update'])->name('update-gatepass');
         Route::get('/add-gatepass-with-po/{id}', [GatepassController::class, 'addGatePassWithPO'])->name('add-gatepass-with-po');
         Route::post('/store-gatepass', [GatepassController::class, 'store'])->name('store-gatepass');
+        Route::post('/close-po', [GatepassController::class, 'closePO'])->name('close-po');
         Route::post('/list-all-po-number', [SecurityAllListController::class, 'getAllListMaterialRecieved'])->name('list-all-po-number');
         Route::get('/security-report', [ReportController::class, 'getSecurityReport'])->name('security-report');
         Route::get('/security-report-ajax', [ReportController::class, 'getSecurityReportAjax'])->name('security-report-ajax');
