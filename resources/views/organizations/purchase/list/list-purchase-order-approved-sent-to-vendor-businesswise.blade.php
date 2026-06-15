@@ -31,7 +31,7 @@
                                         <thead>
                                             <tr>
                                                 <th data-field="id">Sr.No.</th>
-                                                <th data-field="updated_at" data-editable="false">Updated Date</th>
+                                                <th data-field="owner_po_action_date" data-editable="false">Owner Approved Date</th>
 
 
                                                 <th data-field="purchase_orders_id" data-editable="false">Purchase Order ID</th>
@@ -53,7 +53,7 @@
                                                 <tr>
 
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ $data->updated_at ? \Carbon\Carbon::parse($data->updated_at)->format('d-m-Y') : 'N/A' }}</td>
+                                                    <td>{{ $data->owner_po_action_date ? \Carbon\Carbon::parse($data->owner_po_action_date)->format('d-m-Y') : 'N/A' }}</td>
                                                     {{-- <td>{{$data['purchase_order_id']}}</td>
                                                     <td>{{ ucwords($data['product_name']) }}</td>
                                                     <td>{{ ucwords($data['descriptions']) }}</td> --}}

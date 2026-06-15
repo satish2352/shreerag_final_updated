@@ -164,7 +164,8 @@ class AllListRepository
           'vendors.contact_no',
           'vendors.gst_no',
           'purchase_orders.business_details_id',
-          'purchase_orders.is_active'
+          'purchase_orders.is_active',
+          'purchase_orders.updated_at'
         )
         ->where('purchase_orders.business_details_id', $id)
         // ->get(); 
@@ -286,6 +287,7 @@ class AllListRepository
           'vendors.contact_no',
           'vendors.gst_no',
           'purchase_orders.updated_at',
+          'purchase_orders.owner_po_action_date',
         )->distinct()->orderBy('purchase_orders.updated_at', 'desc')
         ->get();
 

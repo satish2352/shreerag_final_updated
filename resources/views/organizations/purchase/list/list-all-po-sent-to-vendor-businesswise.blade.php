@@ -34,6 +34,7 @@
                                         <thead>
                                             <tr>
                                                 <th data-field="id">Sr.No.</th>
+                                                <th data-field="updated_at" data-editable="false">Sent To Vendor Date</th>
                                                 <th data-field="purchase_orders_id" data-editable="false">Purchase Order ID
                                                 </th>
                                                 <th data-field="client_name" data-editable="false">Client Name</th>
@@ -49,6 +50,7 @@
                                                 <tr>
                                                     <td>{{ ($data_output->currentPage() - 1) * $data_output->perPage() + $loop->iteration }}
                                                     </td>
+                                                    <td>{{ $data->updated_at ? \Carbon\Carbon::parse($data->updated_at)->format('d-m-Y') : 'N/A' }}</td>
                                                     <td>{{ $data->purchase_order_id }}</td>
                                                     <td>{{ $data->vendor_name }}</td>
                                                     <td>{{ $data->vendor_company_name }}</td>
