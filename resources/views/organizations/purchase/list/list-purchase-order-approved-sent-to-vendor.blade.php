@@ -36,6 +36,7 @@
                                         <thead>
                                             <tr>
                                                 <th data-field="id">Sr.No.</th>
+                                                <th data-field="updated_at" data-editable="false">Updated Date</th>
                                                 {{-- <th data-field="po_number" data-editable="false">PO Number</th> --}}
                                                 <th data-field="product_name" data-editable="false">Product Name</th>
                                                 <th data-field="grn_date" data-editable="false">Description</th>
@@ -49,10 +50,11 @@
 
                                         <tbody>
                                             @foreach ($data_output as $data)
-                                            
+
                                                 <tr>
 
                                                     <td>{{ $loop->iteration }}</td>
+                                                    <td>{{ $data->latest_update ? \Carbon\Carbon::parse($data->latest_update)->format('d-m-Y') : 'N/A' }}</td>
 
                                                     {{-- <td>{{$data['purchase_order_id']}}</td> --}}
                                                     <td>{{ ucwords($data['product_name']) }}</td>

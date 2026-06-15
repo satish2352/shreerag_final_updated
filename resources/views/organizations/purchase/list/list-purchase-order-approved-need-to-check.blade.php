@@ -72,8 +72,8 @@ padding-left: 20px !important;
                                     data-toolbar="#toolbar">
                                     <thead>
                                         <tr>
-                                            <th data-field="id">Sr.No.</th> 
-                                            
+                                            <th data-field="id">Sr.No.</th>
+                                            <th data-field="updated_at" data-editable="false">Updated Date</th>
                                             <th data-field="product_name" data-editable="false">Product Name</th>
                                             <th data-field="grn_date" data-editable="false">Description</th>
                                             <th data-field="action" data-editable="false">Action</th>
@@ -88,9 +88,9 @@ padding-left: 20px !important;
                                     <tbody>
                                         @foreach($data_output as $data)
                                         <tr>
-                                            
+
                                             <td>{{ $loop->iteration }}</td>
-                                            
+                                            <td>{{ $data->latest_update ? \Carbon\Carbon::parse($data->latest_update)->format('d-m-Y') : 'N/A' }}</td>
                                             <td>{{ucwords($data->product_name)}}</td>
                                             <td>{{ucwords($data->description)}}</td>
                                             {{-- <td>{{ucwords($data->vendor_id)}}</td>

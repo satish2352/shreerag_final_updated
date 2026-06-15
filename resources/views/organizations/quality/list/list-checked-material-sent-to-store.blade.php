@@ -34,6 +34,7 @@
                                         <thead>
                                             <tr>
                                                 <th data-field="id">Sr. No.</th>
+                                                <th data-field="updated_at" data-editable="false">Updated Date</th>
                                                 <th data-field="grn_number" data-editable="false">Product Name</th>
                                                 <th data-field="grn_date" data-editable="false">Description</th>
                                                 <th data-field="action" data-editable="false">Action</th>
@@ -45,6 +46,7 @@
 
                                                     <td> {{ ($data_output->currentPage() - 1) * $data_output->perPage() + $loop->iteration }}
                                                     </td>
+                                                    <td>{{ $data->latest_update ? \Carbon\Carbon::parse($data->latest_update)->format('d-m-Y') : 'N/A' }}</td>
                                                     <td>{{ ucwords($data->product_name) }}</td>
                                                     <td>{{ ucwords($data->description) }}</td>
                                                     <td>

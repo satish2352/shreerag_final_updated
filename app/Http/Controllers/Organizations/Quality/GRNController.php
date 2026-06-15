@@ -276,9 +276,9 @@ class GRNController extends Controller
                     // 'design_revision_for_prod.id as design_revision_for_prod_id',
                     // 'designs.bom_image',
                     // 'designs.design_image',
-                    'businesses.updated_at',
+                    DB::raw('purchase_orders.updated_at as latest_update'),
 
-                )->orderBy('businesses.updated_at', 'desc')
+                )->orderBy('purchase_orders.updated_at', 'desc')
                 ->paginate($perPage)
                 ->withQueryString();
 
