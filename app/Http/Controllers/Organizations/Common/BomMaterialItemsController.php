@@ -117,11 +117,28 @@ class BomMaterialItemsController extends Controller
                 'qty for 01 trolley',
                 'qty for 1 nos trolley',
                 'qty for 01 nos trolley',
+                // singular "NO" variants (e.g. "QTY FOR 1 NO TROLLEY")
+                'qty for 1 no trolley',
+                'qty for 01 no trolley',
+                'qty for single no trolley',
+                'mtr for 1 no trolley',
+                'mtr for 01 no trolley',
                 'quantity for single trolley',
                 'mtr/nos for single trolley',
                 'mtr/nos per trolley',
                 'mtr per single trolley',
             ]);
+            // Regex fallback: match "qty/mtr ... 1 no(s) trolley" or "... single ... trolley"
+            // to handle future header wording variations without silent failure.
+            if ($cMtr === null) {
+                foreach ($colMap as $label => $idx) {
+                    if (preg_match('/(?:mtr|qty|quantity)\b.*\b0*1\s*nos?\s*trolley/i', $label)
+                        || preg_match('/(?:mtr|qty|quantity)\b.*\bsingle\b.*\btrolley/i', $label)) {
+                        $cMtr = $idx;
+                        break;
+                    }
+                }
+            }
             $cUnit    = $col(['unit', 'uom', 'u.o.m', 'u.o.m.']);
             $cRate    = $col(['rate']);
 
@@ -241,7 +258,7 @@ class BomMaterialItemsController extends Controller
 
             // ---- Parse trolley count from spreadsheet ----
             // Primary source: the column G (cNTrolley) header cell text.
-            //   Pattern: /(\d+)\s*(?:nos\s+)?trolley/i  e.g. "QTY FOR 08 NOS TROLLEY" → 8
+            //   Pattern: /(\d+)\s*(?:no[s]?\s+)?trolley/i  e.g. "QTY FOR 08 NOS TROLLEY" → 8, "QTY FOR 36 NO TROLLEY" → 36
             // Fallback: scan rows ABOVE the header for metadata matching "TROLLEY QTY:- 08 NOS".
             //   Pattern: /trolley\s*(?:qty|quantity)\s*[:\-]*\s*(\d+)/i
             // Default: 1 (single-trolley — preserves backward-compatible behaviour).
@@ -250,7 +267,7 @@ class BomMaterialItemsController extends Controller
             // Primary: column G header cell text
             if ($cNTrolley !== null && isset($rows[$headerIdx][$cNTrolley])) {
                 $headerCellText = strtolower(trim((string) $rows[$headerIdx][$cNTrolley]));
-                if (preg_match('/(\d+)\s*(?:nos\s+)?trolley/i', $headerCellText, $m)) {
+                if (preg_match('/(\d+)\s*(?:no[s]?\s+)?trolley/i', $headerCellText, $m)) {
                     $parsedQty = (int) $m[1];
                     if ($parsedQty >= 1) {
                         $trolleyQty = $parsedQty;
@@ -340,6 +357,22 @@ class BomMaterialItemsController extends Controller
                         }
                     }
                     if (!$partRow && $nDesc !== '') {
+                        // Coverage-ratio threshold for the containment fallback (tier 3).
+                        // After a bidirectional containment match is found, the shorter of
+                        // the two normalised strings must cover at least this fraction of the
+                        // longer one.  Ratio = min(len_a, len_b) / max(len_a, len_b).
+                        //
+                        // Value 0.6 was chosen so that:
+                        //  - "paintyellow" (11) vs "ralbluepaintyellowpaintaspermgistandard" (38)
+                        //    → ratio ≈ 0.29  REJECTED  (false positive eliminated)
+                        //  - "paintroller" (11) vs "paintroller4" (12)
+                        //    → ratio ≈ 0.92  ACCEPTED  (genuine match kept)
+                        //  - "paintbrush"  (10) vs "paintbrush1"  (11)
+                        //    → ratio ≈ 0.91  ACCEPTED  (genuine match kept)
+                        //  - "stackingcup" (11) vs "stackingcupttmlstd" (18)
+                        //    → ratio ≈ 0.61  ACCEPTED  (just above threshold, correct)
+                        $CONTAINMENT_COVERAGE_THRESHOLD = 0.6;
+
                         $bestKey = null;
                         $bestLen = 0;
                         foreach ($partLookup as $pKey => $pRow) {
@@ -354,9 +387,21 @@ class BomMaterialItemsController extends Controller
                             // master (e.g. "mssqpipe40x40x3mm" beats "sqpipe" if both match).
                             $contained = (strpos($nDesc, $pKey) !== false)
                                       || (strpos($pKey, $nDesc) !== false);
-                            if ($contained && strlen($pKey) > $bestLen) {
-                                $bestKey = $pKey;
-                                $bestLen = strlen($pKey);
+                            if ($contained) {
+                                // Coverage-ratio guard: reject matches where the shorter string
+                                // is too small relative to the longer one.  This eliminates the
+                                // case where a short Excel term (e.g. "paintyellow", 11 chars)
+                                // accidentally matches a long master key that merely contains it
+                                // as a substring (e.g. 38 chars → ratio ≈ 0.29 < 0.6 → REJECT).
+                                $coverageRatio = min(strlen($pKey), strlen($nDesc))
+                                               / max(strlen($pKey), strlen($nDesc));
+                                if ($coverageRatio < $CONTAINMENT_COVERAGE_THRESHOLD) {
+                                    continue;
+                                }
+                                if (strlen($pKey) > $bestLen) {
+                                    $bestKey = $pKey;
+                                    $bestLen = strlen($pKey);
+                                }
                             }
                         }
                         if ($bestKey !== null) {
