@@ -1066,7 +1066,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="mt-2 text-sm">
-                                                    <a href="{{ route('list-purchase-orders-sent-to-owner') }}"
+                                                    <a href="{{ route('list-purchase-order-rejected') }}"
                                                         style="color:#dc3545; font-size:12px;">
                                                         <i class="fa-solid fa-arrow-right"></i> Review &amp; Resubmit
                                                     </a>

@@ -161,33 +161,43 @@
                                                     @php
                                                         $poTotal    = $poRows->sum(fn($r) => (float) $r->line_amount);
                                                         $totalRows  = $poRows->count();
+                                                        // Group the PO's lines by GRN so the GRN No / GRN Date
+                                                        // columns are merged (shown once) instead of repeating.
+                                                        $grnGroups  = $poRows->groupBy(fn($r) => ($r->grn_no_generate ?? '—') . '|' . ($r->grn_date ?? ''));
+                                                        $poRowIndex = 0;
                                                     @endphp
-                                                    @foreach($poRows as $ri => $row)
-                                                        <tr>
-                                                            @if($ri === 0)
-                                                                <td rowspan="{{ $totalRows }}" style="text-align:center; vertical-align:middle;">{{ $sr++ }}</td>
-                                                                <td rowspan="{{ $totalRows }}" style="vertical-align:middle;">{{ ucwords($row->project_name) }}</td>
-                                                                <td rowspan="{{ $totalRows }}" style="vertical-align:middle; font-weight:600; white-space:nowrap;">{{ $row->purchase_orders_id }}</td>
-                                                                <td rowspan="{{ $totalRows }}" style="vertical-align:middle; white-space:nowrap;">
-                                                                    {{ $row->po_date ? \Carbon\Carbon::parse($row->po_date)->format('d-m-Y') : '—' }}
-                                                                </td>
-                                                                <td rowspan="{{ $totalRows }}" style="vertical-align:middle;">{{ ucwords($row->product_name) }}</td>
-                                                                <td rowspan="{{ $totalRows }}" style="vertical-align:middle;">{{ ucwords($row->vendor_name) }}</td>
-                                                                <td rowspan="{{ $totalRows }}" style="vertical-align:middle;">{{ ucwords($row->vendor_company_name) }}</td>
-                                                            @endif
-                                                            <td style="white-space:nowrap;">{{ $row->grn_no_generate ?? '—' }}</td>
-                                                            <td style="white-space:nowrap;">
-                                                                {{ $row->grn_date ? \Carbon\Carbon::parse($row->grn_date)->format('d-m-Y') : '—' }}
-                                                            </td>
-                                                            <td>{{ $row->material_description ?? '—' }}</td>
-                                                            <td style="text-align:right;">{{ $row->po_quantity }}</td>
-                                                            <td style="text-align:right;">{{ $row->actual_quantity }}</td>
-                                                            <td style="text-align:right; color:#155724; font-weight:600;">{{ $row->accepted_quantity }}</td>
-                                                            <td style="text-align:right; color:#721c24;">{{ $row->rejected_quantity }}</td>
-                                                            <td>{{ $row->unit_name ?? '—' }}</td>
-                                                            <td style="text-align:right;">{{ number_format((float)$row->rate, 2) }}</td>
-                                                            <td style="text-align:right;"><strong>{{ number_format((float)$row->line_amount, 2) }}</strong></td>
-                                                        </tr>
+                                                    @foreach($grnGroups as $grnRows)
+                                                        @php $grnRowSpan = $grnRows->count(); @endphp
+                                                        @foreach($grnRows as $gi => $row)
+                                                            <tr>
+                                                                @if($poRowIndex === 0)
+                                                                    <td rowspan="{{ $totalRows }}" style="text-align:center; vertical-align:middle;">{{ $sr++ }}</td>
+                                                                    <td rowspan="{{ $totalRows }}" style="vertical-align:middle;">{{ ucwords($row->project_name) }}</td>
+                                                                    <td rowspan="{{ $totalRows }}" style="vertical-align:middle; font-weight:600; white-space:nowrap;">{{ $row->purchase_orders_id }}</td>
+                                                                    <td rowspan="{{ $totalRows }}" style="vertical-align:middle; white-space:nowrap;">
+                                                                        {{ $row->po_date ? \Carbon\Carbon::parse($row->po_date)->format('d-m-Y') : '—' }}
+                                                                    </td>
+                                                                    <td rowspan="{{ $totalRows }}" style="vertical-align:middle;">{{ ucwords($row->product_name) }}</td>
+                                                                    <td rowspan="{{ $totalRows }}" style="vertical-align:middle;">{{ ucwords($row->vendor_name) }}</td>
+                                                                    <td rowspan="{{ $totalRows }}" style="vertical-align:middle;">{{ ucwords($row->vendor_company_name) }}</td>
+                                                                @endif
+                                                                @if($gi === 0)
+                                                                    <td rowspan="{{ $grnRowSpan }}" style="white-space:nowrap; vertical-align:middle;">{{ $row->grn_no_generate ?? '—' }}</td>
+                                                                    <td rowspan="{{ $grnRowSpan }}" style="white-space:nowrap; vertical-align:middle;">
+                                                                        {{ $row->grn_date ? \Carbon\Carbon::parse($row->grn_date)->format('d-m-Y') : '—' }}
+                                                                    </td>
+                                                                @endif
+                                                                <td>{{ $row->material_description ?? '—' }}</td>
+                                                                <td style="text-align:right;">{{ $row->po_quantity }}</td>
+                                                                <td style="text-align:right;">{{ $row->actual_quantity }}</td>
+                                                                <td style="text-align:right; color:#155724; font-weight:600;">{{ $row->accepted_quantity }}</td>
+                                                                <td style="text-align:right; color:#721c24;">{{ $row->rejected_quantity }}</td>
+                                                                <td>{{ $row->unit_name ?? '—' }}</td>
+                                                                <td style="text-align:right;">{{ number_format((float)$row->rate, 2) }}</td>
+                                                                <td style="text-align:right;"><strong>{{ number_format((float)$row->line_amount, 2) }}</strong></td>
+                                                            </tr>
+                                                            @php $poRowIndex++; @endphp
+                                                        @endforeach
                                                     @endforeach
 
                                                     {{-- PO subtotal --}}
