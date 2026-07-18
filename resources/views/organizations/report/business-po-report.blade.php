@@ -174,9 +174,10 @@
                                                                     <td rowspan="{{ $totalRows }}" style="text-align:center; vertical-align:middle;">{{ $sr++ }}</td>
                                                                     <td rowspan="{{ $totalRows }}" style="vertical-align:middle;">{{ ucwords($row->project_name) }}</td>
                                                                     <td rowspan="{{ $totalRows }}" style="vertical-align:middle; font-weight:600; white-space:nowrap;">
-                                                                        <a href="{{ route('check-details-of-po-before-send-vendor', $row->purchase_orders_id) }}"
-                                                                            target="_blank" title="View Purchase Order"
-                                                                            style="color:#1a3a6b; text-decoration:underline;">{{ $row->purchase_orders_id }}</a>
+                                                                        <a href="javascript:void(0)"
+                                                                            onclick="openPoModal('{{ route('check-details-of-po-before-send-vendor', $row->purchase_orders_id) }}', '{{ $row->purchase_orders_id }}')"
+                                                                            title="View Purchase Order"
+                                                                            style="color:#1a3a6b; text-decoration:underline; cursor:pointer;">{{ $row->purchase_orders_id }}</a>
                                                                     </td>
                                                                     <td rowspan="{{ $totalRows }}" style="vertical-align:middle; white-space:nowrap;">
                                                                         {{ $row->po_date ? \Carbon\Carbon::parse($row->po_date)->format('d-m-Y') : '—' }}
@@ -265,7 +266,44 @@
     </div>
 </div>
 
+{{-- PO View Modal (opens the PO in-page instead of a new tab) --}}
+<div id="poModalOverlay"
+    style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:1050; padding:20px;">
+    <div style="max-width:1100px; height:100%; margin:0 auto; background:#fff; border-radius:6px; display:flex; flex-direction:column; overflow:hidden;">
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 15px; background:#1a3a6b; color:#fff;">
+            <span id="poModalTitle" style="font-weight:600; font-size:14px;">Purchase Order</span>
+            <button type="button" onclick="closePoModal()"
+                style="background:transparent; border:none; color:#fff; font-size:22px; line-height:1; cursor:pointer;">&times;</button>
+        </div>
+        <iframe id="poModalFrame" src="" title="Purchase Order"
+            style="flex:1; width:100%; border:none;"></iframe>
+    </div>
+</div>
+
 <script>
+function openPoModal(url, poNo) {
+    document.getElementById('poModalTitle').textContent = 'Purchase Order — ' + (poNo || '');
+    document.getElementById('poModalFrame').src = url;
+    document.getElementById('poModalOverlay').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+}
+
+function closePoModal() {
+    document.getElementById('poModalOverlay').style.display = 'none';
+    document.getElementById('poModalFrame').src = ''; // stop loading / free memory
+    document.body.style.overflow = '';
+}
+
+// Close when clicking the dark backdrop (outside the modal panel)
+document.getElementById('poModalOverlay').addEventListener('click', function (e) {
+    if (e.target === this) closePoModal();
+});
+
+// Close on Escape
+document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closePoModal();
+});
+
 function changePerPage(size) {
     var url = new URL(window.location.href);
     url.searchParams.set('per_page', size);
