@@ -223,9 +223,11 @@ class AllListController extends Controller
      * PDF — each PO rendered on its own page, reusing the same single-PO PDF
      * markup used by PurchaseOrderController::downloadPurchaseOrderPdf().
      */
-    public function downloadAllSubmittedPoBusinessWise($id)
+    public function downloadAllSubmittedPoBusinessWise(Request $request, $id)
     {
         try {
+            $token = $request->query('download_token');
+
             $poIds = $this->service->getAllSubmitedPoIdsBusinessWise($id);
 
             if (!$poIds || $poIds->isEmpty()) {
@@ -276,7 +278,13 @@ class AllListController extends Controller
                 'isRemoteEnabled' => true,
             ])->setWarnings(false);
 
-            return $pdf->download('all_purchase_orders_business_' . $id . '.pdf');
+            $response = $pdf->download('all_purchase_orders_business_' . $id . '.pdf');
+
+            if ($token) {
+                $response->headers->setCookie(cookie('downloadToken', $token, 1, '/', null, false, false));
+            }
+
+            return $response;
         } catch (Exception $e) {
             return redirect()->back()->with([
                 'status' => 'error',

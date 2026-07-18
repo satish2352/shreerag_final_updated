@@ -16,14 +16,15 @@
                                     <form method="GET" action="{{ url()->current() }}">
                                         <input type="hidden" name="per_page" value="{{ (int) request('per_page', 10) }}">
                                         <div class="d-flex justify-content-end mb-3">
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <input type="text" name="search" value="{{ request('search') }}"
                                                     class="form-control" placeholder="Search Product Name">
                                             </div>
-                                            <div class="col-md-2 ">
+                                            <div class="col-md-3 d-flex flex-wrap align-items-center" style="gap:6px;">
                                                 <button class="btn btn-primary filterbg">Search</button>
                                                 <a href="{{ url()->current() }}" class="btn btn-secondary">Reset</a>
-                                                <a href="{{ route('download-all-po-businesswise', request()->route('id')) }}"
+                                                <a id="downloadAllPoBtn"
+                                                    href="{{ route('download-all-po-businesswise', request()->route('id')) }}"
                                                     class="btn btn-success"><i class="fa fa-download"></i> Download All PO</a>
                                             </div>
                                         </div>
@@ -114,5 +115,73 @@
             url.searchParams.set('page', 1); // jump back to first page when page size changes
             window.location.href = url.toString();
         }
+
+        (function () {
+            var downloadBtn = document.getElementById('downloadAllPoBtn');
+            if (!downloadBtn) {
+                return;
+            }
+
+            var originalHtml = downloadBtn.innerHTML;
+            var pollInterval = null;
+            var safetyTimeout = null;
+
+            function getCookie(name) {
+                var match = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+                return match ? decodeURIComponent(match[1]) : null;
+            }
+
+            function deleteCookie(name) {
+                document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            }
+
+            function resetButton() {
+                if (pollInterval) {
+                    clearInterval(pollInterval);
+                    pollInterval = null;
+                }
+                if (safetyTimeout) {
+                    clearTimeout(safetyTimeout);
+                    safetyTimeout = null;
+                }
+                downloadBtn.innerHTML = originalHtml;
+                downloadBtn.classList.remove('disabled');
+                downloadBtn.style.pointerEvents = '';
+                downloadBtn.removeAttribute('aria-disabled');
+                deleteCookie('downloadToken');
+            }
+
+            downloadBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                if (downloadBtn.classList.contains('disabled')) {
+                    return;
+                }
+
+                var token = Date.now() + '-' + Math.floor(Math.random() * 1e6);
+
+                downloadBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Preparing...';
+                downloadBtn.classList.add('disabled');
+                downloadBtn.style.pointerEvents = 'none';
+                downloadBtn.setAttribute('aria-disabled', 'true');
+
+                var baseUrl = downloadBtn.getAttribute('href');
+                var separator = baseUrl.indexOf('?') === -1 ? '?' : '&';
+                var url = baseUrl + separator + 'download_token=' + encodeURIComponent(token);
+
+                pollInterval = setInterval(function () {
+                    var cookieValue = getCookie('downloadToken');
+                    if (cookieValue === token) {
+                        resetButton();
+                    }
+                }, 500);
+
+                safetyTimeout = setTimeout(function () {
+                    resetButton();
+                }, 120000);
+
+                window.location.href = url;
+            });
+        })();
     </script>
 @endsection
