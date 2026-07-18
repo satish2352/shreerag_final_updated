@@ -652,6 +652,7 @@
         // Approved Purchase Orders
         Route::get('/list-approved-purchase-orders', [PurchaseAllListController::class, 'getAllListApprovedPurchaseOrder'])->name('list-approved-purchase-orders');
         Route::get('/check-details-of-po-before-send-vendor/{purchase_order_id}', [PurchaseOrderController::class, 'checkDetailsBeforeSendPOToVendor'])->name('check-details-of-po-before-send-vendor');
+        Route::get('/download-po-pdf/{purchase_order_id}', [PurchaseOrderController::class, 'downloadPurchaseOrderPdf'])->name('download-po-pdf');
         Route::get('/list-check-final-purchase-order/{purchase_order_id}', [PurchaseOrderController::class, 'listAllApprovedPOToBeChecked'])->name('list-check-final-purchase-order');
         Route::get('/finalize-and-submit-mail-to-vendor/{purchase_order_id}/{business_id}', [PurchaseOrderController::class, 'submitAndSentEmailToTheVendorFinalPurchaseOrder'])->name('finalize-and-submit-mail-to-vendor');
         Route::post('/submit-purchase-order-to-owner-for-review', [PurchaseOrderController::class, 'submitPurchaseOrderToOwnerForReview'])->name('submit-purchase-order-to-owner-for-review');

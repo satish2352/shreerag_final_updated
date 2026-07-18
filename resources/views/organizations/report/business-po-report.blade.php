@@ -173,7 +173,11 @@
                                                                 @if($poRowIndex === 0)
                                                                     <td rowspan="{{ $totalRows }}" style="text-align:center; vertical-align:middle;">{{ $sr++ }}</td>
                                                                     <td rowspan="{{ $totalRows }}" style="vertical-align:middle;">{{ ucwords($row->project_name) }}</td>
-                                                                    <td rowspan="{{ $totalRows }}" style="vertical-align:middle; font-weight:600; white-space:nowrap;">{{ $row->purchase_orders_id }}</td>
+                                                                    <td rowspan="{{ $totalRows }}" style="vertical-align:middle; font-weight:600; white-space:nowrap;">
+                                                                        <a href="{{ route('check-details-of-po-before-send-vendor', $row->purchase_orders_id) }}"
+                                                                            target="_blank" title="View Purchase Order"
+                                                                            style="color:#1a3a6b; text-decoration:underline;">{{ $row->purchase_orders_id }}</a>
+                                                                    </td>
                                                                     <td rowspan="{{ $totalRows }}" style="vertical-align:middle; white-space:nowrap;">
                                                                         {{ $row->po_date ? \Carbon\Carbon::parse($row->po_date)->format('d-m-Y') : '—' }}
                                                                     </td>

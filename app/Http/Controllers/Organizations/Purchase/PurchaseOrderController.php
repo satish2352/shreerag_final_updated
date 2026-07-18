@@ -556,6 +556,38 @@ class PurchaseOrderController extends Controller
         }
     }
 
+    public function downloadPurchaseOrderPdf($purchase_order_id)
+    {
+        try {
+            $getOrganizationData       = $this->serviceCommon->getAllOrganizationData();
+            $data                      = $this->serviceCommon->getPurchaseOrderDetails($purchase_order_id);
+            $getAllRulesAndRegulations = $this->serviceCommon->getAllRulesAndRegulations();
+            $purchaseOrder             = $data['purchaseOrder'];
+            $purchaseOrderDetails      = $data['purchaseOrderDetails'];
+            $business_id               = $purchaseOrder->business_id;
+
+            // Render the same PO view used on-screen / in the vendor email as a PDF.
+            $pdf = Pdf::loadView('organizations.common-pages.purchase-order-view', [
+                'purchase_order_id'         => $purchase_order_id,
+                'purchaseOrder'             => $purchaseOrder,
+                'purchaseOrderDetails'      => $purchaseOrderDetails,
+                'getOrganizationData'       => $getOrganizationData,
+                'getAllRulesAndRegulations' => $getAllRulesAndRegulations,
+                'business_id'               => $business_id,
+                'is_pdf'                    => true,
+            ])->setPaper('a4', 'portrait')->setOptions([
+                'isRemoteEnabled' => true,
+            ])->setWarnings(false);
+
+            return $pdf->download('purchase_order_' . $purchase_order_id . '.pdf');
+        } catch (Exception $e) {
+            return redirect()->back()->with([
+                'status' => 'error',
+                'msg'    => 'Unable to download the purchase order. Please try again.',
+            ]);
+        }
+    }
+
 
 
     public function listAllApprovedPOToBeChecked($purchase_order_id)
