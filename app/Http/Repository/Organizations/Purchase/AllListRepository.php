@@ -939,7 +939,12 @@ class AllListRepository
   public function getBusinessPoReport($request)
   {
     try {
-      $perPage = Config::get('AllFileValidation.PAGINATION', 15);
+      // Page size: default 100, selectable via the left-side dropdown (5/10/20/50/100)
+      $allowedPerPage = [5, 10, 20, 50, 100];
+      $perPage = (int) $request->input('per_page', 100);
+      if (!in_array($perPage, $allowedPerPage, true)) {
+        $perPage = 100;
+      }
 
       // Base: GRN-completed POs only — join grn_tbl (INNER) to ensure GRN exists
       $query = DB::table('grn_tbl')

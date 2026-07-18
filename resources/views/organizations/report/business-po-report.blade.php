@@ -22,6 +22,7 @@
 
                         {{-- Filter Form --}}
                         <form method="GET" action="{{ route('business-po-report') }}" id="filterForm">
+                            <input type="hidden" name="per_page" value="{{ (int) request('per_page', 100) }}">
                             <div class="row mb-3" style="background:#f8f9fa; padding:15px 15px 5px 15px; border-radius:6px; margin:0 0 15px 0; border:1px solid #dee2e6;">
 
                                 <div class="col-md-3 mb-2">
@@ -222,8 +223,24 @@
                             </div>
 
                             {{-- Pagination --}}
-                            <div class="d-flex justify-content-end mt-3">
-                                {{ $paginator->links() }}
+                            <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap">
+                                <div class="d-flex align-items-center mb-2">
+                                    <label for="perPageSelect" style="font-size:12px; font-weight:600; margin:0 8px 0 0; white-space:nowrap;">
+                                        Show
+                                    </label>
+                                    <select id="perPageSelect" class="form-control form-control-sm" style="width:auto;"
+                                        onchange="changePerPage(this.value)">
+                                        @foreach([5, 10, 20, 50, 100] as $size)
+                                            <option value="{{ $size }}" {{ (int) request('per_page', 100) === $size ? 'selected' : '' }}>
+                                                {{ $size }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <span style="font-size:12px; color:#6c757d; margin-left:8px; white-space:nowrap;">per page</span>
+                                </div>
+                                <div>
+                                    {{ $paginator->links() }}
+                                </div>
                             </div>
                         @endif
 
@@ -235,6 +252,13 @@
 </div>
 
 <script>
+function changePerPage(size) {
+    var url = new URL(window.location.href);
+    url.searchParams.set('per_page', size);
+    url.searchParams.set('page', 1); // jump back to first page when page size changes
+    window.location.href = url.toString();
+}
+
 $(document).ready(function() {
     $('#businessSelect').on('change', function() {
         var businessId = $(this).val();
