@@ -666,6 +666,7 @@
         // Submitted POs by Vendor
         Route::get('/list-submited-po-to-vendor', [PurchaseAllListController::class, 'getAllListSubmitedPurchaeOrderByVendor'])->name('list-submited-po-to-vendor');
         Route::get('/list-submited-po-to-vendor-businesswise/{id}', [PurchaseAllListController::class, 'getAllListSubmitedPurchaeOrderByVendorBusinessWise'])->name('list-submited-po-to-vendor-businesswise');
+        Route::get('/download-all-po-businesswise/{id}', [PurchaseAllListController::class, 'downloadAllSubmittedPoBusinessWise'])->name('download-all-po-businesswise');
 
         // Tax CRUD
         Route::any('/list-tax', [TaxController::class, 'index'])->name('list-tax');

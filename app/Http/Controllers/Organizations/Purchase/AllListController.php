@@ -217,6 +217,74 @@ class AllListController extends Controller
         }
     }
 
+    /**
+     * Downloads EVERY purchase order sent to vendor for this business_details
+     * id (all pages, ignoring the on-screen search filter) as ONE combined
+     * PDF — each PO rendered on its own page, reusing the same single-PO PDF
+     * markup used by PurchaseOrderController::downloadPurchaseOrderPdf().
+     */
+    public function downloadAllSubmittedPoBusinessWise($id)
+    {
+        try {
+            $poIds = $this->service->getAllSubmitedPoIdsBusinessWise($id);
+
+            if (!$poIds || $poIds->isEmpty()) {
+                return redirect()->back()->with([
+                    'status' => 'error',
+                    'msg'    => 'No purchase orders found to download.',
+                ]);
+            }
+
+            $common = new \App\Http\Controllers\Organizations\CommanController();
+
+            $getOrganizationData       = $common->getAllOrganizationData();
+            $getAllRulesAndRegulations = $common->getAllRulesAndRegulations();
+
+            $orders = [];
+            foreach ($poIds as $poId) {
+                $data = $common->getPurchaseOrderDetails($poId);
+
+                // getPurchaseOrderDetails() returns a JsonResponse on failure
+                // (e.g. PO not found) — skip anything that isn't the normal
+                // ['purchaseOrder' => ..., 'purchaseOrderDetails' => ...] shape.
+                if (!is_array($data) || !isset($data['purchaseOrder'])) {
+                    continue;
+                }
+
+                $purchaseOrder = $data['purchaseOrder'];
+
+                $orders[] = [
+                    'purchase_order_id'    => $poId,
+                    'purchaseOrder'        => $purchaseOrder,
+                    'purchaseOrderDetails' => $data['purchaseOrderDetails'],
+                    'business_id'          => $purchaseOrder->business_id,
+                ];
+            }
+
+            if (empty($orders)) {
+                return redirect()->back()->with([
+                    'status' => 'error',
+                    'msg'    => 'No purchase orders found to download.',
+                ]);
+            }
+
+            $pdf = Pdf::loadView('exports.all-purchase-orders-pdf', [
+                'orders'                    => $orders,
+                'getOrganizationData'       => $getOrganizationData,
+                'getAllRulesAndRegulations' => $getAllRulesAndRegulations,
+            ])->setPaper('a4', 'portrait')->setOptions([
+                'isRemoteEnabled' => true,
+            ])->setWarnings(false);
+
+            return $pdf->download('all_purchase_orders_business_' . $id . '.pdf');
+        } catch (Exception $e) {
+            return redirect()->back()->with([
+                'status' => 'error',
+                'msg'    => 'Unable to download the purchase orders. Please try again.',
+            ]);
+        }
+    }
+
     public function getAllListPurchaseOrderTowardsOwner(Request $request)
     {
         try {

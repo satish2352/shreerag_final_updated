@@ -14,6 +14,7 @@
                             <div class="datatable-dashv1-list custom-datatable-overright">
                                 <div class="table-responsive">
                                     <form method="GET" action="{{ url()->current() }}">
+                                        <input type="hidden" name="per_page" value="{{ (int) request('per_page', 10) }}">
                                         <div class="d-flex justify-content-end mb-3">
                                             <div class="col-md-4">
                                                 <input type="text" name="search" value="{{ request('search') }}"
@@ -22,6 +23,8 @@
                                             <div class="col-md-2 ">
                                                 <button class="btn btn-primary filterbg">Search</button>
                                                 <a href="{{ url()->current() }}" class="btn btn-secondary">Reset</a>
+                                                <a href="{{ route('download-all-po-businesswise', request()->route('id')) }}"
+                                                    class="btn btn-success"><i class="fa fa-download"></i> Download All PO</a>
                                             </div>
                                         </div>
                                     </form>
@@ -76,8 +79,24 @@
                                             @endforelse
                                         </tbody>
                                     </table>
-                                    <div class="d-flex justify-content-end mt-3">
-                                        {{ $data_output->links() }}
+                                    <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <label for="perPageSelect" style="font-size:12px; font-weight:600; margin:0 8px 0 0; white-space:nowrap;">
+                                                Show
+                                            </label>
+                                            <select id="perPageSelect" class="form-control form-control-sm" style="width:auto;"
+                                                onchange="changePerPage(this.value)">
+                                                @foreach([5, 10, 20, 100] as $size)
+                                                    <option value="{{ $size }}" {{ (int) request('per_page', 10) === $size ? 'selected' : '' }}>
+                                                        {{ $size }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            <span style="font-size:12px; color:#6c757d; margin-left:8px; white-space:nowrap;">per page</span>
+                                        </div>
+                                        <div>
+                                            {{ $data_output->links() }}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -87,4 +106,13 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function changePerPage(size) {
+            var url = new URL(window.location.href);
+            url.searchParams.set('per_page', size);
+            url.searchParams.set('page', 1); // jump back to first page when page size changes
+            window.location.href = url.toString();
+        }
+    </script>
 @endsection

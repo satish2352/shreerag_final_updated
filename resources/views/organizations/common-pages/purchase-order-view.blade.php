@@ -452,6 +452,7 @@ overflow-wrap: anywhere !important;">
 
 
     </div>
+    @unless($is_pdf ?? false)
     <script>
         function printInvoice() {
             // Clone the printable content area
@@ -561,3 +562,4 @@ overflow-wrap: anywhere !important;">
             printWindow.close();
         }
     </script>
+    @endunless

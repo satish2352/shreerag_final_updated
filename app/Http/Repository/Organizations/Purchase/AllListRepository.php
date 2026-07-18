@@ -360,7 +360,11 @@ class AllListRepository
       $array_to_be_check = [config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY_SENT_TO_VENDOR')];
       $array_to_be_check_owner = [config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY_SENT_TO_VENDOR')];
       $search = request()->search;
-      $perPage = Config::get('AllFileValidation.PAGINATION');
+      $allowedPerPage = [5, 10, 20, 100];
+      $perPage = (int) request('per_page', 10);
+      if (!in_array($perPage, $allowedPerPage, true)) {
+          $perPage = 10;
+      }
       $data_output = BusinessApplicationProcesses::leftJoin('production', function ($join) {
         $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
       })
@@ -416,6 +420,54 @@ class AllListRepository
       return $e->getMessage(); // Changed to return the error message string
     }
   }
+
+  /**
+   * Returns a de-duplicated, ordered list of purchase_orders.purchase_orders_id
+   * for ALL purchase orders sent to vendor for this business_details id — no
+   * pagination, no search filter (used by the "Download All PO" combined PDF).
+   * Mirrors the same filter criteria as getAllListSubmitedPurchaeOrderByVendorBusinessWise().
+   */
+  public function getAllSubmitedPoIdsBusinessWise($id)
+  {
+    try {
+      $array_to_be_check = [config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY_SENT_TO_VENDOR')];
+      $array_to_be_check_owner = [config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY_SENT_TO_VENDOR')];
+
+      $rows = BusinessApplicationProcesses::leftJoin('production', function ($join) {
+        $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
+      })
+        ->leftJoin('businesses', function ($join) {
+          $join->on('business_application_processes.business_id', '=', 'businesses.id');
+        })
+        ->leftJoin('businesses_details', function ($join) {
+          $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
+        })
+        ->leftJoin('purchase_orders', function ($join) {
+          $join->on('business_application_processes.business_details_id', '=', 'purchase_orders.business_details_id');
+        })
+        ->leftJoin('vendors', function ($join) {
+          $join->on('purchase_orders.vendor_id', '=', 'vendors.id');
+        })
+        ->where('businesses_details.id', $id)
+        ->whereIn('purchase_orders.purchase_status_from_owner', $array_to_be_check_owner)
+        ->whereIn('purchase_orders.purchase_status_from_purchase', $array_to_be_check)
+        ->where('businesses.is_active', true)
+        ->where('businesses.is_deleted', 0)
+        ->select(
+          'purchase_orders.purchase_orders_id as purchase_order_id',
+          'purchase_orders.updated_at',
+        )
+        ->orderBy('purchase_orders.updated_at', 'desc')
+        ->get();
+
+      // De-duplicate in PHP (rather than SQL DISTINCT + ORDER BY on a
+      // non-selected column, which MySQL rejects) while preserving order.
+      return $rows->pluck('purchase_order_id')->filter()->unique()->values();
+    } catch (\Exception $e) {
+      return collect();
+    }
+  }
+
   public function getAllListPurchaseOrderTowardsOwner()
   {
     try {

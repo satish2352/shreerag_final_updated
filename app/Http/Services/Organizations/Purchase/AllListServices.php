@@ -80,6 +80,16 @@ class AllListServices
             return $e;
         }
     }
+    public function getAllSubmitedPoIdsBusinessWise($id)
+    {
+        try {
+            $data_output = $this->repo->getAllSubmitedPoIdsBusinessWise($id);
+
+            return $data_output;
+        } catch (\Exception $e) {
+            return collect();
+        }
+    }
     public function getAllListPurchaseOrderTowardsOwner()
     {
         try {
