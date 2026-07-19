@@ -15,20 +15,33 @@
                                 <div class="table-responsive">
                                     <form method="GET" action="{{ url()->current() }}">
                                         <input type="hidden" name="per_page" value="{{ (int) request('per_page', 10) }}">
-                                        <div class="d-flex justify-content-end mb-3">
-                                            <div class="col-md-3">
+                                        <div class="d-flex justify-content-end align-items-end flex-wrap mb-3">
+                                            <div class="col-md-2">
+                                                <label style="font-size:12px; font-weight:600; margin-bottom:3px; visibility:hidden;">Search</label>
                                                 <input type="text" name="search" value="{{ request('search') }}"
                                                     class="form-control" placeholder="Search Product Name">
                                             </div>
                                             <div class="col-md-2">
-                                                <input type="month" name="month" value="{{ request('month') }}"
+                                                <label style="font-size:12px; font-weight:600; margin-bottom:3px;">From</label>
+                                                <input type="date" name="from_date" value="{{ request('from_date') }}"
+                                                    class="form-control">
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label style="font-size:12px; font-weight:600; margin-bottom:3px;">To</label>
+                                                <input type="date" name="to_date" value="{{ request('to_date') }}"
                                                     class="form-control">
                                             </div>
                                             <div class="col-md-3 d-flex flex-wrap align-items-center" style="gap:6px;">
                                                 <button class="btn btn-primary filterbg">Search</button>
                                                 <a href="{{ url()->current() }}" class="btn btn-secondary">Reset</a>
+                                                @php
+                                                    $dlQuery = http_build_query(array_filter([
+                                                        'from_date' => request('from_date'),
+                                                        'to_date'   => request('to_date'),
+                                                    ]));
+                                                @endphp
                                                 <a id="downloadAllPoBtn"
-                                                    href="{{ route('download-all-po-businesswise', request()->route('id')) }}{{ request('month') ? '?month=' . request('month') : '' }}"
+                                                    href="{{ route('download-all-po-businesswise', request()->route('id')) }}{{ $dlQuery ? '?' . $dlQuery : '' }}"
                                                     class="btn btn-success"><i class="fa fa-download"></i> Download All PO</a>
                                             </div>
                                         </div>

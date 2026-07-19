@@ -360,7 +360,8 @@ class AllListRepository
       $array_to_be_check = [config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY_SENT_TO_VENDOR')];
       $array_to_be_check_owner = [config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY_SENT_TO_VENDOR')];
       $search = request()->search;
-      $month = request('month');
+      $fromDate = request('from_date');
+      $toDate = request('to_date');
       $allowedPerPage = [5, 10, 20, 100];
       $perPage = (int) request('per_page', 10);
       if (!in_array($perPage, $allowedPerPage, true)) {
@@ -393,12 +394,16 @@ class AllListRepository
               ->orWhere('vendors.vendor_company_name', 'LIKE', "%{$search}%");
           });
         })
-        ->when($month, function ($query) use ($month) {
-          $trimmedMonth = trim((string) $month);
-          if (preg_match('/^\d{4}-\d{2}$/', $trimmedMonth)) {
-            [$y, $m] = explode('-', $trimmedMonth);
-            $query->whereYear('purchase_orders.updated_at', (int) $y)
-              ->whereMonth('purchase_orders.updated_at', (int) $m);
+        ->when($fromDate, function ($query) use ($fromDate) {
+          $d = trim((string) $fromDate);
+          if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $d)) {
+            $query->whereDate('purchase_orders.updated_at', '>=', $d);
+          }
+        })
+        ->when($toDate, function ($query) use ($toDate) {
+          $d = trim((string) $toDate);
+          if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $d)) {
+            $query->whereDate('purchase_orders.updated_at', '<=', $d);
           }
         })
         // ->distinct('business_application_processes.id')
@@ -436,7 +441,7 @@ class AllListRepository
    * pagination, no search filter (used by the "Download All PO" combined PDF).
    * Mirrors the same filter criteria as getAllListSubmitedPurchaeOrderByVendorBusinessWise().
    */
-  public function getAllSubmitedPoIdsBusinessWise($id, $month = null)
+  public function getAllSubmitedPoIdsBusinessWise($id, $fromDate = null, $toDate = null)
   {
     try {
       $array_to_be_check = [config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY_SENT_TO_VENDOR')];
@@ -462,12 +467,16 @@ class AllListRepository
         ->whereIn('purchase_orders.purchase_status_from_purchase', $array_to_be_check)
         ->where('businesses.is_active', true)
         ->where('businesses.is_deleted', 0)
-        ->when($month, function ($query) use ($month) {
-          $trimmedMonth = trim((string) $month);
-          if (preg_match('/^\d{4}-\d{2}$/', $trimmedMonth)) {
-            [$y, $m] = explode('-', $trimmedMonth);
-            $query->whereYear('purchase_orders.updated_at', (int) $y)
-              ->whereMonth('purchase_orders.updated_at', (int) $m);
+        ->when($fromDate, function ($query) use ($fromDate) {
+          $d = trim((string) $fromDate);
+          if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $d)) {
+            $query->whereDate('purchase_orders.updated_at', '>=', $d);
+          }
+        })
+        ->when($toDate, function ($query) use ($toDate) {
+          $d = trim((string) $toDate);
+          if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $d)) {
+            $query->whereDate('purchase_orders.updated_at', '<=', $d);
           }
         })
         ->select(

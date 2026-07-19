@@ -227,9 +227,10 @@ class AllListController extends Controller
     {
         try {
             $token = $request->query('download_token');
-            $month = $request->query('month');
+            $fromDate = $request->query('from_date');
+            $toDate = $request->query('to_date');
 
-            $poIds = $this->service->getAllSubmitedPoIdsBusinessWise($id, $month);
+            $poIds = $this->service->getAllSubmitedPoIdsBusinessWise($id, $fromDate, $toDate);
 
             if (!$poIds || $poIds->isEmpty()) {
                 return redirect()->back()->with([
@@ -279,9 +280,22 @@ class AllListController extends Controller
                 'isRemoteEnabled' => true,
             ])->setWarnings(false);
 
-            $trimmedMonth = trim((string) $month);
-            $monthSuffix = ($trimmedMonth && preg_match('/^\d{4}-\d{2}$/', $trimmedMonth)) ? '_' . $trimmedMonth : '';
-            $response = $pdf->download('all_purchase_orders_business_' . $id . $monthSuffix . '.pdf');
+            $trimmedFromDate = trim((string) $fromDate);
+            $trimmedToDate   = trim((string) $toDate);
+            $validFromDate = preg_match('/^\d{4}-\d{2}-\d{2}$/', $trimmedFromDate) ? $trimmedFromDate : null;
+            $validToDate   = preg_match('/^\d{4}-\d{2}-\d{2}$/', $trimmedToDate) ? $trimmedToDate : null;
+
+            if ($validFromDate && $validToDate) {
+                $rangeSuffix = '_' . $validFromDate . '_to_' . $validToDate;
+            } elseif ($validFromDate) {
+                $rangeSuffix = '_from_' . $validFromDate;
+            } elseif ($validToDate) {
+                $rangeSuffix = '_to_' . $validToDate;
+            } else {
+                $rangeSuffix = '';
+            }
+
+            $response = $pdf->download('all_purchase_orders_business_' . $id . $rangeSuffix . '.pdf');
 
             if ($token) {
                 $response->headers->setCookie(cookie('downloadToken', $token, 1, '/', null, false, false));
