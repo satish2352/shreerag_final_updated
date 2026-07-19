@@ -80,10 +80,10 @@ class AllListServices
             return $e;
         }
     }
-    public function getAllSubmitedPoIdsBusinessWise($id)
+    public function getAllSubmitedPoIdsBusinessWise($id, $month = null)
     {
         try {
-            $data_output = $this->repo->getAllSubmitedPoIdsBusinessWise($id);
+            $data_output = $this->repo->getAllSubmitedPoIdsBusinessWise($id, $month);
 
             return $data_output;
         } catch (\Exception $e) {

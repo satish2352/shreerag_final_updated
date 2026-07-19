@@ -227,8 +227,9 @@ class AllListController extends Controller
     {
         try {
             $token = $request->query('download_token');
+            $month = $request->query('month');
 
-            $poIds = $this->service->getAllSubmitedPoIdsBusinessWise($id);
+            $poIds = $this->service->getAllSubmitedPoIdsBusinessWise($id, $month);
 
             if (!$poIds || $poIds->isEmpty()) {
                 return redirect()->back()->with([
@@ -278,7 +279,9 @@ class AllListController extends Controller
                 'isRemoteEnabled' => true,
             ])->setWarnings(false);
 
-            $response = $pdf->download('all_purchase_orders_business_' . $id . '.pdf');
+            $trimmedMonth = trim((string) $month);
+            $monthSuffix = ($trimmedMonth && preg_match('/^\d{4}-\d{2}$/', $trimmedMonth)) ? '_' . $trimmedMonth : '';
+            $response = $pdf->download('all_purchase_orders_business_' . $id . $monthSuffix . '.pdf');
 
             if ($token) {
                 $response->headers->setCookie(cookie('downloadToken', $token, 1, '/', null, false, false));

@@ -20,11 +20,15 @@
                                                 <input type="text" name="search" value="{{ request('search') }}"
                                                     class="form-control" placeholder="Search Product Name">
                                             </div>
+                                            <div class="col-md-2">
+                                                <input type="month" name="month" value="{{ request('month') }}"
+                                                    class="form-control">
+                                            </div>
                                             <div class="col-md-3 d-flex flex-wrap align-items-center" style="gap:6px;">
                                                 <button class="btn btn-primary filterbg">Search</button>
                                                 <a href="{{ url()->current() }}" class="btn btn-secondary">Reset</a>
                                                 <a id="downloadAllPoBtn"
-                                                    href="{{ route('download-all-po-businesswise', request()->route('id')) }}"
+                                                    href="{{ route('download-all-po-businesswise', request()->route('id')) }}{{ request('month') ? '?month=' . request('month') : '' }}"
                                                     class="btn btn-success"><i class="fa fa-download"></i> Download All PO</a>
                                             </div>
                                         </div>
