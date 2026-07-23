@@ -211,6 +211,9 @@
         // Exceed Amount Requests — Global Owner List
         Route::get('/list-exceed-amount-requests', [BusinessAllListController::class, 'listExceedAmountRequests'])
             ->name('list-exceed-amount-requests');
+        // T-2026-057: Owner rejects an exceed-amount request (sibling to "Update Amount" above)
+        Route::post('/reject-exceed-amount-request', [BusinessAllListController::class, 'rejectExceedAmountRequest'])
+            ->name('reject-exceed-amount-request');
 
         // Accept BOM Estimation
         Route::get('/accept-bom-estimation/{id}', [BusinessController::class, 'acceptEstimationBOM'])

@@ -661,7 +661,19 @@ class DashboardController extends Controller
                 'url' => $baseUrl . '/estimationdept/list-bom-exceed-owner-suggested',
             ];
 
-            $count = $received_design_for_estimation + $corrected_design_count + $estimation_accept_data_count + $estimation_rejected_data_count + $owner_updated_amount_count;
+            // T-2026-057: Owner rejected an exceed-amount request.
+            $owner_rejected_exceed_data = AdminView::where('off_canvas_status', 52)
+                ->where('is_view', '0')
+                ->select('id')
+                ->get();
+            $owner_rejected_exceed_count = $owner_rejected_exceed_data->count();
+            $notifications[] = [
+                'admin_count' => $owner_rejected_exceed_count,
+                'message' => 'Exceed Amount Request Rejected by Owner',
+                'url' => $baseUrl . '/estimationdept/list-bom-exceed-owner-suggested',
+            ];
+
+            $count = $received_design_for_estimation + $corrected_design_count + $estimation_accept_data_count + $estimation_rejected_data_count + $owner_updated_amount_count + $owner_rejected_exceed_count;
         }
 
         /*

@@ -1,5 +1,94 @@
 @extends('admin.layouts.master')
 @section('content')
+
+    <style>
+        /* Custom searchable Part Item dropdown */
+        .custom-dropdown {
+            position: relative;
+            width: 100%;
+        }
+
+        .custom-dropdown .dropdown-input {
+            cursor: pointer;
+            min-width: 180px;
+            background: #fff;
+        }
+
+        .custom-dropdown .dropdown-options {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            z-index: 1051;
+            width: 100%;
+            min-width: 487px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, .15);
+            padding: 6px;
+            /* remove the outer scrollbar; only the inner list scrolls */
+            max-height: none !important;
+            overflow: visible !important;
+        }
+
+        .custom-dropdown .search-box {
+            margin-bottom: 6px;
+        }
+
+        .custom-dropdown .options-list {
+            max-height: 240px;
+            overflow-y: auto;
+        }
+
+        .custom-dropdown .option {
+            padding: 7px 10px;
+            cursor: pointer;
+            white-space: normal;
+            word-break: break-word;
+            border-bottom: 1px solid #f1f1f1;
+            font-size: 13px;
+            line-height: 1.35;
+        }
+
+        .custom-dropdown .option:last-child {
+            border-bottom: 0;
+        }
+
+        .custom-dropdown .option:hover {
+            background: #eef5ff;
+        }
+
+        #dynamicTable td {
+            overflow: visible;
+        }
+
+        /* Narrow, centered serial-number column */
+        #dynamicTable .serial-col,
+        #dynamicTable .serial-no {
+            width: 34px;
+            min-width: 34px;
+            max-width: 34px;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        /* Keep the item table usable on smaller screens */
+        #dynamicTable {
+            min-width: 900px;
+        }
+
+        /* Searchable Part Item select2 on existing rows */
+        .part-item-select + .select2-container {
+            min-width: 300px;
+        }
+
+        .select2-container--default .select2-results__option {
+            white-space: normal;
+            word-break: break-word;
+            font-size: 13px;
+        }
+    </style>
+
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -256,8 +345,10 @@
                                                                 value="{{ count($editData) }}"> --}}
                                                             <input type="hidden" id="row_index"
                                                                 value="{{ count($editData) }}">
+                                                            <div class="table-responsive">
                                                             <table class="table table-bordered" id="dynamicTable">
                                                                 <tr>
+                                                                    <th class="serial-col">#</th>
                                                                     <th style="width:200px">Part No</th>
                                                                     <th style="width:100px">HSN</th>
                                                                     <th style="width:100px">Process</th>
@@ -288,9 +379,10 @@
                                                                             class="form-control"
                                                                             value="{{ $editDataNew->tbl_delivery_chalan_item_details_id }}"
                                                                             placeholder="">
+                                                                        <td class="serial-no">{{ $key + 1 }}</td>
                                                                         <td>
                                                                             <select
-                                                                                class="form-control process_id mb-2 readonly-select"
+                                                                                class="form-control process_id mb-2 readonly-select part-item-select"
                                                                                 name="part_item_id_{{ $key }}"
                                                                                 id="part_item_id_{{ $key }}"
                                                                                 onchange="updateHiddenInput(this)">
@@ -390,6 +482,7 @@
                                                                     </tr>
                                                                 @endforeach
                                                             </table>
+                                                            </div>
                                                         </div>
 
                                                         @foreach ($editData as $key => $editDataNew)
@@ -401,11 +494,7 @@
                                                                             <label for="note">Remark
                                                                                 : <span
                                                                                     class="text-danger">*</span></label>
-                                                                            <textarea class="form-control" name="remark">
-                                                                                @if (old('remark'))
-{{ old('remark') }}@else{{ $editDataNew->remark }}
-@endif
-                                                                                </textarea>
+                                                                            <textarea class="form-control" rows="3" name="remark" placeholder="Enter Remark">{{ old('remark', $editDataNew->remark) }}</textarea>
                                                                         </div>
                                                             @endif
                                                         @endforeach
@@ -443,6 +532,13 @@
                 $('.select2').select2({
                     width: '100%',
                     placeholder: "Select Vendor",
+                    allowClear: true
+                });
+
+                // Searchable Part Item dropdown for existing rows
+                $('.part-item-select').select2({
+                    width: '100%',
+                    placeholder: "Search Part Item",
                     allowClear: true
                 });
 
@@ -720,7 +816,7 @@
 
                     var newRow = `
             <tr>
-                
+                <td class="serial-no">${i + 1}</td>
                 <td>
                     <!-- Custom dropdown example -->
                     <div class="custom-dropdown">

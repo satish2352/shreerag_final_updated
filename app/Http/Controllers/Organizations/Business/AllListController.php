@@ -689,4 +689,37 @@ class AllListController extends Controller
             ]);
         }
     }
+
+    /**
+     * T-2026-057: Owner rejects an exceed-amount request (sibling to "Update Amount").
+     * Route: POST owner/reject-exceed-amount-request
+     * business_id is base64-encoded businesses_details.id (matches base64_encode($data->business_details_id)
+     * emitted by the list-exceed-amount-requests view, following this codebase's URL-id convention).
+     */
+    public function rejectExceedAmountRequest(Request $request)
+    {
+        try {
+            $request->validate([
+                'business_id'    => 'required|string',
+                'reject_remark'  => 'required|string',
+            ], [
+                'reject_remark.required' => 'Please enter a reject remark.',
+            ]);
+
+            $business_details_id = base64_decode($request->business_id);
+            $remark = trim($request->reject_remark);
+
+            if ($business_details_id === false || $business_details_id === '' || $remark === '') {
+                return redirect()->route('list-exceed-amount-requests')
+                    ->with(['status' => 'error', 'msg' => 'Invalid request. Please try again.']);
+            }
+
+            $update_data = $this->service->rejectExceedAmountRequest($business_details_id, $remark);
+
+            return redirect()->route('list-exceed-amount-requests')->with($update_data);
+        } catch (\Exception $e) {
+            return redirect()->route('list-exceed-amount-requests')
+                ->with(['status' => 'error', 'msg' => 'Something went wrong. Please try again.']);
+        }
+    }
 }

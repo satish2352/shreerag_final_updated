@@ -484,4 +484,14 @@ class AllListServices
         }
     }
 
+    // T-2026-057: Owner rejects an exceed-amount request.
+    public function rejectExceedAmountRequest($business_details_id, $remark)
+    {
+        try {
+            return $this->repo->rejectExceedAmountRequest($business_details_id, $remark);
+        } catch (\Exception $e) {
+            return ['status' => 'error', 'msg' => 'Failed to reject exceed amount request.'];
+        }
+    }
+
 }

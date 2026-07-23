@@ -64,6 +64,27 @@
                                     </div>
                                 @endif
 
+                                {{-- T-2026-057: Owner rejected the exceed-amount request. Unlike the
+                                     "suggested amount" banner above, there is no revised amount to show —
+                                     the estimator must reduce/revise the BOM items themselves and resubmit. --}}
+                                @if(isset($estimation_data) && !is_null($estimation_data) && !empty($estimation_data->is_exceed_rejected))
+                                    <div class="col-md-12">
+                                        <div class="bom-owner-rejected-note" role="alert"
+                                             style="border-left: 4px solid #c0392b; background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; border-radius: 4px; padding: 12px 16px; margin-bottom: 16px;">
+                                            <strong>Rejected by Owner</strong><br>
+                                            The owner has rejected your exceeded estimation
+                                            @if($estimation_data->exceed_rejected_at)
+                                                (on {{ \Carbon\Carbon::parse($estimation_data->exceed_rejected_at)->format('d-m-Y') }})
+                                            @endif.<br>
+                                            Please reduce/revise the estimation amount to be within the business limit (or provide a
+                                            stronger justification) before resubmitting.
+                                            @if(!is_null($estimation_data->exceed_rejected_remark))
+                                                <br><strong>Owner Remark:</strong> {{ $estimation_data->exceed_rejected_remark }}
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endif
+
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="all-form-element-inner">
                                         <form action="{{ route('update-estimation') }}" method="POST"

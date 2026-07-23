@@ -69,6 +69,12 @@ class EstimationRepository
             $estimation_data->owner_suggestion_remark = null;
             $estimation_data->owner_suggested_at = null;
             $estimation_data->owner_suggested_by = null;
+            // T-2026-057: also clear a prior owner-rejection so a resubmitted, now
+            // within-limit estimation no longer shows a stale "Rejected by Owner" badge.
+            $estimation_data->is_exceed_rejected = 0;
+            $estimation_data->exceed_rejected_remark = null;
+            $estimation_data->exceed_rejected_at = null;
+            $estimation_data->exceed_rejected_by = null;
             $estimation_data->save();
 
             // Update existing BusinessApplicationProcesses
@@ -349,6 +355,13 @@ class EstimationRepository
                 $estimation_data->owner_suggestion_remark = null;
                 $estimation_data->owner_suggested_at = null;
                 $estimation_data->owner_suggested_by = null;
+                // T-2026-057: also clear a prior owner-rejection when restarting the
+                // exceed flow so the estimation-side list doesn't keep showing the
+                // old "Rejected by Owner" state for this newly-resubmitted amount.
+                $estimation_data->is_exceed_rejected = 0;
+                $estimation_data->exceed_rejected_remark = null;
+                $estimation_data->exceed_rejected_at = null;
+                $estimation_data->exceed_rejected_by = null;
                 $estimation_data->save();
 
                 $business_application = BusinessApplicationProcesses::where('business_details_id', $edit_id)->first();
@@ -539,7 +552,12 @@ class EstimationRepository
     }
 
     /**
-     * Get list of estimations where owner has suggested an amount (status 1301).
+     * Get list of estimations where the owner has responded to an exceed-amount
+     * request — either by suggesting a revised amount (status 1301) or by
+     * rejecting the request outright (status 1302, T-2026-057).
+     * Both states land the estimator on the same
+     * list-bom-exceed-owner-suggested.blade.php page so they can review the
+     * response and, via "Edit Estimation", revise/resubmit either way.
      */
     public function getExceedOwnerSuggested()
     {
@@ -547,11 +565,12 @@ class EstimationRepository
             ->join('businesses_details as bd', 'bap.business_details_id', '=', 'bd.id')
             ->join('businesses as b', 'bd.business_id', '=', 'b.id')
             ->join('estimation as e', 'bap.business_details_id', '=', 'e.business_details_id')
-            ->where('bap.bom_estimation_send_to_owner', 1301)
+            ->whereIn('bap.bom_estimation_send_to_owner', [1301, 1302])
             ->where('bap.is_deleted', 0)
             ->where('e.is_deleted', 0)
             ->select(
                 'bap.business_details_id',
+                'bap.bom_estimation_send_to_owner',
                 'bd.product_name',
                 'bd.quantity',
                 'b.customer_po_number',
@@ -560,7 +579,10 @@ class EstimationRepository
                 'e.exceed_remark',
                 'e.owner_suggested_amount',
                 'e.owner_suggestion_remark',
-                'e.owner_suggested_at'
+                'e.owner_suggested_at',
+                'e.is_exceed_rejected',
+                'e.exceed_rejected_remark',
+                'e.exceed_rejected_at'
             )
             ->get();
     }

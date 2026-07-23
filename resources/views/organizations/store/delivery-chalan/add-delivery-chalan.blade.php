@@ -1,6 +1,69 @@
 @extends('admin.layouts.master')
 @section('content')
-    
+
+    <style>
+        /* Custom searchable Part Item dropdown */
+        .custom-dropdown {
+            position: relative;
+            width: 100%;
+        }
+
+        .custom-dropdown .dropdown-input {
+            cursor: pointer;
+            min-width: 180px;
+            background: #fff;
+        }
+
+        .custom-dropdown .dropdown-options {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            z-index: 1051;
+            width: 100%;
+            min-width: 487px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, .15);
+            padding: 6px;
+            /* remove the outer scrollbar; only the inner list scrolls */
+            max-height: none !important;
+            overflow: visible !important;
+        }
+
+        .custom-dropdown .search-box {
+            margin-bottom: 6px;
+        }
+
+        .custom-dropdown .options-list {
+            max-height: 240px;
+            overflow-y: auto;
+        }
+
+        .custom-dropdown .option {
+            padding: 7px 10px;
+            cursor: pointer;
+            white-space: normal;
+            word-break: break-word;
+            border-bottom: 1px solid #f1f1f1;
+            font-size: 13px;
+            line-height: 1.35;
+        }
+
+        .custom-dropdown .option:last-child {
+            border-bottom: 0;
+        }
+
+        .custom-dropdown .option:hover {
+            background: #eef5ff;
+        }
+
+        /* Let the dropdown escape the horizontal-scroll clipping of the table */
+        #purchase_order_table td.col-part-item {
+            overflow: visible;
+        }
+    </style>
+
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">

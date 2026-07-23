@@ -12,7 +12,9 @@ use App\Models\{
   Gatepass,
   CustomerProductQuantityTracking,
   EstimationModel,
-  LoginHistory
+  LoginHistory,
+  AdminView,
+  NotificationStatus
 };
 
 class AllListRepositor
@@ -2327,6 +2329,83 @@ class AllListRepositor
       return $data_output;
     } catch (\Exception $e) {
       return collect();
+    }
+  }
+
+  /**
+   * T-2026-057: Owner rejects an exceed-amount request (sibling action to
+   * "Update Amount" — see BusinessRepository::updateAll()'s exceed-pending
+   * writeback for the accept/update counterpart of this flow).
+   *
+   * - Clears estimation.is_exceed_pending so the row leaves this owner list
+   *   (loadExceedAmountRequests() above filters on is_exceed_pending=1).
+   * - Records who rejected / when / why on dedicated exceed_rejected_* columns
+   *   (kept separate from owner_suggested_amount/owner_suggestion_remark —
+   *   see migration 2026_07_22_100001 for the reasoning).
+   * - Moves BAP.bom_estimation_send_to_owner to 1302 (rejected) so the
+   *   estimation department's list-bom-exceed-owner-suggested page can pick
+   *   this row up and show it as "Rejected by Owner".
+   * - Does NOT touch is_approved_estimation — that column is never set
+   *   anywhere in this codebase, so it never blocks re-editing the estimation
+   *   via edit-estimation after rejection.
+   *
+   * @param int $business_details_id
+   * @param string $remark
+   * @return array ['status' => 'success'|'error', 'msg' => string]
+   */
+  public function rejectExceedAmountRequest($business_details_id, $remark)
+  {
+    try {
+      $estimation = EstimationModel::where('business_details_id', $business_details_id)
+        ->where('is_exceed_pending', 1)
+        ->where('is_deleted', 0)
+        ->first();
+
+      if (!$estimation) {
+        return [
+          'status' => 'error',
+          'msg' => 'Exceed amount request not found or already processed.',
+        ];
+      }
+
+      DB::transaction(function () use ($business_details_id, $remark, $estimation) {
+        $estimation->is_exceed_pending = 0;
+        $estimation->is_exceed_rejected = 1;
+        $estimation->exceed_rejected_remark = $remark;
+        $estimation->exceed_rejected_at = now();
+        $estimation->exceed_rejected_by = session('user_id');
+        $estimation->save();
+
+        $business_application = BusinessApplicationProcesses::where('business_details_id', $business_details_id)
+          ->where('bom_estimation_send_to_owner', 1300)
+          ->where('is_deleted', 0)
+          ->first();
+
+        if ($business_application) {
+          $business_application->bom_estimation_send_to_owner = 1302;
+          $business_application->off_canvas_status = 52;
+          $business_application->save();
+        }
+
+        AdminView::where('business_details_id', $business_details_id)->update([
+          'off_canvas_status' => 52,
+          'is_view' => 0,
+        ]);
+        NotificationStatus::where('business_details_id', $business_details_id)->update([
+          'off_canvas_status' => 52,
+        ]);
+      });
+
+      return [
+        'status' => 'success',
+        'msg' => 'Exceed amount request rejected. The estimation department has been notified to revise the amount.',
+      ];
+    } catch (\Exception $e) {
+      return [
+        'status' => 'error',
+        'msg' => 'Failed to reject exceed amount request.',
+        'error' => $e->getMessage(),
+      ];
     }
   }
 

@@ -15,9 +15,10 @@
                                  footer timer ($(".alert").alert('close') after 1s) does NOT
                                  dismiss this informational note before the user can read it. --}}
                             <div class="bom-owner-update-note" style="margin: 10px 0; padding: 12px 16px; background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; border-radius: 4px;">
-                                <strong>Note:</strong> The owner has updated the business amount for the item(s) below.
-                                Please review the updated amount and update your estimation accordingly, then send it to the
-                                owner for approval.
+                                <strong>Note:</strong> The owner has responded to the exceed-amount item(s) below —
+                                either by updating the business amount or rejecting the request. Please review the
+                                response and remark, update your estimation accordingly (reduce the amount if
+                                rejected), then send it to the owner again.
                             </div>
                         @endif
                         <div class="sparkline13-graph">
@@ -43,23 +44,49 @@
                                                 <th data-field="your_remark">Your Remark</th>
                                                 <th data-field="owner_amount">Owner Suggested (₹)</th>
                                                 <th data-field="owner_remark">Owner Remark</th>
+                                                <th data-field="status">Status</th>
                                                 <th data-field="action">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @forelse ($data_output as $data)
+                                                @php
+                                                    // T-2026-057: bom_estimation_send_to_owner 1302 = owner rejected the
+                                                    // exceed-amount request (sibling to 1301 = owner suggested amount).
+                                                    $isRejected = ($data->bom_estimation_send_to_owner ?? null) == 1302
+                                                        || !empty($data->is_exceed_rejected);
+                                                    $responseDate = $isRejected ? $data->exceed_rejected_at : $data->owner_suggested_at;
+                                                @endphp
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ $data->owner_suggested_at ? \Carbon\Carbon::parse($data->owner_suggested_at)->format('d-m-Y') : 'N/A' }}
+                                                    <td>{{ $responseDate ? \Carbon\Carbon::parse($responseDate)->format('d-m-Y') : 'N/A' }}
                                                     </td>
                                                     <td>{{ ucwords($data->project_name ?? '') }}</td>
                                                     <td>{{ ucwords($data->customer_po_number ?? '') }}</td>
                                                     <td>₹{{ number_format($data->total_estimation_amount, 2) }}</td>
                                                     <td>{{ $data->exceed_remark ?? '-' }}</td>
-                                                    <td><strong
-                                                            class="text-success">₹{{ number_format($data->owner_suggested_amount, 2) }}</strong>
+                                                    <td>
+                                                        @if ($isRejected)
+                                                            <span class="text-muted">—</span>
+                                                        @else
+                                                            <strong
+                                                                class="text-success">₹{{ number_format($data->owner_suggested_amount, 2) }}</strong>
+                                                        @endif
                                                     </td>
-                                                    <td>{{ $data->owner_suggestion_remark ?? '-' }}</td>
+                                                    <td>
+                                                        {{ $isRejected ? ($data->exceed_rejected_remark ?? '-') : ($data->owner_suggestion_remark ?? '-') }}
+                                                    </td>
+                                                    <td>
+                                                        @if ($isRejected)
+                                                            <span class="badge badge-danger" style="font-size:12px; padding:5px 8px;">
+                                                                Rejected by Owner
+                                                            </span>
+                                                        @else
+                                                            <span class="badge badge-success" style="font-size:12px; padding:5px 8px;">
+                                                                Owner Suggested Amount
+                                                            </span>
+                                                        @endif
+                                                    </td>
                                                     <td>
                                                         {{-- <a href="{{ route('accept-owner-suggested-amount', base64_encode($data->business_details_id)) }}"
                                                             class="accept-btn"
@@ -73,7 +100,7 @@
                                                             href="{{ route('edit-estimation', base64_encode($data->business_details_id)) }}">
                                                             <button class="btn btn-sm btn-primary" type="button"
                                                                 data-toggle="tooltip"
-                                                                title="Modify estimation and resubmit (if still above new limit, exceed flow restarts)">
+                                                                title="{{ $isRejected ? 'Reduce/revise the estimation amount and resubmit' : 'Modify estimation and resubmit (if still above new limit, exceed flow restarts)' }}">
                                                                 Edit Estimation
                                                             </button>
                                                         </a>
@@ -81,7 +108,7 @@
                                                 </tr>
                                             @empty
                                                 <tr>
-                                                    <td colspan="9" class="text-center">No owner-suggested amounts
+                                                    <td colspan="10" class="text-center">No owner-suggested amounts
                                                         pending review.</td>
                                                 </tr>
                                             @endforelse
