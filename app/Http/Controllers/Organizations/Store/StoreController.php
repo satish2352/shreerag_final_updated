@@ -454,6 +454,9 @@ class StoreController extends Controller
                 $norm->partItem            = $issued->partItemRelation;
                 $norm->unitMaster          = $issued->unitMasterRelation;
                 $norm->issued_at           = $issued->updated_at;
+                // T-2026-058: non-BOM issued row — no BOM context, blade renders em-dash for these.
+                $norm->length              = null;
+                $norm->total_in_mm         = null;
                 $alreadyIssued[]           = $norm;
             }
 
@@ -500,6 +503,9 @@ class StoreController extends Controller
                 $norm->source              = 'production';  // display badge in blade
                 $norm->design_id           = null;
                 $norm->created_at          = $pitem->created_at;
+                // T-2026-058: production-request row — no BOM context, blade renders em-dash for these.
+                $norm->length              = null;
+                $norm->total_in_mm         = null;
 
                 if ($stockQty >= $reqQty) {
                     $availableFromProduction[] = $norm;  // pre-filled in "Additional Items to Issue" rows
@@ -598,6 +604,14 @@ class StoreController extends Controller
                     $norm->created_at          = $mri->created_at;
                     $norm->source              = 'manual_shortage';
                     $norm->is_sent_to_purchase = (int) $mri->is_sent_to_purchase;
+                    // requisition_items DOES carry mtr_for_01_nos_trolley — the draft-row grid
+                    // renders it as an editable input plus a derived "for N trolleys" cell, so it
+                    // must always be present on the normalised row (null when never captured).
+                    $norm->mtr_for_01_nos_trolley = $mri->mtr_for_01_nos_trolley ?? null;
+                    // T-2026-058: requisition_items has no length/total_in_mm columns — no BOM
+                    // context for manually-added shortage rows, blade renders em-dash for these.
+                    $norm->length              = null;
+                    $norm->total_in_mm         = null;
                     $shortage[]                = $norm;
                     // Track this part_item_id as covered so duplicates in reqItemsMap are not added twice
                     $coveredPartIds[] = $key;

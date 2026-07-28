@@ -21,6 +21,17 @@
         $fmt = fn($n) => $n === null || $n === ''
             ? '&mdash;'
             : rtrim(rtrim(number_format((float) $n, 3, '.', ''), '0'), '.');
+        // T-2026-058: unit-aware issue quantity for BOM-prefilled rows in the
+        // "Additional Items to Issue" grid — piece units use required_quantity*trolleyQty
+        // (already what $computeMtrN returns for piece units), length/raw units use
+        // mtr_for_01_nos_trolley*trolleyQty ($computeMtrN's non-piece branch). When
+        // $computeMtrN returns null (length-unit row with no mtr data), fall back to
+        // required_quantity*trolleyQty (T-2026-058 iteration 2 fix — the fallback must
+        // stay trolley-scaled like every other branch, otherwise multi-trolley orders
+        // silently under-issue by a factor of 1/trolleyQty) so the row is still issuable.
+        $computeIssueQty = fn($mtrN, $reqQty, $trolleyQty) => $mtrN !== null
+            ? $mtrN
+            : ((float) ($reqQty ?? 0)) * ((float) ($trolleyQty ?? 1));
     @endphp
     <style>
         .bom-check-section-title {
@@ -54,12 +65,16 @@
         }
 
         /* Wrap long Product Description text in the Shortage Materials table
-           (column 3) so a single long row doesn't force the whole table wide.
+           so a single long row doesn't force the whole table wide.
            Bootstrap's default table-layout: auto IGNORES max-width on cells —
            it expands the column to fit the longest token. So we set explicit
-           width + !important to override the framework rule.                 */
-        .table-shortage th:nth-child(3),
-        .table-shortage td:nth-child(3) {
+           width + !important to override the framework rule.
+           T-2026-058: switched from :nth-child(3) positional targeting to a
+           dedicated .shortage-desc-col class — the Length/Total in mm columns
+           inserted by this task change column indices across the row types
+           (BOM rows vs draft rows), so a class is the robust choice.         */
+        .table-shortage th.shortage-desc-col,
+        .table-shortage td.shortage-desc-col {
             width: 320px !important;
             min-width: 220px !important;
             max-width: 360px !important;
@@ -70,8 +85,8 @@
         /* The product-description cell wraps its text in a <span>. Force the
            <span> (and any nested inline-block) to respect the column width
            so long unbroken tokens like SKU codes also wrap.                  */
-        .table-shortage td:nth-child(3) span,
-        .table-shortage td:nth-child(3) > * {
+        .table-shortage td.shortage-desc-col span,
+        .table-shortage td.shortage-desc-col > * {
             max-width: 100%;
             white-space: normal !important;
             word-break: break-word !important;
@@ -286,7 +301,9 @@
                                                 <th style="width:45px;">Sr.</th>
                                                 <th style="white-space:nowrap;">Date &amp; Time</th>
                                                 <th>Product Description</th>
+                                                <th style="width:110px;">Length</th>
                                                 <th>Issued Qty</th>
+                                                <th style="width:130px;">Total in mm</th>
                                                 <th>Unit</th>
                                                 <th>Rate</th>
                                                 <th>Total</th>
@@ -311,7 +328,9 @@
                                                         {{ $issuedAtStr }}</td>
                                                     <td>{{ $item->product_description ?? (optional($item->partItem)->description ?? '—') }}
                                                     </td>
+                                                    <td>{!! $fmt($item->length ?? null) !!}</td>
                                                     <td>{{ number_format($item->required_quantity, 3) }}</td>
+                                                    <td>{!! $fmt($item->total_in_mm ?? null) !!}</td>
                                                     <td>{{ optional($item->unitMaster)->name ?? ($item->unit_id ?? '—') }}
                                                     </td>
                                                     <td>{{ isset($item->rate) && $item->rate !== null ? number_format((float) $item->rate, 3) : '—' }}
@@ -322,13 +341,13 @@
                                         </tbody>
                                         <tfoot>
                                             <tr style="background:#e9ecef; font-weight:700;">
-                                                <td colspan="6" style="text-align:right; padding-right:12px;">Grand Total
+                                                <td colspan="8" style="text-align:right; padding-right:12px;">Grand Total
                                                 </td>
                                                 <td>{{ number_format($issuedGrandTotal, 2) }}</td>
                                             </tr>
                                             @if ($issuedExceedsEstimation)
                                                 <tr>
-                                                    <td colspan="7" style="padding:0;">
+                                                    <td colspan="9" style="padding:0;">
                                                         <div
                                                             style="background:#dc3545;color:#fff;padding:6px 12px;font-size:13px;font-weight:600;">
                                                             <i class="fa fa-exclamation-triangle"></i>
@@ -404,7 +423,9 @@
                                             <tr>
                                                 <th style="width:45px;">Sr.</th>
                                                 <th>Product Description</th>
+                                                <th style="width:110px;">Length</th>
                                                 <th>Required Qty</th>
+                                                <th style="width:130px;">Total in mm</th>
                                                 <th>Available Stock</th>
                                                 <th>Unit</th>
                                                 <th>Mtr for 01 Nos Trolley</th>
@@ -427,7 +448,9 @@
                                                     <td style="width:45px;">{{ $i + 1 }}</td>
                                                     <td>{{ $item->product_description ?? (optional($item->partItem)->description ?? '—') }}
                                                     </td>
+                                                    <td>{!! $fmt($item->length ?? null) !!}</td>
                                                     <td>{{ number_format($item->required_quantity, 3) }}</td>
+                                                    <td>{!! $fmt($item->total_in_mm ?? null) !!}</td>
                                                     <td>{{ number_format($item->available_stock, 3) }}</td>
                                                     <td>{{ $unitNameAvail ?? ($item->unit_id ?? '—') }}</td>
                                                     <td>{!! $fmt($item->mtr_for_01_nos_trolley ?? null) !!}</td>
@@ -467,7 +490,10 @@
                             </div>
                             <div class="table-responsive" style="margin-bottom: 10px;">
                                 @php
-                                    // Grand Total = sum of (Rate × Mtr/Nos for N Trolleys) across BOM-prefilled rows.
+                                    // Grand Total = sum of (Rate × unit-aware issue quantity) across BOM-prefilled rows.
+                                    // Unit-aware issue quantity = $mtrN for the row when available, else falls back
+                                    // to required_quantity (via $computeIssueQty) — mirrors the quantity now
+                                    // pre-filled into each row's editable Quantity input below (T-2026-058).
                                     // Production-request and manual rows have no BOM Mtr context and contribute 0.
                                     $extraGrandTotal = 0;
                                     foreach ($available as $gtItem) {
@@ -478,9 +504,8 @@
                                             $gtUnitName,
                                             $trolleyQty,
                                         );
-                                        if ($gtMtrN !== null) {
-                                            $extraGrandTotal += ((float) $gtMtrN) * ((float) ($gtItem->rate ?? 0));
-                                        }
+                                        $gtIssueQty = $computeIssueQty($gtMtrN, $gtItem->required_quantity ?? 0, $trolleyQty);
+                                        $extraGrandTotal += $gtIssueQty * ((float) ($gtItem->rate ?? 0));
                                     }
                                 @endphp
                                 <table class="table table-bordered" id="extraItemsTable">
@@ -488,7 +513,9 @@
                                         <tr>
                                             <th>Sr.</th>
                                             <th>Part Item</th>
+                                            <th style="width:110px;">Length</th>
                                             <th>Quantity</th>
+                                            <th style="width:130px;">Total in mm</th>
                                             <th>Unit</th>
                                             <th>Mtr for 01 Nos Trolley</th>
                                             <th>Mtr/Nos for {{ $trolleyQty }} Trolley(s)</th>
@@ -514,6 +541,11 @@
                                                     $unitNameAi,
                                                     $trolleyQty,
                                                 );
+                                                // T-2026-058: unit-aware issue quantity — meters for raw/length
+                                                // material (mtr_for_01_nos_trolley*trolleyQty), nos for piece
+                                                // units (required_quantity*trolleyQty), falling back to
+                                                // required_quantity when $mtrNAi is null (no BOM mtr data).
+                                                $issueQtyAi = $computeIssueQty($mtrNAi, $item->required_quantity ?? 0, $trolleyQty);
                                             @endphp
                                             <tr id="extra_row_{{ $ai }}" style="background:#f0fff4;">
                                                 <td style="vertical-align:middle;">{{ $ai + 1 }}</td>
@@ -530,14 +562,18 @@
                                                     <small style="color:#28a745;font-size:11px;">&#10004; BOM
                                                         Available</small>
                                                 </td>
+                                                <td style="vertical-align:middle; white-space:nowrap;">
+                                                    {!! $fmt($item->length ?? null) !!}</td>
                                                 <td style="vertical-align:middle;">
                                                     <input type="number"
                                                         name="extra_items[{{ $ai }}][quantity]"
                                                         class="form-control" step="0.001" min="0.001"
-                                                        value="{{ $item->required_quantity }}" style="width:110px;">
+                                                        value="{{ number_format($issueQtyAi, 3, '.', '') }}" style="width:110px;">
                                                     <small style="color:green;font-size:11px;">&#10004; Stock:
                                                         {{ number_format($item->available_stock, 3) }}</small>
                                                 </td>
+                                                <td style="vertical-align:middle; white-space:nowrap;">
+                                                    {!! $fmt($item->total_in_mm ?? null) !!}</td>
                                                 <td style="vertical-align:middle;">
                                                     <select name="extra_items[{{ $ai }}][unit_id]"
                                                         class="form-control" style="min-width:100px;">
@@ -561,8 +597,8 @@
                                                 </td>
                                                 <td style="vertical-align:middle; white-space:nowrap; font-weight:bold;"
                                                     class="extra-row-total">
-                                                    @php $totalAi = ($mtrNAi === null) ? null : ((float) $mtrNAi) * ((float) ($item->rate ?? 0)); @endphp
-                                                    {!! $totalAi === null ? '&mdash;' : '&#8377;' . number_format($totalAi, 2) !!}
+                                                    @php $totalAi = $issueQtyAi * ((float) ($item->rate ?? 0)); @endphp
+                                                    &#8377;{{ number_format($totalAi, 2) }}
                                                 </td>
                                                 <td style="vertical-align:middle;">
                                                     <button type="button" class="btn btn-danger btn-sm"
@@ -589,6 +625,8 @@
                                                     <small style="color:#fd7e14;font-size:11px;"><i
                                                             class="fa fa-industry"></i> Production Request</small>
                                                 </td>
+                                                {{-- Production-request rows have no BOM context — show em-dash --}}
+                                                <td style="vertical-align:middle; white-space:nowrap;">&mdash;</td>
                                                 <td style="vertical-align:middle;">
                                                     <input type="number"
                                                         name="extra_items[{{ $pIdx }}][quantity]"
@@ -597,6 +635,7 @@
                                                     <small style="color:green;font-size:11px;">&#10004; Stock:
                                                         {{ number_format($pitem->available_stock, 3) }}</small>
                                                 </td>
+                                                <td style="vertical-align:middle; white-space:nowrap;">&mdash;</td>
                                                 <td style="vertical-align:middle;">
                                                     <select name="extra_items[{{ $pIdx }}][unit_id]"
                                                         class="form-control" style="min-width:100px;">
@@ -633,7 +672,7 @@
                                     </tbody>
                                     <tfoot>
                                         <tr style="background:#e8f5e9; font-weight:bold;">
-                                            <td colspan="7" style="text-align:right; padding-right:12px;">Grand Total:
+                                            <td colspan="9" style="text-align:right; padding-right:12px;">Grand Total:
                                             </td>
                                             <td id="extraGrandTotalCell" style="white-space:nowrap; font-size:15px; color:#155724;">
                                                 &#8377;{{ number_format($extraGrandTotal, 2) }}</td>
@@ -708,8 +747,10 @@
                                         <tr>
                                             <th style="width:45px;">Sr.</th>
                                             <th style="white-space:nowrap;">Date &amp; Time</th>
-                                            <th>Product Description</th>
+                                            <th class="shortage-desc-col">Product Description</th>
+                                            <th style="width:110px;">Length</th>
                                             <th>Required Qty</th>
+                                            <th style="width:130px;">Total in mm</th>
                                             <th>Available Stock</th>
                                             <th class="qty-highlight" style="color:#fff;">Shortage Qty</th>
                                             <th>Unit</th>
@@ -742,7 +783,7 @@
                                                 <td style="white-space:nowrap; font-size:12px; color:#555;">
                                                     {{ $item->created_at ?? null ? \Carbon\Carbon::parse($item->created_at)->format('d M Y, h:i A') : '—' }}
                                                 </td>
-                                                <td><span>
+                                                <td class="shortage-desc-col"><span>
                                                         {{ $item->product_description ?? (optional($item->partItem)->description ?? '—') }}
                                                         @if ($isSent)
                                                             <span class="badge-sent-purchase"><i class="fa fa-check"></i>
@@ -754,7 +795,9 @@
                                                         @endif
                                                     </span>
                                                 </td>
+                                                <td>{!! $fmt($item->length ?? null) !!}</td>
                                                 <td>{{ number_format($item->required_quantity, 3) }}</td>
+                                                <td>{!! $fmt($item->total_in_mm ?? null) !!}</td>
                                                 <td>{{ number_format($item->available_stock, 3) }}</td>
                                                 <td><strong
                                                         class="qty-highlight">{{ number_format($item->shortage_quantity, 3) }}</strong>
@@ -778,7 +821,7 @@
                                                 <td style="vertical-align:middle; font-size:12px; color:#999;">
                                                     {{ \Carbon\Carbon::now()->format('d M Y, h:i A') }}
                                                 </td>
-                                                <td style="vertical-align:middle; min-width:220px;">
+                                                <td class="shortage-desc-col" style="vertical-align:middle; min-width:220px;">
                                                     <input type="text" class="form-control"
                                                         value="{{ $ditem->product_description ?? (optional($ditem->partItem)->description ?? '—') }}"
                                                         readonly style="background:#f8f9fa;">
@@ -787,11 +830,14 @@
                                                     <input type="hidden" class="sm-desc"
                                                         value="{{ $ditem->product_description ?? (optional($ditem->partItem)->description ?? '') }}">
                                                 </td>
+                                                {{-- requisition_items has no length/total_in_mm columns — no BOM context, show em-dash --}}
+                                                <td style="vertical-align:middle;">&mdash;</td>
                                                 <td style="vertical-align:middle;">
                                                     <input type="number" class="form-control sm-qty-input"
                                                         step="0.001" min="0.001" style="width:110px;"
                                                         value="{{ $ditem->required_quantity }}">
                                                 </td>
+                                                <td style="vertical-align:middle;">&mdash;</td>
                                                 <td style="vertical-align:middle;">
                                                     <input type="number" class="form-control sm-avail-stock"
                                                         step="0.001" readonly
@@ -825,10 +871,16 @@
                                                         value="{{ $ditem->mtr_for_01_nos_trolley ?? '' }}">
                                                 </td>
                                                 <td style="vertical-align:middle;">
+                                                    @php
+                                                        // Draft rows come from requisition_items and are normalised into
+                                                        // stdClass in the controller — guard with ?? so a row missing the
+                                                        // property never fatals the whole page.
+                                                        $dMtr1 = $ditem->mtr_for_01_nos_trolley ?? null;
+                                                    @endphp
                                                     <input type="text" class="form-control short-mtrN"
                                                         readonly tabindex="-1"
                                                         style="background:#f3f4f6;cursor:not-allowed;min-width:90px;"
-                                                        value="{{ $ditem->mtr_for_01_nos_trolley !== null ? number_format((float)($ditem->mtr_for_01_nos_trolley) * (int)($trolleyQty ?: 1), 3) : '' }}">
+                                                        value="{{ $dMtr1 !== null && $dMtr1 !== '' ? number_format((float) $dMtr1 * (int) ($trolleyQty ?: 1), 3) : '' }}">
                                                 </td>
                                                 <td style="vertical-align:middle;">
                                                     <input type="number" class="form-control sm-rate-input"
@@ -1206,11 +1258,14 @@
                         '][product_description]" class="extra-desc" value="">' +
                         '<input type="hidden" name="extra_items[' + i + '][rate]" class="extra-rate-hidden" value="0">' +
                         '</td>' +
+                        // Manually-added rows have no BOM context — Length/Total in mm show em-dash (T-2026-058)
+                        '<td style="vertical-align:middle; white-space:nowrap;">&mdash;</td>' +
                         '<td style="vertical-align:middle;">' +
                         '<input type="number" name="extra_items[' + i +
                         '][quantity]" class="form-control extra-qty-input" step="0.001" min="0.001" required style="width:110px;">' +
                         '<small class="extra-stock-msg d-block mt-1" style="font-size:11px;"></small>' +
                         '</td>' +
+                        '<td style="vertical-align:middle; white-space:nowrap;">&mdash;</td>' +
                         '<td style="vertical-align:middle;">' +
                         '<select name="extra_items[' + i +
                         '][unit_id]" class="form-control" required style="min-width:100px;">' + unitOptions + '</select>' +
@@ -1445,16 +1500,19 @@
                         '<tr id="shortage_manual_row_' + i + '" class="shortage-row-manual" style="background:#fff8f0;">' +
                         '<td style="vertical-align:middle;" class="sr-cell">?</td>' +
                         '<td style="vertical-align:middle; white-space:nowrap; font-size:12px; color:#999;">' + new Date().toLocaleDateString('en-IN', {day:'2-digit',month:'short',year:'numeric'}) + '</td>' +
-                        '<td style="vertical-align:middle; min-width:220px;">' +
+                        '<td class="shortage-desc-col" style="vertical-align:middle; min-width:220px;">' +
                         '<div class="ei-dropdown">' +
                         '<button type="button" class="btn btn-default form-control sm-trigger" style="text-align:left;">-- Select Part Item --</button>' +
                         '</div>' +
                         '<input type="hidden" class="sm-part-id" value="">' +
                         '<input type="hidden" class="sm-desc" value="">' +
                         '</td>' +
+                        // requisition_items has no length/total_in_mm columns — no BOM context, show em-dash (T-2026-058)
+                        '<td style="vertical-align:middle;">&mdash;</td>' +
                         '<td style="vertical-align:middle;">' +
                         '<input type="number" class="form-control sm-qty-input" step="0.001" min="0.001" style="width:110px;" placeholder="0">' +
                         '</td>' +
+                        '<td style="vertical-align:middle;">&mdash;</td>' +
                         '<td style="vertical-align:middle;">' +
                         '<input type="number" class="form-control sm-avail-stock" step="0.001" min="0" value="0" readonly style="width:110px; background:#f8f9fa;">' +
                         '</td>' +
@@ -1792,12 +1850,17 @@
                 var budgetExceeded = {{ $issuedExceedsEstimation ? 'true' : 'false' }};
 
                 function calcNewItemsTotal() {
+                    // T-2026-058: all rows in #extraItemsBody (BOM-prefilled, production-request,
+                    // and manually-added) carry their own live [quantity]/[rate] DOM inputs, so a
+                    // single DOM-driven pass over every <tr> here already covers every row exactly
+                    // once. A previous version of this function ALSO summed required_quantity*rate
+                    // for $available server-side (hardcoded at page load) before this loop, which
+                    // double-counted every BOM row — and, after this task pre-fills the Quantity
+                    // input with the unit-aware issue figure instead of required_quantity, that
+                    // hardcoded duplicate would no longer even match the DOM value it duplicated.
+                    // Removed: this loop alone is the single source of truth and reflects any live
+                    // edits the user makes to quantity/rate before submit.
                     var total = 0;
-                    // BOM available items (hidden inputs carry rate)
-                    @foreach ($available as $i => $item)
-                        total += {{ (float) ($item->required_quantity ?? 0) }} * {{ (float) ($item->rate ?? 0) }};
-                    @endforeach
-                    // Extra rows (production requests + manual add)
                     document.querySelectorAll('#extraItemsBody tr').forEach(function(row) {
                         var qtyEl = row.querySelector('input[name*="[quantity]"]');
                         var rateEl = row.querySelector('input[name*="[rate]"].extra-rate-hidden') ||
