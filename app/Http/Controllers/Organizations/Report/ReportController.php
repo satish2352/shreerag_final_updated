@@ -1265,6 +1265,12 @@ class ReportController extends Controller
                 'totals' => $response['totals'] ?? ['received' => 0, 'issue' => 0, 'balance' => 0],
             ]);
         } catch (\Exception $e) {
+            // Log the real fault — the server has no terminal, so an unlogged
+            // generic message here is undiagnosable in production.
+            Log::error('listStockDailyReportAjax failed: ' . $e->getMessage(), [
+                'part_item_id' => $request->description,
+                'exception'    => $e,
+            ]);
             return response()->json(['status' => false, 'message' => 'Something went wrong. Please try again.']);
         }
     }

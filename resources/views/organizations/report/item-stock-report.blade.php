@@ -357,8 +357,29 @@
                             `Showing ${res.pagination.from} to ${res.pagination.to} of ${res.pagination.totalItems}`;
 
                     } else {
-                        tbody.innerHTML = '<tr><td colspan="7">Failed to fetch data.</td></tr>';
+                        // Show the actual reason the server reported. The server has
+                        // no terminal, so swallowing this behind a generic "Failed to
+                        // fetch data." left real faults (e.g. a pending schema change
+                        // -> "Unknown column 'issued_at'") completely undiagnosable.
+                        const reason = res.message ? String(res.message) : 'Failed to fetch data.';
+                        const cell = document.createElement('td');
+                        cell.setAttribute('colspan', '7');
+                        cell.textContent = reason;
+                        const tr = document.createElement('tr');
+                        tr.appendChild(cell);
+                        tbody.innerHTML = '';
+                        tbody.appendChild(tr);
                     }
+                })
+                .catch(err => {
+                    const tbody = document.getElementById('reportBody');
+                    const cell = document.createElement('td');
+                    cell.setAttribute('colspan', '7');
+                    cell.textContent = 'Failed to fetch data. ' + (err && err.message ? err.message : '');
+                    const tr = document.createElement('tr');
+                    tr.appendChild(cell);
+                    tbody.innerHTML = '';
+                    tbody.appendChild(tr);
                 });
         }
 
