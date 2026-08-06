@@ -373,6 +373,67 @@ class AllListRepository
             return $e;
         }
     }
+    /**
+     * T-2026-059 (Defect 2iii + "ADDED SCOPE" header/body misattribution fix).
+     *
+     * Previous implementation joined businesses_details THROUGH `production`
+     * (production.business_details_id = businesses_details.id) rather than directly
+     * off business_application_processes.business_details_id, so any project with no
+     * `production` row yielded product_name=NULL/description=NULL. Combined with a
+     * groupBy(['businesses_details.product_name', 'businesses_details.description'])
+     * that was NOT scoped to business_details_id/business_id/BAP, ALL such NULL/NULL
+     * projects collapsed into one row — and more generally ANY two projects that
+     * legitimately share the same (product_name, description) pair ALSO collapsed,
+     * with MAX(requisition.id) picking one arbitrary requisition and
+     * SUM(businesses_details.quantity) summing across unrelated projects. Because the
+     * BOM Requisition modal's HEADER (product/customer name) came from this grouped
+     * row while its BODY came from requisition_items keyed by that same arbitrary
+     * MAX(requisition.id), two different projects' name and item list could be
+     * wholesale mismatched (not just "some items missing" — a genuine cross-project
+     * misattribution).
+     *
+     * Fix:
+     *   1. Join businesses_details directly off business_application_processes.business_details_id.
+     *   2. businesses.is_active / businesses.is_deleted moved into the JOIN's ON clause
+     *      (not a top-level ->where(...)), so the LEFT JOIN genuinely stays a LEFT JOIN
+     *      and never silently degrades into an INNER JOIN.
+     *   3. designs is also joined with is_active/is_deleted scoped into its ON clause —
+     *      defensive: multiple historical design revision rows can exist per
+     *      business_details_id (see DesignModel usage elsewhere in StoreController),
+     *      and an unscoped join here would fan out duplicate rows per project once the
+     *      collapsing groupBy is removed.
+     *   4. `production` is no longer joined at all — every column this query actually
+     *      selects comes from businesses / businesses_details / requisition, and
+     *      `production` was ONLY ever used as a (buggy) stepping stone to reach
+     *      businesses_details; keeping it would reintroduce a fan-out risk (multiple
+     *      production rows can exist per business_details_id) for zero benefit.
+     *   5. groupBy is now business_application_processes.id — the true per-project row
+     *      identity. Two projects can NEVER collapse into one row again, regardless of
+     *      shared product_name/description, because grouping is on the BAP row itself,
+     *      not on any descriptive text. Every selected column is wrapped in MAX() purely
+     *      to satisfy ONLY_FULL_GROUP_BY — since the group is exactly one BAP row's own
+     *      joined data, MAX() here can never blend two different projects' values.
+     *   6. Multiple-requisitions-per-project note (Defect 2iii item 5): this codebase's
+     *      write path (StoreController::storeShortageRequisition — `Requisition::where
+     *      ('business_details_id', ...)->first()` before ever creating a new one) never
+     *      creates more than one requisition per business_details_id, so
+     *      MAX(requisition.id) is at most a defensive no-op here, not a collapsing
+     *      mechanism — this query already surfaces "one row per requisition" in the only
+     *      configuration this codebase's write path can actually produce. If a future
+     *      change ever allowed >1 requisition per project, this query would need a
+     *      genuine per-requisition fan-out (dropping MAX(requisition.id) in favour of a
+     *      real join-and-multiply) to keep exposing every one of them.
+     *   7. Pagination is preserved (->paginate($perPage) still runs against the
+     *      per-project-row grouped query, not an unbounded full scan).
+     *
+     * Header/body consistency (bug-class fix, not just data fix): because this method's
+     * output row now IS the single source of truth for BOTH the requisition_id used to
+     * load items AND the product/customer name/quantity/description shown alongside it,
+     * list-material-sent-to-purchase.blade.php's modal title and body — and its Print/CSV
+     * handlers, which read straight out of the rendered modal DOM — can structurally never
+     * diverge again; there is no remaining code path that derives the title from an
+     * aggregated/grouped row while the body comes from something else.
+     */
     public function getAllListMaterialSentToPurchase()
     {
         try {
@@ -384,24 +445,23 @@ class AllListRepository
                 config('constants.STORE_DEPARTMENT.LIST_REQUEST_NOTE_SENT_FROM_STORE_DEPT_FOR_PURCHASE')
             ];
 
-            $query = BusinessApplicationProcesses::leftJoin('production', function ($join) {
-                $join->on('business_application_processes.business_details_id', '=', 'production.business_details_id');
-            })
-                ->leftJoin('designs', function ($join) {
-                    $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id');
+            $query = BusinessApplicationProcesses::leftJoin('designs', function ($join) {
+                    $join->on('business_application_processes.business_details_id', '=', 'designs.business_details_id')
+                        ->where('designs.is_active', 1)
+                        ->where('designs.is_deleted', 0);
                 })
                 ->leftJoin('businesses', function ($join) {
-                    $join->on('business_application_processes.business_id', '=', 'businesses.id');
+                    $join->on('business_application_processes.business_id', '=', 'businesses.id')
+                        ->where('businesses.is_active', true)
+                        ->where('businesses.is_deleted', 0);
                 })
                 ->leftJoin('businesses_details', function ($join) {
-                    $join->on('production.business_details_id', '=', 'businesses_details.id');
+                    $join->on('business_application_processes.business_details_id', '=', 'businesses_details.id');
                 })
                 ->leftJoin('requisition', function ($join) {
                     $join->on('business_application_processes.business_details_id', '=', 'requisition.business_details_id');
                 })
-                ->whereIn('business_application_processes.store_status_id', $array_to_be_check)
-                ->where('businesses.is_active', true)
-                ->where('businesses.is_deleted', 0);
+                ->whereIn('business_application_processes.store_status_id', $array_to_be_check);
 
             if ($search) {
                 $query->where(function ($q) use ($search) {
@@ -412,18 +472,17 @@ class AllListRepository
             }
 
             $data_output = $query
-                ->groupBy([
-                    'businesses_details.product_name',
-                    'businesses_details.description',
-                ])
+                ->groupBy(['business_application_processes.id'])
                 ->selectRaw("
+                business_application_processes.id as bap_id,
+                MAX(business_application_processes.business_details_id) as business_details_id,
                 MAX(businesses.id) as business_id,
                 MAX(businesses.customer_po_number) as customer_po_number,
                 MAX(businesses.project_name) as customer_project_name,
-                businesses_details.product_name,
+                MAX(businesses_details.product_name) as product_name,
                 MAX(businesses.title) as title,
-                businesses_details.description,
-                SUM(businesses_details.quantity) as quantity,
+                MAX(businesses_details.description) as description,
+                MAX(businesses_details.quantity) as quantity,
                 MAX(businesses.remarks) as remarks,
                 MAX(requisition.id) as requistition_id,
                 MAX(requisition.bom_file) as bom_file,

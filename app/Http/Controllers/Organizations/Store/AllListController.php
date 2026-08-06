@@ -93,12 +93,23 @@ class AllListController extends Controller
             // Load requisition items keyed by requisition_id so the view can render
             // the BOM Requisition modal (same pattern used by Purchase dept's
             // list-bom-material-recived-for-purchase).
+            //
+            // T-2026-059 (Defect 2i): this modal is specifically the "already sent to
+            // Purchase" view — it must show ONLY genuinely-sent requisition rows.
+            // Filtering on is_deleted=0 alone let draft rows (is_sent_to_purchase=0,
+            // written by storeAdditionalShortageRequisition / the production_shortage
+            // upsert) leak into this modal as if they had been formally sent. Adding
+            // is_active=1 + is_sent_to_purchase=1 restricts it to real, sent rows only.
+            // (Draft-row visibility for the Store user themselves is a separate concern
+            // handled entirely on bom-inventory-check.blade.php, not this listing page.)
             $reqIds = collect($data_output->items())->pluck('requistition_id')->filter()->unique()->values();
             $requisitionItemsMap = collect();
             if ($reqIds->isNotEmpty()) {
                 $requisitionItemsMap = RequisitionItem::with(['unitMaster', 'partItem'])
                     ->whereIn('requisition_id', $reqIds)
+                    ->where('is_active', 1)
                     ->where('is_deleted', 0)
+                    ->where('is_sent_to_purchase', 1)
                     ->get()
                     ->groupBy('requisition_id');
             }

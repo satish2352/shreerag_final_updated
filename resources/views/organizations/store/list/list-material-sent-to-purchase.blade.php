@@ -118,6 +118,17 @@
 @foreach ($data_output as $data)
     @php
         $reqItems = $requisitionItemsMap[$data->requistition_id] ?? collect();
+        // T-2026-059: current trolley_qty for THIS project (from designs.trolley_qty),
+        // used only as the fallback multiplier for legacy pre-fix requisition_items rows
+        // (is_qty_trolley_scaled=0) whose own trolley_qty column is NULL — see
+        // BomTotalCalculator::effectiveRequiredQuantity()/effectiveShortageQuantity().
+        // requisitionItemsMap is now already filtered to is_sent_to_purchase=1 only
+        // (AllListController::getAllListMaterialSentToPurchase, Defect 2i), so every row
+        // here is immutable — safe to retroactively correct for display.
+        $modalTrolleyQty = (int) (\App\Models\DesignModel::where('business_details_id', $data->business_details_id)
+            ->where('is_deleted', 0)
+            ->where('is_active', 1)
+            ->value('trolley_qty') ?: 1);
     @endphp
     @if(!empty($data->requistition_id))
     <div class="modal fade" id="storeBomModal{{ $data->requistition_id }}" tabindex="-1" role="dialog"
@@ -156,16 +167,35 @@
                                 @php $modalTotal = 0; @endphp
                                 @foreach($reqItems as $ri => $ritem)
                                     @php
-                                        $rTotal      = (float)($ritem->shortage_quantity ?? 0) * (float)($ritem->rate ?? 0);
+                                        // T-2026-059: reuse BomTotalCalculator (never re-implement the
+                                        // piece/length branch here) to derive the EFFECTIVE (always
+                                        // unit-aware + trolley-scaled) required/shortage quantity —
+                                        // transparently handling both post-fix rows (already scaled at
+                                        // write time, used as-is) and legacy pre-fix rows (retroactively
+                                        // corrected for display only). The Total column's base MUST be the
+                                        // shortage quantity (what Purchase actually needs to buy), never
+                                        // shortage_quantity*rate computed from a raw, possibly wrong-basis,
+                                        // possibly un-scaled stored value as before.
+                                        $riUnitName  = optional($ritem->unitMaster)->name ?? optional($ritem->unitMaster)->unit_name ?? '';
+                                        $riIsScaled  = (int) ($ritem->is_qty_trolley_scaled ?? 0) === 1;
+                                        $riReqQty    = \App\Support\BomTotalCalculator::effectiveRequiredQuantity(
+                                            $ritem->required_quantity, $ritem->mtr_for_01_nos_trolley, $riUnitName,
+                                            $ritem->trolley_qty, $modalTrolleyQty, $riIsScaled
+                                        );
+                                        $riShortQty  = \App\Support\BomTotalCalculator::effectiveShortageQuantity(
+                                            $ritem->available_quantity, $ritem->required_quantity, $ritem->mtr_for_01_nos_trolley, $riUnitName,
+                                            $ritem->trolley_qty, $modalTrolleyQty, $riIsScaled
+                                        );
+                                        $rTotal      = $riShortQty * (float) ($ritem->rate ?? 0);
                                         $modalTotal += $rTotal;
                                     @endphp
                                     <tr>
                                         <td>{{ $ri + 1 }}</td>
                                         <td>{{ $ritem->product_description ?? (optional($ritem->partItem)->description ?? '—') }}</td>
-                                        <td>{{ number_format($ritem->required_quantity, 3) }}</td>
+                                        <td>{{ number_format($riReqQty, 3) }}</td>
                                         <td>{{ number_format($ritem->available_quantity, 3) }}</td>
-                                        <td><strong style="color:#dc3545;">{{ number_format($ritem->shortage_quantity, 3) }}</strong></td>
-                                        <td>{{ optional($ritem->unitMaster)->name ?? '—' }}</td>
+                                        <td><strong style="color:#dc3545;">{{ number_format($riShortQty, 3) }}</strong></td>
+                                        <td>{{ $riUnitName !== '' ? $riUnitName : '—' }}</td>
                                         <td>{{ $ritem->rate !== null ? number_format((float)$ritem->rate, 3) : '—' }}</td>
                                         <td><strong>{{ number_format($rTotal, 2) }}</strong></td>
                                     </tr>

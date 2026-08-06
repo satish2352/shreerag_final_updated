@@ -62,10 +62,33 @@
                                                     </td>
                                                     <td>
                                                         <div style="display: inline-block; align-items: center;">
+                                                            {{--
+                                                                T-2026-059 iteration 6 fix: $data->business_details_id
+                                                                is aliased from the fragile `production.business_
+                                                                details_id` LEFT JOIN (see AllListRepository::
+                                                                getAllListMaterialReceivedForPurchase()) and is NULL
+                                                                whenever this project has no `production` row yet — a
+                                                                real, common state (the SAME root cause iteration 5
+                                                                fixed for $trolleyQtyMap in AllListController.php).
+                                                                base64_encode(null) => '', and Laravel's route()
+                                                                helper drops a trailing empty parameter entirely
+                                                                instead of encoding an empty segment, producing a URL
+                                                                with only 1 path segment against a route that requires
+                                                                2 ({requistition_id}/{business_details_id}) — a
+                                                                genuine 404 (NotFoundHttpException) for the MAJORITY
+                                                                of real "sent to Purchase" rows. $data->id (aliased
+                                                                from `businesses_details.id`, confirmed via
+                                                                PurchaseOrderController::index()/create() — both treat
+                                                                the incoming business_details_id route param as
+                                                                businesses_details.id, e.g.
+                                                                BusinessDetails::where('businesses_details.id', ...))
+                                                                is always present and is the value this route/
+                                                                controller pair actually expects.
+                                                            --}}
                                                             <a
                                                                 href="{{ route('list-purchase-order', [
                                                                     base64_encode($data->requistition_id),
-                                                                    base64_encode($data->business_details_id),
+                                                                    base64_encode($data->id),
                                                                 ]) }} "><button
                                                                     data-toggle="tooltip"
                                                                     title="Accept and Send For Purchase "
@@ -114,17 +137,13 @@
 
 {{-- BOM Requisition Modals --}}
 @php
-    // Shared helpers for the trolley columns. Piece-units (NOS / PCS / SET /
-    // EACH) multiply quantity × trolley_qty; other units multiply
-    // mtr_for_01_nos_trolley × trolley_qty. Matches the Store BOM screen.
-    $PIECE_UNITS_BOM = ['NOS', 'PCS', 'SET', 'EACH'];
-    $computeMtrN_BOM = function ($mtr, $qty, $unitName, $tQty) use ($PIECE_UNITS_BOM) {
-        $t = (int) ($tQty ?: 1);
-        $isPiece = in_array(strtoupper(trim((string) $unitName)), $PIECE_UNITS_BOM, true);
-        if ($isPiece) return (float) ($qty ?? 0) * $t;
-        if ($mtr === null || $mtr === '') return null;
-        return (float) $mtr * $t;
-    };
+    // T-2026-059 iteration 3 fix: never re-derive the trolley/unit-aware formula
+    // locally — always go through BomTotalCalculator's effective-* helpers so a
+    // LEGACY (is_qty_trolley_scaled=0) row is retroactively, correctly trolley-scaled
+    // for display here too (same rule already applied on Store's own
+    // list-material-sent-to-purchase.blade.php). This is the page where Purchase
+    // reviews BOM shortages before creating a PO, so it must never show the old,
+    // wrong, unscaled figure for a legacy sent requisition.
     $fmt_BOM = fn($n) => ($n === null || $n === '') ? '—' : rtrim(rtrim(number_format((float) $n, 3, '.', ''), '0'), '.');
 @endphp
 @foreach ($data_output as $data)
@@ -172,25 +191,41 @@
                                 @php $modalTotal = 0; @endphp
                                 @foreach($reqItems as $ri => $ritem)
                                     @php
-                                        $rTotal       = (float)($ritem->shortage_quantity ?? 0) * (float)($ritem->rate ?? 0);
+                                        // T-2026-059 iteration 3 fix: reuse BomTotalCalculator's
+                                        // effectiveRequiredQuantity()/effectiveShortageQuantity() (never a
+                                        // locally duplicated formula) so a legacy (is_qty_trolley_scaled=0)
+                                        // row is retroactively, correctly trolley-scaled here too. The
+                                        // "Mtr/Nos for N Trolley(s)" column reuses the SAME effective
+                                        // required-quantity value as the "Required Qty" column (single
+                                        // source of truth — previously it was derived from a separate,
+                                        // shortage-based closure that could disagree with "Required Qty").
+                                        // Total's base MUST be the shortage quantity (what Purchase
+                                        // actually needs to buy), matching list-material-sent-to-purchase.
+                                        $unitNameBOM   = optional($ritem->unitMaster)->name ?? '';
+                                        $bomIsScaled   = (int) ($ritem->is_qty_trolley_scaled ?? 0) === 1;
+                                        $riReqQtyBOM   = \App\Support\BomTotalCalculator::effectiveRequiredQuantity(
+                                            $ritem->required_quantity, $ritem->mtr_for_01_nos_trolley, $unitNameBOM,
+                                            $ritem->trolley_qty, $tQtyForModal, $bomIsScaled
+                                        );
+                                        $riShortQtyBOM = \App\Support\BomTotalCalculator::effectiveShortageQuantity(
+                                            $ritem->available_quantity, $ritem->required_quantity, $ritem->mtr_for_01_nos_trolley, $unitNameBOM,
+                                            $ritem->trolley_qty, $tQtyForModal, $bomIsScaled
+                                        );
+                                        $mtr1BOM      = $ritem->mtr_for_01_nos_trolley ?? null;
+                                        $rTotal       = $riShortQtyBOM * (float) ($ritem->rate ?? 0);
                                         $modalTotal  += $rTotal;
                                         $partStr      = (string)($ritem->part_item_id ?? '');
                                         $hasPO        = in_array($partStr, $poCreatedParts);
                                     @endphp
-                                    @php
-                                        $unitNameBOM = optional($ritem->unitMaster)->name;
-                                        $mtr1BOM = $ritem->mtr_for_01_nos_trolley ?? null;
-                                        $mtrNBOM = $computeMtrN_BOM($mtr1BOM, $ritem->shortage_quantity ?? null, $unitNameBOM, $tQtyForModal);
-                                    @endphp
                                     <tr style="{{ $hasPO ? 'background:#f0fff4;' : '' }}">
                                         <td>{{ $ri + 1 }}</td>
                                         <td>{{ $ritem->product_description ?? (optional($ritem->partItem)->description ?? '—') }}</td>
-                                        <td>{{ number_format($ritem->required_quantity, 3) }}</td>
+                                        <td>{{ number_format($riReqQtyBOM, 3) }}</td>
                                         <td>{{ number_format($ritem->available_quantity, 3) }}</td>
-                                        <td><strong style="color:#dc3545;">{{ number_format($ritem->shortage_quantity, 3) }}</strong></td>
-                                        <td>{{ $unitNameBOM ?? '—' }}</td>
+                                        <td><strong style="color:#dc3545;">{{ number_format($riShortQtyBOM, 3) }}</strong></td>
+                                        <td>{{ $unitNameBOM !== '' ? $unitNameBOM : '—' }}</td>
                                         <td>{{ $fmt_BOM($mtr1BOM) }}</td>
-                                        <td>{{ $fmt_BOM($mtrNBOM) }}</td>
+                                        <td>{{ number_format($riReqQtyBOM, 3) }}</td>
                                         <td>{{ $ritem->rate !== null ? number_format((float)$ritem->rate, 3) : '—' }}</td>
                                         <td><strong>{{ number_format($rTotal, 2) }}</strong></td>
                                         <td style="white-space:nowrap;">

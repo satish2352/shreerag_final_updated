@@ -501,6 +501,7 @@
         Route::post('/store-shortage-requisition', [StoreController::class, 'storeShortageRequisition'])->name('store-shortage-requisition');
         Route::post('/store-additional-shortage-requisition', [StoreController::class, 'storeAdditionalShortageRequisition'])->name('store-additional-shortage-requisition');
         Route::post('/send-pending-shortage-to-purchase', [StoreController::class, 'sendPendingShortageToPurchase'])->name('send-pending-shortage-to-purchase');
+        Route::post('/resync-shortage-requisition', [StoreController::class, 'resyncShortageRequisition'])->name('resync-shortage-requisition');
         Route::post('/delete-draft-shortage-item', [StoreController::class, 'deleteDraftShortageItem'])->name('delete-draft-shortage-item');
         Route::post('/update-draft-shortage-item', [StoreController::class, 'updateDraftShortageItem'])->name('update-draft-shortage-item');
         Route::post('/issue-available-materials', [StoreController::class, 'issueAvailableMaterials'])->name('issue-available-materials');

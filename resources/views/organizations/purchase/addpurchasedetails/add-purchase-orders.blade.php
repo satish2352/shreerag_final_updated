@@ -203,11 +203,23 @@
                                                 </thead>
                                                 <tbody>
                                                     @foreach($purchasedItems as $pi => $pitem)
+                                                    @php
+                                                        // T-2026-059 iteration 3 fix: never read requisition_items.shortage_quantity
+                                                        // raw — always go through BomTotalCalculator::effectiveShortageQuantity()
+                                                        // so a LEGACY (is_qty_trolley_scaled=0) row is retroactively, correctly
+                                                        // trolley-scaled here too (this is the actual PO-creation screen).
+                                                        $piUnitName = optional(\App\Models\UnitMaster::find($pitem->unit_id))->name ?? '';
+                                                        $piIsScaled = (int) ($pitem->is_qty_trolley_scaled ?? 0) === 1;
+                                                        $piShortQty = \App\Support\BomTotalCalculator::effectiveShortageQuantity(
+                                                            $pitem->available_quantity, $pitem->required_quantity, $pitem->mtr_for_01_nos_trolley, $piUnitName,
+                                                            $pitem->trolley_qty, $trolleyQty, $piIsScaled
+                                                        );
+                                                    @endphp
                                                     <tr>
                                                         <td>{{ $pi + 1 }}</td>
                                                         <td>{{ $pitem->product_description ?? '—' }}</td>
-                                                        <td>{{ number_format((float)$pitem->shortage_quantity, 3) }}</td>
-                                                        <td>{{ optional(\App\Models\UnitMaster::find($pitem->unit_id))->name ?? $pitem->unit_id ?? '—' }}</td>
+                                                        <td>{{ number_format($piShortQty, 3) }}</td>
+                                                        <td>{{ $piUnitName !== '' ? $piUnitName : ($pitem->unit_id ?? '—') }}</td>
                                                         <td>{{ $pitem->rate !== null ? number_format((float)$pitem->rate, 3) : '—' }}</td>
                                                     </tr>
                                                     @endforeach
@@ -255,18 +267,14 @@
                                                  aria-labelledby="reqRefPanelHeading">
                                                 <div style="background:#e8f4fd; padding:12px 16px;">
                                                     @php
-                                                        // Helper closures for the trolley columns. Piece-units (NOS / PCS /
-                                                        // SET / EACH) multiply quantity × trolley_qty; other units multiply
-                                                        // mtr_for_01_nos_trolley × trolley_qty. Matches the convention used
-                                                        // on the store BOM-inventory-check screen.
-                                                        $PIECE_UNITS_PO = ['NOS', 'PCS', 'SET', 'EACH'];
-                                                        $computeMtrN_PO = function ($mtr, $qty, $unitName, $trolleyQty) use ($PIECE_UNITS_PO) {
-                                                            $t = (int) ($trolleyQty ?: 1);
-                                                            $isPiece = in_array(strtoupper(trim((string) $unitName)), $PIECE_UNITS_PO, true);
-                                                            if ($isPiece) return (float) ($qty ?? 0) * $t;
-                                                            if ($mtr === null || $mtr === '') return null;
-                                                            return (float) $mtr * $t;
-                                                        };
+                                                        // T-2026-059 iteration 3 fix: quantities read from requisition_items must
+                                                        // ALWAYS go through BomTotalCalculator's effective-* helpers (never a
+                                                        // locally re-derived formula) so a LEGACY (is_qty_trolley_scaled=0) row
+                                                        // is retroactively, correctly trolley-scaled for display here too — same
+                                                        // rule already applied on Store's own
+                                                        // list-material-sent-to-purchase.blade.php. This is the actual
+                                                        // PO-creation screen, so it must never show the old, wrong, unscaled
+                                                        // figure for a legacy sent requisition.
                                                         $fmt_PO = fn($n) => ($n === null || $n === '') ? '—' : rtrim(rtrim(number_format((float) $n, 3, '.', ''), '0'), '.');
                                                     @endphp
                                                     <table class="table table-sm table-bordered mt-1 mb-0" style="background:#fff;">
@@ -284,17 +292,29 @@
                                                         <tbody>
                                                             @foreach($newRequisitionItems as $pi => $pitem)
                                                             @php
+                                                                // T-2026-059 iteration 3 fix: reuse BomTotalCalculator's
+                                                                // effectiveShortageQuantity() (never a locally duplicated
+                                                                // formula) so a legacy (is_qty_trolley_scaled=0) row is
+                                                                // retroactively, correctly trolley-scaled here too. Used for
+                                                                // BOTH the "Shortage Qty" column and the "Mtr/Nos for N
+                                                                // Trolley(s)" column (the latter previously derived its own
+                                                                // value FROM shortage_quantity in the removed closure — same
+                                                                // canonical value is reused here, single source of truth).
                                                                 $unitNamePO = optional(\App\Models\UnitMaster::find($pitem->unit_id))->name;
                                                                 $mtr1PO = $pitem->mtr_for_01_nos_trolley ?? null;
-                                                                $mtrNPO = $computeMtrN_PO($mtr1PO, $pitem->shortage_quantity ?? null, $unitNamePO, $trolleyQty);
+                                                                $poIsScaled = (int) ($pitem->is_qty_trolley_scaled ?? 0) === 1;
+                                                                $poShortQty = \App\Support\BomTotalCalculator::effectiveShortageQuantity(
+                                                                    $pitem->available_quantity, $pitem->required_quantity, $pitem->mtr_for_01_nos_trolley,
+                                                                    (string) ($unitNamePO ?? ''), $pitem->trolley_qty, $trolleyQty, $poIsScaled
+                                                                );
                                                             @endphp
                                                             <tr>
                                                                 <td>{{ $pi + 1 }}</td>
                                                                 <td>{{ $pitem->product_description ?? optional($pitem->partItem)->description ?? '—' }}</td>
-                                                                <td>{{ number_format((float)$pitem->shortage_quantity, 3) }}</td>
+                                                                <td>{{ number_format($poShortQty, 3) }}</td>
                                                                 <td>{{ $unitNamePO ?? $pitem->unit_id ?? '—' }}</td>
                                                                 <td>{{ $fmt_PO($mtr1PO) }}</td>
-                                                                <td>{{ $fmt_PO($mtrNPO) }}</td>
+                                                                <td>{{ $fmt_PO($poShortQty) }}</td>
                                                                 <td>{{ $pitem->rate !== null ? number_format((float)$pitem->rate, 3) : '—' }}</td>
                                                             </tr>
                                                             @endforeach

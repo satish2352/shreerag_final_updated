@@ -262,7 +262,7 @@
                                 <div class="col-md-2">
                                     <span class="info-label">Items:</span>
                                     {{ count($available) }} available,
-                                    {{ count($shortageSent) + count($shortageDraft) }} shortage,
+                                    <span id="itemsShortageCount">{{ count($shortageSent) + count($shortageDraft) }}</span> shortage,
                                     {{ count($alreadyIssued) }} issued
                                 </div>
                             </div>
@@ -622,8 +622,26 @@
                                                     <input type="hidden"
                                                         name="extra_items[{{ $pIdx }}][product_description]"
                                                         value="{{ $pitem->product_description }}">
+                                                    {{-- Source production_details row that raised this request.
+                                                         Posted back so issueAvailableMaterials() can close it out
+                                                         (quantity_minus_status pending -> done) instead of leaving
+                                                         an orphan pending row that re-appears on every reload. --}}
+                                                    <input type="hidden"
+                                                        name="extra_items[{{ $pIdx }}][pd_id]"
+                                                        value="{{ $pitem->pd_id }}">
                                                     <small style="color:#fd7e14;font-size:11px;"><i
                                                             class="fa fa-industry"></i> Production Request</small>
+                                                    @if ($pitem->is_partial_issue ?? false)
+                                                        {{-- Stock covers only part of the request: this row issues what
+                                                             is on the shelf, the balance is listed under Shortage. --}}
+                                                        <br>
+                                                        <small style="color:#c0392b;font-size:11px;">
+                                                            <i class="fa fa-exclamation-triangle"></i>
+                                                            Partial &mdash; requested
+                                                            {{ number_format($pitem->requested_quantity, 3) }},
+                                                            {{ number_format($pitem->pending_quantity, 3) }} to purchase
+                                                        </small>
+                                                    @endif
                                                 </td>
                                                 {{-- Production-request rows have no BOM context — show em-dash --}}
                                                 <td style="vertical-align:middle; white-space:nowrap;">&mdash;</td>
@@ -631,6 +649,7 @@
                                                     <input type="number"
                                                         name="extra_items[{{ $pIdx }}][quantity]"
                                                         class="form-control" step="0.001" min="0.001"
+                                                        max="{{ $pitem->available_stock }}"
                                                         value="{{ $pitem->required_quantity }}" style="width:110px;">
                                                     <small style="color:green;font-size:11px;">&#10004; Stock:
                                                         {{ number_format($pitem->available_stock, 3) }}</small>
@@ -793,6 +812,17 @@
                                                                     class="fa fa-exclamation"></i>
                                                                 Not in Requisition</span>
                                                         @endif
+                                                        @if ($item->is_partial_issue ?? false)
+                                                            {{-- Part of this request is covered by stock and is
+                                                                 pre-filled above under "Additional Items to Issue";
+                                                                 only the balance below needs purchasing. --}}
+                                                            <br>
+                                                            <small style="color:#1e7e34;font-size:11px;">
+                                                                <i class="fa fa-check-circle"></i>
+                                                                {{ number_format($item->issuable_quantity, 3) }}
+                                                                issuable from stock now
+                                                            </small>
+                                                        @endif
                                                     </span>
                                                 </td>
                                                 <td>{!! $fmt($item->length ?? null) !!}</td>
@@ -829,6 +859,16 @@
                                                         value="{{ $ditem->part_item_id }}">
                                                     <input type="hidden" class="sm-desc"
                                                         value="{{ $ditem->product_description ?? (optional($ditem->partItem)->description ?? '') }}">
+                                                    @if ($ditem->is_partial_issue ?? false)
+                                                        {{-- Part of this request is covered by stock and is pre-filled
+                                                             above under "Additional Items to Issue"; only the balance
+                                                             in this row needs purchasing. --}}
+                                                        <small style="color:#1e7e34;font-size:11px;">
+                                                            <i class="fa fa-check-circle"></i>
+                                                            {{ number_format($ditem->issuable_quantity, 3) }}
+                                                            issuable from stock now
+                                                        </small>
+                                                    @endif
                                                 </td>
                                                 {{-- requisition_items has no length/total_in_mm columns — no BOM context, show em-dash --}}
                                                 <td style="vertical-align:middle;">&mdash;</td>
@@ -930,6 +970,14 @@
                                             <i class="fa fa-check-circle"></i>
                                             Requisition Already Sent to Purchase
                                         </button>
+                                        {{-- T-2026-059: requisition drift/resync — an already-sent requisition is
+                                             otherwise a frozen snapshot; this reconciles it against the CURRENT
+                                             BOM + stock without ever touching rows a Purchase Order already covers. --}}
+                                        <button type="button" class="btn btn-outline-secondary" id="resyncRequisitionBtn"
+                                            data-bd="{{ $productDetails->id }}"
+                                            title="Refresh this requisition against the current BOM and stock (e.g. after a BOM re-upload). Rows already covered by a Purchase Order are never modified — only new/grown shortages are added.">
+                                            <i class="fa fa-refresh"></i> Resync with Current BOM/Stock
+                                        </button>
                                     @endif
 
                                     {{-- Unified send button — JS controls label + visibility --}}
@@ -989,6 +1037,11 @@
                                         value="{{ $item->rate }}">
                                     <input type="hidden" name="items[{{ $i }}][mtr_for_01_nos_trolley]"
                                         value="{{ $item->mtr_for_01_nos_trolley ?? '' }}">
+                                    {{-- T-2026-059: BOM length — lets this exact BOM row be re-matched to its
+                                         own requisition_items row (by part_item_id + length) on future page
+                                         loads, instead of colliding with other BOM rows for the same part. --}}
+                                    <input type="hidden" name="items[{{ $i }}][length]"
+                                        value="{{ $item->length ?? '' }}">
                                 @endforeach
                                 {{-- manual_shortage[] hidden inputs injected by JS before submit --}}
                             </form>
@@ -1346,7 +1399,13 @@
                                 shortage_quantity: '{{ $bomItem->shortage_quantity ?? 0 }}',
                                 unit_id: '{{ $bomItem->unit_id ?? '' }}',
                                 rate: '{{ $bomItem->rate ?? '' }}',
-                                mtr_for_01_nos_trolley: '{{ $bomItem->mtr_for_01_nos_trolley ?? '' }}'
+                                mtr_for_01_nos_trolley: '{{ $bomItem->mtr_for_01_nos_trolley ?? '' }}',
+                                length: '{{ $bomItem->length ?? '' }}',
+                                // T-2026-059: required_quantity above is ALREADY the final unit-aware,
+                                // trolley-scaled figure (computed server-side in showBomInventoryCheck()) —
+                                // tell the server not to re-scale it (only genuinely-raw manual rows need
+                                // server-side scaling). See storeAdditionalShortageRequisition().
+                                already_scaled: '1'
                             });
                         @endif
                     @endforeach
@@ -1372,6 +1431,17 @@
                     // Show/hide the badge
                     var badge = document.getElementById('pendingDraftCountBadge');
                     if (badge) badge.style.display = total > 0 ? '' : 'none';
+
+                    // T-2026-059 (Defect 2iv): the "Items: N shortage" counter in the product-info
+                    // header is otherwise a static PHP-rendered number from page load — it never
+                    // reflected rows added client-side via addShortageManualRow(). Re-derive it from
+                    // the live DOM row count (BOM shortage rows + pre-rendered drafts + JS-added rows
+                    // all live in the same #shortageTableBody) so it always matches what is visible.
+                    var shortageCountEl = document.getElementById('itemsShortageCount');
+                    if (shortageCountEl) {
+                        var tbody = document.getElementById('shortageTableBody');
+                        shortageCountEl.textContent = tbody ? tbody.querySelectorAll('tr').length : 0;
+                    }
 
                     // Update unified send button label + visibility
                     var sendBtn = document.getElementById('unifiedSendBtn');
@@ -1623,6 +1693,9 @@
                         addHidden('manual_shortage[' + idx + '][unit_id]', unitId);
                         addHidden('manual_shortage[' + idx + '][rate]', rate);
                         addHidden('manual_shortage[' + idx + '][mtr_for_01_nos_trolley]', mtr1);
+                        // T-2026-059: genuinely manual/free-typed row — required_quantity/mtr1 above
+                        // are raw per-1-trolley bases; server must unit-aware + trolley-scale them.
+                        addHidden('manual_shortage[' + idx + '][already_scaled]', '0');
                     });
                 }
 
@@ -1723,7 +1796,10 @@
                                     shortage_quantity: shortage,
                                     unit_id: unitId,
                                     rate: rate,
-                                    mtr_for_01_nos_trolley: mtr1
+                                    mtr_for_01_nos_trolley: mtr1,
+                                    // T-2026-059: genuinely manual/free-typed row — qty/mtr1 are raw
+                                    // per-1-trolley bases, server must unit-aware + trolley-scale them.
+                                    already_scaled: '0'
                                 });
                             }
                         });
@@ -2119,6 +2195,57 @@
                                     sendPendingBtn.disabled = false;
                                     sendPendingBtn.innerHTML =
                                         '<i class="fa fa-paper-plane"></i> Send Pending to Purchase';
+                                });
+                        });
+                    });
+                }
+
+                // ── T-2026-059: Resync Requisition with Current BOM/Stock ─────────────
+                var resyncRequisitionBtn = document.getElementById('resyncRequisitionBtn');
+                if (resyncRequisitionBtn) {
+                    resyncRequisitionBtn.addEventListener('click', function() {
+                        var bd = resyncRequisitionBtn.getAttribute('data-bd');
+                        confirmWithPrompt({
+                            title: 'Resync Requisition?',
+                            text: 'Refresh this requisition against the current BOM and stock? Rows already covered by a Purchase Order will never be modified — only new or grown shortages will be added.',
+                            icon: 'question',
+                            confirmButtonText: 'Yes, Resync'
+                        }, function() {
+                            resyncRequisitionBtn.disabled = true;
+                            resyncRequisitionBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Resyncing...';
+
+                            fetch('{{ route('resync-shortage-requisition') }}', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': getCsrfToken(),
+                                        'Accept': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        business_details_id: bd
+                                    })
+                                })
+                                .then(function(r) {
+                                    return r.json();
+                                })
+                                .then(function(data) {
+                                    if (data.status === 'success') {
+                                        showAlert('Resync Complete', data.msg, 'success');
+                                        setTimeout(function() {
+                                            location.reload();
+                                        }, 1500);
+                                    } else {
+                                        showAlert('Error', data.msg || 'Something went wrong.', 'error');
+                                        resyncRequisitionBtn.disabled = false;
+                                        resyncRequisitionBtn.innerHTML =
+                                            '<i class="fa fa-refresh"></i> Resync with Current BOM/Stock';
+                                    }
+                                })
+                                .catch(function() {
+                                    showAlert('Error', 'Network error. Please try again.', 'error');
+                                    resyncRequisitionBtn.disabled = false;
+                                    resyncRequisitionBtn.innerHTML =
+                                        '<i class="fa fa-refresh"></i> Resync with Current BOM/Stock';
                                 });
                         });
                     });

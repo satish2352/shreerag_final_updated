@@ -44,8 +44,21 @@ class AllListController extends Controller
 
             if ($data_output && $data_output->total() > 0) {
 
+                // T-2026-059 iteration 6 fix: same fragile-field bug as the
+                // $trolleyQtyMap fix below (iteration 5) and the "Accept and Send
+                // For Purchase" button fix (this iteration). `business_details_id`
+                // here was aliased from the LEFT-JOINed `production` table (see
+                // AllListRepository::getAllListMaterialReceivedForPurchase()) and
+                // is NULL whenever this project has no `production` row yet — so
+                // this row's NotificationStatus was silently never marked viewed
+                // (purchase_is_view stayed 0), leaving the Purchase dashboard's
+                // "Received Requisition Request" unread badge stuck for that
+                // project even after it was genuinely viewed here. `$row->id`
+                // (aliased from `businesses_details.id`) is always present and is
+                // the same reliable identifier NotificationStatus.business_details_id
+                // rows are keyed on elsewhere in this codebase.
                 $bdIds = collect($data_output->items())
-                    ->pluck('business_details_id')
+                    ->pluck('id')
                     ->filter()
                     ->unique()
                     ->values();
@@ -82,10 +95,29 @@ class AllListController extends Controller
             // Trolley count per requisition (read from designs.trolley_qty for the
             // requisition's business_details_id). Used by the modal to label the
             // "Mtr/Nos for N Trolley(s)" column and compute its per-row value.
+            //
+            // T-2026-059 iteration 5 fix: this row's own `business_details_id`
+            // property is aliased from `production.business_details_id` (a LEFT
+            // JOIN in AllListRepository::getAllListMaterialReceivedForPurchase())
+            // and is genuinely NULL whenever the project has no `production` row
+            // yet (e.g. a requisition sent to Purchase before Production has
+            // started work on it — a real, common state, not an edge case: 4/6
+            // live "sent to Purchase" projects had this shape when diagnosed).
+            // That silently skipped this map entry, so the blade's own
+            // `$trolleyQtyMap[...] ?? 1` fallback kicked in and fed trolleyQty=1
+            // into BomTotalCalculator::effective*(), reproducing the exact
+            // un-scaled legacy-figure bug the iteration-3 fix exists to prevent.
+            // `$row->id` (aliased from `businesses_details.id`, the row this
+            // whole listing is filtered/joined on via `is_active=1`/`is_deleted=0`
+            // — see AllListRepository) is always present regardless of whether a
+            // `production` row exists, so it is the reliable identifier to use
+            // here. This is a purely local variable (used only to build this
+            // map, nothing else reads it) — does not change `$row->business_
+            // details_id` itself or any other read site in this method/view.
             $trolleyQtyMap = [];
             foreach ($data_output->items() as $row) {
                 $reqId = $row->requistition_id ?? null;
-                $bdId  = $row->business_details_id ?? null;
+                $bdId  = $row->id ?? null;
                 if ($reqId === null || $bdId === null || isset($trolleyQtyMap[$reqId])) continue;
                 $tq = \App\Models\DesignModel::where('business_details_id', $bdId)
                     ->where('is_deleted', 0)
