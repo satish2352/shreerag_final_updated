@@ -37,6 +37,10 @@ class ItemStockReportExport implements FromCollection, WithHeadings, WithStyles
 
                 if ($item->grn_no === 'Opening Stock') {
                     $particulars = "Opening Stock | " . $item->part_name;
+                } elseif ($item->grn_no === 'Opening Reconciliation') {
+                    $particulars = "Stock Adjustment (Opening Reconciliation) | " . $item->part_name;
+                } elseif ($item->grn_no === 'Manual Entry') {
+                    $particulars = "Manual Stock Adjustment | " . $item->part_name;
                 } else {
                     $particulars = "Supplier GRN No." . $item->grn_no .
                         " | " . $item->vendor_name .
@@ -46,6 +50,12 @@ class ItemStockReportExport implements FromCollection, WithHeadings, WithStyles
 
                 if ($item->product_name === 'Delivery Challan No.') {
                     $particulars = "DELIVERY CHALLAN ISSUE | " . $item->part_name;
+                } elseif ($item->product_name === 'Returnable Challan No.') {
+                    $particulars = "RETURNABLE CHALLAN ISSUE | " . $item->part_name;
+                } elseif ($item->product_name === 'Opening Reconciliation') {
+                    $particulars = "Stock Adjustment (Opening Reconciliation) | " . $item->part_name;
+                } elseif ($item->product_name === 'Manual Entry') {
+                    $particulars = "Manual Stock Adjustment | " . $item->part_name;
                 } else {
                     $particulars = "FOR PRODUCTION ISSUE " .
                         $item->product_name . " " .
@@ -59,7 +69,7 @@ class ItemStockReportExport implements FromCollection, WithHeadings, WithStyles
                 $particulars,
                 number_format($item->received_qty, 2),
                 number_format($item->issue_qty, 2),
-                number_format($item->balance, 2),
+                $item->balance !== null ? number_format($item->balance, 2) : '-',
             ]);
         }
 
@@ -70,7 +80,7 @@ class ItemStockReportExport implements FromCollection, WithHeadings, WithStyles
             'TOTAL',
             number_format($this->totals['received'], 2),
             number_format($this->totals['issue'], 2),
-            number_format($this->totals['balance'], 2),
+            ($this->totals['balance'] ?? null) !== null ? number_format($this->totals['balance'], 2) : '-',
         ]);
 
         return $rows;

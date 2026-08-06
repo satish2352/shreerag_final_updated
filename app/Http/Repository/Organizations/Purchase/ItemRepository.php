@@ -101,9 +101,17 @@ class ItemRepository
             $itemStock->save();
 
             // Insert into ItemStockHistory
+            // (T-2026-060: tagged as 'item_creation_opening_stock' so the Stock
+            // Daily Report can exclude it from the "manual stock movement"
+            // ledger leg — it is already represented by the report's own
+            // Opening Stock leg, sourced from tbl_part_item.opening_stock, and
+            // including it again here would double-count the same quantity.)
             $itemStockHistory = new ItemStockHistory();
             $itemStockHistory->part_item_id = $last_insert_id;
-            $itemStockHistory->quantity = $dataOutput->opening_stock;
+            $itemStockHistory->movement_type = 'item_creation_opening_stock';
+            $itemStockHistory->quantity = $dataOutput->opening_stock; // legacy column, kept for backward compatibility
+            $itemStockHistory->quantity_delta = (float) $dataOutput->opening_stock;
+            $itemStockHistory->balance_after = (float) $itemStock->quantity;
             $itemStockHistory->save();
 
             // Return status, the new id and the (optional) image name
@@ -121,7 +129,7 @@ class ItemRepository
     }
 
     // public function addAll($request)
-    // {   
+    // {
     //     try {
     //         // Create a new PartItem record
     //         $dataOutput = new PartItem();
@@ -174,6 +182,7 @@ class ItemRepository
     //         ];
     //     }
     // }
+
     public function getById($id)
     {
         try {
@@ -212,7 +221,7 @@ class ItemRepository
     // public function updateAll($request)
     // {
     //     try {
-    //         $dataOutput = PartItem::find($request->part_item_id);    
+    //         $dataOutput = PartItem::find($request->part_item_id);
     //         if (!$dataOutput) {
     //             return [
     //                 'msg' => 'Update Data not found.',

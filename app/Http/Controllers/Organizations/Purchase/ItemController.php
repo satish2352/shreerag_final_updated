@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Organizations\Purchase;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Services\Organizations\Purchase\ItemServices;
+use App\Http\Controllers\Exports\PartItemListExport;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Config;
@@ -29,9 +32,36 @@ class ItemController extends Controller
         $this->service = new ItemServices();
     }
 
-    public function index()
+    private function timeStamp()
+    {
+        return now()->format('Y-m-d_H-i-s');
+    }
+
+    public function index(Request $request)
     {
         try {
+            // export_type: 1 = PDF, 2 = Excel. Exports honour the same search
+            // filter as the screen but cover every page, not just the current one.
+            if ($request->filled('export_type')) {
+                $exportData = $this->service->getAllForExport();
+
+                if ($request->export_type == 1) {
+                    $pdf = Pdf::loadView('exports.part-item-list-pdf', [
+                        'data'   => $exportData,
+                        'search' => $request->search,
+                    ])->setPaper('a3', 'landscape');
+
+                    return $pdf->download("PartItemList_{$this->timeStamp()}.pdf");
+                }
+
+                if ($request->export_type == 2) {
+                    return Excel::download(
+                        new PartItemListExport($exportData),
+                        "PartItemList_{$this->timeStamp()}.xlsx"
+                    );
+                }
+            }
+
             $getOutput = $this->service->getAll();
             return view('organizations.purchase.part-item.list-part-item', compact('getOutput'));
         } catch (\Exception $e) {

@@ -67,6 +67,10 @@
                     if ($row->received_qty > 0) {
                         if ($row->grn_no === 'Opening Stock') {
                             $particulars = 'Opening Stock | ' . $row->part_name;
+                        } elseif ($row->grn_no === 'Opening Reconciliation') {
+                            $particulars = 'Stock Adjustment (Opening Reconciliation) | ' . $row->part_name;
+                        } elseif ($row->grn_no === 'Manual Entry') {
+                            $particulars = 'Manual Stock Adjustment | ' . $row->part_name;
                         } else {
                             $particulars =
                                 'Supplier GRN No.' . $row->grn_no . ' | ' . $row->vendor_name . ' | ' . $row->part_name;
@@ -74,6 +78,12 @@
                     } elseif ($row->issue_qty > 0) {
                         if ($row->product_name === 'Delivery Challan No.') {
                             $particulars = 'DELIVERY CHALLAN ISSUE | ' . $row->part_name;
+                        } elseif ($row->product_name === 'Returnable Challan No.') {
+                            $particulars = 'RETURNABLE CHALLAN ISSUE | ' . $row->part_name;
+                        } elseif ($row->product_name === 'Opening Reconciliation') {
+                            $particulars = 'Stock Adjustment (Opening Reconciliation) | ' . $row->part_name;
+                        } elseif ($row->product_name === 'Manual Entry') {
+                            $particulars = 'Manual Stock Adjustment | ' . $row->part_name;
                         } else {
                             $particulars = 'FOR PRODUCTION ISSUE ' . $row->product_name . ' ' . $row->part_name;
                         }
@@ -114,7 +124,7 @@
                 <td colspan="3" class="text-right">Total</td>
                 <td class="text-right">{{ number_format($totals['received'], 2) }}</td>
                 <td class="text-right">{{ number_format($totals['issue'], 2) }}</td>
-                <td class="text-right">{{ number_format($totals['balance'], 2) }}</td>
+                <td class="text-right">{{ isset($totals['balance']) ? number_format($totals['balance'], 2) : '-' }}</td>
             </tr>
 
         </tbody>

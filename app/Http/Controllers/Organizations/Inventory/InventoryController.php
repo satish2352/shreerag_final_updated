@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Organizations\Inventory;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Services\Organizations\Inventory\InventoryServices;
+use App\Http\Controllers\Exports\InventoryMaterialListExport;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Validator;
 use Exception;
 use App\Models\{
@@ -25,9 +28,36 @@ class InventoryController extends Controller
     {
         $this->service = new InventoryServices();
     }
-    public function getMaterialList()
+    private function timeStamp()
+    {
+        return now()->format('Y-m-d_H-i-s');
+    }
+
+    public function getMaterialList(Request $request)
     {
         try {
+            // export_type: 1 = PDF, 2 = Excel. Exports honour the same search
+            // filter as the screen but cover every page, not just the current one.
+            if ($request->filled('export_type')) {
+                $exportData = $this->service->getAllForExport();
+
+                if ($request->export_type == 1) {
+                    $pdf = Pdf::loadView('exports.inventory-material-list-pdf', [
+                        'data'   => $exportData,
+                        'search' => $request->search,
+                    ])->setPaper('a4', 'landscape');
+
+                    return $pdf->download("InventoryMaterialList_{$this->timeStamp()}.pdf");
+                }
+
+                if ($request->export_type == 2) {
+                    return Excel::download(
+                        new InventoryMaterialListExport($exportData),
+                        "InventoryMaterialList_{$this->timeStamp()}.xlsx"
+                    );
+                }
+            }
+
             $getOutput = $this->service->getAll();
             return view('organizations.inventory.list-part-item', compact('getOutput'));
         } catch (\Exception $e) {

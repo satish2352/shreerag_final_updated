@@ -3,6 +3,7 @@
 namespace App\Http\Services\Organizations\Inventory;
 
 use App\Http\Repository\Organizations\Inventory\InventoryRepository;
+use App\Http\Repository\Organizations\Inventory\InventoryExportRepository;
 use Exception;
 
 class InventoryServices
@@ -18,6 +19,16 @@ class InventoryServices
     {
         try {
             $data_output = $this->repo->getAll();
+            return $data_output;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    // Unpaginated feed for the Excel / PDF exports (same filters as getAll()).
+    public function getAllForExport()
+    {
+        try {
+            $data_output = (new InventoryExportRepository())->getAllForExport();
             return $data_output;
         } catch (\Exception $e) {
             return $e;

@@ -4,6 +4,7 @@ namespace App\Http\Services\Organizations\Purchase;
 
 use Exception;
 use App\Http\Repository\Organizations\Purchase\ItemRepository;
+use App\Http\Repository\Organizations\Purchase\ItemExportRepository;
 use App\Models\{
     PartItem
 };
@@ -22,6 +23,16 @@ class ItemServices
     {
         try {
             $data_output = $this->repo->getAll();
+            return $data_output;
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    // Unpaginated feed for the Excel / PDF exports (same filters as getAll()).
+    public function getAllForExport()
+    {
+        try {
+            $data_output = (new ItemExportRepository())->getAllForExport();
             return $data_output;
         } catch (\Exception $e) {
             return $e;

@@ -24,6 +24,7 @@ class ProductionDetails extends Model
         'design_id',
         'production_id',
         'is_deleted',
+        'issued_at',
     ];
 
     public function business()

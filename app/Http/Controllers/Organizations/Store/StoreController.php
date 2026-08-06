@@ -1443,6 +1443,13 @@ class StoreController extends Controller
                         $detail->items_used_total_amount  = $rate * $quantity;
                         $detail->quantity_minus_status    = 'done';
                         $detail->material_send_production = 1;
+                        // issued_at (T-2026-060): stamped exactly once, atomically with the
+                        // real stock deduction below, so the Stock Daily Report has a stable
+                        // transaction date that later unrelated re-saves cannot move. This is
+                        // the 3rd real material_send_production=1 write site (the other 2 live
+                        // in StoreRepository::updateProductMaterialWiseAddNewReq()) — see that
+                        // method for the identical pattern.
+                        $detail->issued_at                = now();
                         $detail->save();
 
                         // Carry the un-issued balance of a partially-fulfilled request forward.

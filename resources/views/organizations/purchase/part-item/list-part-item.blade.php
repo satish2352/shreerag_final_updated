@@ -55,6 +55,21 @@
                                                 <button class="btn btn-primary filterbg">Search</button>
                                                 <a href="{{ url()->current() }}" class="btn btn-secondary">Reset</a>
                                             </div>
+                                            @php
+                                                // Exports reuse the current filters (minus paging) so the
+                                                // download always matches what is on screen.
+                                                $exportQuery = request()->except(['export_type', 'page']);
+                                            @endphp
+                                            <div class="col-md-3 text-right">
+                                                <a class="btn btn-success"
+                                                    href="{{ url()->current() }}?{{ http_build_query(array_merge($exportQuery, ['export_type' => 2])) }}">
+                                                    <i class="fa fa-file-excel-o" aria-hidden="true"></i> Excel
+                                                </a>
+                                                <a class="btn btn-danger"
+                                                    href="{{ url()->current() }}?{{ http_build_query(array_merge($exportQuery, ['export_type' => 1])) }}">
+                                                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF
+                                                </a>
+                                            </div>
                                         </div>
                                     </form>
                                     <table class="table table-bordered table-striped">

@@ -79,6 +79,8 @@ class InventoryRepository
                 throw new \Exception('Part item not found.');
             }
 
+            $addedQuantity = (float) $request->quantity;
+
             // Step 2: Check if the ItemStock record with the given part_item_id already exists
             $dataOutput = ItemStock::where('part_item_id', $request->part_item_id)->first();
 
@@ -86,25 +88,33 @@ class InventoryRepository
                 // Step 3: If the record exists, check if quantity is null
                 if ($dataOutput->quantity === null) {
                     // If quantity is null, add opening_stock + new quantity
-                    $dataOutput->quantity = $partItem->opening_stock + $request->quantity;
+                    $dataOutput->quantity = $partItem->opening_stock + $addedQuantity;
                 } else {
                     // Otherwise, just add the new quantity
-                    $dataOutput->quantity += $request->quantity;
+                    $dataOutput->quantity += $addedQuantity;
                 }
             } else {
                 // Step 4: If the record does not exist, create a new one
                 $dataOutput = new ItemStock();
-                $dataOutput->part_item_id = $request->part_item_id;
-                $dataOutput->quantity = $partItem->opening_stock + $request->quantity;
+                $dataOutput->part_item_id = $partItem->id;
+                $dataOutput->quantity = $partItem->opening_stock + $addedQuantity;
             }
 
             // Save the record (either updated or new)
             $dataOutput->save();
 
-            // Step 5: Insert a new record into ItemStockHistory for tracking changes
+            // Step 5: Insert a new record into ItemStockHistory for tracking changes.
+            // BUG FIX (T-2026-060): this previously wrote $dataOutput->id (the
+            // tbl_item_stock PRIMARY KEY) into part_item_id, silently orphaning
+            // the history row from its real part whenever the two ids diverge.
+            // The correct FK is the PartItem own id ($partItem->id), which is
+            // also what updateAll() below has always used correctly.
             $itemStockHistory = new ItemStockHistory();
-            $itemStockHistory->part_item_id = $dataOutput->id;  // Use the ID of the saved record
-            $itemStockHistory->quantity = $request->quantity;
+            $itemStockHistory->part_item_id = $partItem->id;
+            $itemStockHistory->movement_type = 'manual_addition';
+            $itemStockHistory->quantity = $addedQuantity; // legacy column, kept for backward compatibility
+            $itemStockHistory->quantity_delta = $addedQuantity;
+            $itemStockHistory->balance_after = $dataOutput->quantity;
             $itemStockHistory->save();
 
             return [
@@ -153,24 +163,47 @@ class InventoryRepository
         try {
             $return_data = array();
 
-            // Fetch the existing PartItem to get the previous opening_stock
-            $partItem = PartItem::find($request->id);
+            // NOTE: $request->id here is the tbl_item_stock PRIMARY KEY (see
+            // edit-stock.blade.php hidden id field, populated from
+            // getById() tbl_item_stock.id AS id alias), NOT the part item id.
+            // Fetch the ItemStock record first, then derive the owning
+            // PartItem from its own part_item_id -- fetching PartItem directly
+            // via $request->id (as the old code did) only worked by
+            // coincidence when the two ids happened to match.
+            $itemStock = ItemStock::where('id', $request->id)->first();
+
+            if (!$itemStock) {
+                throw new \Exception('Item stock record not found.');
+            }
+
+            $partItem = PartItem::find($itemStock->part_item_id);
 
             if (!$partItem) {
                 throw new \Exception('Part item not found.');
             }
 
-            // Check if the ItemStock record with the given part_item_id already exists
-            $itemStock = ItemStock::where('id', $request->id)->first();
+            $previousQuantity = $itemStock->quantity !== null ? (float) $itemStock->quantity : 0.0;
+            $newQuantity = (float) $request->quantity;
+            $delta = $newQuantity - $previousQuantity;
 
-            // Save the ItemStock record (either updated or new)
-            $itemStock->quantity = $request->quantity;
+            // Save the ItemStock record (absolute correction, not a delta)
+            $itemStock->quantity = $newQuantity;
             $itemStock->save();
 
-            // Insert a new record into ItemStockHistory for tracking changes
+            // Insert a new record into ItemStockHistory for tracking changes.
+            // BUG FIX (T-2026-060): the old code logged $request->quantity (the
+            // new ABSOLUTE quantity) into the same `quantity` column that
+            // addAll() uses for a DELTA -- two different semantics under one
+            // ambiguous column. `quantity_delta` now unambiguously stores the
+            // signed change this edit actually applied, and `balance_after`
+            // records the resulting absolute quantity, mirroring addAll().
             $itemStockHistory = new ItemStockHistory();
-            $itemStockHistory->part_item_id = $itemStock->part_item_id;  // Use the ID of the updated or created ItemStock record
-            $itemStockHistory->quantity = $request->quantity;
+            $itemStockHistory->part_item_id = $itemStock->part_item_id;
+            $itemStockHistory->movement_type = 'manual_adjustment_set';
+            $itemStockHistory->quantity = $request->quantity; // legacy column, kept for backward compatibility
+            $itemStockHistory->quantity_delta = $delta;
+            $itemStockHistory->balance_after = $newQuantity;
+            $itemStockHistory->remark = 'Manual correction via Edit Stock screen (set to absolute quantity).';
             $itemStockHistory->save();
 
             $return_data['data'] = $itemStock;

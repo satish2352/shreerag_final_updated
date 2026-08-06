@@ -97,6 +97,49 @@
 
     // ✅ Admin Routes
     Route::middleware(['admin'])->group(function () {
+
+        /*
+         * T-2026-060 — one-time stock ledger reconciliation.
+         *
+         * The production server has no terminal, so the
+         * `stock:reconcile-opening-balance` artisan command is exposed here.
+         * Owner role (tbl_roles.id = 1) only.
+         *
+         *   /stock-reconcile              preview only — writes nothing
+         *   /stock-reconcile?apply=1      actually seeds the adjustments
+         *   /stock-reconcile?part=101     limit to one part item
+         *
+         * Defaults to a dry run on purpose: hitting the URL by accident, or a
+         * browser/crawler prefetching it, can never modify stock.
+         */
+        Route::get('/stock-reconcile', function () {
+            if (session('role_id') != 1) {
+                abort(403, 'Owner access only.');
+            }
+
+            $apply = request()->boolean('apply');
+
+            $options = [];
+            if (!$apply) {
+                $options['--dry-run'] = true;
+            }
+            if (request()->filled('part')) {
+                $options['--part'] = (int) request()->input('part');
+            }
+
+            Artisan::call('stock:reconcile-opening-balance', $options);
+
+            $banner = $apply
+                ? 'MODE: APPLY — adjustments have been written.'
+                : 'MODE: PREVIEW (dry run) — nothing was written. Add ?apply=1 to commit.';
+
+            return response(
+                '<pre style="font:13px/1.45 monospace;padding:16px;white-space:pre-wrap;">'
+                . e($banner) . "\n\n" . e(Artisan::output())
+                . '</pre>'
+            )->header('Content-Type', 'text/html; charset=utf-8');
+        })->name('stock-reconcile');
+
         // Dashboard
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('/get-notification', [DashboardController::class, 'getNotification'])->name('get-notification');

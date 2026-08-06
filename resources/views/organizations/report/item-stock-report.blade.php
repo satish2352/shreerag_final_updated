@@ -86,6 +86,10 @@
                                                     <option value="{{ $id }}">{{ $name }}</option>
                                                 @endforeach
                                             </select>
+                                            <small class="text-muted d-block mt-1">
+                                                Select a Part Item to see a running Balance Qty.
+                                                Balance is not shown across multiple parts at once.
+                                            </small>
                                         </div>
                                         <div class="col-md-2">
                                             <label>Year</label>
@@ -257,6 +261,10 @@
 
                                     if (item.grn_no === 'Opening Stock') {
                                         particulars = `Opening Stock | ${item.part_name}`;
+                                    } else if (item.grn_no === 'Opening Reconciliation') {
+                                        particulars = `Stock Adjustment (Opening Reconciliation) | ${item.part_name}`;
+                                    } else if (item.grn_no === 'Manual Entry') {
+                                        particulars = `Manual Stock Adjustment | ${item.part_name}`;
                                     } else {
                                         particulars =
                                             `Supplier GRN No.${item.grn_no} | <b>${item.vendor_name}</b> | ${item.part_name}`;
@@ -267,6 +275,13 @@
                                     if (item.product_name === 'Delivery Challan No.') {
                                         particulars =
                                             `DELIVERY CHALLAN ISSUE |  ${item.part_name}| ${item.vendor_name}`;
+                                    } else if (item.product_name === 'Returnable Challan No.') {
+                                        particulars =
+                                            `RETURNABLE CHALLAN ISSUE |  ${item.part_name}| ${item.vendor_name}`;
+                                    } else if (item.product_name === 'Opening Reconciliation') {
+                                        particulars = `Stock Adjustment (Opening Reconciliation) | ${item.part_name}`;
+                                    } else if (item.product_name === 'Manual Entry') {
+                                        particulars = `Manual Stock Adjustment | ${item.part_name}`;
                                     } else {
                                         particulars =
                                             `FOR PRODUCTION ISSUE ${item.product_name} ${item.part_name}`;
@@ -275,6 +290,19 @@
                                 }
 
 
+                                // Root cause: a genuine 0.00 must render as "0.00", not "-".
+                                // received_qty/issue_qty intentionally keep the truthy check —
+                                // every row is structurally either a receive OR an issue row, so
+                                // the non-applicable side is ALWAYS exactly 0, and showing '-'
+                                // there is a deliberate readability choice, not a data-loss bug.
+                                // balance is different: null/undefined means "not computed"
+                                // (no Part Item filter selected — see root cause #6), while a
+                                // real 0.00 balance is a genuine, meaningful value that must be
+                                // shown as such.
+                                const balanceDisplay = (item.balance === null || item.balance === undefined || item.balance === '')
+                                    ? '-'
+                                    : Number(item.balance).toFixed(2);
+
                                 rows += `
                                     <tr>
                                         <td>${((res.pagination.currentPage - 1) * pageSize) + i + 1}</td>
@@ -282,7 +310,7 @@
                                         <td>${particulars}</td>
                                        <td>${item.received_qty ? Number(item.received_qty).toFixed(2) : '-'}</td>
 <td>${item.issue_qty ? Number(item.issue_qty).toFixed(2) : '-'}</td>
-<td>${item.balance ? Number(item.balance).toFixed(2) : '-'}</td>
+<td>${balanceDisplay}</td>
 
                                     </tr>
                                 `;
@@ -290,12 +318,15 @@
 
                             // Totals row
                             const totals = res.totals;
+                            const totalsBalanceDisplay = (totals.balance === null || totals.balance === undefined || totals.balance === '')
+                                ? '-'
+                                : Number(totals.balance).toFixed(2);
                             const totalsRow = `
 <tr style="font-weight:bold; background:#f2f2f2;">
     <td colspan="3" style="text-align:right;">Total:</td>
     <td>${Number(totals.received).toFixed(2)}</td>
     <td>${Number(totals.issue).toFixed(2)}</td>
-    <td>${Number(totals.balance).toFixed(2)}</td>
+    <td>${totalsBalanceDisplay}</td>
 </tr>
 `;
 

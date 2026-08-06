@@ -2981,58 +2981,139 @@ class ReportRepository
     //         ];
     //     }
     // }
+    /**
+     * T-2026-060 — Stock Daily Report ledger.
+     *
+     * Ledger legs (all UNION ALL'd, each selecting the SAME 8 columns in the
+     * same order: date, part_name, received_qty, issue_qty, grn_no,
+     * vendor_name, product_name, sort_order):
+     *   0. Opening Stock          — tbl_part_item.opening_stock (sort_order=0,
+     *                               always the first row for the selected part;
+     *                               window-aware when a date/year/month filter
+     *                               narrows the report — see
+     *                               resolveStockReportWindowStart()).
+     *   1. GRN Received           — tbl_grn_po_quantity_tracking, dated by the
+     *                               real grn_tbl.grn_date (falls back to
+     *                               updated_at only when grn_date is null).
+     *   2. Production Issue       — production_details, restricted to rows
+     *                               that ACTUALLY moved stock
+     *                               (quantity_minus_status='done' AND
+     *                               material_send_production=1 — see
+     *                               StoreRepository::updateAddmoreStoreItem()),
+     *                               dated by the dedicated issued_at column
+     *                               (falls back to updated_at for legacy rows
+     *                               written before that column existed).
+     *   3. Delivery Challan Issue — tbl_delivery_chalan_item_details, dated by
+     *                               the real tbl_delivery_chalan.dc_date
+     *                               (set once at creation, never touched by
+     *                               later edits).
+     *   4. Returnable Challan Issue — tbl_returnable_chalan_item_details (was
+     *                               entirely missing from the ledger before
+     *                               this fix), same dating convention as
+     *                               Delivery.
+     *   5. Manual Stock Movement  — tbl_item_stock_history, movement_type IN
+     *                               (manual_addition, manual_adjustment_set,
+     *                               opening_reconciliation) — this is what
+     *                               makes "Add Stock" / "Edit Stock" receipts
+     *                               (previously invisible to this report)
+     *                               show up, and where the one-time
+     *                               reconciliation entries seeded by
+     *                               `php artisan stock:reconcile-opening-
+     *                               balance` land.
+     *
+     * Cross-part accumulation (root cause #6): a running Balance Qty is only
+     * meaningful for ONE part at a time. When no `description` (part item)
+     * filter is applied, `balance` is returned as `null` for every row and in
+     * `totals.balance` — never a meaningless cross-part running total. This
+     * was chosen over partitioning the balance per part within one flat,
+     * chronologically-interleaved list, which would make the single visible
+     * "Balance Qty" column jump around nonsensically row to row between
+     * unrelated parts.
+     *
+     * `search` (root cause #8) is applied as a POST-filter on the already
+     * balance-computed ledger collection, never as a SQL WHERE before the
+     * running balance is computed — this guarantees the true final Balance
+     * Qty (and `totals.balance`) always matches tbl_item_stock.quantity
+     * regardless of what the user has typed into the search box.
+     */
     public function listStockDailyReport($request)
     {
         try {
 
             $partId = $request->description ?? null;
+            $search = $request->filled('search') ? trim((string) $request->search) : null;
 
-            $opening = DB::table('tbl_part_item')
-                ->selectRaw("
-        created_at as date,
-        description as part_name,
-        opening_stock as received_qty,
-        0 as issue_qty,
-        'Opening Stock' as grn_no,
-        '' as vendor_name,
-        '' as product_name
-    ");
+            $windowStart = $this->resolveStockReportWindowStart($request);
 
+            /* -----------------------------------------
+           0. OPENING STOCK
+        ------------------------------------------*/
             if ($partId) {
-                $opening->where('id', $partId);
+                $partRow = DB::table('tbl_part_item')
+                    ->where('id', $partId)
+                    ->where('is_active', 1)
+                    ->where('is_deleted', 0)
+                    ->first(['id', 'description', 'opening_stock', 'created_at']);
+
+                if ($partRow) {
+                    $openingValue = (float) ($partRow->opening_stock ?? 0);
+                    $openingDate = $partRow->created_at;
+
+                    if ($windowStart) {
+                        // Root cause #5: when a date/year/month window narrows the
+                        // report, "opening balance" must mean everything that
+                        // happened BEFORE the window, not just the static
+                        // opening_stock column.
+                        $openingValue += $this->sumLedgerNetForPart($partId, $windowStart);
+                        $openingDate = $windowStart->copy()->subSecond();
+                    }
+
+                    $opening = DB::table('tbl_part_item')
+                        ->where('id', $partId)
+                        ->selectRaw('? as date, ? as part_name, ? as received_qty, 0 as issue_qty, ? as grn_no, ? as vendor_name, ? as product_name, 0 as sort_order', [
+                            $openingDate, $partRow->description, $openingValue, 'Opening Stock', '', ''
+                        ])
+                        ->limit(1);
+                } else {
+                    // Selected part id is invalid / inactive / deleted — keep the
+                    // union structurally valid with an empty opening leg.
+                    $opening = DB::table('tbl_part_item')
+                        ->selectRaw("created_at as date, description as part_name, 0 as received_qty, 0 as issue_qty, 'Opening Stock' as grn_no, '' as vendor_name, '' as product_name, 0 as sort_order")
+                        ->whereRaw('1 = 0');
+                }
+            } else {
+                $opening = DB::table('tbl_part_item')
+                    ->selectRaw("
+                        created_at as date,
+                        description as part_name,
+                        opening_stock as received_qty,
+                        0 as issue_qty,
+                        'Opening Stock' as grn_no,
+                        '' as vendor_name,
+                        '' as product_name,
+                        0 as sort_order
+                    ")
+                    ->where('is_active', 1)
+                    ->where('is_deleted', 0);
             }
 
             /* -----------------------------------------
            1. RECEIVED TRANSACTIONS (GRN)
         ------------------------------------------*/
-            // tbl_grn_po_quantity_tracking.quantity AS received_qty,
-            // $received = DB::table('tbl_grn_po_quantity_tracking')
-            //     ->join('tbl_part_item', 'tbl_part_item.id', '=', 'tbl_grn_po_quantity_tracking.part_no_id')
-            //     ->join('grn_tbl', 'grn_tbl.id', '=', 'tbl_grn_po_quantity_tracking.grn_id')
-            //     ->leftJoin('purchase_orders', 'purchase_orders.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id')
-            //     ->leftJoin('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
-            //     ->selectRaw("
-            //     tbl_grn_po_quantity_tracking.updated_at AS date,
-            //     tbl_part_item.description AS part_name,
-            //     IFNULL(tbl_grn_po_quantity_tracking.accepted_quantity, 0) AS received_qty,
-            //     0 AS issue_qty,
-            //     grn_tbl.grn_no_generate AS grn_no,
-            //     vendors.vendor_name AS vendor_name,
-            //     '' AS product_name
-            // ");
             $received = DB::table('tbl_grn_po_quantity_tracking')
                 ->join('tbl_part_item', 'tbl_part_item.id', '=', 'tbl_grn_po_quantity_tracking.part_no_id')
                 ->join('grn_tbl', 'grn_tbl.id', '=', 'tbl_grn_po_quantity_tracking.grn_id')
                 ->leftJoin('purchase_orders', 'purchase_orders.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id')
                 ->leftJoin('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
                 ->selectRaw("
-        tbl_grn_po_quantity_tracking.updated_at as date,
+        COALESCE(grn_tbl.grn_date, tbl_grn_po_quantity_tracking.updated_at) as date,
         tbl_part_item.description as part_name,
         IFNULL(tbl_grn_po_quantity_tracking.accepted_quantity,0) as received_qty,
         0 as issue_qty,
         grn_tbl.grn_no_generate as grn_no,
         vendors.vendor_name as vendor_name,
-        '' as product_name
+        '' as product_name,
+        1 as sort_order
     ")
                 ->where('tbl_grn_po_quantity_tracking.is_deleted', 0)
                 ->where('tbl_grn_po_quantity_tracking.is_active', 1);
@@ -3041,91 +3122,52 @@ class ReportRepository
                 $received->where('tbl_part_item.id', $partId);
             }
 
-            if ($request->filled('from_date')) {
-                $received->whereDate('tbl_grn_po_quantity_tracking.updated_at', '>=', $request->from_date);
-            }
-            if ($request->filled('to_date')) {
-                $received->whereDate('tbl_grn_po_quantity_tracking.updated_at', '<=', $request->to_date);
-            }
-            if ($request->filled('year')) {
-                $received->whereYear('tbl_grn_po_quantity_tracking.updated_at', $request->year);
-            }
-            if ($request->filled('month')) {
-                $received->whereMonth('tbl_grn_po_quantity_tracking.updated_at', $request->month);
-            }
+            $this->applyStockReportDateFilters($received, $request, DB::raw('COALESCE(grn_tbl.grn_date, tbl_grn_po_quantity_tracking.updated_at)'));
 
             /* -----------------------------------------
            2. ISSUE TRANSACTIONS (PRODUCTION)
+           Root cause #3: only count rows that ACTUALLY moved stock.
         ------------------------------------------*/
-            // $issued = DB::table('production_details')
-            //     ->join('tbl_part_item', 'tbl_part_item.id', '=', 'production_details.part_item_id')
-            //     ->join('tbl_part_item', 'businesses_details.id', '=', 'production_details.business_details_id')
-            //     ->selectRaw("
-            //         production_details.updated_at AS date,
-            //         tbl_part_item.description AS part_name,
-            //         0 AS received_qty,
-            //         production_details.quantity AS issue_qty,
-            //         '' AS grn_no,
-            //         businesses_details.product_name AS product_name 
-            //     ");
-            //         $issued = DB::table('production_details')
-            //             ->leftJoin('tbl_part_item', 'tbl_part_item.id', '=', 'production_details.part_item_id')
-            //             ->leftJoin('businesses_details', 'businesses_details.id', '=', 'production_details.business_details_id')
-            //             ->selectRaw("
-            //     production_details.updated_at AS date,
-            //     tbl_part_item.description AS part_name,
-            //     0 AS received_qty,
-            //     production_details.quantity AS issue_qty,
-            //     '' AS grn_no,
-            //      '' AS vendor_name,   -- required for UNION,
-            //     businesses_details.product_name AS product_name
-            // ");
             $issued = DB::table('production_details')
                 ->leftJoin('tbl_part_item', 'tbl_part_item.id', '=', 'production_details.part_item_id')
                 ->leftJoin('businesses_details', 'businesses_details.id', '=', 'production_details.business_details_id')
                 ->selectRaw("
-        production_details.updated_at as date,
+        COALESCE(production_details.issued_at, production_details.updated_at) as date,
         tbl_part_item.description as part_name,
         0 as received_qty,
         production_details.quantity as issue_qty,
         '' as grn_no,
         '' as vendor_name,
-        businesses_details.product_name as product_name
+        businesses_details.product_name as product_name,
+        1 as sort_order
     ")
                 ->where('production_details.is_deleted', 0)
-                ->where('production_details.is_active', 1);
+                ->where('production_details.is_active', 1)
+                ->where('production_details.quantity_minus_status', 'done')
+                ->where('production_details.material_send_production', 1);
 
             if ($partId) {
                 $issued->where('tbl_part_item.id', $partId);
             }
 
+            $this->applyStockReportDateFilters($issued, $request, DB::raw('COALESCE(production_details.issued_at, production_details.updated_at)'));
 
-            if ($request->filled('from_date')) {
-                $issued->whereDate('production_details.updated_at', '>=', $request->from_date);
-            }
-            if ($request->filled('to_date')) {
-                $issued->whereDate('production_details.updated_at', '<=', $request->to_date);
-            }
-            if ($request->filled('year')) {
-                $issued->whereYear('production_details.updated_at', $request->year);
-            }
-            if ($request->filled('month')) {
-                $issued->whereMonth('production_details.updated_at', $request->month);
-            }
-
-
+            /* -----------------------------------------
+           3. DELIVERY CHALLAN ISSUE
+        ------------------------------------------*/
             $delivery = DB::table('tbl_delivery_chalan_item_details')
                 ->leftJoin('tbl_part_item', 'tbl_part_item.id', '=', 'tbl_delivery_chalan_item_details.part_item_id')
                 ->leftJoin('tbl_delivery_chalan', 'tbl_delivery_chalan.id', '=', 'tbl_delivery_chalan_item_details.delivery_chalan_id')
                 ->leftJoin('vendors', 'vendors.id', '=', 'tbl_delivery_chalan.vendor_id')
                 ->selectRaw("
-        tbl_delivery_chalan_item_details.updated_at as date,
+        COALESCE(tbl_delivery_chalan.dc_date, tbl_delivery_chalan_item_details.created_at) as date,
         tbl_part_item.description as part_name,
         0 as received_qty,
         tbl_delivery_chalan_item_details.quantity as issue_qty,
         '' as grn_no,
         vendors.vendor_company_name as vendor_name,
-        'Delivery Challan No.' as product_name
+        'Delivery Challan No.' as product_name,
+        1 as sort_order
     ")
                 ->where('tbl_delivery_chalan_item_details.is_deleted', 0)
                 ->where('tbl_delivery_chalan_item_details.is_active', 1);
@@ -3134,57 +3176,145 @@ class ReportRepository
                 $delivery->where('tbl_part_item.id', $partId);
             }
 
-            if ($request->filled('from_date')) {
-                $delivery->whereDate('tbl_delivery_chalan_item_details.updated_at', '>=', $request->from_date);
-            }
+            $this->applyStockReportDateFilters($delivery, $request, DB::raw('COALESCE(tbl_delivery_chalan.dc_date, tbl_delivery_chalan_item_details.created_at)'));
 
-            if ($request->filled('to_date')) {
-                $delivery->whereDate('tbl_delivery_chalan_item_details.updated_at', '<=', $request->to_date);
-            }
-
-            if ($request->filled('year')) {
-                $delivery->whereYear('tbl_delivery_chalan_item_details.updated_at', $request->year);
-            }
-
-            if ($request->filled('month')) {
-                $delivery->whereMonth('tbl_delivery_chalan_item_details.updated_at', $request->month);
-            }
             /* -----------------------------------------
-           3. MERGE BOTH (UNION ALL)
+           4. RETURNABLE CHALLAN ISSUE (root cause #4 — was entirely missing)
+
+           KNOWN LIMITATION (T-2026-060, deferred, not fixed here): this leg
+           reads the CURRENT `tbl_returnable_chalan_item_details.quantity`,
+           which is what was actually deducted from ItemStock only at the
+           moment the issue was first created. `ReturnableChalanRepository::
+           updateAll()` (~lines 209-222) allows editing an existing
+           returnable-chalan item's quantity WITHOUT adjusting ItemStock, so
+           for any part whose returnable-chalan issue was later edited that
+           way, this leg's figure can silently diverge from the amount truly
+           deducted from stock. This is a pre-existing bug in
+           ReturnableChalanRepository, not introduced by this task;
+           ReturnableChalanRepository is an explicitly off-limits/read-only
+           reference file for T-2026-060 and must not be modified here. See
+           system_architect memory (T-2026-060, iteration 2) for the full
+           writeup — candidate for a future dedicated task.
         ------------------------------------------*/
-            // $ledger = $received->unionAll($issued)
-            $ledger = $opening
+            $returnableIssue = DB::table('tbl_returnable_chalan_item_details')
+                ->leftJoin('tbl_part_item', 'tbl_part_item.id', '=', 'tbl_returnable_chalan_item_details.part_item_id')
+                ->leftJoin('tbl_returnable_chalan', 'tbl_returnable_chalan.id', '=', 'tbl_returnable_chalan_item_details.returnable_chalan_id')
+                ->leftJoin('vendors', 'vendors.id', '=', 'tbl_returnable_chalan.vendor_id')
+                ->selectRaw("
+        COALESCE(tbl_returnable_chalan.dc_date, tbl_returnable_chalan_item_details.created_at) as date,
+        tbl_part_item.description as part_name,
+        0 as received_qty,
+        tbl_returnable_chalan_item_details.quantity as issue_qty,
+        '' as grn_no,
+        vendors.vendor_company_name as vendor_name,
+        'Returnable Challan No.' as product_name,
+        1 as sort_order
+    ")
+                ->where('tbl_returnable_chalan_item_details.is_deleted', 0)
+                ->where('tbl_returnable_chalan_item_details.is_active', 1);
+
+            if ($partId) {
+                $returnableIssue->where('tbl_part_item.id', $partId);
+            }
+
+            $this->applyStockReportDateFilters($returnableIssue, $request, DB::raw('COALESCE(tbl_returnable_chalan.dc_date, tbl_returnable_chalan_item_details.created_at)'));
+
+            /* -----------------------------------------
+           5. MANUAL STOCK MOVEMENT (root cause #1 — was entirely missing)
+        ------------------------------------------*/
+            $manual = DB::table('tbl_item_stock_history')
+                ->join('tbl_part_item', 'tbl_part_item.id', '=', 'tbl_item_stock_history.part_item_id')
+                ->selectRaw("
+        tbl_item_stock_history.created_at as date,
+        tbl_part_item.description as part_name,
+        CASE WHEN tbl_item_stock_history.quantity_delta >= 0 THEN tbl_item_stock_history.quantity_delta ELSE 0 END as received_qty,
+        CASE WHEN tbl_item_stock_history.quantity_delta < 0 THEN ABS(tbl_item_stock_history.quantity_delta) ELSE 0 END as issue_qty,
+        CASE
+            WHEN tbl_item_stock_history.quantity_delta >= 0 AND tbl_item_stock_history.movement_type = 'opening_reconciliation' THEN 'Opening Reconciliation'
+            WHEN tbl_item_stock_history.quantity_delta >= 0 THEN 'Manual Entry'
+            ELSE ''
+        END as grn_no,
+        '' as vendor_name,
+        CASE
+            WHEN tbl_item_stock_history.quantity_delta < 0 AND tbl_item_stock_history.movement_type = 'opening_reconciliation' THEN 'Opening Reconciliation'
+            WHEN tbl_item_stock_history.quantity_delta < 0 THEN 'Manual Entry'
+            ELSE ''
+        END as product_name,
+        1 as sort_order
+    ")
+                ->where('tbl_item_stock_history.is_deleted', 0)
+                ->where('tbl_item_stock_history.is_active', 1)
+                ->whereIn('tbl_item_stock_history.movement_type', ['manual_addition', 'manual_adjustment_set', 'opening_reconciliation'])
+                ->whereNotNull('tbl_item_stock_history.quantity_delta');
+
+            if ($partId) {
+                $manual->where('tbl_part_item.id', $partId);
+            }
+
+            $this->applyStockReportDateFilters($manual, $request, DB::raw('tbl_item_stock_history.created_at'));
+
+            /* -----------------------------------------
+           6. MERGE ALL LEGS (UNION ALL)
+        ------------------------------------------*/
+            $ledgerQuery = $opening
                 ->unionAll($received)
                 ->unionAll($issued)
-                ->unionAll($delivery);
+                ->unionAll($delivery)
+                ->unionAll($returnableIssue)
+                ->unionAll($manual);
 
+            // sort_order guarantees Opening Stock is always the FIRST row for
+            // the selected part regardless of any date-formatting/timezone
+            // edge case in the underlying columns (root cause #5).
             $ledger = DB::query()
-                ->fromSub($ledger, 'ledger')
+                ->fromSub($ledgerQuery, 'ledger')
+                ->orderBy('sort_order', 'asc')
                 ->orderBy('date', 'asc')
                 ->get();
 
-            // ->orderBy('date', 'asc')
-            // ->get();
-
             /* -----------------------------------------
-           4. RUNNING BALANCE LOGIC
+           7. RUNNING BALANCE LOGIC
+           Root cause #6: only computed when a single part is selected.
         ------------------------------------------*/
-            $runningBalance = 0;
+            $computeBalance = (bool) $partId;
+            $runningBalance = 0.0;
 
             foreach ($ledger as $row) {
-                $runningBalance = $runningBalance + $row->received_qty - $row->issue_qty;
-                $row->balance = $runningBalance;
+                if ($computeBalance) {
+                    $runningBalance = $runningBalance + (float) $row->received_qty - (float) $row->issue_qty;
+                    $row->balance = $runningBalance;
+                } else {
+                    $row->balance = null;
+                }
             }
 
-            // Prepare totals
+            $finalBalance = $computeBalance ? $runningBalance : null;
+
+            // Root cause #8: search is a display-only post-filter, applied
+            // AFTER the true running balance has already been computed and
+            // stamped onto every row — it can never desync the reported
+            // balance from tbl_item_stock.quantity.
+            if ($search !== null && $search !== '') {
+                $needle = mb_strtolower($search);
+                $ledger = $ledger->filter(function ($row) use ($needle) {
+                    return str_contains(mb_strtolower((string) $row->part_name), $needle)
+                        || str_contains(mb_strtolower((string) $row->grn_no), $needle)
+                        || str_contains(mb_strtolower((string) $row->vendor_name), $needle)
+                        || str_contains(mb_strtolower((string) $row->product_name), $needle);
+                })->values();
+            }
+
+            // Prepare totals. received/issue reflect the currently-visible
+            // (possibly searched) rows; balance is always the TRUE final
+            // balance across the FULL ledger, never affected by search.
             $totals = [
-                'received' => $ledger->sum('received_qty'),
-                'issue'    => $ledger->sum('issue_qty'),
-                'balance'  => $runningBalance
+                'received' => (float) $ledger->sum('received_qty'),
+                'issue'    => (float) $ledger->sum('issue_qty'),
+                'balance'  => $finalBalance,
             ];
 
             /* -----------------------------------------
-           5. EXPORT PDF / EXCEL
+           8. EXPORT PDF / EXCEL
         ------------------------------------------*/
             if ($request->filled('export_type')) {
 
@@ -3208,13 +3338,13 @@ class ReportRepository
             }
 
             /* -----------------------------------------
-           6. PAGINATION
+           9. PAGINATION
         ------------------------------------------*/
             $currentPage = $request->input('currentPage', 1);
             $pageSize    = $request->input('pageSize', 10);
 
-            $totalItems = count($ledger);
-            $pagedData  = array_slice($ledger->toArray(), ($currentPage - 1) * $pageSize, $pageSize);
+            $totalItems = $ledger->count();
+            $pagedData  = array_slice($ledger->values()->toArray(), ($currentPage - 1) * $pageSize, $pageSize);
 
             return [
                 'status' => true,
@@ -3235,6 +3365,293 @@ class ReportRepository
                 'message' => $e->getMessage(),
             ];
         }
+    }
+
+    /**
+     * Resolves the lower-bound date of the currently-applied filter window,
+     * used only to compute a correct "opening balance as of window start"
+     * (root cause #5). Returns null when there is no clean, contiguous lower
+     * bound to compute against (no filter at all, or a `month`-only filter
+     * with no `year` — that combination matches the given calendar month
+     * across every year, which is not a contiguous window and has no single
+     * meaningful "before" boundary; in that case the report falls back to
+     * the static tbl_part_item.opening_stock, same as when unfiltered).
+     */
+    private function resolveStockReportWindowStart($request): ?Carbon
+    {
+        if ($request->filled('from_date')) {
+            return Carbon::parse($request->from_date)->startOfDay();
+        }
+
+        if ($request->filled('year')) {
+            $year = (int) $request->year;
+            if ($request->filled('month')) {
+                return Carbon::createFromDate($year, (int) $request->month, 1)->startOfDay();
+            }
+            return Carbon::createFromDate($year, 1, 1)->startOfDay();
+        }
+
+        return null;
+    }
+
+    /**
+     * Applies the report's from_date/to_date/year/month filters to a leg's
+     * query builder against the given date expression (a real column or a
+     * DB::raw() COALESCE expression — never `updated_at` alone, per root
+     * cause #7).
+     */
+    private function applyStockReportDateFilters($query, $request, $dateExpression): void
+    {
+        if ($request->filled('from_date')) {
+            $query->whereRaw('DATE(' . $dateExpression->getValue(DB::connection()->getQueryGrammar()) . ') >= ?', [$request->from_date]);
+        }
+        if ($request->filled('to_date')) {
+            $query->whereRaw('DATE(' . $dateExpression->getValue(DB::connection()->getQueryGrammar()) . ') <= ?', [$request->to_date]);
+        }
+        if ($request->filled('year')) {
+            $query->whereRaw('YEAR(' . $dateExpression->getValue(DB::connection()->getQueryGrammar()) . ') = ?', [$request->year]);
+        }
+        if ($request->filled('month')) {
+            $query->whereRaw('MONTH(' . $dateExpression->getValue(DB::connection()->getQueryGrammar()) . ') = ?', [$request->month]);
+        }
+    }
+
+    /**
+     * Sums the signed net (received - issued) of every ledger leg EXCEPT
+     * Opening Stock for a single part, optionally bounded to movements
+     * strictly before $beforeDate. Shared by:
+     *   - listStockDailyReport()'s windowed opening-balance calculation
+     *     (root cause #5), where $beforeDate = the window start.
+     *   - computeFullStockLedgerBalance() (used by the
+     *     stock:reconcile-opening-balance artisan command), where
+     *     $beforeDate = null (sums the entire history).
+     */
+    private function sumLedgerNetForPart($partId, ?Carbon $beforeDate = null): float
+    {
+        $received = DB::table('tbl_grn_po_quantity_tracking')
+            ->join('tbl_part_item', 'tbl_part_item.id', '=', 'tbl_grn_po_quantity_tracking.part_no_id')
+            ->join('grn_tbl', 'grn_tbl.id', '=', 'tbl_grn_po_quantity_tracking.grn_id')
+            ->where('tbl_grn_po_quantity_tracking.is_deleted', 0)
+            ->where('tbl_grn_po_quantity_tracking.is_active', 1)
+            ->where('tbl_part_item.id', $partId);
+        if ($beforeDate) {
+            $received->whereRaw('COALESCE(grn_tbl.grn_date, tbl_grn_po_quantity_tracking.updated_at) < ?', [$beforeDate]);
+        }
+        $receivedSum = (float) $received->sum(DB::raw('IFNULL(tbl_grn_po_quantity_tracking.accepted_quantity,0)'));
+
+        $issuedProd = DB::table('production_details')
+            ->join('tbl_part_item', 'tbl_part_item.id', '=', 'production_details.part_item_id')
+            ->where('production_details.is_deleted', 0)
+            ->where('production_details.is_active', 1)
+            ->where('production_details.quantity_minus_status', 'done')
+            ->where('production_details.material_send_production', 1)
+            ->where('tbl_part_item.id', $partId);
+        if ($beforeDate) {
+            $issuedProd->whereRaw('COALESCE(production_details.issued_at, production_details.updated_at) < ?', [$beforeDate]);
+        }
+        $issuedProdSum = (float) $issuedProd->sum('production_details.quantity');
+
+        $issuedDelivery = DB::table('tbl_delivery_chalan_item_details')
+            ->join('tbl_part_item', 'tbl_part_item.id', '=', 'tbl_delivery_chalan_item_details.part_item_id')
+            ->leftJoin('tbl_delivery_chalan', 'tbl_delivery_chalan.id', '=', 'tbl_delivery_chalan_item_details.delivery_chalan_id')
+            ->where('tbl_delivery_chalan_item_details.is_deleted', 0)
+            ->where('tbl_delivery_chalan_item_details.is_active', 1)
+            ->where('tbl_part_item.id', $partId);
+        if ($beforeDate) {
+            $issuedDelivery->whereRaw('COALESCE(tbl_delivery_chalan.dc_date, tbl_delivery_chalan_item_details.created_at) < ?', [$beforeDate]);
+        }
+        $issuedDeliverySum = (float) $issuedDelivery->sum('tbl_delivery_chalan_item_details.quantity');
+
+        // KNOWN LIMITATION: see the identical comment on the main Returnable
+        // Challan Issue ledger leg above (~line 3182) — this sum has the same
+        // pre-existing ReturnableChalanRepository::updateAll() divergence risk.
+        $issuedReturnable = DB::table('tbl_returnable_chalan_item_details')
+            ->join('tbl_part_item', 'tbl_part_item.id', '=', 'tbl_returnable_chalan_item_details.part_item_id')
+            ->leftJoin('tbl_returnable_chalan', 'tbl_returnable_chalan.id', '=', 'tbl_returnable_chalan_item_details.returnable_chalan_id')
+            ->where('tbl_returnable_chalan_item_details.is_deleted', 0)
+            ->where('tbl_returnable_chalan_item_details.is_active', 1)
+            ->where('tbl_part_item.id', $partId);
+        if ($beforeDate) {
+            $issuedReturnable->whereRaw('COALESCE(tbl_returnable_chalan.dc_date, tbl_returnable_chalan_item_details.created_at) < ?', [$beforeDate]);
+        }
+        $issuedReturnableSum = (float) $issuedReturnable->sum('tbl_returnable_chalan_item_details.quantity');
+
+        $manual = DB::table('tbl_item_stock_history')
+            ->where('is_active', 1)
+            ->where('is_deleted', 0)
+            ->whereIn('movement_type', ['manual_addition', 'manual_adjustment_set', 'opening_reconciliation'])
+            ->whereNotNull('quantity_delta')
+            ->where('part_item_id', $partId);
+        if ($beforeDate) {
+            $manual->where('created_at', '<', $beforeDate);
+        }
+        $manualSum = (float) $manual->sum('quantity_delta');
+
+        return $receivedSum - $issuedProdSum - $issuedDeliverySum - $issuedReturnableSum + $manualSum;
+    }
+
+    /**
+     * Computes the FULL (unfiltered, entire-history) ledger balance for a
+     * single part item and compares it against the authoritative
+     * tbl_item_stock.quantity — used by the
+     * `php artisan stock:reconcile-opening-balance` command.
+     *
+     * Returns null if the part item does not exist.
+     */
+    public function computeFullStockLedgerBalance($partId): ?array
+    {
+        $partRow = DB::table('tbl_part_item')
+            ->where('id', $partId)
+            ->first(['id', 'description', 'opening_stock', 'is_active', 'is_deleted']);
+
+        if (!$partRow) {
+            return null;
+        }
+
+        $openingStock = (float) ($partRow->opening_stock ?? 0);
+        $net = $this->sumLedgerNetForPart($partId, null);
+        $computedBalance = $openingStock + $net;
+
+        $itemStock = DB::table('tbl_item_stock')->where('part_item_id', $partId)->first(['quantity']);
+        $actualQuantity = ($itemStock && $itemStock->quantity !== null) ? (float) $itemStock->quantity : null;
+
+        return [
+            'part_id'          => $partRow->id,
+            'description'      => $partRow->description,
+            'is_active'        => (bool) $partRow->is_active,
+            'is_deleted'       => (bool) $partRow->is_deleted,
+            'computed_balance' => round($computedBalance, 3),
+            'actual_quantity'  => $actualQuantity !== null ? round($actualQuantity, 3) : null,
+        ];
+    }
+
+    /**
+     * True if this part already has an active (non-deleted)
+     * 'opening_reconciliation' history entry — the reconciliation command's
+     * idempotency guard (never seed more than one per part).
+     */
+    public function hasActiveOpeningReconciliation($partId): bool
+    {
+        return DB::table('tbl_item_stock_history')
+            ->where('part_item_id', $partId)
+            ->where('movement_type', 'opening_reconciliation')
+            ->where('is_deleted', 0)
+            ->exists();
+    }
+
+    /**
+     * Seeds the one-time "Stock Adjustment (opening reconciliation)" ledger
+     * entry for a part whose computed ledger total does not match
+     * tbl_item_stock.quantity (unrecoverable historical manual stock
+     * movements, per the task's acceptance criteria). Dated as early as
+     * possible in that part's own ledger so it structurally sorts as the very
+     * first real transaction, immediately after the true Opening Stock row.
+     */
+    public function insertOpeningReconciliationEntry($partId, float $delta, float $balanceAfter, string $remark): void
+    {
+        $earliestDate = $this->findEarliestLedgerDateForPart($partId);
+
+        DB::table('tbl_item_stock_history')->insert([
+            'part_item_id'   => $partId,
+            'movement_type'  => 'opening_reconciliation',
+            'quantity'       => $delta,
+            'quantity_delta' => $delta,
+            'balance_after'  => $balanceAfter,
+            'remark'         => $remark,
+            'is_active'      => 1,
+            'is_deleted'     => 0,
+            'created_at'     => $earliestDate,
+            'updated_at'     => now(),
+        ]);
+    }
+
+    /**
+     * Earliest known date across a part's own ledger (part creation, or any
+     * existing GRN/production/delivery/returnable/manual movement, whichever
+     * is earliest), minus one second — used purely so a newly-inserted
+     * opening_reconciliation row sorts before every other real row.
+     */
+    private function findEarliestLedgerDateForPart($partId): Carbon
+    {
+        $dates = [];
+
+        $partCreatedAt = DB::table('tbl_part_item')->where('id', $partId)->value('created_at');
+        if ($partCreatedAt) {
+            $dates[] = Carbon::parse($partCreatedAt);
+        }
+
+        $grnMin = DB::table('tbl_grn_po_quantity_tracking')
+            ->join('grn_tbl', 'grn_tbl.id', '=', 'tbl_grn_po_quantity_tracking.grn_id')
+            ->where('tbl_grn_po_quantity_tracking.part_no_id', $partId)
+            ->where('tbl_grn_po_quantity_tracking.is_deleted', 0)
+            ->min(DB::raw('COALESCE(grn_tbl.grn_date, tbl_grn_po_quantity_tracking.updated_at)'));
+        if ($grnMin) {
+            $dates[] = Carbon::parse($grnMin);
+        }
+
+        $prodMin = DB::table('production_details')
+            ->where('part_item_id', $partId)
+            ->where('is_deleted', 0)
+            ->where('quantity_minus_status', 'done')
+            ->where('material_send_production', 1)
+            ->min(DB::raw('COALESCE(issued_at, updated_at)'));
+        if ($prodMin) {
+            $dates[] = Carbon::parse($prodMin);
+        }
+
+        $delivMin = DB::table('tbl_delivery_chalan_item_details')
+            ->leftJoin('tbl_delivery_chalan', 'tbl_delivery_chalan.id', '=', 'tbl_delivery_chalan_item_details.delivery_chalan_id')
+            ->where('tbl_delivery_chalan_item_details.part_item_id', $partId)
+            ->where('tbl_delivery_chalan_item_details.is_deleted', 0)
+            ->min(DB::raw('COALESCE(tbl_delivery_chalan.dc_date, tbl_delivery_chalan_item_details.created_at)'));
+        if ($delivMin) {
+            $dates[] = Carbon::parse($delivMin);
+        }
+
+        $retMin = DB::table('tbl_returnable_chalan_item_details')
+            ->leftJoin('tbl_returnable_chalan', 'tbl_returnable_chalan.id', '=', 'tbl_returnable_chalan_item_details.returnable_chalan_id')
+            ->where('tbl_returnable_chalan_item_details.part_item_id', $partId)
+            ->where('tbl_returnable_chalan_item_details.is_deleted', 0)
+            ->min(DB::raw('COALESCE(tbl_returnable_chalan.dc_date, tbl_returnable_chalan_item_details.created_at)'));
+        if ($retMin) {
+            $dates[] = Carbon::parse($retMin);
+        }
+
+        $manualMin = DB::table('tbl_item_stock_history')
+            ->where('part_item_id', $partId)
+            ->where('is_deleted', 0)
+            ->whereIn('movement_type', ['manual_addition', 'manual_adjustment_set'])
+            ->min('created_at');
+        if ($manualMin) {
+            $dates[] = Carbon::parse($manualMin);
+        }
+
+        if (empty($dates)) {
+            return Carbon::now()->subSecond();
+        }
+
+        /** @var Carbon $earliest */
+        $earliest = collect($dates)->sort()->first();
+
+        return $earliest->copy()->subSecond();
+    }
+
+    /**
+     * All active, non-deleted part item ids — used by
+     * stock:reconcile-opening-balance to iterate the whole catalogue (or a
+     * single part when --part=ID is given).
+     */
+    public function getReconcilablePartItemIds(?int $onlyPartId = null): \Illuminate\Support\Collection
+    {
+        $query = DB::table('tbl_part_item')
+            ->where('is_active', 1)
+            ->where('is_deleted', 0);
+
+        if ($onlyPartId) {
+            $query->where('id', $onlyPartId);
+        }
+
+        return $query->orderBy('id')->pluck('id');
     }
 
     // public function listItemWiseVendorRateReport(Request $request)

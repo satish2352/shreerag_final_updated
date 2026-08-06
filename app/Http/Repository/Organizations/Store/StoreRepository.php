@@ -461,13 +461,18 @@ class StoreRepository
                                 $itemStock->save();
 
                                 // Mark the entry as done and material sent to production
+                                // issued_at (T-2026-060): stamped exactly once, atomically with the
+                                // real stock deduction, so the Stock Daily Report has a stable
+                                // transaction date that later unrelated re-saves cannot move.
                                 if ($existingEntry) {
                                     $existingEntry->material_send_production = 1;
                                     $existingEntry->quantity_minus_status = 'done';  // Set to done
+                                    $existingEntry->issued_at = now();
                                 } else {
                                     // For newly created entry, mark as 'done' as well
                                     $newEntry->material_send_production = 1;
                                     $newEntry->quantity_minus_status = 'done';  // Set to done
+                                    $newEntry->issued_at = now();
                                 }
                                 // Save updated entry (after stock deduction)
                                 $existingEntry ? $existingEntry->save() : $newEntry->save();
@@ -516,13 +521,16 @@ class StoreRepository
                                 $itemStock->save();
 
                                 // Mark the entry as done and material sent to production
+                                // issued_at (T-2026-060): see identical comment above.
                                 if ($newEntry) {
                                     $newEntry->material_send_production = 1;
                                     $newEntry->quantity_minus_status = 'done';  // Set to done
+                                    $newEntry->issued_at = now();
                                 } else {
                                     // For newly created entry, mark as 'done' as well
                                     $newEntry->material_send_production = 1;
                                     $newEntry->quantity_minus_status = 'done';  // Set to done
+                                    $newEntry->issued_at = now();
                                 }
                                 // Save updated entry (after stock deduction)
                                 $newEntry ? $newEntry->save() : $newEntry->save();
