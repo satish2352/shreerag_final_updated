@@ -3086,7 +3086,7 @@ class ReportRepository
                     ->selectRaw("
                         created_at as date,
                         description as part_name,
-                        opening_stock as received_qty,
+                        COALESCE(opening_stock, 0) as received_qty,
                         0 as issue_qty,
                         'Opening Stock' as grn_no,
                         '' as vendor_name,
@@ -3094,7 +3094,16 @@ class ReportRepository
                         0 as sort_order
                     ")
                     ->where('is_active', 1)
-                    ->where('is_deleted', 0);
+                    ->where('is_deleted', 0)
+                    // Only parts that actually HAVE opening stock. Without this
+                    // the unfiltered report emitted one row per part item
+                    // regardless — and since opening_stock is NULL or 0 for
+                    // almost every part (1,335 of 1,336 on live data), page 1
+                    // was nothing but blank rows with the real transactions
+                    // buried pages deep. Excluding them changes no figure:
+                    // a NULL/0 opening stock contributes nothing to any total.
+                    ->whereNotNull('opening_stock')
+                    ->where('opening_stock', '<>', 0);
             }
 
             /* -----------------------------------------
