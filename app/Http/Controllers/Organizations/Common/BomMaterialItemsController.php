@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use App\Http\Repository\Organizations\Common\BomMaterialItemsRepository;
 use App\Http\Services\Organizations\Common\BomMaterialItemsService;
 use App\Models\BomMaterialItem;
 use App\Models\EstimationModel;
@@ -858,29 +859,40 @@ class BomMaterialItemsController extends Controller
             return 'Items must be an array.';
         }
 
+        // T-2026-063: every row must resolve to a part-item master record. Collected across
+        // ALL rows rather than returning on the first one, so the designer is told about
+        // every offending item in a single pass instead of fixing them one save at a time.
+        $notInStore = [];
+
         foreach ($items as $index => $item) {
             $rowNum = $index + 1;
 
-            // part_item_id is optional. T-2026-062: when it is missing/zero the repository
-            // tries to match product_description against the EXISTING part-item master and,
-            // failing that, saves the row unlinked (part_item_id NULL) with its "Not in
-            // store" badge — it no longer creates a master row. Either identifier is enough
-            // to accept the row: part_item_id > 0 (already matched) OR a non-empty
-            // product_description (unmatched, but still a meaningful BOM line).
             $partItemId = isset($item['part_item_id']) ? (int) $item['part_item_id'] : 0;
             $productDescription = trim($item['product_description'] ?? '');
             if ($partItemId <= 0 && $productDescription === '') {
                 return "Row {$rowNum}: Product Description is required.";
             }
-            // If part_item_id is provided, verify it exists (existing-master path).
-            // If it is 0/empty there is nothing to verify — the row saves unlinked.
+
             if ($partItemId > 0) {
+                // Existing-master path — verify the id is real and still active.
                 $partItemExists = PartItem::where('id', $partItemId)
                     ->where('is_active', true)
                     ->where('is_deleted', false)
                     ->exists();
                 if (!$partItemExists) {
                     return "Row {$rowNum}: Selected Part Item does not exist or is inactive.";
+                }
+            } else {
+                // T-2026-063: no id, so fall back to the SAME description match the
+                // repository's write path uses (shared helper — the two must never
+                // disagree, or a row could pass validation and still land unlinked).
+                // Nothing matched => "not in store": the save is refused outright rather
+                // than storing an unlinked row. T-2026-062 had removed the old auto-create
+                // and let such rows save unlinked; blocking them is the deliberate next
+                // step, so an item can only enter a BOM once it exists in the master.
+                $matchedId = BomMaterialItemsRepository::matchPartItemIdByDescription($productDescription);
+                if ($matchedId <= 0) {
+                    $notInStore[] = "Row {$rowNum}: \"{$productDescription}\"";
                 }
             }
 
@@ -926,6 +938,17 @@ class BomMaterialItemsController extends Controller
                     return "Row {$rowNum}: Rate must be 0 or greater.";
                 }
             }
+        }
+
+        // T-2026-063: reported last so genuinely malformed rows (missing quantity, bad
+        // numbers) still surface their own specific message first.
+        if (!empty($notInStore)) {
+            $shown = array_slice($notInStore, 0, 10);
+            $more  = count($notInStore) - count($shown);
+
+            return 'These item(s) are not in store: ' . implode('; ', $shown)
+                . ($more > 0 ? " (and {$more} more)" : '')
+                . '. Add them to the part item master first, or pick an existing item from the list. BOM not saved.';
         }
 
         return true;

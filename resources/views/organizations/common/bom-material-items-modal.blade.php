@@ -506,6 +506,11 @@
     var EXCEED_REASON_ERR = '#{{ $modalId }}ExceedReasonError';
     var BIZ_LIMIT_INPUT   = '#{{ $modalId }}BusinessLimit';
 
+    // T-2026-063: descriptions of rows that carry no part-item master link, gathered by
+    // validateRow() during a save attempt and consumed by the save handler's banner.
+    // Reset at the start of every save attempt, never read outside that pass.
+    var notInStoreDescs   = [];
+
     var businessId        = parseInt($('#{{ $modalId }}BusinessId').val(), 10);
     var businessDetailsId = parseInt($('#{{ $modalId }}BusinessDetailsId').val(), 10);
     var designId          = parseInt($('#{{ $modalId }}DesignId').val(), 10);
@@ -1237,19 +1242,25 @@
     function validateRow($row) {
         var ok = true;
 
-        // Product Description validation — accept the row if EITHER:
-        //   (a) a valid part_item_id is set (matched to an existing master record), OR
-        //   (b) the visible product description text is non-empty.
-        // Rows imported from Excel that didn't match any tbl_part_item master arrive with
-        // part_item_id empty but product_description filled. T-2026-062: these save unlinked
-        // and keep their "Not in store" badge instead of auto-creating a master record —
-        // they are still valid BOM lines and must not be blocked here.
+        // Product Description validation. T-2026-063: every row must be linked to a real
+        // part-item master record. A row imported from Excel that matched nothing arrives
+        // with part_item_id empty and shows the orange "Not in store" badge — saving is
+        // now REFUSED for those rows (previously T-2026-062 let them save unlinked, and
+        // before that T-2026-019 silently auto-created a placeholder master record).
+        // The designer must either pick an existing item from the dropdown or have the
+        // part added to the master first.
         var $partInput = $row.find('.bom-part-input');
         var partItemId = $.trim($row.find('.bom-part-id').val());
         var partDesc   = $.trim($partInput.val());
+        var noPartId   = (partItemId === '' || parseInt(partItemId, 10) <= 0);
         clearFieldError($partInput);
-        if ((partItemId === '' || parseInt(partItemId, 10) <= 0) && partDesc === '') {
+        if (noPartId && partDesc === '') {
             showFieldError($partInput, 'Product Description is required.');
+            ok = false;
+        } else if (noPartId) {
+            showFieldError($partInput,
+                '"' + partDesc + '" is not in store. Add it to the part item master, or pick an existing item from the list.');
+            notInStoreDescs.push(partDesc);
             ok = false;
         }
 
@@ -1311,6 +1322,11 @@
         var isValid = true;
         var $firstInvalid = null;
 
+        // T-2026-063: filled by validateRow() with the description of every row that has
+        // no part-item master link, so the banner can name the offending items instead of
+        // just saying "fix the highlighted fields".
+        notInStoreDescs = [];
+
         // Run inline validation on every row first — collect results across ALL rows
         // (don't bail on the first error like the old banner did) so the user sees
         // every field that needs fixing in one pass.
@@ -1325,7 +1341,17 @@
         });
 
         if (!isValid) {
-            $(ERROR_MSG).text('Please fix the highlighted fields before saving.').show();
+            var bannerMsg;
+            if (notInStoreDescs.length) {
+                var shown = notInStoreDescs.slice(0, 5).map(function (d) { return '"' + d + '"'; }).join(', ');
+                var more  = notInStoreDescs.length - Math.min(5, notInStoreDescs.length);
+                bannerMsg = 'Not saved — ' + notInStoreDescs.length + ' item(s) are not in store: ' +
+                    shown + (more > 0 ? ' (and ' + more + ' more)' : '') +
+                    '. Add them to the part item master first, or pick an existing item from the list.';
+            } else {
+                bannerMsg = 'Please fix the highlighted fields before saving.';
+            }
+            $(ERROR_MSG).text(bannerMsg).show();
             if ($firstInvalid && $firstInvalid.length) {
                 // Scroll the modal so the first error is visible, then focus it.
                 var $modalEl = $(MODAL_ID);

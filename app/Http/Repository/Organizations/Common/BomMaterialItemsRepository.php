@@ -181,22 +181,42 @@ class BomMaterialItemsRepository
             return 0;
         }
 
-        // 1. Check batch cache first (within same transaction)
-        if (array_key_exists($normalizedKey, $batchCache)) {
-            return $batchCache[$normalizedKey];
+        // Check batch cache first (within same transaction). Misses are cached as 0 too, so
+        // a BOM repeating the same unmatched description on many rows costs one query
+        // rather than one per row.
+        if (!array_key_exists($normalizedKey, $batchCache)) {
+            $batchCache[$normalizedKey] = self::matchPartItemIdByDescription($description);
         }
 
-        // 2. Check existing active master record (case-insensitive TRIM match)
+        return $batchCache[$normalizedKey];
+    }
+
+    /**
+     * Case-insensitive, whitespace-tolerant lookup of a description against the ACTIVE
+     * part-item master. Returns the matched id, or 0 when the description is in no master
+     * record ("not in store").
+     *
+     * Static and public because this single definition of "does this description exist in
+     * the master?" is shared by two callers that must never disagree:
+     *   - resolvePartItemId() above, on the write path;
+     *   - BomMaterialItemsController::validateSaveRequest(), which REJECTS the save when
+     *     this returns 0 (T-2026-063).
+     * If the validator used a different matching rule than the writer, a row could pass
+     * validation and still land unlinked, or be rejected despite being perfectly matchable.
+     */
+    public static function matchPartItemIdByDescription(string $description): int
+    {
+        $normalizedKey = strtolower(trim($description));
+        if ($normalizedKey === '') {
+            return 0;
+        }
+
         $existing = PartItem::whereRaw('LOWER(TRIM(description)) = ?', [$normalizedKey])
             ->where('is_active', true)
             ->where('is_deleted', false)
             ->first();
 
-        // Cache the miss too (as 0), so a BOM repeating the same unmatched description on
-        // many rows costs one query rather than one per row.
-        $batchCache[$normalizedKey] = $existing ? $existing->id : 0;
-
-        return $batchCache[$normalizedKey];
+        return $existing ? (int) $existing->id : 0;
     }
 
     public function saveItems(
