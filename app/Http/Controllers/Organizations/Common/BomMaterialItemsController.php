@@ -861,17 +861,19 @@ class BomMaterialItemsController extends Controller
         foreach ($items as $index => $item) {
             $rowNum = $index + 1;
 
-            // T-2026-019: part_item_id is now optional — if missing/zero the repository will
-            // auto-create a new tbl_part_item row from product_description.
-            // We only require that EITHER part_item_id > 0 (existing master row) OR
-            // product_description is non-empty (auto-create path).
+            // part_item_id is optional. T-2026-062: when it is missing/zero the repository
+            // tries to match product_description against the EXISTING part-item master and,
+            // failing that, saves the row unlinked (part_item_id NULL) with its "Not in
+            // store" badge — it no longer creates a master row. Either identifier is enough
+            // to accept the row: part_item_id > 0 (already matched) OR a non-empty
+            // product_description (unmatched, but still a meaningful BOM line).
             $partItemId = isset($item['part_item_id']) ? (int) $item['part_item_id'] : 0;
             $productDescription = trim($item['product_description'] ?? '');
             if ($partItemId <= 0 && $productDescription === '') {
                 return "Row {$rowNum}: Product Description is required.";
             }
             // If part_item_id is provided, verify it exists (existing-master path).
-            // If it is 0/empty, the repository will create it — skip existence check here.
+            // If it is 0/empty there is nothing to verify — the row saves unlinked.
             if ($partItemId > 0) {
                 $partItemExists = PartItem::where('id', $partItemId)
                     ->where('is_active', true)

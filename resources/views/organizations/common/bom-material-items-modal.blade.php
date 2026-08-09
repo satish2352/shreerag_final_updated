@@ -1237,12 +1237,13 @@
     function validateRow($row) {
         var ok = true;
 
-        // T-2026-019: Product Description validation — accept the row if EITHER:
+        // Product Description validation — accept the row if EITHER:
         //   (a) a valid part_item_id is set (matched to an existing master record), OR
-        //   (b) the visible product description text is non-empty (auto-create path).
+        //   (b) the visible product description text is non-empty.
         // Rows imported from Excel that didn't match any tbl_part_item master arrive with
-        // part_item_id empty but product_description filled; the backend will auto-create
-        // the master record on save — so these rows are valid and must not be blocked here.
+        // part_item_id empty but product_description filled. T-2026-062: these save unlinked
+        // and keep their "Not in store" badge instead of auto-creating a master record —
+        // they are still valid BOM lines and must not be blocked here.
         var $partInput = $row.find('.bom-part-input');
         var partItemId = $.trim($row.find('.bom-part-id').val());
         var partDesc   = $.trim($partInput.val());
@@ -1350,7 +1351,9 @@
             var quantity    = $.trim($row.find('.bom-quantity').val());
 
             var rateRaw = $row.find('.bom-rate').val();
-            // T-2026-019: send 0 when no part_item_id is set so the backend auto-creates the PartItem
+            // T-2026-062: send 0 when no part_item_id is set. The backend matches the
+            // description against the existing master and, if nothing matches, saves the
+            // row unlinked — it never creates a part-item master record.
             var resolvedPartItemId = (partItemId !== '' && !isNaN(parseInt(partItemId, 10))) ? parseInt(partItemId, 10) : 0;
             items.push({
                 id:                      (itemId && parseInt(itemId, 10) > 0) ? parseInt(itemId, 10) : null,

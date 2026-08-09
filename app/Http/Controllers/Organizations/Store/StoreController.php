@@ -72,6 +72,44 @@ class StoreController extends Controller
     }
 
     /**
+     * T-2026-061 — quantity that a BOM row will ACTUALLY deduct from ItemStock when it
+     * is issued to Production, i.e. the figure pre-filled into the "Additional Items to
+     * Issue" grid.
+     *
+     * Exact server-side mirror of the blade's $computeMtrN + $computeIssueQty pair
+     * (T-2026-058, resources/views/organizations/store/list/bom-inventory-check.blade.php):
+     *
+     *   piece unit (NOS/PCS/SET/EACH)  -> quantity               x trolleyQty
+     *   length unit WITH mtr data      -> mtr_for_01_nos_trolley x trolleyQty
+     *   length unit WITHOUT mtr data   -> quantity               x trolleyQty  (fallback)
+     *
+     * This agrees with BomTotalCalculator::scaledQuantity() on the first two branches —
+     * the only divergence is the third, where scaledQuantity() yields 0 because it has no
+     * mtr to multiply. Stock allocation must be driven by what is really taken off the
+     * shelf, so showBomInventoryCheck() uses this rather than scaledQuantity() directly;
+     * that also stops such a row from being sent to Purchase with a required quantity of 0.
+     *
+     * @param  \App\Models\BomMaterialItem|object  $item        BOM row (quantity + mtr_for_01_nos_trolley)
+     * @param  string                              $unitName    resolved unit name, e.g. "NOS", "MTR", "KG"
+     * @param  int|string|null                     $trolleyQty  designs.trolley_qty (clamped to >= 1)
+     */
+    private static function bomIssueQuantity($item, string $unitName, $trolleyQty): float
+    {
+        $t = max(1, (int) $trolleyQty);
+
+        if (\App\Support\BomTotalCalculator::isPieceUnit($unitName)) {
+            return (float) ($item->quantity ?? 0) * $t;
+        }
+
+        $mtr = $item->mtr_for_01_nos_trolley ?? null;
+        if ($mtr === null || $mtr === '') {
+            return (float) ($item->quantity ?? 0) * $t;
+        }
+
+        return (float) $mtr * $t;
+    }
+
+    /**
      * Normalise a length value (bom_material_items.length / requisition_items.length)
      * into a stable string key for map lookups, so that DB-decimal string formatting
      * differences (e.g. "500.000" vs "500.0") never cause a false mismatch, and NULL
@@ -478,12 +516,41 @@ class StoreController extends Controller
             // BOM part_item_ids for dedup when adding non-BOM issued items later
             $bomPartItemIds = $bomItems->pluck('part_item_id')->filter()->toArray();
 
+            // T-2026-061: per-part RUNNING stock pool for BOM rows.
+            //
+            // The BOM legitimately lists the SAME part_item_id on many rows (different
+            // lengths / usages) and every one of them draws down ONE physical stock
+            // balance. Classifying each row independently against the FULL part stock
+            // promised the same physical material to every row at once: with 209.054 KG of
+            // "MS SQ PIPE 25 X 25 X 2 MM" on the shelf and 10 BOM rows needing 445.158 KG
+            // in total, the page showed all 10 as "available", and then
+            // issueAvailableMaterials() — which DOES see the running deduction, because it
+            // re-reads ItemStock inside its loop — rejected every row past the point the
+            // balance ran out with "Insufficient stock for: ... (available: 46.19,
+            // required: 51.036)". Those rejected rows were then silently `continue`d: no
+            // material issued AND no requisition raised for them, so the shortage simply
+            // vanished from the workflow.
+            //
+            // Allocation is first-come-first-served in BOM row order (deterministic — the
+            // same order issueAvailableMaterials() consumes the grid in), mirroring the
+            // pool already used for pending production rows further below (T-2026-060).
+            //
+            // Two per-part caches: $partStockCache avoids re-running the identical
+            // ItemStock SUM once per BOM row, $bomStockPool holds the UNALLOCATED balance.
+            $partStockCache = [];
+            $bomStockPool   = [];
+
             foreach ($bomItems as $item) {
+                $partKey = (string) ($item->part_item_id ?? '');
+
                 if ($item->part_item_id) {
-                    $availableStock = (float) ItemStock::where('part_item_id', $item->part_item_id)
-                        ->where('is_deleted', 0)
-                        ->where('is_active', 1)
-                        ->sum('quantity');
+                    if (!array_key_exists($partKey, $partStockCache)) {
+                        $partStockCache[$partKey] = (float) ItemStock::where('part_item_id', $item->part_item_id)
+                            ->where('is_deleted', 0)
+                            ->where('is_active', 1)
+                            ->sum('quantity');
+                    }
+                    $availableStock = $partStockCache[$partKey];
                 } else {
                     $availableStock = 0.0;
                 }
@@ -494,13 +561,17 @@ class StoreController extends Controller
                 // by trolleyQty). This is the figure that must be compared against real
                 // stock to decide availability, and it is what gets sent to Purchase for
                 // genuinely-short items.
+                //
+                // T-2026-061: resolved through bomIssueQuantity() rather than
+                // BomTotalCalculator::scaledQuantity() directly, so it also carries the
+                // blade's null-mtr fallback. Both agree exactly on every normal row
+                // (piece: quantity×trolleys; length-with-mtr: mtr×trolleys) and differ
+                // ONLY for a length row with no mtr data, where scaledQuantity() returns
+                // 0 while the issue grid still offers quantity×trolleys. Pool accounting
+                // must use the figure that is actually deducted from ItemStock, and 0 is
+                // in any case the wrong quantity to send Purchase for such a row.
                 $unitName          = (string) ($item->unit ?: (optional($item->unitMaster)->name ?? optional($item->unitMaster)->unit_name ?? ''));
-                $scaledRequiredQty = \App\Support\BomTotalCalculator::scaledQuantity(
-                    $item->quantity,
-                    $item->mtr_for_01_nos_trolley,
-                    $unitName,
-                    $trolleyQty
-                );
+                $scaledRequiredQty = self::bomIssueQuantity($item, $unitName, $trolleyQty);
                 // Raw (unscaled, non-unit-aware) BOM quantity — kept for the Already
                 // Issued / Available Materials tables + "Additional Items to Issue" grid,
                 // which have their OWN independent trolley-scaling logic in the blade
@@ -509,20 +580,76 @@ class StoreController extends Controller
                 // would double-apply the trolley factor.
                 $rawRequiredQty = (float) $item->quantity;
 
-                $item->available_stock = $availableStock;
+                // Full physical balance of the part, for the "Stock: N" hint in the blade.
+                // Distinct from `available_stock`, which from T-2026-061 on carries this
+                // ROW's allocated slice of that balance (what the row may actually draw).
+                $item->total_part_stock = $availableStock;
+                $item->available_stock  = $availableStock;
 
                 if ($item->part_item_id && in_array($item->part_item_id, $alreadyIssuedIds)) {
+                    // Already-issued rows never draw from the pool: ItemStock already
+                    // reflects their deduction, so charging them again would double-count.
                     $item->required_quantity = $rawRequiredQty;
                     $item->shortage_quantity = max(0, $rawRequiredQty - $availableStock);
                     $item->issued_at = $issuedDateMap->get($item->part_item_id);
                     $alreadyIssued[] = $item;
-                } elseif ($availableStock >= $scaledRequiredQty) {
+                    continue;
+                }
+
+                if (!array_key_exists($partKey, $bomStockPool)) {
+                    $bomStockPool[$partKey] = $availableStock;
+                }
+                $remaining = max(0.0, $bomStockPool[$partKey]);
+                $allocated = min($scaledRequiredQty, $remaining);
+
+                if ($scaledRequiredQty <= 0) {
+                    // Zero-quantity BOM row — nothing to draw and nothing to purchase.
+                    // Behaviour deliberately unchanged: stays under Available Materials.
                     $item->required_quantity = $rawRequiredQty;
                     $item->shortage_quantity = 0.0;
+                    $item->available_stock   = 0.0;
+                    $item->issue_quantity    = 0.0;
                     $available[] = $item;
-                } else {
+                } elseif ($allocated >= $scaledRequiredQty) {
+                    // Fully covered by what is still unallocated — issue the lot.
+                    $bomStockPool[$partKey] = $remaining - $scaledRequiredQty;
+                    $item->required_quantity = $rawRequiredQty;
+                    $item->shortage_quantity = 0.0;
+                    $item->available_stock   = $allocated;
+                    $item->issue_quantity    = $scaledRequiredQty;
+                    $available[] = $item;
+                } elseif ($allocated > 0) {
+                    // PARTIAL — the remaining balance covers only part of this row. Issue
+                    // that slice now and raise a requisition for the outstanding balance,
+                    // rather than dropping the whole row into either bucket. Same split
+                    // shape production-request rows already use (T-2026-060), so the blade
+                    // renders the "N issuable from stock now" hint unchanged.
+                    $bomStockPool[$partKey] = 0.0;
+
+                    // Shallow clone is safe: Eloquent keeps its attributes in an array
+                    // (copied by value on clone), and only scalars are reassigned here.
+                    $issuableRow = clone $item;
+                    $issuableRow->required_quantity  = $rawRequiredQty;
+                    $issuableRow->shortage_quantity  = 0.0;
+                    $issuableRow->available_stock    = $allocated;
+                    $issuableRow->issue_quantity     = $allocated;
+                    $issuableRow->is_partial_issue   = true;
+                    $issuableRow->requested_quantity = $scaledRequiredQty;
+                    $issuableRow->pending_quantity   = $scaledRequiredQty - $allocated;
+                    $available[] = $issuableRow;
+
                     $item->required_quantity = $scaledRequiredQty;
-                    $item->shortage_quantity = \App\Support\BomTotalCalculator::shortage($scaledRequiredQty, $availableStock);
+                    $item->shortage_quantity = \App\Support\BomTotalCalculator::shortage($scaledRequiredQty, $allocated);
+                    $item->available_stock   = $allocated;
+                    $item->is_partial_issue  = true;
+                    $item->issuable_quantity = $allocated;
+                    $shortage[] = $item;
+                } else {
+                    // Nothing left on the shelf for this row — all of it to purchase.
+                    $bomStockPool[$partKey] = 0.0;
+                    $item->required_quantity = $scaledRequiredQty;
+                    $item->shortage_quantity = \App\Support\BomTotalCalculator::shortage($scaledRequiredQty, 0.0);
+                    $item->available_stock   = 0.0;
                     $shortage[]  = $item;
                 }
             }

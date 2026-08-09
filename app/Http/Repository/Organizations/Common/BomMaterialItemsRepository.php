@@ -149,29 +149,40 @@ class BomMaterialItemsRepository
      */
 
     /**
-     * T-2026-019: Auto-create a PartItem for a given description within a transaction.
+     * Resolve a BOM row's description to an EXISTING PartItem master record.
      *
-     * Deduplication strategy:
-     *   1. Check existing active tbl_part_item by lowercase-trimmed description.
-     *   2. Check the within-batch cache $batchCache (key = lowercase-trimmed description).
-     * Returns the PartItem id to use.
+     * T-2026-019 originally auto-CREATED a `tbl_part_item` row (part_number 'AUTO-BOM')
+     * for any description that matched nothing. T-2026-062 removed that: a BOM upload is
+     * a design document, not an authority to define store inventory, and the auto-create
+     * silently filled the part-item master with one placeholder record per unmatched
+     * description — including typos and scratch text ("sdsdsdsfsdgfsdgfdg", "ARNAV") —
+     * each with a fake part number, HSN id 1, group id 1 and zero rate. Those placeholders
+     * then compete with the real master rows in every part-item dropdown and search.
+     *
+     * An unmatched row is now simply left unlinked (part_item_id NULL). The BOM row itself
+     * still saves in full, and the modal keeps showing its orange "Not in store" badge on
+     * every reload, so whoever owns the master data can add the part deliberately (with a
+     * real part number, HSN, group and rate) or point the row at an existing item.
+     *
+     * Lookup order:
+     *   1. Within-batch cache $batchCache (key = lowercase-trimmed description).
+     *   2. Existing active tbl_part_item by lowercase-trimmed description.
+     * Returns 0 when nothing matches — callers persist that as part_item_id NULL.
      *
      * @param  string  $description   Raw product description from the BOM row
-     * @param  int     $unitId        Unit id to use (0 = fallback to 1/NOS)
-     * @param  float|null $basicRate  Rate from the BOM row (used as basic_rate)
      * @param  array   &$batchCache   In-memory map: normalizedDesc => part_item_id
-     * @return int
+     * @return int                    Matched PartItem id, or 0 when unmatched
      */
-    private function resolveOrCreatePartItem(
-        string $description,
-        int $unitId,
-        ?float $basicRate,
-        array &$batchCache
-    ): int {
+    private function resolvePartItemId(string $description, array &$batchCache): int
+    {
         $normalizedKey = strtolower(trim($description));
 
+        if ($normalizedKey === '') {
+            return 0;
+        }
+
         // 1. Check batch cache first (within same transaction)
-        if (isset($batchCache[$normalizedKey])) {
+        if (array_key_exists($normalizedKey, $batchCache)) {
             return $batchCache[$normalizedKey];
         }
 
@@ -180,36 +191,12 @@ class BomMaterialItemsRepository
             ->where('is_active', true)
             ->where('is_deleted', false)
             ->first();
-        if ($existing) {
-            $batchCache[$normalizedKey] = $existing->id;
-            return $existing->id;
-        }
 
-        // 3. Create a new PartItem master record
-        $effectiveUnitId = ($unitId > 0) ? $unitId : 1; // fallback to unit_id=1 (NOS)
-        $effectiveRate   = ($basicRate !== null && $basicRate > 0) ? (string) $basicRate : '0';
+        // Cache the miss too (as 0), so a BOM repeating the same unmatched description on
+        // many rows costs one query rather than one per row.
+        $batchCache[$normalizedKey] = $existing ? $existing->id : 0;
 
-        $newPart = PartItem::create([
-            'part_number'       => 'AUTO-BOM',
-            'description'       => trim($description),
-            'extra_description' => null,
-            'unit_id'           => $effectiveUnitId,
-            'hsn_id'            => 1,  // default HSN (id=1 always exists)
-            'group_type_id'     => 1,  // default group (tbl_group_master id=1 always exists)
-            'basic_rate'        => $effectiveRate,
-            'opening_stock'     => null,
-            'rack_id'           => null,
-            'image'             => null,
-            'is_active'         => 1,
-            'is_deleted'        => 0,
-            'created_at'        => now(),
-            'updated_at'        => now(),
-        ]);
-
-        Log::info("T-2026-019: Auto-created PartItem id={$newPart->id} for description='{$description}'");
-
-        $batchCache[$normalizedKey] = $newPart->id;
-        return $newPart->id;
+        return $batchCache[$normalizedKey];
     }
 
     public function saveItems(
@@ -245,7 +232,7 @@ class BomMaterialItemsRepository
             }
 
             $savedItems = [];
-            // T-2026-019: per-transaction deduplication cache for auto-created PartItems
+            // T-2026-062: per-transaction lookup cache for description -> PartItem id
             $batchCache = [];
 
             foreach ($items as $item) {
@@ -253,13 +240,12 @@ class BomMaterialItemsRepository
                 $partItemId  = (int) ($item['part_item_id'] ?? 0);
                 $unitId      = (int) ($item['unit_id'] ?? 0);
 
-                // T-2026-019: auto-create PartItem when not matched to an existing master row
+                // T-2026-062: match against the EXISTING master only. An unmatched row is
+                // saved with part_item_id NULL and keeps its "Not in store" badge — the
+                // part-item master is never written to from a BOM upload.
                 if ($partItemId <= 0) {
-                    $rateForCreate = isset($item['rate']) && is_numeric($item['rate']) ? (float) $item['rate'] : null;
-                    $partItemId    = $this->resolveOrCreatePartItem(
+                    $partItemId = $this->resolvePartItemId(
                         trim($item['product_description'] ?? ''),
-                        $unitId,
-                        $rateForCreate,
                         $batchCache
                     );
                 }
@@ -398,7 +384,7 @@ class BomMaterialItemsRepository
             }
 
             $savedItems = [];
-            // T-2026-019: per-transaction deduplication cache for auto-created PartItems
+            // T-2026-062: per-transaction lookup cache for description -> PartItem id
             $batchCacheExceed = [];
 
             foreach ($items as $item) {
@@ -406,13 +392,11 @@ class BomMaterialItemsRepository
                 $partItemId = (int) ($item['part_item_id'] ?? 0);
                 $unitId     = (int) ($item['unit_id'] ?? 0);
 
-                // T-2026-019: auto-create PartItem when not matched to an existing master row
+                // T-2026-062: match against the EXISTING master only — never create. See
+                // resolvePartItemId() and the identical block in saveItems() above.
                 if ($partItemId <= 0) {
-                    $rateForCreate = isset($item['rate']) && is_numeric($item['rate']) ? (float) $item['rate'] : null;
-                    $partItemId    = $this->resolveOrCreatePartItem(
+                    $partItemId = $this->resolvePartItemId(
                         trim($item['product_description'] ?? ''),
-                        $unitId,
-                        $rateForCreate,
                         $batchCacheExceed
                     );
                 }

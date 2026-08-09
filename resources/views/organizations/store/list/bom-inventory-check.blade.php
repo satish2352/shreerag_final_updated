@@ -32,6 +32,16 @@
         $computeIssueQty = fn($mtrN, $reqQty, $trolleyQty) => $mtrN !== null
             ? $mtrN
             : ((float) ($reqQty ?? 0)) * ((float) ($trolleyQty ?? 1));
+        // T-2026-061: the controller now allocates one shared physical stock balance
+        // across every BOM row that names the same part_item_id, and publishes each
+        // row's slice as `issue_quantity`. When present it is AUTHORITATIVE and must
+        // win over the local recomputation above — on a partially-covered row it is
+        // deliberately smaller than $computeIssueQty's full requirement, which is what
+        // stops the grid from offering stock a previous row has already claimed (and
+        // stops issueAvailableMaterials() rejecting the row with "Insufficient stock").
+        $resolveIssueQty = fn($item, $mtrN, $trolleyQty) => isset($item->issue_quantity)
+            ? (float) $item->issue_quantity
+            : $computeIssueQty($mtrN, $item->required_quantity ?? 0, $trolleyQty);
     @endphp
     <style>
         .bom-check-section-title {
@@ -426,7 +436,10 @@
                                                 <th style="width:110px;">Length</th>
                                                 <th>Required Qty</th>
                                                 <th style="width:130px;">Total in mm</th>
-                                                <th>Available Stock</th>
+                                                {{-- T-2026-061: this column is the slice of the part's physical
+                                                     balance ALLOCATED to this row, not the whole balance — several
+                                                     BOM rows can name the same part and they share one balance. --}}
+                                                <th>Allocated Stock</th>
                                                 <th>Unit</th>
                                                 <th>Mtr for 01 Nos Trolley</th>
                                                 <th>Mtr/Nos for {{ $trolleyQty }} Trolley(s)</th>
@@ -447,11 +460,36 @@
                                                 <tr>
                                                     <td style="width:45px;">{{ $i + 1 }}</td>
                                                     <td>{{ $item->product_description ?? (optional($item->partItem)->description ?? '—') }}
+                                                        @if ($item->is_partial_issue ?? false)
+                                                            {{-- Stock covers only part of this row; the balance is
+                                                                 listed under Shortage Materials for purchase. Both
+                                                                 figures are quoted on the ISSUE basis (the trolley-
+                                                                 scaled quantity actually taken off the shelf), which
+                                                                 is what "Allocated Stock" opposite counts — the
+                                                                 "Required Qty" column is the raw per-trolley BOM
+                                                                 figure and is not comparable to either. --}}
+                                                            <br>
+                                                            <small style="color:#b8860b;font-size:11px;">
+                                                                <i class="fa fa-adjust"></i>
+                                                                Partly covered — {{ number_format($item->issue_quantity, 3) }}
+                                                                issuable now of
+                                                                {{ number_format($item->requested_quantity, 3) }} needed;
+                                                                {{ number_format($item->pending_quantity, 3) }} moved to
+                                                                Shortage
+                                                            </small>
+                                                        @endif
                                                     </td>
                                                     <td>{!! $fmt($item->length ?? null) !!}</td>
                                                     <td>{{ number_format($item->required_quantity, 3) }}</td>
                                                     <td>{!! $fmt($item->total_in_mm ?? null) !!}</td>
-                                                    <td>{{ number_format($item->available_stock, 3) }}</td>
+                                                    <td>{{ number_format($item->available_stock, 3) }}
+                                                        @if (isset($item->total_part_stock))
+                                                            <br><small class="text-muted"
+                                                                style="font-size:11px;">of
+                                                                {{ number_format($item->total_part_stock, 3) }} in
+                                                                store</small>
+                                                        @endif
+                                                    </td>
                                                     <td>{{ $unitNameAvail ?? ($item->unit_id ?? '—') }}</td>
                                                     <td>{!! $fmt($item->mtr_for_01_nos_trolley ?? null) !!}</td>
                                                     <td>{!! $fmt($mtrNAvail) !!}</td>
@@ -504,7 +542,7 @@
                                             $gtUnitName,
                                             $trolleyQty,
                                         );
-                                        $gtIssueQty = $computeIssueQty($gtMtrN, $gtItem->required_quantity ?? 0, $trolleyQty);
+                                        $gtIssueQty = $resolveIssueQty($gtItem, $gtMtrN, $trolleyQty);
                                         $extraGrandTotal += $gtIssueQty * ((float) ($gtItem->rate ?? 0));
                                     }
                                 @endphp
@@ -545,7 +583,9 @@
                                                 // material (mtr_for_01_nos_trolley*trolleyQty), nos for piece
                                                 // units (required_quantity*trolleyQty), falling back to
                                                 // required_quantity when $mtrNAi is null (no BOM mtr data).
-                                                $issueQtyAi = $computeIssueQty($mtrNAi, $item->required_quantity ?? 0, $trolleyQty);
+                                                // T-2026-061: capped at this row's allocated slice of the shared
+                                                // per-part stock balance when the controller published one.
+                                                $issueQtyAi = $resolveIssueQty($item, $mtrNAi, $trolleyQty);
                                             @endphp
                                             <tr id="extra_row_{{ $ai }}" style="background:#f0fff4;">
                                                 <td style="vertical-align:middle;">{{ $ai + 1 }}</td>
@@ -559,8 +599,13 @@
                                                     <input type="hidden"
                                                         name="extra_items[{{ $ai }}][product_description]"
                                                         value="{{ $item->product_description ?? (optional($item->partItem)->description ?? '') }}">
-                                                    <small style="color:#28a745;font-size:11px;">&#10004; BOM
-                                                        Available</small>
+                                                    @if ($item->is_partial_issue ?? false)
+                                                        <small style="color:#b8860b;font-size:11px;">&#9681; BOM
+                                                            Partly Available</small>
+                                                    @else
+                                                        <small style="color:#28a745;font-size:11px;">&#10004; BOM
+                                                            Available</small>
+                                                    @endif
                                                 </td>
                                                 <td style="vertical-align:middle; white-space:nowrap;">
                                                     {!! $fmt($item->length ?? null) !!}</td>
@@ -569,8 +614,17 @@
                                                         name="extra_items[{{ $ai }}][quantity]"
                                                         class="form-control" step="0.001" min="0.001"
                                                         value="{{ number_format($issueQtyAi, 3, '.', '') }}" style="width:110px;">
-                                                    <small style="color:green;font-size:11px;">&#10004; Stock:
+                                                    {{-- T-2026-061: "Allocated" is this row's reserved slice of the
+                                                         shared per-part balance; "in store" is that whole balance.
+                                                         Raising the quantity above the allocated figure re-takes
+                                                         stock another row is already counting on. --}}
+                                                    <small style="color:green;font-size:11px;">&#10004; Allocated:
                                                         {{ number_format($item->available_stock, 3) }}</small>
+                                                    @if (isset($item->total_part_stock))
+                                                        <br><small class="text-muted" style="font-size:11px;">of
+                                                            {{ number_format($item->total_part_stock, 3) }} in
+                                                            store</small>
+                                                    @endif
                                                 </td>
                                                 <td style="vertical-align:middle; white-space:nowrap;">
                                                     {!! $fmt($item->total_in_mm ?? null) !!}</td>
