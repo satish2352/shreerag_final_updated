@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Services\Organizations\Store\AllListServices;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Collection;
@@ -196,6 +197,22 @@ class AllListController extends Controller
                     'grn_tbl.remark as grn_remark'
                 )
                 ->first();
+
+            if (!$purchase_order_data || !$grn_data) {
+                Log::warning('GRN details not found', [
+                    'purchase_orders_id' => $idtoedit,
+                    'grn_id' => $grn_id,
+                    'business_details_id' => $business_details_id,
+                    'purchase_order_found' => (bool) $purchase_order_data,
+                    'grn_found' => (bool) $grn_data,
+                ]);
+
+                return redirect()->back()->with([
+                    'status' => 'error',
+                    'msg' => 'GRN details are not available for this record. The GRN may have been removed or the link is outdated.',
+                ]);
+            }
+
             $po_id = $purchase_order_data->id;
             $purchase_order_details_data = GrnPOQuantityTracking::leftJoin('tbl_part_item', 'tbl_grn_po_quantity_tracking.part_no_id', '=', 'tbl_part_item.id')
                 ->leftJoin('purchase_order_details', 'tbl_grn_po_quantity_tracking.purchase_order_details_id', '=', 'purchase_order_details.id')
@@ -273,6 +290,22 @@ class AllListController extends Controller
                     'grn_tbl.remark as grn_remark'
                 )
                 ->first();
+
+            if (!$purchase_order_data || !$grn_data) {
+                Log::warning('GRN details (PO tracking) not found', [
+                    'purchase_orders_id' => $idtoedit,
+                    'grn_id' => $grn_id,
+                    'business_details_id' => $business_details_id,
+                    'purchase_order_found' => (bool) $purchase_order_data,
+                    'grn_found' => (bool) $grn_data,
+                ]);
+
+                return redirect()->back()->with([
+                    'status' => 'error',
+                    'msg' => 'GRN details are not available for this record. The GRN may have been removed or the link is outdated.',
+                ]);
+            }
+
             $po_id = $purchase_order_data->id;
             $purchase_order_details_data = GrnPOQuantityTracking::leftJoin('tbl_part_item', 'tbl_grn_po_quantity_tracking.part_no_id', '=', 'tbl_part_item.id')
                 ->leftJoin('purchase_order_details', 'tbl_grn_po_quantity_tracking.purchase_order_details_id', '=', 'purchase_order_details.id')

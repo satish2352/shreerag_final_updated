@@ -106,7 +106,7 @@
                                                         <label for="po_date">PO Date :</label>
                                                         <input type="text" class="form-control" id="po_date"
                                                             name="po_date" placeholder="Enter PO Date"
-                                                            value="{{ $purchase_order_data->created_at->format('d-m-Y') }}"
+                                                            value="{{ optional($purchase_order_data->created_at)->format('d-m-Y') }}"
                                                             readonly>
                                                     </div>
 

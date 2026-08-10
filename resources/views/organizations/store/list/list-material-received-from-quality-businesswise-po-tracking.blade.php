@@ -12,6 +12,16 @@
                         </div>
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
+                                @if (session('msg'))
+                                    <div
+                                        class="alert alert-{{ session('status') == 'success' ? 'success' : 'danger' }} alert-dismissible"
+                                        role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        {{ session('msg') }}
+                                    </div>
+                                @endif
                                 <div class="table-responsive">
                                     <form method="GET" action="{{ url()->current() }}">
                                         <div class="d-flex justify-content-end mb-3">

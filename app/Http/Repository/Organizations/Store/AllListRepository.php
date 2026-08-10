@@ -789,10 +789,14 @@ class AllListRepository
             $search = request()->search;
             $perPage = Config::get('AllFileValidation.PAGINATION');
 
-            $data_output = PurchaseOrdersModel::leftJoin('grn_tbl', 'purchase_orders.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id')
+            // Join the tracking rows first, then resolve the GRN through the tracking row's
+            // grn_id. Joining grn_tbl on purchase_orders_id instead produced a row per
+            // (GRN x tracking grn_id) combination, so the GRN No. shown could belong to a
+            // different GRN than the one the "GRN Details" link pointed at. Inner joins also
+            // keep out rows whose grn_id is null or orphaned, which rendered dead links.
+            $data_output = PurchaseOrdersModel::join('tbl_grn_po_quantity_tracking', 'purchase_orders.id', '=', 'tbl_grn_po_quantity_tracking.purchase_order_id')
+                ->join('grn_tbl', 'tbl_grn_po_quantity_tracking.grn_id', '=', 'grn_tbl.id')
                 ->leftJoin('businesses_details', 'purchase_orders.business_details_id', '=', 'businesses_details.id')
-                ->leftJoin('purchase_order_details', 'purchase_orders.id', '=', 'purchase_order_details.purchase_id')
-                ->leftJoin('tbl_grn_po_quantity_tracking', 'purchase_orders.id', '=', 'tbl_grn_po_quantity_tracking.purchase_order_id')
                 ->leftJoin('vendors', 'purchase_orders.vendor_id', '=', 'vendors.id')
                 ->where('businesses_details.id', $id)
                 ->whereIn('purchase_orders.quality_status_id', $array_to_be_check)
