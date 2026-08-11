@@ -1234,8 +1234,24 @@ class StoreController extends Controller
                 return redirect()->back()->with(['status' => 'error', 'msg' => 'No additional items to submit.']);
             }
 
-            // Requisition must already exist for this business_details_id
-            $requisition = Requisition::where('business_details_id', $business_details_id)->first();
+            // Requisition must already exist for this business_details_id.
+            //
+            // T-2026-060: prefer the requisition the rest of this page is bound to
+            // (business_application_processes.requisition_id). Nothing in the schema stops a
+            // business_details_id from owning more than one requisitions row, and both the read
+            // side (showBomInventoryCheck) and sendPendingShortageToPurchase() key strictly off
+            // $bap->requisition_id — so appending to whatever `->first()` happened to return could
+            // silently write drafts into a requisition that neither of them ever looks at. Those
+            // rows would then be invisible on the page AND unsendable, which surfaces to the user
+            // as exactly the reported "No pending rows to send." The business_details_id lookup is
+            // kept only as a fallback for a project whose BAP row has no requisition_id yet.
+            $bapForRequisition = \App\Models\BusinessApplicationProcesses::where('business_details_id', $business_details_id)->first();
+            $requisition = ($bapForRequisition && $bapForRequisition->requisition_id)
+                ? Requisition::find($bapForRequisition->requisition_id)
+                : null;
+            if (!$requisition) {
+                $requisition = Requisition::where('business_details_id', $business_details_id)->first();
+            }
             if (!$requisition) {
                 return redirect()->back()->with(['status' => 'error', 'msg' => 'No existing requisition found. Please send the main requisition first.']);
             }
@@ -1246,7 +1262,17 @@ class StoreController extends Controller
             // flips is_sent_to_purchase without recomputing anything.
             $trolleyQty = $this->resolveTrolleyQty($business_details_id);
 
-            DB::transaction(function () use ($requisition, $business_details_id, $items, $trolleyQty) {
+            // T-2026-060: per-row outcome tally, so the caller can tell the user exactly what
+            // happened. Previously every outcome (including "silently dropped as a duplicate")
+            // returned the same flat success message, which is what produced the reported
+            // "Success — No pending rows to send." dead end: nothing was inserted, so the
+            // follow-up sendPendingShortageToPurchase() had zero draft rows to flip.
+            $inserted     = 0;
+            $mergedCount  = 0;
+            $skipped      = 0;
+            $skippedNames = [];
+
+            DB::transaction(function () use ($requisition, $business_details_id, $items, $trolleyQty, &$inserted, &$mergedCount, &$skipped, &$skippedNames) {
                 // T-2026-059 iteration 4 (code_reviewer iteration-3 re-review MEDIUM finding —
                 // resync-vs-storeAdditionalShortageRequisition race, reproduced with a real
                 // 2-process test): re-fetch and lock the OWNING requisition row FIRST, inside
@@ -1285,8 +1311,28 @@ class StoreController extends Controller
                     $mtr1     = isset($itemData['mtr_for_01_nos_trolley']) && $itemData['mtr_for_01_nos_trolley'] !== '' ? (float) $itemData['mtr_for_01_nos_trolley'] : null;
                     $length   = isset($itemData['length']) && $itemData['length'] !== '' ? (float) $itemData['length'] : null;
 
-                    // Skip only if this EXACT part_item_id + length combo is already in the
-                    // requisition (as any row, sent or draft). T-2026-059 iteration 2: made
+                    // T-2026-059: `already_scaled` distinguishes a BOM-not-yet-sent row (already
+                    // final/scaled, echoed back from the server-computed value) from a genuinely
+                    // free-typed manual row (qty/mtr1 are raw per-1-trolley bases that MUST be
+                    // unit-aware + trolley-scaled server-side).
+                    $alreadyScaled = (string) ($itemData['already_scaled'] ?? '0') === '1';
+                    // T-2026-060: `row_origin` says WHO produced this row, which now decides how a
+                    // part+length collision is resolved (see the dedup block below). 'bom' = a
+                    // server-rendered BOM-not-yet-sent row echoed back by the unified send button
+                    // (must stay strictly idempotent — the same payload is re-posted on every
+                    // retry); 'manual' = a row the Store user deliberately built with "+Add More"
+                    // (must never be silently discarded). Falls back to the pre-T-2026-060 signal
+                    // (already_scaled) for any caller that has not been updated to send it.
+                    $rowOrigin = (string) ($itemData['row_origin'] ?? '') !== ''
+                        ? (string) $itemData['row_origin']
+                        : ($alreadyScaled ? 'bom' : 'manual');
+
+                    $rowLabel = trim((string) ($itemData['product_description'] ?? '')) !== ''
+                        ? (string) $itemData['product_description']
+                        : ('Part #' . $partItemId);
+
+                    // Match this EXACT part_item_id + length combo against what is already in the
+                    // requisition. T-2026-059 iteration 2: made
                     // length-aware (was part_item_id-only) — this endpoint is reachable via the
                     // unified "Send to Purchase" button's State-2 AJAX chain, where
                     // bomNotSentItems (carrying a real, non-null BOM length) get concatenated
@@ -1303,21 +1349,45 @@ class StoreController extends Controller
                     // T-2026-059 iteration 3 (defensive, code_reviewer Issue 3): scope the dedup
                     // read to is_active=1/is_deleted=0 rows only — see the identical comment in
                     // storeShortageRequisition()'s manual_shortage loop for the full rationale.
-                    $isDuplicate = RequisitionItem::where('requisition_id', $lockedRequisition->id)
+                    // T-2026-060: `production_shortage`-sourced rows are EXCLUDED from this match,
+                    // exactly as they are on the read side (showBomInventoryCheck() keeps them in a
+                    // separate $reqItemsByPartForProd index, matched by part_item_id alone, and
+                    // never lets them satisfy a BOM row's part_item_id+length lookup). Without this
+                    // exclusion the two sides disagreed: a piece-unit BOM row (length NULL) whose
+                    // part also had a production_shortage row was rendered as "Not in Requisition"
+                    // forever (read side found no match) yet was refused on insert here (write side
+                    // found one) — an unbreakable loop where the row could never be sent.
+                    $existingMatches = RequisitionItem::where('requisition_id', $lockedRequisition->id)
                         ->where('part_item_id', $partItemId)
                         ->where('is_active', 1)
                         ->where('is_deleted', 0)
-                        ->get(['length'])
-                        ->contains(fn ($existing) => self::normalizeLengthKey($existing->length) === $lengthKey);
-                    if ($isDuplicate) {
+                        ->where(function ($q) {
+                            $q->whereNull('source')->orWhere('source', '!=', 'production_shortage');
+                        })
+                        ->get()
+                        ->filter(fn ($existing) => self::normalizeLengthKey($existing->length) === $lengthKey);
+
+                    // A BOM-echoed row is re-posted verbatim on every retry of the unified send
+                    // chain, so it must stay strictly idempotent: if ANY row already represents it
+                    // (draft or sent), do nothing. This is the only path that still skips.
+                    if ($rowOrigin === 'bom' && $existingMatches->isNotEmpty()) {
+                        $skipped++;
+                        $skippedNames[] = $rowLabel;
                         continue;
                     }
 
-                    // T-2026-059: `already_scaled` distinguishes a BOM-not-yet-sent row (already
-                    // final/scaled, echoed back from the server-computed value) from a genuinely
-                    // free-typed manual row (qty/mtr1 are raw per-1-trolley bases that MUST be
-                    // unit-aware + trolley-scaled server-side).
-                    $alreadyScaled = (string) ($itemData['already_scaled'] ?? '0') === '1';
+                    // For a user-added ("+Add More") row, an existing DRAFT for the same
+                    // part+length is the same not-yet-sent line the user is re-stating — update it
+                    // in place rather than stacking a second draft. This also makes a retry after a
+                    // failed send idempotent (the second attempt writes the same values).
+                    $existingDraft = $existingMatches->first(fn ($existing) => (int) $existing->is_sent_to_purchase === 0);
+                    // An existing SENT row, in contrast, is immutable and already in Purchase's
+                    // hands. Pre-T-2026-060 this silently discarded the user's row, so a repeat
+                    // order of a part that had been purchased once could never be raised again —
+                    // the exact defect behind the reported "Success — No pending rows to send."
+                    // Append a supplemental draft instead (same never-edit-a-sent-row rule that
+                    // resyncShortageRequisition() follows with its resync_delta rows).
+
                     $unitName      = $this->resolveUnitNameFromId($unitId);
                     $finalQty      = $alreadyScaled
                         ? $qty
@@ -1329,6 +1399,25 @@ class StoreController extends Controller
                         ? (float) $itemData['shortage_quantity']
                         : \App\Support\BomTotalCalculator::shortage($finalQty, $availQty);
 
+                    $rate = isset($itemData['rate']) && $itemData['rate'] !== '' ? (float) $itemData['rate'] : null;
+
+                    if ($existingDraft) {
+                        $existingDraft->product_description    = $itemData['product_description'] ?? $existingDraft->product_description;
+                        $existingDraft->required_quantity      = $finalQty;
+                        $existingDraft->available_quantity     = $availQty;
+                        $existingDraft->shortage_quantity      = $shortageQty;
+                        $existingDraft->unit_id                = $unitId ?? $existingDraft->unit_id;
+                        if ($rate !== null) {
+                            $existingDraft->rate = $rate;
+                        }
+                        $existingDraft->mtr_for_01_nos_trolley = $mtr1;
+                        $existingDraft->trolley_qty            = $trolleyQty;
+                        $existingDraft->is_qty_trolley_scaled  = 1;
+                        $existingDraft->save();
+                        $mergedCount++;
+                        continue;
+                    }
+
                     RequisitionItem::create([
                         'requisition_id'         => $lockedRequisition->id,
                         'business_details_id'    => $business_details_id,
@@ -1338,7 +1427,7 @@ class StoreController extends Controller
                         'available_quantity'     => $availQty,
                         'shortage_quantity'      => $shortageQty,
                         'unit_id'                => $unitId,
-                        'rate'                   => isset($itemData['rate']) && $itemData['rate'] !== '' ? (float) $itemData['rate'] : null,
+                        'rate'                   => $rate,
                         'mtr_for_01_nos_trolley' => $mtr1,
                         'trolley_qty'            => $trolleyQty,
                         'length'                 => $length,
@@ -1348,14 +1437,44 @@ class StoreController extends Controller
                         'is_sent_to_purchase'    => 0,      // draft — user must explicitly send via "Send Pending to Purchase"
                         'source'                 => 'manual_shortage', // explicitly added via +Add More by Store user
                     ]);
+                    $inserted++;
                 }
 
                 // NOTE: Do NOT notify purchase yet — rows are drafts until user clicks "Send Pending to Purchase".
             });
 
-            $successMsg = 'New shortage items saved as draft. Click "Send Pending to Purchase" to formally send them to the Purchase department.';
+            // T-2026-060: report the real outcome instead of an unconditional success line.
+            $written = $inserted + $mergedCount;
+            $parts   = [];
+            if ($inserted > 0) {
+                $parts[] = $inserted . ' new item(s) saved as draft';
+            }
+            if ($mergedCount > 0) {
+                $parts[] = $mergedCount . ' existing draft item(s) updated';
+            }
+            if ($skipped > 0) {
+                $uniqueSkipped = array_values(array_unique($skippedNames));
+                $shown         = array_slice($uniqueSkipped, 0, 5);
+                $suffix        = count($uniqueSkipped) > count($shown) ? ', …' : '';
+                $parts[]       = $skipped . ' item(s) already in this requisition were skipped ('
+                    . implode(', ', $shown) . $suffix . ')';
+            }
+
+            $successMsg = $written > 0
+                ? (implode('. ', $parts) . '. Click "Send Pending to Purchase" to formally send them to the Purchase department.')
+                : (($skipped > 0)
+                    ? implode('. ', $parts) . '. Nothing new was added.'
+                    : 'No valid items to save — every row was missing a part item or a quantity.');
+
             if ($request->ajax() || $request->wantsJson()) {
-                return response()->json(['status' => 'success', 'msg' => $successMsg]);
+                return response()->json([
+                    'status'        => 'success',
+                    'msg'           => $successMsg,
+                    'inserted'      => $inserted,
+                    'merged'        => $mergedCount,
+                    'skipped'       => $skipped,
+                    'skipped_items' => array_values(array_unique($skippedNames)),
+                ]);
             }
             return redirect()->back()->with(['status' => 'success', 'msg' => $successMsg]);
 
@@ -1682,7 +1801,14 @@ class StoreController extends Controller
             });
 
             if ($updated === 0) {
-                return response()->json(['status' => 'info', 'msg' => 'No pending rows to send.', 'updated' => 0]);
+                // T-2026-060: this is NOT a success. Reaching here means every row in the
+                // requisition is already marked sent, so the user's click changed nothing —
+                // say so plainly instead of showing a green "Success" tick over a no-op.
+                return response()->json([
+                    'status'  => 'info',
+                    'msg'     => 'Nothing was sent — every item in this requisition is already marked as sent to Purchase.',
+                    'updated' => 0,
+                ]);
             }
 
             return response()->json([

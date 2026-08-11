@@ -1459,7 +1459,11 @@
                                 // trolley-scaled figure (computed server-side in showBomInventoryCheck()) —
                                 // tell the server not to re-scale it (only genuinely-raw manual rows need
                                 // server-side scaling). See storeAdditionalShortageRequisition().
-                                already_scaled: '1'
+                                already_scaled: '1',
+                                // T-2026-060: this payload is re-posted verbatim on every retry of
+                                // the send chain, so the server must keep treating it idempotently
+                                // (skip if already present) — unlike a user-added row.
+                                row_origin: 'bom'
                             });
                         @endif
                     @endforeach
@@ -1853,7 +1857,10 @@
                                     mtr_for_01_nos_trolley: mtr1,
                                     // T-2026-059: genuinely manual/free-typed row — qty/mtr1 are raw
                                     // per-1-trolley bases, server must unit-aware + trolley-scale them.
-                                    already_scaled: '0'
+                                    already_scaled: '0',
+                                    // T-2026-060: deliberately added by the Store user via +Add More —
+                                    // the server must never silently discard it as a duplicate.
+                                    row_origin: 'manual'
                                 });
                             }
                         });
@@ -1876,6 +1883,9 @@
                         }, function() {
                             unifiedSendBtn.disabled = true;
                             unifiedSendBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Sending...';
+
+                            // Outcome of Step 2, needed by the Step 3 handler below.
+                            var lastInsertResult = null;
 
                             // Step 1: Update existing draft rows
                             var updatePromises = existingDraftRows.map(function(rowData) {
@@ -1912,7 +1922,7 @@
 
                                 // Step 2: Insert new rows
                                 if (newRows.length === 0) {
-                                    return Promise.resolve({ status: 'success' });
+                                    return Promise.resolve({ status: 'success', inserted: 0, merged: 0, skipped: 0 });
                                 }
 
                                 var formData = new FormData();
@@ -1940,6 +1950,11 @@
                                     return Promise.reject('insert_failed');
                                 }
 
+                                // T-2026-060: keep the insert outcome (inserted/merged/skipped
+                                // counts) so the final alert can explain a no-op instead of
+                                // showing a green "Success" over "nothing happened".
+                                lastInsertResult = insertResult;
+
                                 // Step 3: Flip all drafts to sent
                                 return fetch('{{ route('send-pending-shortage-to-purchase') }}', {
                                     method: 'POST',
@@ -1953,9 +1968,30 @@
 
                             }).then(function(sendResult) {
                                 if (!sendResult) return;
-                                if (sendResult.status === 'success' || sendResult.status === 'info') {
-                                    showAlert('Success', sendResult.msg || 'Items sent to Purchase.', 'success');
-                                    setTimeout(function() { location.reload(); }, 1500);
+                                if (sendResult.status === 'success') {
+                                    var okMsg = sendResult.msg || 'Items sent to Purchase.';
+                                    // Surface partially-skipped rows even on an otherwise
+                                    // successful send, so nothing disappears silently.
+                                    if (lastInsertResult && lastInsertResult.skipped > 0) {
+                                        okMsg += ' ' + (lastInsertResult.msg || '');
+                                    }
+                                    showAlert('Success', okMsg, 'success');
+                                    setTimeout(function() { location.reload(); }, 2500);
+                                } else if (sendResult.status === 'info') {
+                                    // T-2026-060: updated === 0 means the click changed nothing.
+                                    // Report it as a warning with the reason (usually: every row
+                                    // posted was already present in the requisition), never as a
+                                    // green success tick.
+                                    var infoMsg = sendResult.msg || 'Nothing was sent.';
+                                    if (lastInsertResult && lastInsertResult.msg &&
+                                        (lastInsertResult.skipped > 0 || lastInsertResult.inserted === 0)) {
+                                        infoMsg += ' ' + lastInsertResult.msg;
+                                    }
+                                    // Reload only once the user has actually read and dismissed
+                                    // this — a timed reload would tear the dialog down first.
+                                    showAlert('Nothing to Send', infoMsg, 'warning', function() {
+                                        location.reload();
+                                    });
                                 } else {
                                     showAlert('Error', sendResult.msg || 'Something went wrong.', 'error');
                                     unifiedSendBtn.disabled = false;
@@ -2048,7 +2084,7 @@
                     });
                 }
 
-                function showAlert(title, text, icon) {
+                function showAlert(title, text, icon, onClose) {
                     if (window.Swal) {
                         Swal.fire({
                             title: title,
@@ -2056,7 +2092,12 @@
                             icon: icon || 'info',
                             confirmButtonText: 'OK',
                             confirmButtonColor: '#25385F'
+                        }).then(function() {
+                            if (typeof onClose === 'function') onClose();
                         });
+                    } else if (typeof onClose === 'function') {
+                        // Swal missing — still honour the caller's continuation.
+                        onClose();
                     }
                 }
 
