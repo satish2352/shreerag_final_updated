@@ -1000,10 +1000,30 @@ class StoreController extends Controller
             }));
             $hasDraftRows = count($shortageDraft) > 0;
 
+            // $shortageSent mixes two very different kinds of row: those the requisition sent to
+            // Purchase already covers (is_sent_to_purchase = 1) and those still outstanding
+            // (null — never entered the requisition, e.g. a shortage that appeared after a BOM
+            // re-upload). The page used to render both in one red "Shortage Materials" table, so a
+            // fully-dispatched requisition looked like it had come back for action: every row wore a
+            // green "Sent to Purchase" badge yet sat under a "Need to purchase" heading, and rows
+            // whose stock had since been delivered showed a shortage of 0.000 (they reach $shortage
+            // via the leftover-requisition_items loop above, not via the BOM comparison).
+            //
+            // Split here rather than in the blade so the info-header count, the shortage table, the
+            // send button and the collapsed history panel are all driven by one definition.
+            $shortagePendingRows = array_values(array_filter($shortageSent, function ($r) {
+                return !(isset($r->is_sent_to_purchase) && (int) $r->is_sent_to_purchase === 1);
+            }));
+            $shortageAlreadySent = array_values(array_filter($shortageSent, function ($r) {
+                return isset($r->is_sent_to_purchase) && (int) $r->is_sent_to_purchase === 1;
+            }));
+
             return view('organizations.store.list.bom-inventory-check', compact(
                 'available',
                 'shortage',
                 'shortageSent',
+                'shortagePendingRows',
+                'shortageAlreadySent',
                 'shortageDraft',
                 'alreadyIssued',
                 'availableFromProduction',

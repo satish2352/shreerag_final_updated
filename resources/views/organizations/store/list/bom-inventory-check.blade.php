@@ -272,7 +272,12 @@
                                 <div class="col-md-2">
                                     <span class="info-label">Items:</span>
                                     {{ count($available) }} available,
-                                    <span id="itemsShortageCount">{{ count($shortageSent) + count($shortageDraft) }}</span> shortage,
+                                    {{-- Outstanding shortage only (rows already sent to Purchase are counted
+                                         separately below the shortage table). Kept in step with what
+                                         updateDraftCount() recomputes from #shortageTableBody at runtime. --}}
+                                    <span
+                                        id="itemsShortageCount">{{ count($shortagePendingRows) + count($shortageDraft) }}</span>
+                                    shortage,
                                     {{ count($alreadyIssued) }} issued
                                 </div>
                             </div>
@@ -778,8 +783,15 @@
                          TABLE 2 — Shortage Items (unified: BOM rows + draft/manual rows in one table)
                          ======================== --}}
                         @php
-                            // Count BOM-derived shortage rows and draft/manual rows for button label logic
-                            $bomShortageCount  = count($shortageSent);
+                            // $shortagePendingRows / $shortageAlreadySent are the two halves of
+                            // $shortageSent, split in showBomInventoryCheck() — see the comment there for
+                            // why already-sent rows are pulled out of the shortage table.
+                            //
+                            // $bomShortageCount counts only the rows that still NEED sending: it drives the
+                            // send button's label/visibility and the confirm prompt, and already-sent rows
+                            // must not inflate it because they are exactly the rows the send chain skips.
+                            $bomShortageCount  = count($shortagePendingRows);
+                            $sentShortageCount = count($shortageAlreadySent);
                             $draftCount        = count($shortageDraft);
                             $hasBomShortage    = $bomShortageCount > 0;
                             $hasDraftOrManual  = $draftCount > 0; // JS-added rows also count via JS
@@ -795,7 +807,12 @@
                                         style="background:#28a745;color:#fff;padding:3px 10px;border-radius:4px;font-size:12px;">
                                         <i class="fa fa-check"></i> Requisition Sent to Purchase
                                     </span>
-                                @elseif($hasBomShortage || $hasDraftOrManual)
+                                @endif
+                                {{-- "Need to purchase" reflects the OUTSTANDING rows only, so it no longer
+                                     appears once everything has been sent — and it now also shows alongside
+                                     the green badge when a new shortage has appeared since (e.g. after a BOM
+                                     re-upload or a resync), which the old @elseif chain suppressed. --}}
+                                @if ($hasBomShortage || $hasDraftOrManual)
                                     <span class="badge-shortage">Need to purchase</span>
                                 @endif
                                 {{-- Draft pending badge --}}
@@ -834,65 +851,18 @@
                                         </tr>
                                     </thead>
                                     <tbody id="shortageTableBody">
-                                        {{-- BOM-derived shortage rows (read-only display) --}}
-                                        @foreach ($shortageSent as $i => $item)
-                                            @php
-                                                $isSent =
-                                                    isset($item->is_sent_to_purchase) &&
-                                                    (int) $item->is_sent_to_purchase === 1;
-                                                $rowClass  = $isSent ? 'shortage-sent-row' : 'shortage-row';
-                                                $reqItemId = $item->requisition_item_id ?? null;
-                                                $unitNameSh = optional($item->unitMaster)->name ?? null;
-                                                $mtrNSh = $computeMtrN(
-                                                    $item->mtr_for_01_nos_trolley ?? null,
-                                                    $item->required_quantity ?? null,
-                                                    $unitNameSh,
-                                                    $trolleyQty,
-                                                );
-                                            @endphp
-                                            <tr class="{{ $rowClass }}"
-                                                id="shortage-row-{{ $reqItemId ?? 'bom-' . $i }}">
-                                                <td style="width:45px;" class="sr-cell">{{ $i + 1 }}</td>
-                                                <td style="white-space:nowrap; font-size:12px; color:#555;">
-                                                    {{ $item->created_at ?? null ? \Carbon\Carbon::parse($item->created_at)->format('d M Y, h:i A') : '—' }}
-                                                </td>
-                                                <td class="shortage-desc-col"><span>
-                                                        {{ $item->product_description ?? (optional($item->partItem)->description ?? '—') }}
-                                                        @if ($isSent)
-                                                            <span class="badge-sent-purchase"><i class="fa fa-check"></i>
-                                                                Sent to Purchase</span>
-                                                        @elseif($requisitionSent)
-                                                            <span class="badge-not-sent"><i
-                                                                    class="fa fa-exclamation"></i>
-                                                                Not in Requisition</span>
-                                                        @endif
-                                                        @if ($item->is_partial_issue ?? false)
-                                                            {{-- Part of this request is covered by stock and is
-                                                                 pre-filled above under "Additional Items to Issue";
-                                                                 only the balance below needs purchasing. --}}
-                                                            <br>
-                                                            <small style="color:#1e7e34;font-size:11px;">
-                                                                <i class="fa fa-check-circle"></i>
-                                                                {{ number_format($item->issuable_quantity, 3) }}
-                                                                issuable from stock now
-                                                            </small>
-                                                        @endif
-                                                    </span>
-                                                </td>
-                                                <td>{!! $fmt($item->length ?? null) !!}</td>
-                                                <td>{{ number_format($item->required_quantity, 3) }}</td>
-                                                <td>{!! $fmt($item->total_in_mm ?? null) !!}</td>
-                                                <td>{{ number_format($item->available_stock, 3) }}</td>
-                                                <td><strong
-                                                        class="qty-highlight">{{ number_format($item->shortage_quantity, 3) }}</strong>
-                                                </td>
-                                                <td>{{ $unitNameSh ?? ($item->unit_id ?? '—') }}</td>
-                                                <td style="white-space:nowrap;">{!! $fmt($item->mtr_for_01_nos_trolley ?? null) !!}</td>
-                                                <td style="white-space:nowrap;">{!! $fmt($mtrNSh) !!}</td>
-                                                <td>{{ isset($item->rate) && $item->rate !== null ? number_format((float) $item->rate, 3) : '—' }}
-                                                </td>
-                                                <td></td>{{-- no action for BOM rows --}}
-                                            </tr>
+                                        {{-- BOM-derived shortage rows still awaiting a requisition (read-only
+                                             display). Rows already sent live in the collapsed panel below. --}}
+                                        @foreach ($shortagePendingRows as $i => $item)
+                                            @include('organizations.store.list.partials.bom-shortage-row', [
+                                                'item' => $item,
+                                                'i' => $i,
+                                                'idPrefix' => 'shortage-row-',
+                                                'requisitionSent' => $requisitionSent,
+                                                'trolleyQty' => $trolleyQty,
+                                                'computeMtrN' => $computeMtrN,
+                                                'fmt' => $fmt,
+                                            ])
                                         @endforeach
 
                                         {{-- Pre-rendered draft/manual rows (is_sent_to_purchase=0, editable) --}}
@@ -997,12 +967,86 @@
                             </div>
                         @endif
 
-                        @if ($bomShortageCount === 0 && !($isClosed ?? false) && $draftCount === 0)
-                            {{-- No BOM shortages yet and no drafts: show "all available" notice --}}
-                            <div class="alert alert-success">
-                                <i class="fa fa-check-circle"></i>
-                                All BOM items are available in stock. No purchase requisition is needed. You can still add manual shortage items using the "+ Add More" button above.
+                        {{-- ========================
+                         Already Sent to Purchase — collapsed history panel
+                         ========================
+                         These rows are a record, not a to-do: the requisition covering them has
+                         already gone to Purchase and they can never be edited or re-sent from here
+                         (updateDraftShortageItem() rejects a sent row with 403, and the send chain
+                         skips them). They stay on the page so Store can still see WHAT was ordered
+                         and track what Purchase owes, but out of the shortage table so a fully-sent
+                         requisition no longer reads as outstanding work. --}}
+                        @if ($sentShortageCount > 0)
+                            <div style="margin-bottom:14px;">
+                                <button type="button" class="btn btn-sm btn-outline-success" id="toggleSentShortageBtn"
+                                    aria-expanded="false" aria-controls="sentShortageWrap"
+                                    style="border:1px solid #28a745; background:#f2fbf5; color:#1e7e34; font-weight:600;">
+                                    <i class="fa fa-caret-right" id="sentShortageCaret"></i>
+                                    <i class="fa fa-check-circle"></i>
+                                    Already Sent to Purchase ({{ $sentShortageCount }})
+                                </button>
+                                <div id="sentShortageWrap" style="display:none; margin-top:8px;">
+                                    <div class="table-responsive">
+                                        {{-- Green header (table-available), not the red table-shortage one:
+                                             these rows are settled work, and a second red table directly
+                                             under the shortage table is exactly what made them look
+                                             outstanding in the first place. --}}
+                                        <table class="table table-bordered table-hover table-available"
+                                            id="sentShortageTable">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:45px;">Sr.</th>
+                                                    <th style="white-space:nowrap;">Date &amp; Time</th>
+                                                    <th class="shortage-desc-col">Product Description</th>
+                                                    <th style="width:110px;">Length</th>
+                                                    <th>Required Qty</th>
+                                                    <th style="width:130px;">Total in mm</th>
+                                                    <th>Available Stock</th>
+                                                    <th class="qty-highlight" style="color:#fff;">Shortage Qty</th>
+                                                    <th>Unit</th>
+                                                    <th>Mtr for 01 Nos Trolley</th>
+                                                    <th>Mtr/Nos for {{ $trolleyQty }} Trolley(s)</th>
+                                                    <th>Rate</th>
+                                                    <th style="width:40px;"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="sentShortageBody">
+                                                @foreach ($shortageAlreadySent as $i => $item)
+                                                    @include('organizations.store.list.partials.bom-shortage-row', [
+                                                        'item' => $item,
+                                                        'i' => $i,
+                                                        'idPrefix' => 'sent-shortage-row-',
+                                                        'requisitionSent' => $requisitionSent,
+                                                        'trolleyQty' => $trolleyQty,
+                                                        'computeMtrN' => $computeMtrN,
+                                                        'fmt' => $fmt,
+                                                    ])
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
+                        @endif
+
+                        @if ($bomShortageCount === 0 && $draftCount === 0 && !($isClosed ?? false))
+                            @if ($sentShortageCount > 0)
+                                {{-- Everything short has already been requisitioned. Saying "all items are
+                                     available in stock" here would be plainly wrong — the items are on order,
+                                     not on the shelf. --}}
+                                <div class="alert alert-success">
+                                    <i class="fa fa-check-circle"></i>
+                                    All {{ $sentShortageCount }} shortage item(s) for this order have already been
+                                    sent to Purchase — nothing further to send. Expand "Already Sent to Purchase"
+                                    above to review them, or use "+ Add More" to raise an additional item.
+                                </div>
+                            @else
+                                {{-- No BOM shortages yet and no drafts: show "all available" notice --}}
+                                <div class="alert alert-success">
+                                    <i class="fa fa-check-circle"></i>
+                                    All BOM items are available in stock. No purchase requisition is needed. You can still add manual shortage items using the "+ Add More" button above.
+                                </div>
+                            @endif
                         @endif
 
                         {{-- Validation message for manual shortage rows --}}
@@ -1074,7 +1118,12 @@
                                 <input type="hidden" name="business_id" value="{{ $productDetails->business_id }}">
                                 <input type="hidden" name="design_id" value="{{ $design_id_for_form }}">
 
-                                @foreach ($shortageSent as $i => $item)
+                                {{-- Outstanding rows only. In this branch ($requisitionSent === false) nothing
+                                     has been sent yet, so this is normally identical to $shortageSent — the
+                                     filter is a guard for the edge case where a row carries
+                                     is_sent_to_purchase = 1 while the business's store_status_id says
+                                     otherwise, which would otherwise re-post an already-sent row. --}}
+                                @foreach ($shortagePendingRows as $i => $item)
                                     <input type="hidden" name="items[{{ $i }}][part_item_id]"
                                         value="{{ $item->part_item_id }}">
                                     <input type="hidden" name="items[{{ $i }}][product_description]"
@@ -1431,46 +1480,67 @@
                 var shortageManualRowCount = 0;
                 var requisitionSentFlag = {{ $requisitionSent ? 'true' : 'false' }};
 
-                // Count of BOM-derived shortage rows rendered server-side
-                var bomRowCount = {{ count($shortageSent) }};
+                // Count of OUTSTANDING BOM-derived shortage rows rendered server-side (rows already
+                // sent to Purchase are excluded — they render in the collapsed history panel and the
+                // send chain skips them, so counting them here made the send button offer to send a
+                // requisition that had nothing left to send).
+                var bomRowCount = {{ $bomShortageCount }};
 
                 // BOM rows that are NOT yet in the requisition (shown with "Not in Requisition" badge).
-                // These are BOM-derived rows where is_sent_to_purchase != 1.
+                // These are BOM-derived rows where is_sent_to_purchase != 1 — i.e. exactly
+                // $shortagePendingRows, which the shortage table above renders.
                 // In State 2 (requisition already sent) they must be inserted as new rows via
                 // store-additional-shortage-requisition so they get picked up by send-pending-shortage-to-purchase.
                 var bomNotSentItems = [];
                 @if ($requisitionSent)
-                    @foreach ($shortageSent as $bomItem)
-                        @php
-                            $bomIsSent = isset($bomItem->is_sent_to_purchase) && (int) $bomItem->is_sent_to_purchase === 1;
-                        @endphp
-                        @if (!$bomIsSent)
-                            bomNotSentItems.push({
-                                part_item_id: '{{ $bomItem->part_item_id ?? '' }}',
-                                product_description: {!! json_encode($bomItem->product_description ?? (optional($bomItem->partItem)->description ?? '')) !!},
-                                required_quantity: '{{ $bomItem->required_quantity ?? 0 }}',
-                                available_quantity: '{{ $bomItem->available_stock ?? 0 }}',
-                                shortage_quantity: '{{ $bomItem->shortage_quantity ?? 0 }}',
-                                unit_id: '{{ $bomItem->unit_id ?? '' }}',
-                                rate: '{{ $bomItem->rate ?? '' }}',
-                                mtr_for_01_nos_trolley: '{{ $bomItem->mtr_for_01_nos_trolley ?? '' }}',
-                                length: '{{ $bomItem->length ?? '' }}',
-                                // T-2026-059: required_quantity above is ALREADY the final unit-aware,
-                                // trolley-scaled figure (computed server-side in showBomInventoryCheck()) —
-                                // tell the server not to re-scale it (only genuinely-raw manual rows need
-                                // server-side scaling). See storeAdditionalShortageRequisition().
-                                already_scaled: '1',
-                                // T-2026-060: this payload is re-posted verbatim on every retry of
-                                // the send chain, so the server must keep treating it idempotently
-                                // (skip if already present) — unlike a user-added row.
-                                row_origin: 'bom'
-                            });
-                        @endif
+                    @foreach ($shortagePendingRows as $bomItem)
+                        bomNotSentItems.push({
+                            part_item_id: '{{ $bomItem->part_item_id ?? '' }}',
+                            product_description: {!! json_encode($bomItem->product_description ?? (optional($bomItem->partItem)->description ?? '')) !!},
+                            required_quantity: '{{ $bomItem->required_quantity ?? 0 }}',
+                            available_quantity: '{{ $bomItem->available_stock ?? 0 }}',
+                            shortage_quantity: '{{ $bomItem->shortage_quantity ?? 0 }}',
+                            unit_id: '{{ $bomItem->unit_id ?? '' }}',
+                            rate: '{{ $bomItem->rate ?? '' }}',
+                            mtr_for_01_nos_trolley: '{{ $bomItem->mtr_for_01_nos_trolley ?? '' }}',
+                            length: '{{ $bomItem->length ?? '' }}',
+                            // T-2026-059: required_quantity above is ALREADY the final unit-aware,
+                            // trolley-scaled figure (computed server-side in showBomInventoryCheck()) —
+                            // tell the server not to re-scale it (only genuinely-raw manual rows need
+                            // server-side scaling). See storeAdditionalShortageRequisition().
+                            already_scaled: '1',
+                            // T-2026-060: this payload is re-posted verbatim on every retry of
+                            // the send chain, so the server must keep treating it idempotently
+                            // (skip if already present) — unlike a user-added row.
+                            row_origin: 'bom'
+                        });
                     @endforeach
                 @endif
 
                 // Count of pre-rendered draft rows (from server — is_sent_to_purchase=0)
                 var preRenderedDraftCount = {{ count($shortageDraft) }};
+
+                // ── "Already Sent to Purchase" collapsed history panel ─────────────────────
+                // Purely presentational: the panel holds read-only rows in their own <tbody>
+                // (#sentShortageBody), deliberately OUTSIDE #shortageTableBody, so none of the
+                // shortage-table logic above (renumbering, draft counting, send payload) can ever
+                // pick them up.
+                (function () {
+                    var sentToggleBtn = document.getElementById('toggleSentShortageBtn');
+                    var sentWrap = document.getElementById('sentShortageWrap');
+                    if (!sentToggleBtn || !sentWrap) return;
+
+                    sentToggleBtn.addEventListener('click', function () {
+                        var isOpen = sentWrap.style.display !== 'none';
+                        sentWrap.style.display = isOpen ? 'none' : '';
+                        sentToggleBtn.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+                        var caret = document.getElementById('sentShortageCaret');
+                        if (caret) {
+                            caret.classList.toggle('fa-caret-right', isOpen);
+                            caret.classList.toggle('fa-caret-down', !isOpen);
+                        }
+                    });
+                })();
 
                 // Renumber all Sr. cells in the unified shortage table
                 function renumberShortageRows() {
@@ -2148,7 +2218,9 @@
                         }
 
                         var manualCount = document.querySelectorAll('#shortageTableBody tr.shortage-row-manual').length;
-                        var bomCount = {{ count($shortageSent) }};
+                        // Outstanding rows only — must match what the form actually posts, so the
+                        // confirm prompt can never quote a count that includes already-sent rows.
+                        var bomCount = {{ $bomShortageCount }};
                         var confirmText = bomCount > 0 && manualCount > 0
                             ? 'Send ' + bomCount + ' BOM shortage item(s) + ' + manualCount + ' manually-added item(s) to Purchase department?'
                             : bomCount > 0
