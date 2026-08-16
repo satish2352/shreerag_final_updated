@@ -27,10 +27,10 @@
                                                 <th data-field="quantity" data-editable="false">Quantity</th>
                                                 <th data-field="grn_date" data-editable="false">Description</th>
                                                 <th data-field="design_image" data-editable="false">Design Layout</th>
-                                                <th data-field="bom_image" data-editable="false">BOM</th>
+                                                <th data-field="bom_image" data-editable="false">BOM Items</th>
                                                 <th data-field="re_design_image" data-editable="false">Revised Design Layout
                                                 </th>
-                                                <th data-field="re_bom_image" data-editable="false">Revised BOM</th>
+                                                <th data-field="re_bom_image" data-editable="false">Revised BOM Items</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -46,9 +46,15 @@
                                                             href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['design_image'] }}"
                                                             alt="Design"> Click to view</a>
                                                     </td>
-                                                    <td> <a class="img-size"
-                                                            href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['bom_image'] }}"
-                                                            alt="bill of material">Click to download</a>
+                                                    <td>
+                                                        @if (!empty($data->design_id) && !empty($data->business_details_id))
+                                                            <button type="button" class="btn btn-outline-info btn-sm"
+                                                                onclick="acceptDesignOpenBomModal({{ $data->business_details_id }}, {{ $data->design_id }})">
+                                                                <i class="fa fa-list"></i> View BOM
+                                                            </button>
+                                                        @else
+                                                            <span class="text-muted">—</span>
+                                                        @endif
                                                     </td>
                                                     @if ($data->reject_reason_prod == '')
                                                         <td>-</td>
@@ -58,9 +64,15 @@
                                                                 href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['re_design_image'] }}"
                                                                 alt="Design"> Click to view</a>
                                                         </td>
-                                                        <td> <a class="img-size"
-                                                                href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $data['re_bom_image'] }}"
-                                                                alt="bill of material">Click to download</a>
+                                                        <td>
+                                                            @if (!empty($data->design_id) && !empty($data->business_details_id))
+                                                                <button type="button" class="btn btn-outline-info btn-sm"
+                                                                    onclick="acceptDesignOpenBomModal({{ $data->business_details_id }}, {{ $data->design_id }})">
+                                                                    <i class="fa fa-list"></i> View BOM
+                                                                </button>
+                                                            @else
+                                                                <span class="text-muted">—</span>
+                                                            @endif
                                                         </td>
                                                     @endif
                                                 </tr>
@@ -75,4 +87,24 @@
             </div>
         </div>
     </div>
-   @endsection
+
+{{-- BOM Material Items Modal (designer view-only — accepted design list) --}}
+@include('organizations.common.bom-material-items-modal', [
+    'mode'              => 'view_only',
+    'businessId'        => 0,
+    'businessDetailsId' => 0,
+    'designId'          => 0,
+    'bomModalId'        => 'acceptDesignBomModal',
+])
+
+@push('scripts')
+<script>
+    function acceptDesignOpenBomModal(businessDetailsId, designId) {
+        var bdEncoded = btoa(businessDetailsId);
+        var dEncoded  = btoa(designId);
+        var fetchUrl  = '{{ url("designdept/get-bom-material-items") }}/' + bdEncoded + '/' + dEncoded;
+        openBomModal_acceptDesignBomModal(fetchUrl);
+    }
+</script>
+@endpush
+@endsection

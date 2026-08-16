@@ -42,6 +42,7 @@ class AllListRepositor
                 // ->where('businesses.is_active',true)
                 ->groupBy(
                     'businesses.id',
+                    'designs.id',
                     'designs.business_details_id',
                     'businesses.project_name',
                     'businesses.customer_po_number',
@@ -62,6 +63,9 @@ class AllListRepositor
                 )
                 ->select(
                     'businesses.id',
+                    // T-2026-003 follow-up: BOM is stored as bom_material_items rows, not an
+                    // Excel file — the listing needs designs.id to open the BOM modal.
+                    'designs.id as design_id',
                     'designs.business_details_id',
                     'businesses_details.id',
                     'businesses.title',
