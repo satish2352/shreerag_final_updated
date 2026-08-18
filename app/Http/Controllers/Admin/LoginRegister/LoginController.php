@@ -96,14 +96,37 @@ class LoginController extends Controller
             // $ipAddress = getHostByName(getHostName());
             $ipAddress = $this->getClientIpAddress();
 
+            // ✅ Synchronously create the login history record for EVERY successful
+            // login (regardless of whether latitude/longitude were supplied). This
+            // guarantees a row always exists for the Login History list, and gives
+            // the background job (below) a valid historyId to backfill
+            // location_address into once reverse-geocoding completes.
+            $loginHistoryId = null;
+            try {
+                $loginHistory = LoginHistory::create([
+                    'user_id'          => $user->id,
+                    'ip_address'       => $ipAddress,
+                    'latitude'         => $request->filled('latitude') ? $request->latitude : null,
+                    'longitude'        => $request->filled('longitude') ? $request->longitude : null,
+                    'location_address' => null,
+                ]);
+                $loginHistoryId = $loginHistory->id;
+            } catch (\Exception $e) {
+                // A logging/insert failure here must NEVER block the user's login/redirect.
+                Log::error('LoginHistory create failed: ' . $e->getMessage());
+            }
 
-            // ✅ Dispatch location storage as background job (non-blocking)
+            // ✅ Dispatch location storage as background job (non-blocking).
+            // Only needed when coordinates are present, so the job can reverse
+            // geocode and backfill location_address on the row created above.
+            // Requires `php artisan queue:work` to be running (QUEUE_CONNECTION=database).
             if ($request->filled(['latitude', 'longitude'])) {
                 StoreLoginLocation::dispatch(
                     $user->id,
                     $request->latitude,
                     $request->longitude,
-                    $ipAddress
+                    $ipAddress,
+                    $loginHistoryId
                 );
             }
 
