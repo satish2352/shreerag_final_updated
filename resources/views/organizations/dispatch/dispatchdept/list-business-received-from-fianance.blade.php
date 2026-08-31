@@ -62,7 +62,7 @@
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>
                                                         {{ $data->finance_updated_at
-                                                            ? \Illuminate\Support\Carbon::parse($data->finance_updated_at)->timezone('Asia/Kolkata')->format('d-m-Y h:i A') . ' IST'
+                                                            ? \Illuminate\Support\Carbon::parse($data->finance_updated_at)->timezone('Asia/Kolkata')->format('d-m-Y h:i A')
                                                             : 'N/A' }}
                                                     </td>
                                                     <td>{{ ucwords($data->project_name) }}</td>
