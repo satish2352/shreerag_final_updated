@@ -426,11 +426,14 @@ class T2026061LoginHistoryTest extends TestCase
      * (which declares `catch (\Exception $e)`, not `\Throwable`) genuinely
      * survives this case end-to-end, rather than reasoning about it.
      *
-     * FINDING (see memory / audit report for detail): PDO binding an array
-     * throws \TypeError, which extends \Error, NOT \Exception. The
-     * `catch (\Exception $e)` block in LoginController::submitLogin() does
-     * NOT catch \Error, so this assertion documents the actual observed
-     * behavior rather than assuming the happy-path reasoning holds.
+     * FINDING (empirically observed, see assertions below): passing an array
+     * does NOT reach PDO as a raw \TypeError. Instead, an earlier
+     * array-to-string conversion attempt raises a PHP E_WARNING, which
+     * Laravel's global error handler escalates to \ErrorException — a
+     * genuine \Exception subclass — so `catch (\Exception $e)` in
+     * LoginController::submitLogin() DOES catch this reachable failure mode.
+     * This test exists specifically to prove that empirically rather than
+     * assume it from reading the catch signature alone.
      */
     public function malformed_array_shaped_coordinates_are_handled_end_to_end_without_fatal_crash()
     {

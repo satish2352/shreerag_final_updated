@@ -74,7 +74,7 @@ class AllListRepository
                     'production.business_id',
                     'production.id as productionId',
                     'bap1.store_material_sent_date',
-                    'tbl_customer_product_quantity_tracking.updated_at',
+                    'tbl_customer_product_quantity_tracking.updated_at as finance_updated_at',
                     'tbl_transport_name.name as transport_name',
                     'tbl_vehicle_type.name as vehicle_name',
                     'tbl_logistics.truck_no',
