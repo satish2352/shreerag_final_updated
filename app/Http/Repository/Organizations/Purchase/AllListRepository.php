@@ -882,9 +882,10 @@ class AllListRepository
         config('constants.PUCHASE_DEPARTMENT.LIST_APPROVED_PO_FROM_HIGHER_AUTHORITY_SENT_TO_VENDOR')
       ];
 
+      // Filter POs that have been sent to vendor (regardless of status field values)
+      // A PO is considered "sent to vendor" if purchase_order_mail_submited_to_vendor_date is NOT NULL
       $query = PurchaseOrdersModel::leftJoin('vendors', 'purchase_orders.vendor_id', '=', 'vendors.id')
-        ->whereIn('purchase_orders.purchase_status_from_owner', $statuses)
-        ->whereIn('purchase_orders.purchase_status_from_purchase', $statuses);
+        ->whereNotNull('purchase_orders.purchase_order_mail_submited_to_vendor_date');
 
       /* ----------------------------------
            🔹 FILTERS
