@@ -60,15 +60,24 @@
                                 </div>
 
                                 <div class="col-md-2 mb-2">
-                                    <label style="font-size:12px; font-weight:600; margin-bottom:3px;">From Date (GRN)</label>
+                                    <label style="font-size:12px; font-weight:600; margin-bottom:3px;">From Date (GRN / PO)</label>
                                     <input type="date" name="from_date" class="form-control form-control-sm"
                                         value="{{ request('from_date') }}">
                                 </div>
 
                                 <div class="col-md-2 mb-2">
-                                    <label style="font-size:12px; font-weight:600; margin-bottom:3px;">To Date (GRN)</label>
+                                    <label style="font-size:12px; font-weight:600; margin-bottom:3px;">To Date (GRN / PO)</label>
                                     <input type="date" name="to_date" class="form-control form-control-sm"
                                         value="{{ request('to_date') }}">
+                                </div>
+
+                                <div class="col-md-2 mb-2">
+                                    <label style="font-size:12px; font-weight:600; margin-bottom:3px;">GRN Status</label>
+                                    <select name="grn_status" class="form-control form-control-sm">
+                                        <option value="" {{ request('grn_status') == '' ? 'selected' : '' }}>-- All --</option>
+                                        <option value="received" {{ request('grn_status') == 'received' ? 'selected' : '' }}>GRN Received</option>
+                                        <option value="pending" {{ request('grn_status') == 'pending' ? 'selected' : '' }}>Pending GRN</option>
+                                    </select>
                                 </div>
 
                                 <div class="col-md-4 mb-2">
@@ -78,7 +87,7 @@
                                         value="{{ request('search') }}">
                                 </div>
 
-                                <div class="col-md-8 mb-2 d-flex align-items-end business-po-filter-actions">
+                                <div class="col-md-6 mb-2 d-flex align-items-end business-po-filter-actions">
                                     <button type="submit" class="btn btn-primary btn-sm filterbg">
                                         <i class="fa fa-search"></i> Search
                                     </button>
@@ -194,9 +203,12 @@
                                                                 @endif
                                                                 <td>{{ $row->material_description ?? '—' }}</td>
                                                                 <td style="text-align:right;">{{ $row->po_quantity }}</td>
-                                                                <td style="text-align:right;">{{ $row->actual_quantity }}</td>
-                                                                <td style="text-align:right; color:#155724; font-weight:600;">{{ $row->accepted_quantity }}</td>
-                                                                <td style="text-align:right; color:#721c24;">{{ $row->rejected_quantity }}</td>
+                                                                {{-- Actual/Accepted/Rejected Qty come from the (now optional)
+                                                                     GRN tracking row. is_null() distinguishes "no GRN yet"
+                                                                     (render '—') from "GRN exists with quantity 0" (render 0). --}}
+                                                                <td style="text-align:right;">{{ is_null($row->actual_quantity) ? '—' : $row->actual_quantity }}</td>
+                                                                <td style="text-align:right; color:#155724; font-weight:600;">{{ is_null($row->accepted_quantity) ? '—' : $row->accepted_quantity }}</td>
+                                                                <td style="text-align:right; color:#721c24;">{{ is_null($row->rejected_quantity) ? '—' : $row->rejected_quantity }}</td>
                                                                 <td>{{ $row->unit_name ?? '—' }}</td>
                                                                 <td style="text-align:right;">{{ number_format((float)$row->rate, 2) }}</td>
                                                                 <td style="text-align:right;"><strong>{{ number_format((float)$row->line_amount, 2) }}</strong></td>

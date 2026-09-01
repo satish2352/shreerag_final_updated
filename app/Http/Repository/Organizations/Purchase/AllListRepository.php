@@ -1025,30 +1025,41 @@ class AllListRepository
         $perPage = 100;
       }
 
-      // Base: GRN-completed POs only — join grn_tbl (INNER) to ensure GRN exists
-      $query = DB::table('grn_tbl')
-        ->join('tbl_grn_po_quantity_tracking',
-               'grn_tbl.id', '=', 'tbl_grn_po_quantity_tracking.grn_id')
-        ->join('purchase_orders',
-               'purchase_orders.purchase_orders_id', '=', 'grn_tbl.purchase_orders_id')
+      // Base: ALL POs (created / approved / sent-to-vendor / GRN-received) —
+      // purchase_orders is now the driving table so a PO shows up as soon as it
+      // exists, and GRN data (tracking + grn_tbl) is attached via LEFT JOIN so
+      // it is optional. A PO with no GRN yet renders with '—' / 0.00 in the
+      // GRN-related columns instead of being invisible/unsearchable.
+      $query = DB::table('purchase_orders')
         ->join('purchase_order_details',
-               'purchase_order_details.id', '=', 'tbl_grn_po_quantity_tracking.purchase_order_details_id')
+               'purchase_order_details.purchase_id', '=', 'purchase_orders.id')
         ->join('businesses',
                'businesses.id', '=', 'purchase_orders.business_id')
         ->join('businesses_details',
                'businesses_details.id', '=', 'purchase_orders.business_details_id')
         ->join('vendors',
                'vendors.id', '=', 'purchase_orders.vendor_id')
+        // Optional GRN data: is_deleted guards live in the ON clause, not a
+        // WHERE clause, otherwise the LEFT JOIN is silently turned back into
+        // an INNER JOIN and pending (no-GRN) POs disappear again.
+        ->leftJoin('tbl_grn_po_quantity_tracking', function ($join) {
+          $join->on('tbl_grn_po_quantity_tracking.purchase_order_details_id', '=', 'purchase_order_details.id')
+               ->where('tbl_grn_po_quantity_tracking.is_deleted', '=', 0);
+        })
+        ->leftJoin('grn_tbl', function ($join) {
+          $join->on('grn_tbl.id', '=', 'tbl_grn_po_quantity_tracking.grn_id')
+               ->where('grn_tbl.is_deleted', '=', 0);
+        })
         ->leftJoin('tbl_unit as u',
                'u.id', '=', 'purchase_order_details.unit')
         // Join the part-item master so we can fall back to its description when
         // purchase_order_details.description was entered as a bad value (e.g. "1")
         ->leftJoin('tbl_part_item as pi',
                'pi.id', '=', 'purchase_order_details.part_no_id')
+        ->where('purchase_orders.is_deleted', 0)
+        ->where('purchase_orders.is_active',  1)
         ->where('businesses.is_active',  1)
-        ->where('businesses.is_deleted', 0)
-        ->where('grn_tbl.is_deleted',    0)
-        ->where('tbl_grn_po_quantity_tracking.is_deleted', 0);
+        ->where('businesses.is_deleted', 0);
 
       if ($request->filled('business_id')) {
         $query->where('purchase_orders.business_id', $request->business_id);
@@ -1056,14 +1067,23 @@ class AllListRepository
       if ($request->filled('product_id')) {
         $query->where('purchase_orders.business_details_id', $request->product_id);
       }
+      // Date/year filters must not silently drop pending (no-GRN) POs: grn_tbl.grn_date
+      // is NULL until a GRN exists, so match on COALESCE(grn_tbl.grn_date, purchase_orders.created_at).
       if ($request->filled('year')) {
-        $query->whereYear('grn_tbl.grn_date', $request->year);
+        $query->whereRaw('YEAR(COALESCE(grn_tbl.grn_date, purchase_orders.created_at)) = ?', [$request->year]);
       }
       if ($request->filled('from_date')) {
-        $query->whereDate('grn_tbl.grn_date', '>=', $request->from_date);
+        $query->whereRaw('DATE(COALESCE(grn_tbl.grn_date, purchase_orders.created_at)) >= ?', [$request->from_date]);
       }
       if ($request->filled('to_date')) {
-        $query->whereDate('grn_tbl.grn_date', '<=', $request->to_date);
+        $query->whereRaw('DATE(COALESCE(grn_tbl.grn_date, purchase_orders.created_at)) <= ?', [$request->to_date]);
+      }
+      if ($request->filled('grn_status')) {
+        if ($request->grn_status === 'received') {
+          $query->whereNotNull('grn_tbl.id');
+        } elseif ($request->grn_status === 'pending') {
+          $query->whereNull('grn_tbl.id');
+        }
       }
       if ($request->filled('search')) {
         $s = $request->search;
@@ -1078,9 +1098,11 @@ class AllListRepository
         });
       }
 
-      // Grand total of (accepted_quantity × rate) across ALL rows before pagination
+      // Grand total of (accepted_quantity × rate) across ALL rows before pagination.
+      // NULL-safe: pending (no-GRN) rows have no tracking.accepted_quantity, so they
+      // must contribute 0 to the sum rather than turning the whole SUM() into NULL.
       $grandTotal = (clone $query)->selectRaw(
-        'SUM(tbl_grn_po_quantity_tracking.accepted_quantity * purchase_order_details.rate) as total'
+        'SUM(COALESCE(tbl_grn_po_quantity_tracking.accepted_quantity, 0) * purchase_order_details.rate) as total'
       )->value('total');
 
       $paginator = $query->select(
@@ -1093,6 +1115,7 @@ class AllListRepository
           'purchase_orders.created_at                      as po_date',
           'vendors.vendor_name',
           'vendors.vendor_company_name',
+          'grn_tbl.id                                      as grn_row_id',
           'grn_tbl.grn_no_generate',
           'grn_tbl.grn_date',
           // Prefer the part-item master description; fall back to the PO line
@@ -1106,11 +1129,12 @@ class AllListRepository
           'tbl_grn_po_quantity_tracking.actual_quantity',
           'tbl_grn_po_quantity_tracking.accepted_quantity',
           'tbl_grn_po_quantity_tracking.rejected_quantity',
-          DB::raw('(tbl_grn_po_quantity_tracking.accepted_quantity * purchase_order_details.rate) as line_amount')
+          DB::raw('(COALESCE(tbl_grn_po_quantity_tracking.accepted_quantity, 0) * purchase_order_details.rate) as line_amount')
         )
         ->orderBy('businesses.project_name')
         ->orderBy('purchase_orders.purchase_orders_id')
         ->orderBy('grn_tbl.grn_date')
+        ->orderBy('purchase_order_details.id')
         ->paginate($perPage)
         ->withQueryString();
 
