@@ -143,4 +143,14 @@ class AllListServices
             return ['status' => false, 'message' => $e->getMessage()];
         }
     }
+
+    /** Unpaginated (all filtered rows) variant used by the PDF / CSV exports. */
+    public function getBusinessPoReportAll($request)
+    {
+        try {
+            return $this->repo->getBusinessPoReportAll($request);
+        } catch (\Exception $e) {
+            return ['status' => false, 'message' => $e->getMessage()];
+        }
+    }
 }

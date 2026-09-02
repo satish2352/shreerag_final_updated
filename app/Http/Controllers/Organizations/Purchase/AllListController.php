@@ -515,10 +515,162 @@ class AllListController extends Controller
                 ->where('is_deleted', 0)->orderBy('product_name')->pluck('product_name', 'id');
         }
 
+        // Export (PDF / CSV) uses the SAME filters as the on-screen report but
+        // pulls every matching row instead of just the current page.
+        if ($request->filled('export_type')) {
+            return $this->exportBusinessPoReport($request);
+        }
+
         // Always load data (default = all records, paginated)
         $result = $this->service->getBusinessPoReport($request);
 
         return view('organizations.report.business-po-report', compact('businesses', 'products', 'result'));
+    }
+
+    /**
+     * PDF (export_type=1) / CSV (export_type=2) export of the Business PO report.
+     * Honours business, product, year, from/to date, GRN status and search filters.
+     */
+    private function exportBusinessPoReport(Request $request)
+    {
+        $result = $this->service->getBusinessPoReportAll($request);
+
+        if (!($result['status'] ?? false)) {
+            return redirect()->route('business-po-report', $request->except('export_type'))
+                ->with('error', $result['message'] ?? 'Unable to export the report. Please try again.');
+        }
+
+        $rows       = $result['data'];
+        $grandTotal = (float) $result['grandTotal'];
+
+        if ((int) $request->export_type === 1) {
+            // Filter summary is printed on the PDF only; the CSV is kept as raw
+            // tabular data so it imports cleanly.
+            $pdf = Pdf::loadView('exports.business-po-report-pdf', [
+                'rows'       => $rows,
+                'grandTotal' => $grandTotal,
+                'filters'    => $this->businessPoReportFilterLabels($request),
+            ])->setPaper('a3', 'landscape');
+
+            return $pdf->download("BusinessPoReport_{$this->timeStamp()}.pdf");
+        }
+
+        if ((int) $request->export_type === 2) {
+            return $this->streamBusinessPoReportCsv($rows, $grandTotal);
+        }
+
+        return redirect()->route('business-po-report', $request->except('export_type'));
+    }
+
+    /**
+     * Human-readable summary of the applied filters, printed on the PDF header
+     * so an exported PDF is self-describing.
+     */
+    private function businessPoReportFilterLabels(Request $request)
+    {
+        $labels = [];
+
+        if ($request->filled('business_id')) {
+            $labels['Business / Project'] = optional(
+                Business::find($request->business_id)
+            )->project_name ?: $request->business_id;
+        }
+        if ($request->filled('product_id')) {
+            $labels['Product'] = optional(
+                \App\Models\BusinessDetails::find($request->product_id)
+            )->product_name ?: $request->product_id;
+        }
+        if ($request->filled('year')) {
+            $labels['Year'] = $request->year;
+        }
+        if ($request->filled('from_date')) {
+            $labels['From Date'] = date('d-m-Y', strtotime($request->from_date));
+        }
+        if ($request->filled('to_date')) {
+            $labels['To Date'] = date('d-m-Y', strtotime($request->to_date));
+        }
+        if ($request->filled('grn_status')) {
+            $labels['GRN Status'] = $request->grn_status === 'received' ? 'GRN Received' : 'Pending GRN';
+        }
+        if ($request->filled('search')) {
+            $labels['Search'] = $request->search;
+        }
+
+        return $labels;
+    }
+
+    /**
+     * CSV is streamed row-by-row so a large filtered result set never has to be
+     * held in memory as one string.
+     */
+    private function streamBusinessPoReportCsv($rows, float $grandTotal)
+    {
+        $fileName = "BusinessPoReport_{$this->timeStamp()}.csv";
+
+        $headers = [
+            'Content-Type'        => 'text/csv; charset=UTF-8',
+            'Pragma'              => 'no-cache',
+            'Cache-Control'       => 'no-store, no-cache, must-revalidate',
+        ];
+
+        // No BOM and no title/filter preamble: the file opens with the column
+        // header row so it drops straight into Excel / any importer.
+        return response()->streamDownload(function () use ($rows, $grandTotal) {
+            $out = fopen('php://output', 'w');
+
+            fputcsv($out, [
+                'Sr.',
+                'Business / Project',
+                'PO Number',
+                'PO Date',
+                'Product Name',
+                'Vendor Name',
+                'Vendor Company',
+                'GRN No',
+                'GRN Date',
+                'Material Description',
+                'PO Qty',
+                'Actual Qty',
+                'Accepted Qty',
+                'Rejected Qty',
+                'Unit',
+                'Rate',
+                'Amount',
+            ]);
+
+            $sr = 1;
+            foreach ($rows as $row) {
+                fputcsv($out, [
+                    $sr++,
+                    ucwords((string) $row->project_name),
+                    $row->purchase_orders_id,
+                    $row->po_date  ? date('d-m-Y', strtotime($row->po_date))  : '',
+                    ucwords((string) $row->product_name),
+                    ucwords((string) $row->vendor_name),
+                    ucwords((string) $row->vendor_company_name),
+                    $row->grn_no_generate ?? '',
+                    $row->grn_date ? date('d-m-Y', strtotime($row->grn_date)) : '',
+                    $row->material_description ?? '',
+                    $row->po_quantity,
+                    is_null($row->actual_quantity)   ? '' : $row->actual_quantity,
+                    is_null($row->accepted_quantity) ? '' : $row->accepted_quantity,
+                    is_null($row->rejected_quantity) ? '' : $row->rejected_quantity,
+                    $row->unit_name ?? '',
+                    number_format((float) $row->rate, 2, '.', ''),
+                    number_format((float) $row->line_amount, 2, '.', ''),
+                ]);
+            }
+
+            fputcsv($out, []);
+            // 15 blanks + label + value = the same 17 columns as the header row,
+            // so the total lands under the "Amount" column in Excel.
+            fputcsv($out, array_merge(
+                array_fill(0, 15, ''),
+                ['Grand Total', number_format($grandTotal, 2, '.', '')]
+            ));
+
+            fclose($out);
+        }, $fileName, $headers);
     }
 
     public function getProductsByBusiness(Request $request)

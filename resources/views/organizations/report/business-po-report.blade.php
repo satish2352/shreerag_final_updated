@@ -6,6 +6,17 @@
         justify-content: flex-end;
         white-space: nowrap;
     }
+
+    /* Keep the Export menu above the filter panel instead of being clipped by it. */
+    .business-po-filter-actions .dropdown-menu {
+        z-index: 1030;
+        min-width: 9rem;
+        font-size: 13px;
+    }
+
+    .business-po-filter-actions .dropdown-item {
+        padding: 6px 14px;
+    }
 </style>
 <div class="data-table-area mg-tb-15">
     <div class="container-fluid">
@@ -23,6 +34,9 @@
                         {{-- Filter Form --}}
                         <form method="GET" action="{{ route('business-po-report') }}" id="filterForm">
                             <input type="hidden" name="per_page" value="{{ (int) request('per_page', 100) }}">
+                            {{-- Filled in by the export buttons, then cleared, so a plain
+                                 Search never accidentally triggers a download. --}}
+                            <input type="hidden" name="export_type" id="exportType" value="">
                             <div class="row mb-3" style="background:#f8f9fa; padding:15px 15px 5px 15px; border-radius:6px; margin:0 0 15px 0; border:1px solid #dee2e6;">
 
                                 <div class="col-md-3 mb-2">
@@ -92,6 +106,22 @@
                                         <i class="fa fa-search"></i> Search
                                     </button>
                                     <a href="{{ route('business-po-report') }}" class="btn btn-secondary btn-sm">Reset</a>
+                                    <div class="dropdown">
+                                        <button type="button" class="btn btn-info btn-sm dropdown-toggle"
+                                            id="exportMenuBtn" data-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false"
+                                            title="Download the full filtered result set">
+                                            <i class="fa fa-download"></i> Export
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="exportMenuBtn">
+                                            <a class="dropdown-item" href="javascript:void(0);" onclick="exportReport(1)">
+                                                <i class="fa fa-file-pdf text-danger"></i> PDF
+                                            </a>
+                                            <a class="dropdown-item" href="javascript:void(0);" onclick="exportReport(2)">
+                                                <i class="fa fa-file-csv text-success"></i> CSV
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
 
                             </div>
@@ -315,6 +345,16 @@ document.getElementById('poModalOverlay').addEventListener('click', function (e)
 document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') closePoModal();
 });
+
+// Submits the SAME filter form with export_type set, so the downloaded file
+// always matches the filters currently entered on screen. The flag is cleared
+// straight after so a later plain "Search" submit stays a normal page load.
+function exportReport(type) {
+    var $flag = $('#exportType');
+    $flag.val(type);
+    $('#filterForm').submit();
+    setTimeout(function () { $flag.val(''); }, 500);
+}
 
 function changePerPage(size) {
     var url = new URL(window.location.href);

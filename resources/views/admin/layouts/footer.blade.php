@@ -82,6 +82,10 @@
         var bestLen = 0;
 
         $('.left-custom-menu-adp-wrap a').each(function () {
+            // Accordion toggles carry a real route in href only as a fallback;
+            // they must never be treated as the "current page" link.
+            if ($(this).hasClass('has-arrow')) return;
+
             var href = $(this).attr('href');
             if (!href || href === '#' || href.startsWith('javascript')) return;
 
@@ -99,12 +103,19 @@
             $best.closest('li').addClass('active');
 
             // If inside a submenu, open the parent accordion <li>
-            var $parentUl = $best.closest('ul.submenu-angle, ul.submenu');
-            if ($parentUl.length) {
-                $parentUl.show().attr('aria-expanded', 'true');
-                $parentUl.prev('a').attr('aria-expanded', 'true');
-                $parentUl.closest('li').addClass('active');
-            }
+            // Open every ancestor submenu the way metisMenu does (class based).
+            // NOTE: never use .show() here - it writes an inline display:block
+            // that metisMenu cannot undo, so the menu could never be closed again.
+            var $parentUls = $best.parents('ul.submenu-angle, ul.submenu');
+            $parentUls.each(function () {
+                var $ul = $(this);
+                $ul.css('display', '')
+                   .addClass('collapse in')
+                   .removeClass('collapsing')
+                   .attr('aria-expanded', 'true');
+                $ul.prev('a').attr('aria-expanded', 'true');
+                $ul.parent('li').addClass('active');
+            });
 
             // 2. Scroll the sidebar so the active item is visible
             var $scrollWrap = $('.comment-scrollbar');

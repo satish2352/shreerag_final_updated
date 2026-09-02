@@ -256,7 +256,7 @@
                             @endphp
 
                             <li>
-                                <a class="has-arrow" href="{{ route('list-unit') }}" aria-expanded="false"><i
+                                <a class="has-arrow" href="javascript:void(0);" aria-expanded="false"><i
                                         class="fa fa-chart-bar icon-wrap"></i><span class="mini-click-non">Report
                                     </span></a>
                                 <ul class="submenu-angle" aria-expanded="false">
