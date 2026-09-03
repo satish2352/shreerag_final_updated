@@ -47,90 +47,107 @@
                                 @endif
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="all-form-element-inner">
-                                        <form  action="{{ route('store-dispatch', ['id' => $editData->id, 'business_details_id' => $editData->business_details_id]) }}" id="addProductForm" method="POST"  enctype="multipart/form-data">
+                                        <form
+                                            action="{{ route('store-dispatch', ['id' => $editData->id, 'business_details_id' => $editData->business_details_id]) }}"
+                                            id="addProductForm" method="POST" enctype="multipart/form-data">
                                             @csrf
-                                            <input type="hidden" name="id" id=""
-                                            class="form-control" value="{{ $editData->id }}"
-                                            placeholder="">
+                                            <input type="hidden" name="id" id="" class="form-control"
+                                                value="{{ $editData->id }}" placeholder="">
                                             {{-- <input type="hidden" name="id" id=""
                                             class="form-control" value="{{ $editData->business_details_id }}"
                                             placeholder=""> --}}
-                                            <input type="hidden" name="business_details_id" value="{{ $editData->business_details_id }}">
+                                            <input type="hidden" name="business_details_id"
+                                                value="{{ $editData->business_details_id }}">
 
                                             <div class="row">
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="customer_po_number">PO  Number :  <span class="text-danger">*</span></label>
-                                                    <input class="form-control" name="customer_po_number" id="customer_po_number"
-                                                        placeholder="Enter the customer po number"
-                                                        value=" @if (old('customer_po_number')) {{ old('customer_po_number') }}@else{{ $editData->customer_po_number }} @endif" readonly>
+                                                    <label for="customer_po_number">PO Number : <span
+                                                            class="text-danger">*</span></label>
+                                                    <input class="form-control" name="customer_po_number"
+                                                        id="customer_po_number" placeholder="Enter the customer po number"
+                                                        value=" @if (old('customer_po_number')) {{ old('customer_po_number') }}@else{{ $editData->customer_po_number }} @endif"
+                                                        readonly>
                                                 </div>
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="product_name">product Name :  <span class="text-danger">*</span></label> 
+                                                    <label for="product_name">product Name : <span
+                                                            class="text-danger">*</span></label>
                                                     <input type="text" class="form-control" id="product_name"
-                                                     value=" @if (old('product_name')) {{ old('product_name') }}@else{{ $editData->product_name }} @endif"
+                                                        value=" @if (old('product_name')) {{ old('product_name') }}@else{{ $editData->product_name }} @endif"
                                                         name="product_name" placeholder="Enter Product Name" readonly>
-                                                        @if ($errors->has('product_name'))
+                                                    @if ($errors->has('product_name'))
                                                         <span class="red-text"><?php echo $errors->first('product_name', ':message'); ?></span>
                                                     @endif
                                                 </div>
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="quantity">Total Quantity :  <span class="text-danger">*</span></label> 
+                                                    <label for="quantity">Total Quantity : <span
+                                                            class="text-danger">*</span></label>
                                                     <input type="text" class="form-control" id="quantity"
-                                                     value=" @if (old('quantity')) {{ old('quantity') }}@else{{ $editData->quantity }} @endif"
+                                                        value=" @if (old('quantity')) {{ old('quantity') }}@else{{ $editData->quantity }} @endif"
                                                         name="quantity" placeholder="Enter Product Name" readonly>
-                                                        @if ($errors->has('quantity'))
+                                                    @if ($errors->has('quantity'))
                                                         <span class="red-text"><?php echo $errors->first('quantity', ':message'); ?></span>
                                                     @endif
                                                 </div>
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="completed_quantity">Actual Production Quantity :  <span class="text-danger">*</span></label> 
+                                                    <label for="completed_quantity">Actual Production Quantity : <span
+                                                            class="text-danger">*</span></label>
                                                     <input type="text" class="form-control" id="completed_quantity"
-                                                     value=" @if (old('completed_quantity')) {{ old('completed_quantity') }}@else{{ $editData->completed_quantity }} @endif"
-                                                        name="completed_quantity" placeholder="Enter completed quantity " readonly>
-                                                        @if ($errors->has('completed_quantity'))
+                                                        value=" @if (old('completed_quantity')) {{ old('completed_quantity') }}@else{{ $editData->completed_quantity }} @endif"
+                                                        name="completed_quantity" placeholder="Enter completed quantity "
+                                                        readonly>
+                                                    @if ($errors->has('completed_quantity'))
                                                         <span class="red-text"><?php echo $errors->first('completed_quantity', ':message'); ?></span>
                                                     @endif
                                                 </div>
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="title">Vendor Name :  <span class="text-danger">*</span></label> 
+                                                    <label for="title">Vendor Name : <span
+                                                            class="text-danger">*</span></label>
                                                     <input type="text" class="form-control" id="title"
-                                                     value=" @if (old('title')) {{ old('title') }}@else{{ $editData->title }} @endif"
+                                                        value=" @if (old('title')) {{ old('title') }}@else{{ $editData->title }} @endif"
                                                         name="title" placeholder="Enter Vendor Name" readonly>
-                                                        @if ($errors->has('title'))
+                                                    @if ($errors->has('title'))
                                                         <span class="red-text"><?php echo $errors->first('title', ':message'); ?></span>
                                                     @endif
                                                 </div>
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="truck_no">Truck Number:  <span class="text-danger">*</span></label>
+                                                    <label for="truck_no">Truck Number: <span
+                                                            class="text-danger">*</span></label>
                                                     <input class="form-control" name="truck_no" id="truck_no"
                                                         placeholder="Enter the customer po number"
-                                                        value=" @if (old('truck_no')) {{ old('truck_no') }}@else{{ $editData->truck_no }} @endif" readonly>
+                                                        value=" @if (old('truck_no')) {{ old('truck_no') }}@else{{ $editData->truck_no }} @endif"
+                                                        readonly>
                                                 </div>
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="vehicle_type">Vehicle Type: <span class="text-danger">*</span></label>
+                                                    <label for="vehicle_type">Vehicle Type: <span
+                                                            class="text-danger">*</span></label>
                                                     <input class="form-control" name="vehicle_type" id="vehicle_type"
-                                                           placeholder="Enter Vehicle Type"
-                                                           value="{{ $editData->vehicle_type ?? '' }}" readonly>
+                                                        placeholder="Enter Vehicle Type"
+                                                        value="{{ $editData->vehicle_type ?? '' }}" readonly>
                                                 </div>
-                                                
+
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="transport_name">Transport Name: <span class="text-danger">*</span></label>
+                                                    <label for="transport_name">Transport Name: <span
+                                                            class="text-danger">*</span></label>
                                                     <input class="form-control" name="transport_name" id="transport_name"
-                                                           placeholder="Enter Transport Name"
-                                                           value="{{ $editData->transport_name ?? '' }}" readonly>
+                                                        placeholder="Enter Transport Name"
+                                                        value="{{ $editData->transport_name ?? '' }}" readonly>
                                                 </div>
-                                                
+
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="outdoor_no">Outdoor No. (Optional) :  </label> 
-                                                    <input type="text" class="form-control" id="outdoor_no" name="outdoor_no" value="" placeholder="Enter Outdoor Number" >
-                                                        @if ($errors->has('outdoor_no'))
+                                                    <label for="outdoor_no">Outdoor No. (Optional) : </label>
+                                                    <input type="text" class="form-control" id="outdoor_no"
+                                                        name="outdoor_no" value=""
+                                                        placeholder="Enter Outdoor Number">
+                                                    @if ($errors->has('outdoor_no'))
                                                         <span class="red-text"><?php echo $errors->first('outdoor_no', ':message'); ?></span>
                                                     @endif
                                                 </div>
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="gate_entry">Gate Entry :  <span class="text-danger">*</span></label> 
-                                                    <input type="text" class="form-control" id="gate_entry" name="gate_entry" value="" placeholder="Enter Gate Entry" >
-                                                        @if ($errors->has('gate_entry'))
+                                                    <label for="gate_entry">Gate Entry : <span
+                                                            class="text-danger">*</span></label>
+                                                    <input type="text" class="form-control" id="gate_entry"
+                                                        name="gate_entry" value="" placeholder="Enter Gate Entry">
+                                                    @if ($errors->has('gate_entry'))
                                                         <span class="red-text"><?php echo $errors->first('gate_entry', ':message'); ?></span>
                                                     @endif
                                                 </div>
@@ -138,10 +155,10 @@
                                                     <div class="sparkline12-graph">
                                                         <div id="pwd-container1">
                                                             <div class="form-group">
-                                                                <label for="remark">Remark</label> (optional) 
+                                                                <label for="remark">Remark</label> (optional)
                                                                 <textarea class="form-control" rows="3" type="text" class="form-control" id="remark" name="remark"
                                                                     placeholder="Enter Remark">{{ old('remark') }}</textarea>
-                                                                   
+
                                                             </div>
                                                             <div class="form-group">
                                                                 <div class="pwstrength_viewport_progress"></span></div>
@@ -149,23 +166,24 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                                                           </div>
+                                            </div>
 
                                             <div class="container-fluid">
-                                                
-                                            
-                                            
+
+
+
                                                 <div class="login-btn-inner">
                                                     <div class="row">
                                                         <div class="col-lg-5"></div>
                                                         <div class="col-lg-7">
                                                             <div class="login-horizental cancel-wp pull-left">
-                                                                <a href="{{ route('list-products') }}"
+                                                                <a href="{{ route('list-final-production-completed-received-from-fianance') }}"
                                                                     class="btn btn-white"
                                                                     style="margin-bottom:50px">Cancel</a>
                                                                 <button class="btn btn-sm btn-primary login-submit-cs"
-                                                                    type="submit" style="margin-bottom:50px" id="submitButton">Save Data</button>
-                                                               
+                                                                    type="submit" style="margin-bottom:50px"
+                                                                    id="submitButton">Save Data</button>
+
                                                             </div>
                                                         </div>
                                                     </div>
@@ -182,53 +200,52 @@
         </div>
     </div>
     </div>
- 
- 
+
+
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
-<script>
-    $(document).ready(function () {
-        // Validate the form
-        $("#addProductForm").validate({
-            rules: {
-                // outdoor_no:{
-                //     required: true,
-                // },
-                gate_entry: {
-                    required: true,
-                   
-                }
-            },
-            messages: {
-                gate_entry: {
-                    required: "Please enter the gate entry."
-                    
-                },
-                // outdoor_no: {
-                //     required: "Please enter the outdoor no."
-                    
-                // }
-            },
-            submitHandler: function (form) {
-                // Confirmation dialog before submitting the form
-                Swal.fire({
-                    title: "Are you sure?",
-                    text: "Do you want to mark this quantity as completed for dispatch?",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "Yes, submit it!"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        form.submit();
+    <script>
+        $(document).ready(function() {
+            // Validate the form
+            $("#addProductForm").validate({
+                rules: {
+                    // outdoor_no:{
+                    //     required: true,
+                    // },
+                    gate_entry: {
+                        required: true,
+
                     }
-                });
-            }
-        });
-    });
-</script>
+                },
+                messages: {
+                    gate_entry: {
+                        required: "Please enter the gate entry."
 
+                    },
+                    // outdoor_no: {
+                    //     required: "Please enter the outdoor no."
+
+                    // }
+                },
+                submitHandler: function(form) {
+                    // Confirmation dialog before submitting the form
+                    Swal.fire({
+                        title: "Are you sure?",
+                        text: "Do you want to mark this quantity as completed for dispatch?",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Yes, submit it!"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 @endsection
