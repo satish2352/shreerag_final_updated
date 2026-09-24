@@ -506,15 +506,11 @@ class StoreController extends Controller
                 ->get();
 
             $alreadyIssuedIds = $issuedRecords->pluck('part_item_id')->toArray();
-            $issuedDateMap    = $issuedRecords->pluck('updated_at', 'part_item_id');
 
             $available               = [];
             $shortage                = [];
             $alreadyIssued           = [];
             $availableFromProduction = [];
-
-            // BOM part_item_ids for dedup when adding non-BOM issued items later
-            $bomPartItemIds = $bomItems->pluck('part_item_id')->filter()->toArray();
 
             // T-2026-061: per-part RUNNING stock pool for BOM rows.
             //
@@ -589,10 +585,10 @@ class StoreController extends Controller
                 if ($item->part_item_id && in_array($item->part_item_id, $alreadyIssuedIds)) {
                     // Already-issued rows never draw from the pool: ItemStock already
                     // reflects their deduction, so charging them again would double-count.
-                    $item->required_quantity = $rawRequiredQty;
-                    $item->shortage_quantity = max(0, $rawRequiredQty - $availableStock);
-                    $item->issued_at = $issuedDateMap->get($item->part_item_id);
-                    $alreadyIssued[] = $item;
+                    // They are NOT listed from the BOM here: the "Already Issued to
+                    // Production" table is built from the actual production_details
+                    // issuances below, so it shows the real issued quantity (all trolleys)
+                    // rather than the raw per-trolley BOM figure.
                     continue;
                 }
 
@@ -654,11 +650,17 @@ class StoreController extends Controller
                 }
             }
 
-            // Add non-BOM issued items (production-requested items already issued by store)
-            foreach ($issuedRecords as $issued) {
-                if (in_array($issued->part_item_id, $bomPartItemIds)) {
-                    continue; // already handled in BOM loop above
-                }
+            // "Already Issued to Production" = every production_details row the store actually
+            // issued (BOM and non-BOM alike), one row per issuance, with the real issued
+            // quantity/rate. This mirrors exactly what Production sees on its
+            // edit-received-inprocess-production-material page, so both departments agree on
+            // quantities and grand total.
+            $issuedDisplayRecords = $issuedRecords
+                ->filter(fn ($r) => (float) $r->quantity > 0)
+                ->sortBy(fn ($r) => sprintf('%s|%010d', (string) ($r->issued_at ?? $r->updated_at), $r->id))
+                ->values();
+
+            foreach ($issuedDisplayRecords as $issued) {
                 $norm = new \stdClass();
                 $norm->part_item_id        = $issued->part_item_id;
                 $norm->product_description = null; // blade falls back to $item->partItem->description
@@ -667,7 +669,7 @@ class StoreController extends Controller
                 $norm->unit_id             = $issued->unit;
                 $norm->partItem            = $issued->partItemRelation;
                 $norm->unitMaster          = $issued->unitMasterRelation;
-                $norm->issued_at           = $issued->updated_at;
+                $norm->issued_at           = $issued->issued_at ?? $issued->updated_at;
                 // T-2026-058: non-BOM issued row — no BOM context, blade renders em-dash for these.
                 $norm->length              = null;
                 $norm->total_in_mm         = null;
