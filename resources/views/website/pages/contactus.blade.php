@@ -160,8 +160,10 @@
             </div>
           </div>
           <div class="col-md-12 py-3 captcha_set" style="text-align: left;">
+            @if (config('captcha.enabled'))
             {!! NoCaptcha::renderJs() !!}
             {!! NoCaptcha::display() !!}
+            @endif
 
             @if ($errors->has('g-recaptcha-response'))
             <span class="help-block">
@@ -251,7 +253,7 @@
             },
             submitHandler: function(form) {
                 // Check if reCAPTCHA challenge is completed
-                if (grecaptcha.getResponse() === "") {
+                if (typeof grecaptcha !== "undefined" && grecaptcha.getResponse() === "") {
                     alert("Please complete the reCAPTCHA challenge.");
                 } else {
                     // Proceed with form submission

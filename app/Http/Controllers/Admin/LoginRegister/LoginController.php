@@ -62,8 +62,11 @@ class LoginController extends Controller
         $rules = [
             'email' => 'required|email',
             'password' => 'required',
-            'g-recaptcha-response' => 'required|captcha',
         ];
+
+        if (config('captcha.enabled')) {
+            $rules['g-recaptcha-response'] = 'required|captcha';
+        }
         $messages = [
             'email.required' => 'Please Enter Email.',
             'email.email' => 'Please Enter a Valid Email Address.',

@@ -35,8 +35,11 @@ class ContactUsController extends Controller
             'mobile_number' => 'required|regex:/^(\+\d{1,3}[- ]?)?\d{10}$/',
             'subject' => 'required',
             'message' => 'required',
-            'g-recaptcha-response' => 'required|captcha',
         ];
+
+        if (config('captcha.enabled')) {
+            $rules['g-recaptcha-response'] = 'required|captcha';
+        }
 
         $messages = [
             'full_name.required' => 'Please Enter Full Name.',

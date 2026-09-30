@@ -140,8 +140,10 @@
 
 
                                 <div class="form-group">
+                                    @if (config('captcha.enabled'))
                                     {!! NoCaptcha::renderJs() !!}
                                     {!! NoCaptcha::display() !!}
+                                    @endif
 
                                     @if ($errors->has('g-recaptcha-response'))
                                         <span class="help-block">
