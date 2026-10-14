@@ -365,6 +365,7 @@
         <div class="header-grid">
             <div><strong>GRN No. :</strong> ${document.getElementById('grn_no').value}</div>
             <div><strong>GRN Date :</strong> ${document.getElementById('grn_date').value}</div>
+            <div><strong>Vendor Name :</strong> ${document.getElementById('vendor_name').value}</div>
             <div><strong>PO No. :</strong> ${document.getElementById('purchase_orders_id').value}</div>
             <div><strong>PO Date :</strong> ${document.getElementById('po_date').value}</div>
             <div><strong>Bill No. :</strong> ${document.getElementById('bill_no').value}</div>
