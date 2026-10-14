@@ -90,20 +90,17 @@
             margin-bottom: 100px !important;
         }
     </style>
-    <div class="">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="sparkline12-list" style="margin-bottom: 100px;">
-                <div class="sparkline12-hd">
-                    <div class="main-sparkline12-hd">
-                        <center>
-                            <h1>Issue Product Material</h1>
-                        </center>
-                    </div>
-                </div>
-                <div class="sparkline12-graph">
-                    <div class="basic-login-form-ad">
-                        <div class="row">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="data-table-area mg-tb-15">
+    <div class="container-fluid">
+    <div class="row justify-content-center">
+    <div class="col-lg-12 col-md-12">
+    <div class="emp-form-card">
+      <div class="emp-form-header">
+        <h4><i class="fa fa-edit mr-2"></i> Edit Inprocess Material</h4>
+        <a href="{{ route('list-material-received') }}" class="emp-form-close">&times;</a>
+      </div>
+      <div class="emp-form-body">
+
                                 @if (Session::get('status') == 'success')
                                     <div class="col-12 grid-margin">
                                         <div class="alert alert-custom-success " id="success-alert">
@@ -122,389 +119,384 @@
                                     </div>
                                 @endif
 
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="all-form-element-inner">
-                                        <form action="{{ route('update-received-inprocess-production-material', $id) }}"
-                                            method="POST" id="addProductForm" enctype="multipart/form-data">
-                                            @csrf
-                                            <input type="hidden" name="business_details_id" id="business_details_id"
-                                                value="{{ $id }}">
-                                            <input type="hidden" name="part_item_id" id="part_item_id"
-                                                value="{{ $id }}">
-                                            <div class="row">
-                                                <div class="col-lg-4">
-                                                    <label for="product_name">Product Name :</label>
-                                                    <input type="text" class="form-control" id="name"
-                                                        name="product_name" value="{{ $productDetails->product_name }}"
-                                                        placeholder="Enter Product Name" readonly>
-                                                </div>
-                                                <div class="col-lg-5">
-                                                    <label for="description">Description :</label>
-                                                    <input type="text" class="form-control" id="description"
-                                                        name="description" value="{{ $productDetails->description }}"
-                                                        placeholder="Enter Description" readonly>
-                                                </div>
-                                                <div class="col-lg-3">
-                                                    <label for="total_estimation_amount">Estimation Amount :</label>
-                                                    <input type="text" class="form-control" id="total_estimation_amount"
-                                                        name="total_estimation_amount"
-                                                        value="{{ $productDetails->total_estimation_amount }}"
-                                                        placeholder="Enter Description" readonly>
-                                                </div>
+                                <div class="all-form-element-inner">
+                                    <form action="{{ route('update-received-inprocess-production-material', $id) }}"
+                                        method="POST" id="addProductForm" enctype="multipart/form-data">
+                                        @csrf
+                                        <input type="hidden" name="business_details_id" id="business_details_id"
+                                            value="{{ $id }}">
+                                        <input type="hidden" name="part_item_id" id="part_item_id"
+                                            value="{{ $id }}">
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <label for="product_name">Product Name :</label>
+                                                <input type="text" class="form-control" id="name"
+                                                    name="product_name" value="{{ $productDetails->product_name }}"
+                                                    placeholder="Enter Product Name" readonly>
                                             </div>
-
-                                            {{-- Design image links --}}
-                                            @if (!empty($productDetails->design_image) || !empty($productDetails->bom_image))
-                                                <div class="row" style="margin-top:10px;">
-                                                    @if (!empty($productDetails->design_image))
-                                                        <div class="col-lg-3">
-                                                            <a href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $productDetails->design_image }}"
-                                                                target="_blank" class="btn btn-sm btn-outline-primary">
-                                                                <i class="fa fa-image"></i> View Design Layout
-                                                            </a>
-                                                        </div>
-                                                    @endif
-                                                    @if (!empty($productDetails->bom_image))
-                                                        <div class="col-lg-3">
-                                                            <a href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $productDetails->bom_image }}"
-                                                                target="_blank" class="btn btn-sm btn-outline-secondary">
-                                                                <i class="fa fa-file-alt"></i> View BOM
-                                                            </a>
-                                                        </div>
-                                                    @endif
-                                                </div>
-                                            @endif
-
-                                            {{-- Legend --}}
-                                            <div style="margin-top:10px; margin-bottom:4px; font-size:12px;">
-                                                <span class="src-badge src-badge-store">&#9632; Received from Store</span>
-                                                &nbsp;
-                                                <span class="src-badge src-badge-prod">&#9632; Production Request</span>
+                                            <div class="col-lg-5">
+                                                <label for="description">Description :</label>
+                                                <input type="text" class="form-control" id="description"
+                                                    name="description" value="{{ $productDetails->description }}"
+                                                    placeholder="Enter Description" readonly>
                                             </div>
+                                            <div class="col-lg-3">
+                                                <label for="total_estimation_amount">Estimation Amount :</label>
+                                                <input type="text" class="form-control" id="total_estimation_amount"
+                                                    name="total_estimation_amount"
+                                                    value="{{ $productDetails->total_estimation_amount }}"
+                                                    placeholder="Enter Description" readonly>
+                                            </div>
+                                        </div>
 
-                                            {{-- T-2026-038: Removed teal read-only reference panel (T-2026-031/T-2026-032).
-                                                 Store-issued items now appear as editable rows (green badge) directly in the
-                                                 addmore[] grid. Production-request rows follow (orange badge).
-                                                 JS rowCount starts at count($storeRows) + count($prodRows). --}}
-                                            @php
-                                                $storeCount = count($storeRows);
-                                                $prodCount  = count($prodRows);
-                                                $totalPrefilled = $storeCount + $prodCount;
-                                            @endphp
+                                        {{-- Design image links --}}
+                                        @if (!empty($productDetails->design_image) || !empty($productDetails->bom_image))
+                                            <div class="row" style="margin-top:10px;">
+                                                @if (!empty($productDetails->design_image))
+                                                    <div class="col-lg-3">
+                                                        <a href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $productDetails->design_image }}"
+                                                            target="_blank" class="btn btn-sm btn-outline-primary">
+                                                            <i class="fa fa-image"></i> View Design Layout
+                                                        </a>
+                                                    </div>
+                                                @endif
+                                                @if (!empty($productDetails->bom_image))
+                                                    <div class="col-lg-3">
+                                                        <a href="{{ Config::get('FileConstant.DESIGNS_VIEW') }}{{ $productDetails->bom_image }}"
+                                                            target="_blank" class="btn btn-sm btn-outline-secondary">
+                                                            <i class="fa fa-file-alt"></i> View BOM
+                                                        </a>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        @endif
 
-                                            <div class="table-responsive" style="margin-top:20px;">
-                                                <table class="table table-hover table-white repeater"
-                                                    id="purchase_order_table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>#</th>
-                                                            <th>Date</th>
-                                                            <th>Part Item</th>
-                                                            <th>Basic Rate</th>
-                                                            <th>Quantity</th>
-                                                            <th>Unit</th>
-                                                            <th>Mtr for 01 Nos Trolley</th>
-                                                            <th>Mtr/Nos for {{ $trolleyQty }} Trolley(s)</th>
-                                                            <th>Status</th>
-                                                            <th>Received</th>
-                                                            <th>
-                                                                <button type="button" class="btn btn-sm btn-bg-colour"
-                                                                    id="add_more_btn">
-                                                                    <i class="fa fa-plus"></i>
-                                                                </button>
-                                                            </th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
+                                        {{-- Legend --}}
+                                        <div style="margin-top:10px; margin-bottom:4px; font-size:12px;">
+                                            <span class="src-badge src-badge-store">&#9632; Received from Store</span>
+                                            &nbsp;
+                                            <span class="src-badge src-badge-prod">&#9632; Production Request</span>
+                                        </div>
 
-                                                        {{-- Pre-filled rows: store-issued items (green badge, indices 0..storeCount-1) --}}
-                                                        @foreach ($storeRows as $si => $sitem)
-                                                            @php
-                                                                try {
-                                                                    $sDate = $sitem->updated_at
-                                                                        ? \Carbon\Carbon::parse($sitem->updated_at)->format('d-m-Y')
-                                                                        : '';
-                                                                } catch (\Exception $e) {
-                                                                    $sDate = '';
-                                                                }
-                                                            @endphp
-                                                            <tr class="row-store-issued">
-                                                                <td><span class="form-control" style="min-width:50px">{{ $si + 1 }}</span></td>
-                                                                <td>
-                                                                    <input class="form-control" name="addmore[{{ $si }}][updated_at]"
-                                                                        value="{{ $sDate }}" readonly placeholder="—">
-                                                                </td>
-                                                                <td>
-                                                                    <div class="custom-dropdown">
-                                                                        <input type="hidden" name="addmore[{{ $si }}][item_id]" value="{{ $sitem->pd_id }}">
-                                                                        <input type="hidden" name="addmore[{{ $si }}][part_item_id]"
-                                                                            class="part_no" value="{{ $sitem->part_item_id ?? '' }}">
-                                                                        <input type="text" class="dropdown-input form-control"
-                                                                            placeholder="Select Part Item..."
-                                                                            value="{{ $sitem->part_description ?? '' }}" readonly>
-                                                                        <div class="dropdown-options dropdown-height" style="display:none;">
-                                                                            <input type="text" class="search-box form-control" placeholder="Search...">
-                                                                            <div class="options-list">
-                                                                                @foreach ($dataOutputPartItem as $data)
-                                                                                    <div class="option" data-id="{{ $data->id }}">{{ $data->description }}</div>
-                                                                                @endforeach
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>
-                                                                    <input class="form-control basic_rate"
-                                                                        name="addmore[{{ $si }}][basic_rate]"
-                                                                        type="number" step="any"
-                                                                        value="{{ $sitem->basic_rate ?? 0 }}" readonly>
-                                                                    <input type="hidden" class="total_amount"
-                                                                        name="addmore[{{ $si }}][items_used_total_amount]"
-                                                                        value="{{ ($sitem->basic_rate ?? 0) * ($sitem->quantity ?? 0) }}">
-                                                                </td>
-                                                                <td>
-                                                                    {{-- Store-received rows: Quantity is set by Store and not editable here. --}}
-                                                                    <input class="form-control quantity"
-                                                                        name="addmore[{{ $si }}][quantity]"
-                                                                        type="number" step="any"
-                                                                        value="{{ $sitem->quantity ?? '' }}"
-                                                                        readonly
-                                                                        style="background:#e9ecef;cursor:not-allowed;">
-                                                                </td>
-                                                                <td>
-                                                                    {{-- Store-received rows: Unit is set by Store. Disable the select but
-                                                                         keep the value posted via a hidden input under the same name. --}}
-                                                                    <select class="form-control" disabled
-                                                                            style="background:#e9ecef;cursor:not-allowed;">
-                                                                        <option value="">Select Unit</option>
-                                                                        @foreach ($dataOutputUnitMaster as $unit)
-                                                                            <option value="{{ $unit->id }}"
-                                                                                {{ $unit->id == ($sitem->unit ?? '') ? 'selected' : '' }}>
-                                                                                {{ $unit->name }}
-                                                                            </option>
-                                                                        @endforeach
-                                                                    </select>
-                                                                    <input type="hidden"
-                                                                        name="addmore[{{ $si }}][unit]"
-                                                                        value="{{ $sitem->unit ?? '' }}">
-                                                                </td>
-                                                                @php
-                                                                    $mtr1S = $sitem->mtr_for_01_nos_trolley ?? null;
-                                                                    $mtrNS = $computeMtrN($mtr1S, $sitem->quantity ?? null, $sitem->unit_name ?? null, $trolleyQty);
-                                                                @endphp
-                                                                <td style="vertical-align:middle; white-space:nowrap;">{{ $fmt($mtr1S) }}</td>
-                                                                <td style="vertical-align:middle; white-space:nowrap;">{{ $fmt($mtrNS) }}</td>
-                                                                <td style="vertical-align:middle;">
-                                                                    <span class="src-badge src-badge-store">Received from Store</span>
-                                                                    <input type="hidden"
-                                                                        name="addmore[{{ $si }}][material_send_production]" value="1">
-                                                                </td>
-                                                                <td style="vertical-align:middle;">
-                                                                    <span class="text-muted">&#10003;</span>
-                                                                </td>
-                                                                <td style="vertical-align:middle;">
-                                                                    <button type="button"
-                                                                        class="btn btn-danger btn-sm remove-row">
-                                                                        <i class="fa fa-trash"></i>
-                                                                    </button>
-                                                                </td>
-                                                            </tr>
-                                                        @endforeach
+                                        {{-- T-2026-038: Removed teal read-only reference panel (T-2026-031/T-2026-032).
+                                             Store-issued items now appear as editable rows (green badge) directly in the
+                                             addmore[] grid. Production-request rows follow (orange badge).
+                                             JS rowCount starts at count($storeRows) + count($prodRows). --}}
+                                        @php
+                                            $storeCount = count($storeRows);
+                                            $prodCount  = count($prodRows);
+                                            $totalPrefilled = $storeCount + $prodCount;
+                                        @endphp
 
-                                                        {{-- Pre-filled rows: production-request items (orange badge, indices storeCount..total-1) --}}
-                                                        @foreach ($prodRows as $pi => $pitem)
-                                                            @php
-                                                                $pIdx = $storeCount + $pi;
-                                                                try {
-                                                                    $pDate = $pitem->updated_at
-                                                                        ? \Carbon\Carbon::parse($pitem->updated_at)->format('d-m-Y')
-                                                                        : '';
-                                                                } catch (\Exception $e) {
-                                                                    $pDate = '';
-                                                                }
-                                                            @endphp
-                                                            <tr class="row-prod-request">
-                                                                <td><span class="form-control" style="min-width:50px">{{ $pIdx + 1 }}</span></td>
-                                                                <td>
-                                                                    <input class="form-control" name="addmore[{{ $pIdx }}][updated_at]"
-                                                                        value="{{ $pDate }}" readonly placeholder="—">
-                                                                </td>
-                                                                <td>
-                                                                    <div class="custom-dropdown">
-                                                                        <input type="hidden" name="addmore[{{ $pIdx }}][item_id]" value="{{ $pitem->pd_id }}">
-                                                                        <input type="hidden" name="addmore[{{ $pIdx }}][part_item_id]"
-                                                                            class="part_no" value="{{ $pitem->part_item_id ?? '' }}">
-                                                                        <input type="text" class="dropdown-input form-control"
-                                                                            placeholder="Select Part Item..."
-                                                                            value="{{ $pitem->part_description ?? '' }}" readonly>
-                                                                        <div class="dropdown-options dropdown-height" style="display:none;">
-                                                                            <input type="text" class="search-box form-control" placeholder="Search...">
-                                                                            <div class="options-list">
-                                                                                @foreach ($dataOutputPartItem as $data)
-                                                                                    <div class="option" data-id="{{ $data->id }}">{{ $data->description }}</div>
-                                                                                @endforeach
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>
-                                                                    <input class="form-control basic_rate"
-                                                                        name="addmore[{{ $pIdx }}][basic_rate]"
-                                                                        type="number" step="any"
-                                                                        value="{{ $pitem->basic_rate ?? 0 }}" readonly>
-                                                                    <input type="hidden" class="total_amount"
-                                                                        name="addmore[{{ $pIdx }}][items_used_total_amount]"
-                                                                        value="{{ ($pitem->basic_rate ?? 0) * ($pitem->quantity ?? 0) }}">
-                                                                </td>
-                                                                <td>
-                                                                    <input class="form-control quantity"
-                                                                        name="addmore[{{ $pIdx }}][quantity]"
-                                                                        type="number" step="any"
-                                                                        value="{{ $pitem->quantity ?? '' }}">
-                                                                </td>
-                                                                <td>
-                                                                    <select class="form-control" name="addmore[{{ $pIdx }}][unit]">
-                                                                        <option value="">Select Unit</option>
-                                                                        @foreach ($dataOutputUnitMaster as $unit)
-                                                                            <option value="{{ $unit->id }}"
-                                                                                {{ $unit->id == ($pitem->unit ?? '') ? 'selected' : '' }}>
-                                                                                {{ $unit->name }}
-                                                                            </option>
-                                                                        @endforeach
-                                                                    </select>
-                                                                </td>
-                                                                @php
-                                                                    $mtr1P = $pitem->mtr_for_01_nos_trolley ?? null;
-                                                                    $mtrNP = $computeMtrN($mtr1P, $pitem->quantity ?? null, $pitem->unit_name ?? null, $trolleyQty);
-                                                                @endphp
-                                                                <td style="vertical-align:middle;">
-                                                                    <input type="number" class="form-control prod-mtr1"
-                                                                        name="addmore[{{ $pIdx }}][mtr_for_01_nos_trolley]"
-                                                                        value="{{ $mtr1P !== null ? (float) $mtr1P : '' }}"
-                                                                        step="any" min="0" placeholder="0.000"
-                                                                        data-trolley-qty="{{ (int) $trolleyQty }}"
-                                                                        style="min-width:90px;">
-                                                                </td>
-                                                                <td style="vertical-align:middle;">
-                                                                    <input type="text" class="form-control prod-mtrN"
-                                                                        value="{{ $mtrNP !== null ? rtrim(rtrim(number_format((float) $mtrNP, 3, '.', ''), '0'), '.') : '' }}"
-                                                                        readonly tabindex="-1"
-                                                                        style="background:#f3f4f6;cursor:not-allowed;min-width:90px;">
-                                                                </td>
-                                                                <td style="vertical-align:middle;">
-                                                                    <span class="src-badge src-badge-prod">Production Request</span>
-                                                                    <input type="hidden"
-                                                                        name="addmore[{{ $pIdx }}][material_send_production]" value="0">
-                                                                </td>
-                                                                <td style="vertical-align:middle;">
-                                                                    <span class="text-muted">—</span>
-                                                                </td>
-                                                                <td style="vertical-align:middle;">
-                                                                    <button type="button"
-                                                                        class="btn btn-danger btn-sm remove-row">
-                                                                        <i class="fa fa-trash"></i>
-                                                                    </button>
-                                                                </td>
-                                                            </tr>
-                                                        @endforeach
+                                        <div class="table-responsive" style="margin-top:20px;">
+                                            <table class="table table-hover table-white repeater"
+                                                id="purchase_order_table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Date</th>
+                                                        <th>Part Item</th>
+                                                        <th>Basic Rate</th>
+                                                        <th>Quantity</th>
+                                                        <th>Unit</th>
+                                                        <th>Mtr for 01 Nos Trolley</th>
+                                                        <th>Mtr/Nos for {{ $trolleyQty }} Trolley(s)</th>
+                                                        <th>Status</th>
+                                                        <th>Received</th>
+                                                        <th>
+                                                            <button type="button" class="btn btn-sm btn-bg-colour"
+                                                                id="add_more_btn">
+                                                                <i class="fa fa-plus"></i>
+                                                            </button>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
 
-                                                        {{-- If no rows at all, show one blank row so the grid is never completely empty --}}
-                                                        @if ($totalPrefilled === 0)
-                                                            <tr class="row-prod-request">
-                                                                <td><span class="form-control" style="min-width:50px">1</span></td>
-                                                                <td>
-                                                                    <input class="form-control" name="addmore[0][updated_at]"
-                                                                        value="" readonly placeholder="—">
-                                                                </td>
-                                                                <td>
-                                                                    <div class="custom-dropdown">
-                                                                        <input type="hidden" name="addmore[0][item_id]" value="">
-                                                                        <input type="hidden" name="addmore[0][part_item_id]"
-                                                                            class="part_no" value="">
-                                                                        <input type="text" class="dropdown-input form-control"
-                                                                            placeholder="Select Part Item..." readonly>
-                                                                        <div class="dropdown-options dropdown-height" style="display:none;">
-                                                                            <input type="text" class="search-box form-control" placeholder="Search...">
-                                                                            <div class="options-list">
-                                                                                @foreach ($dataOutputPartItem as $data)
-                                                                                    <div class="option" data-id="{{ $data->id }}">{{ $data->description }}</div>
-                                                                                @endforeach
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>
-                                                                    <input class="form-control basic_rate"
-                                                                        name="addmore[0][basic_rate]" type="number" step="any"
-                                                                        value="" readonly>
-                                                                    <input type="hidden" class="total_amount"
-                                                                        name="addmore[0][items_used_total_amount]" value="0">
-                                                                </td>
-                                                                <td>
-                                                                    <input class="form-control quantity"
-                                                                        name="addmore[0][quantity]" type="number" step="any"
-                                                                        value="">
-                                                                </td>
-                                                                <td>
-                                                                    <select class="form-control" name="addmore[0][unit]">
-                                                                        <option value="">Select Unit</option>
-                                                                        @foreach ($dataOutputUnitMaster as $unit)
-                                                                            <option value="{{ $unit->id }}">{{ $unit->name }}</option>
-                                                                        @endforeach
-                                                                    </select>
-                                                                </td>
-                                                                <td style="vertical-align:middle;">—</td>
-                                                                <td style="vertical-align:middle;">—</td>
-                                                                <td style="vertical-align:middle;">
-                                                                    <span class="src-badge src-badge-prod">Production Request</span>
-                                                                    <input type="hidden"
-                                                                        name="addmore[0][material_send_production]" value="0">
-                                                                </td>
-                                                                <td style="vertical-align:middle;">
-                                                                    <span class="text-muted">—</span>
-                                                                </td>
-                                                                <td style="vertical-align:middle;">
-                                                                    <button type="button"
-                                                                        class="btn btn-danger btn-sm remove-row">
-                                                                        <i class="fa fa-trash"></i>
-                                                                    </button>
-                                                                </td>
-                                                            </tr>
-                                                        @endif
-
-                                                    </tbody>
-                                                    <tfoot>
-                                                        <tr>
-                                                            <td colspan="4" class="text-end"><strong>Total Amount
-                                                                    :</strong></td>
-                                                            <td colspan="2">
-                                                                <input type="text" id="grand_total"
-                                                                    class="form-control" readonly value="0">
+                                                    {{-- Pre-filled rows: store-issued items (green badge, indices 0..storeCount-1) --}}
+                                                    @foreach ($storeRows as $si => $sitem)
+                                                        @php
+                                                            try {
+                                                                $sDate = $sitem->updated_at
+                                                                    ? \Carbon\Carbon::parse($sitem->updated_at)->format('d-m-Y')
+                                                                    : '';
+                                                            } catch (\Exception $e) {
+                                                                $sDate = '';
+                                                            }
+                                                        @endphp
+                                                        <tr class="row-store-issued">
+                                                            <td><span class="form-control" style="min-width:50px">{{ $si + 1 }}</span></td>
+                                                            <td>
+                                                                <input class="form-control" name="addmore[{{ $si }}][updated_at]"
+                                                                    value="{{ $sDate }}" readonly placeholder="—">
                                                             </td>
-                                                            <td colspan="5"></td>
+                                                            <td>
+                                                                <div class="custom-dropdown">
+                                                                    <input type="hidden" name="addmore[{{ $si }}][item_id]" value="{{ $sitem->pd_id }}">
+                                                                    <input type="hidden" name="addmore[{{ $si }}][part_item_id]"
+                                                                        class="part_no" value="{{ $sitem->part_item_id ?? '' }}">
+                                                                    <input type="text" class="dropdown-input form-control"
+                                                                        placeholder="Select Part Item..."
+                                                                        value="{{ $sitem->part_description ?? '' }}" readonly>
+                                                                    <div class="dropdown-options dropdown-height" style="display:none;">
+                                                                        <input type="text" class="search-box form-control" placeholder="Search...">
+                                                                        <div class="options-list">
+                                                                            @foreach ($dataOutputPartItem as $data)
+                                                                                <div class="option" data-id="{{ $data->id }}">{{ $data->description }}</div>
+                                                                            @endforeach
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <input class="form-control basic_rate"
+                                                                    name="addmore[{{ $si }}][basic_rate]"
+                                                                    type="number" step="any"
+                                                                    value="{{ $sitem->basic_rate ?? 0 }}" readonly>
+                                                                <input type="hidden" class="total_amount"
+                                                                    name="addmore[{{ $si }}][items_used_total_amount]"
+                                                                    value="{{ ($sitem->basic_rate ?? 0) * ($sitem->quantity ?? 0) }}">
+                                                            </td>
+                                                            <td>
+                                                                {{-- Store-received rows: Quantity is set by Store and not editable here. --}}
+                                                                <input class="form-control quantity"
+                                                                    name="addmore[{{ $si }}][quantity]"
+                                                                    type="number" step="any"
+                                                                    value="{{ $sitem->quantity ?? '' }}"
+                                                                    readonly
+                                                                    style="background:#e9ecef;cursor:not-allowed;">
+                                                            </td>
+                                                            <td>
+                                                                {{-- Store-received rows: Unit is set by Store. Disable the select but
+                                                                     keep the value posted via a hidden input under the same name. --}}
+                                                                <select class="form-control" disabled
+                                                                        style="background:#e9ecef;cursor:not-allowed;">
+                                                                    <option value="">Select Unit</option>
+                                                                    @foreach ($dataOutputUnitMaster as $unit)
+                                                                        <option value="{{ $unit->id }}"
+                                                                            {{ $unit->id == ($sitem->unit ?? '') ? 'selected' : '' }}>
+                                                                            {{ $unit->name }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                                <input type="hidden"
+                                                                    name="addmore[{{ $si }}][unit]"
+                                                                    value="{{ $sitem->unit ?? '' }}">
+                                                            </td>
+                                                            @php
+                                                                $mtr1S = $sitem->mtr_for_01_nos_trolley ?? null;
+                                                                $mtrNS = $computeMtrN($mtr1S, $sitem->quantity ?? null, $sitem->unit_name ?? null, $trolleyQty);
+                                                            @endphp
+                                                            <td style="vertical-align:middle; white-space:nowrap;">{{ $fmt($mtr1S) }}</td>
+                                                            <td style="vertical-align:middle; white-space:nowrap;">{{ $fmt($mtrNS) }}</td>
+                                                            <td style="vertical-align:middle;">
+                                                                <span class="src-badge src-badge-store">Received from Store</span>
+                                                                <input type="hidden"
+                                                                    name="addmore[{{ $si }}][material_send_production]" value="1">
+                                                            </td>
+                                                            <td style="vertical-align:middle;">
+                                                                <span class="text-muted">&#10003;</span>
+                                                            </td>
+                                                            <td style="vertical-align:middle;">
+                                                                <button type="button"
+                                                                    class="btn btn-danger btn-sm remove-row">
+                                                                    <i class="fa fa-trash"></i>
+                                                                </button>
+                                                            </td>
                                                         </tr>
-                                                    </tfoot>
+                                                    @endforeach
 
-                                                </table>
-                                            </div>
-                                            <div class="d-flex justify-content-center align-items-center mt-3 mb-5">
-                                                <a href="{{ route('list-material-received') }}"
-                                                    class="btn btn-white me-3">
-                                                    Cancel
-                                                </a>
-                                                <button class="btn btn-sm btn-bg-colour" type="submit">
-                                                    Save Data
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
+                                                    {{-- Pre-filled rows: production-request items (orange badge, indices storeCount..total-1) --}}
+                                                    @foreach ($prodRows as $pi => $pitem)
+                                                        @php
+                                                            $pIdx = $storeCount + $pi;
+                                                            try {
+                                                                $pDate = $pitem->updated_at
+                                                                    ? \Carbon\Carbon::parse($pitem->updated_at)->format('d-m-Y')
+                                                                    : '';
+                                                            } catch (\Exception $e) {
+                                                                $pDate = '';
+                                                            }
+                                                        @endphp
+                                                        <tr class="row-prod-request">
+                                                            <td><span class="form-control" style="min-width:50px">{{ $pIdx + 1 }}</span></td>
+                                                            <td>
+                                                                <input class="form-control" name="addmore[{{ $pIdx }}][updated_at]"
+                                                                    value="{{ $pDate }}" readonly placeholder="—">
+                                                            </td>
+                                                            <td>
+                                                                <div class="custom-dropdown">
+                                                                    <input type="hidden" name="addmore[{{ $pIdx }}][item_id]" value="{{ $pitem->pd_id }}">
+                                                                    <input type="hidden" name="addmore[{{ $pIdx }}][part_item_id]"
+                                                                        class="part_no" value="{{ $pitem->part_item_id ?? '' }}">
+                                                                    <input type="text" class="dropdown-input form-control"
+                                                                        placeholder="Select Part Item..."
+                                                                        value="{{ $pitem->part_description ?? '' }}" readonly>
+                                                                    <div class="dropdown-options dropdown-height" style="display:none;">
+                                                                        <input type="text" class="search-box form-control" placeholder="Search...">
+                                                                        <div class="options-list">
+                                                                            @foreach ($dataOutputPartItem as $data)
+                                                                                <div class="option" data-id="{{ $data->id }}">{{ $data->description }}</div>
+                                                                            @endforeach
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <input class="form-control basic_rate"
+                                                                    name="addmore[{{ $pIdx }}][basic_rate]"
+                                                                    type="number" step="any"
+                                                                    value="{{ $pitem->basic_rate ?? 0 }}" readonly>
+                                                                <input type="hidden" class="total_amount"
+                                                                    name="addmore[{{ $pIdx }}][items_used_total_amount]"
+                                                                    value="{{ ($pitem->basic_rate ?? 0) * ($pitem->quantity ?? 0) }}">
+                                                            </td>
+                                                            <td>
+                                                                <input class="form-control quantity"
+                                                                    name="addmore[{{ $pIdx }}][quantity]"
+                                                                    type="number" step="any"
+                                                                    value="{{ $pitem->quantity ?? '' }}">
+                                                            </td>
+                                                            <td>
+                                                                <select class="form-control" name="addmore[{{ $pIdx }}][unit]">
+                                                                    <option value="">Select Unit</option>
+                                                                    @foreach ($dataOutputUnitMaster as $unit)
+                                                                        <option value="{{ $unit->id }}"
+                                                                            {{ $unit->id == ($pitem->unit ?? '') ? 'selected' : '' }}>
+                                                                            {{ $unit->name }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </td>
+                                                            @php
+                                                                $mtr1P = $pitem->mtr_for_01_nos_trolley ?? null;
+                                                                $mtrNP = $computeMtrN($mtr1P, $pitem->quantity ?? null, $pitem->unit_name ?? null, $trolleyQty);
+                                                            @endphp
+                                                            <td style="vertical-align:middle;">
+                                                                <input type="number" class="form-control prod-mtr1"
+                                                                    name="addmore[{{ $pIdx }}][mtr_for_01_nos_trolley]"
+                                                                    value="{{ $mtr1P !== null ? (float) $mtr1P : '' }}"
+                                                                    step="any" min="0" placeholder="0.000"
+                                                                    data-trolley-qty="{{ (int) $trolleyQty }}"
+                                                                    style="min-width:90px;">
+                                                            </td>
+                                                            <td style="vertical-align:middle;">
+                                                                <input type="text" class="form-control prod-mtrN"
+                                                                    value="{{ $mtrNP !== null ? rtrim(rtrim(number_format((float) $mtrNP, 3, '.', ''), '0'), '.') : '' }}"
+                                                                    readonly tabindex="-1"
+                                                                    style="background:#f3f4f6;cursor:not-allowed;min-width:90px;">
+                                                            </td>
+                                                            <td style="vertical-align:middle;">
+                                                                <span class="src-badge src-badge-prod">Production Request</span>
+                                                                <input type="hidden"
+                                                                    name="addmore[{{ $pIdx }}][material_send_production]" value="0">
+                                                            </td>
+                                                            <td style="vertical-align:middle;">
+                                                                <span class="text-muted">—</span>
+                                                            </td>
+                                                            <td style="vertical-align:middle;">
+                                                                <button type="button"
+                                                                    class="btn btn-danger btn-sm remove-row">
+                                                                    <i class="fa fa-trash"></i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+
+                                                    {{-- If no rows at all, show one blank row so the grid is never completely empty --}}
+                                                    @if ($totalPrefilled === 0)
+                                                        <tr class="row-prod-request">
+                                                            <td><span class="form-control" style="min-width:50px">1</span></td>
+                                                            <td>
+                                                                <input class="form-control" name="addmore[0][updated_at]"
+                                                                    value="" readonly placeholder="—">
+                                                            </td>
+                                                            <td>
+                                                                <div class="custom-dropdown">
+                                                                    <input type="hidden" name="addmore[0][item_id]" value="">
+                                                                    <input type="hidden" name="addmore[0][part_item_id]"
+                                                                        class="part_no" value="">
+                                                                    <input type="text" class="dropdown-input form-control"
+                                                                        placeholder="Select Part Item..." readonly>
+                                                                    <div class="dropdown-options dropdown-height" style="display:none;">
+                                                                        <input type="text" class="search-box form-control" placeholder="Search...">
+                                                                        <div class="options-list">
+                                                                            @foreach ($dataOutputPartItem as $data)
+                                                                                <div class="option" data-id="{{ $data->id }}">{{ $data->description }}</div>
+                                                                            @endforeach
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <input class="form-control basic_rate"
+                                                                    name="addmore[0][basic_rate]" type="number" step="any"
+                                                                    value="" readonly>
+                                                                <input type="hidden" class="total_amount"
+                                                                    name="addmore[0][items_used_total_amount]" value="0">
+                                                            </td>
+                                                            <td>
+                                                                <input class="form-control quantity"
+                                                                    name="addmore[0][quantity]" type="number" step="any"
+                                                                    value="">
+                                                            </td>
+                                                            <td>
+                                                                <select class="form-control" name="addmore[0][unit]">
+                                                                    <option value="">Select Unit</option>
+                                                                    @foreach ($dataOutputUnitMaster as $unit)
+                                                                        <option value="{{ $unit->id }}">{{ $unit->name }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </td>
+                                                            <td style="vertical-align:middle;">—</td>
+                                                            <td style="vertical-align:middle;">—</td>
+                                                            <td style="vertical-align:middle;">
+                                                                <span class="src-badge src-badge-prod">Production Request</span>
+                                                                <input type="hidden"
+                                                                    name="addmore[0][material_send_production]" value="0">
+                                                            </td>
+                                                            <td style="vertical-align:middle;">
+                                                                <span class="text-muted">—</span>
+                                                            </td>
+                                                            <td style="vertical-align:middle;">
+                                                                <button type="button"
+                                                                    class="btn btn-danger btn-sm remove-row">
+                                                                    <i class="fa fa-trash"></i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    @endif
+
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr>
+                                                        <td colspan="4" class="text-end"><strong>Total Amount
+                                                                :</strong></td>
+                                                        <td colspan="2">
+                                                            <input type="text" id="grand_total"
+                                                                class="form-control" readonly value="0">
+                                                        </td>
+                                                        <td colspan="5"></td>
+                                                    </tr>
+                                                </tfoot>
+
+                                            </table>
+                                        </div>
+                                        <div class="d-flex justify-content-center align-items-center mt-3 mb-5">
+                                            <a href="{{ route('list-material-received') }}"
+                                                class="btn btn-white me-3">
+                                                Cancel
+                                            </a>
+                                            <button class="btn btn-sm btn-bg-colour" type="submit">
+                                                Save Data
+                                            </button>
+                                        </div>
+                                    </form>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
+      </div>
     </div>
+    </div></div></div></div>
 
     {{-- <form method="POST" action="{{ route('delete-addmore-production-material-item') }}" id="deleteform">
         @csrf

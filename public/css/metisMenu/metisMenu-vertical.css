@@ -67,11 +67,9 @@
 .sidebar-nav .metismenu a:hover,
 .sidebar-nav .metismenu a:focus,
 .sidebar-nav .metismenu a:active {
-    color: #f8f9fa;
+    color: #1a3a6b;
     text-decoration: none;
-    background: #e12503;
-    /* new 1A5DA0 */
-    background: #1A5DA0;
+    background: rgba(26, 93, 160, 0.07);
 }
 
 

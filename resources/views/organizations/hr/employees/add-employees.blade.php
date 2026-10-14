@@ -1,516 +1,312 @@
 @extends('admin.layouts.master')
 @section('content')
+
+
+    <div class="data-table-area mg-tb-15">
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="sparkline12-list" style="padding-bottom: 100px">
-                    <div class="sparkline12-hd">
-                        <div class="main-sparkline12-hd">
-                            <center>
-                                <h1>Add Employee Data</h1>
-                            </center>
-                        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-11 col-md-12">
+                <div class="emp-form-card">
+
+                    {{-- Header --}}
+                    <div class="emp-form-header">
+                        <h4><i class="fa fa-user-plus mr-2"></i> Add Employee Data</h4>
+                        <a href="{{ route('list-employee') }}" class="emp-form-close" title="Close">&times;</a>
                     </div>
-                    <div class="sparkline12-graph">
-                        <div class="basic-login-form-ad">
+
+                    <div class="emp-form-body">
+                        <form id="regForm" name="regForm" method="post"
+                            action="{{ route('add-employee') }}" enctype="multipart/form-data">
+                            <input type="hidden" name="_token" value="{{ Session::token() }}" />
+
                             <div class="row">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="all-form-element-inner">
-                                        <form class="forms-sample" id="regForm" name="regForm" method="post"
-                                            role="form" action="{{ route('add-employee') }}" enctype="multipart/form-data">
-                                            <div class="row">
-                                                <input type="hidden" name="_token" id="csrf-token"
-                                                    value="{{ Session::token() }}" />
-                                                <div class="col-lg-6 col-md-6 col-sm-6">
-                                                    <div class="form-group">
-                                                        <label for="u_email">Email ID</label>&nbsp<span
-                                                            class="red-text">*</span>
-                                                        <input type="text" class="form-control" name="u_email"
-                                                            id="u_email" placeholder="" value="{{ old('u_email') }}">
-                                                        @if ($errors->has('u_email'))
-                                                            <span class="red-text"><?php echo $errors->first('u_email', ':message'); ?></span>
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-6 col-md-6 col-sm-6">
-                                                    <div class="form-group">
-                                                        <label for="role_id">Department</label>&nbsp<span
-                                                            class="red-text">*</span>
-                                                        <select class="form-control" id="role_id" name="role_id"
-                                                            onchange="myFunction(this.value)">
-                                                            <option value="">Select Department</option>
-                                                            @foreach ($roles as $role)
-                                                                @if (old('role_id') == $role['id'])
-                                                                    <option value="{{ $role['id'] }}" selected>
-                                                                        {{ $role['role_name'] }}</option>
-                                                                @else
-                                                                    <option value="{{ $role['id'] }}">
-                                                                        {{ $role['role_name'] }}
-                                                                    </option>
-                                                                @endif
-                                                            @endforeach
-                                                        </select>
-                                                        @if ($errors->has('role_id'))
-                                                            <span class="red-text"><?php echo $errors->first('role_id', ':message'); ?></span>
-                                                        @endif
-                                                    </div>
-                                                </div>
 
-                                                <div class="col-lg-6 col-md-6 col-sm-6">
-                                                    <div class="form-group">
-                                                        <label for="u_password">Password</label>&nbsp<span
-                                                            class="red-text">*</span>
-                                                        <input type="password" class="password form-control"
-                                                            name="u_password" id="u_password" placeholder=""
-                                                            value="{{ old('u_password') }}">
-                                                        <span id="togglePassword" class="togglePpassword password-toggle"
-                                                            onclick="togglePasswordVisibility()">
-                                                            <i class="fa fa-eye-slash"></i>
-                                                        </span>
-                                                        @if ($errors->has('u_password'))
-                                                            <span class="red-text"><?php echo $errors->first('u_password', ':message'); ?></span>
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-6 col-md-6 col-sm-6">
-                                                    <div class="form-group">
-                                                        <label for="password_confirmation">Confirm
-                                                            Password</label>&nbsp<span class="red-text">*</span>
-                                                        <input type="password" class="password_confirmation form-control"
-                                                            id="password_confirmation" name="password_confirmation"
-                                                            value="{{ old('password_confirmation') }}">
-                                                        <span id="toggleConfirmPassword"
-                                                            class=" toggleConfirmPpassword password-toggle-confirm"
-                                                            onclick="toggleConfirmPasswordVisibility()">
-                                                            <i class="fa fa-eye-slash"></i>
-                                                        </span>
-                                                        <span id="password-error" class="error-message red-text"></span>
-                                                        @if ($errors->has('password_confirmation'))
-                                                            <span class="red-text"><?php echo $errors->first('password_confirmation', ':message'); ?></span>
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-6 col-md-6 col-sm-6">
-                                                    <div class="form-group">
-                                                        <label for="f_name">First Name</label>&nbsp<span
-                                                            class="red-text">*</span>
-                                                        <input type="text" class="form-control" name="f_name"
-                                                            id="f_name" placeholder="" value="{{ old('f_name') }}"
-                                                            oninput="this.value = this.value.replace(/[^a-zA-Z\s.]/g, '').replace(/(\..*)\./g, '$1');">
-                                                        @if ($errors->has('f_name'))
-                                                            <span class="red-text"><?php echo $errors->first('f_name', ':message'); ?></span>
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-6 col-md-6 col-sm-6">
-                                                    <div class="form-group">
-                                                        <label for="m_name">Middle Name</label>&nbsp<span
-                                                            class="red-text">*</span>
-                                                        <input type="text" class="form-control" name="m_name"
-                                                            id="m_name" placeholder="" value="{{ old('m_name') }}"
-                                                            oninput="this.value = this.value.replace(/[^a-zA-Z\s.]/g, '').replace(/(\..*)\./g, '$1');">
-                                                        @if ($errors->has('m_name'))
-                                                            <span class="red-text"><?php echo $errors->first('m_name', ':message'); ?></span>
-                                                        @endif
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-lg-6 col-md-6 col-sm-6">
-                                                    <div class="form-group">
-                                                        <label for="l_name">Last Name</label>&nbsp<span
-                                                            class="red-text">*</span>
-                                                        <input type="text" class="form-control" name="l_name"
-                                                            id="l_name" placeholder="" value="{{ old('l_name') }}"
-                                                            oninput="this.value = this.value.replace(/[^a-zA-Z\s.]/g, '').replace(/(\..*)\./g, '$1');">
-                                                        @if ($errors->has('l_name'))
-                                                            <span class="red-text"><?php echo $errors->first('l_name', ':message'); ?></span>
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-6 col-md-6 col-sm-6">
-                                                    <div class="form-group">
-                                                        <label for="number">Mobile Number</label>&nbsp<span
-                                                            class="red-text">*</span>
-                                                        <input type="text" class="form-control" name="number"
-                                                            id="number" pattern="[789]{1}[0-9]{9}"
-                                                            oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');"
-                                                            maxlength="10" minlength="10" placeholder=""
-                                                            value="{{ old('number') }}"
-                                                            onkeyup="addvalidateMobileNumber(this.value)">
-                                                        <span id="validation-message" class="red-text"></span>
-                                                        @if ($errors->has('number'))
-                                                            <span class="red-text"><?php echo $errors->first('number', ':message'); ?></span>
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-6 col-md-6 col-sm-6">
-                                                    <div class="form-group">
-                                                        <label for="designation">Designation</label>&nbsp<span
-                                                            class="red-text">*</span>
-                                                        <input type="text" class="form-control" name="designation"
-                                                            id="designation" placeholder=""
-                                                            value="{{ old('designation') }}"
-                                                            oninput="this.value = this.value.replace(/[^a-zA-Z\s.]/g, '').replace(/(\..*)\./g, '$1');">
-                                                        @if ($errors->has('number'))
-                                                            <span class="red-text"><?php echo $errors->first('designation', ':message'); ?></span>
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-6 col-md-6 col-sm-6">
-                                                    <div class="form-group">
-                                                        <label for="address">Address</label>&nbsp<span
-                                                            class="red-text">*</span>
-                                                        <input type="text" class="form-control" name="address"
-                                                            id="address" placeholder="" value="{{ old('address') }}">
-                                                        @if ($errors->has('address'))
-                                                            <span class="red-text"><?php echo $errors->first('address', ':message'); ?></span>
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-6 col-md-6 col-sm-6">
-                                                    <div class="form-group">
-                                                        <label for="state">State</label>&nbsp<span
-                                                            class="red-text">*</span>
-                                                        <select class="form-control" id="state" name="state">
-                                                            <option>Select State</option>
-                                                            @foreach ($dynamic_state as $state)
-                                                                @if (old('state') == $state['location_id'])
-                                                                    <option value="{{ $state['location_id'] }}" selected>
-                                                                        {{ $state['name'] }}</option>
-                                                                @else
-                                                                    <option value="{{ $state['location_id'] }}">
-                                                                        {{ $state['name'] }}
-                                                                    </option>
-                                                                @endif
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-6 col-md-6 col-sm-6">
-                                                    <div class="form-group">
-                                                        <label for="city">City</label>&nbsp<span
-                                                            class="red-text">*</span>
-                                                        <select class="form-control" name="city" id="city">
-                                                            <option value="">Select City</option>
-                                                        </select>
-                                                        @if ($errors->has('city'))
-                                                            <span class="red-text"><?php echo $errors->first('city', ':message'); ?></span>
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-6 col-md-6 col-sm-6">
-                                                    <div class="form-group">
-                                                        <label for="pincode">Pincode</label>&nbsp<span
-                                                            class="red-text">*</span>
-                                                        <input type="text" class="form-control" id="pincode"
-                                                            name="pincode" oninput="addvalidatePincode(this.value)">
-                                                        <span id="validation-message-pincode" style="color: red;"></span>
-                                                        <span id="validation-message-pincode" class="red-text"></span>
-                                                        @if ($errors->has('pincode'))
-                                                            <span class="red-text"><?php echo $errors->first('pincode', ':message'); ?></span>
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-12 col-md-12 col-sm-12 user_tbl">
-                                                    <div id="data_for_role">
-                                                    </div>
-                                                </div>
-                                                <br>
-                                                <div class="col-lg-6 col-md-6 col-sm-6 mt-3">
-                                                    <div class="form-group form-check form-check-flat form-check-primary">
-                                                        <label class="form-check-label">
-                                                            <input type="checkbox" class="form-check-input"
-                                                                name="is_active" id="is_active" value="y"
-                                                                data-parsley-multiple="is_active"
-                                                                {{ old('is_active') ? 'checked' : '' }}>
-                                                            Is Active
-                                                            <i class="input-helper"></i><i
-                                                                class="input-helper"></i></label>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-12 col-sm-12 text-center">
-                                                    <button type="submit" class="btn btn-sm btn-bg-colour"
-                                                        id="submitButton">
-                                                        Save &amp; Submit
-                                                    </button>
-                                                    <span><a href="{{ route('list-employee') }}"
-                                                            class="btn btn-sm btn-primary ">Back</a></span>
-                                                </div>
-                                            </div>
-                                        </form>
+                                {{-- Email --}}
+                                <div class="col-lg-6 col-md-6 col-sm-6 fl-col">
+                                    <div class="fl-group">
+                                        <input type="text" class="form-control" name="u_email" id="u_email"
+                                            placeholder=" " value="{{ old('u_email') }}">
+                                        <label for="u_email">Email ID <span class="red-text">*</span></label>
+                                        @if ($errors->has('u_email'))
+                                            <span class="fl-error">{{ $errors->first('u_email') }}</span>
+                                        @endif
                                     </div>
                                 </div>
+
+                                {{-- Department --}}
+                                <div class="col-lg-6 col-md-6 col-sm-6 fl-col">
+                                    <div class="fl-group">
+                                        <select class="form-control {{ old('role_id') ? 'has-value' : '' }}"
+                                            id="role_id" name="role_id"
+                                            onchange="myFunction(this.value); this.classList.toggle('has-value', this.value !== '')">
+                                            <option value=""></option>
+                                            @foreach ($roles as $role)
+                                                <option value="{{ $role['id'] }}" {{ old('role_id') == $role['id'] ? 'selected' : '' }}>
+                                                    {{ $role['role_name'] }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        <label for="role_id">Department <span class="red-text">*</span></label>
+                                        @if ($errors->has('role_id'))
+                                            <span class="fl-error">{{ $errors->first('role_id') }}</span>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                {{-- Password --}}
+                                <div class="col-lg-6 col-md-6 col-sm-6 fl-col">
+                                    <div class="fl-group fl-pw-wrap">
+                                        <input type="password" class="password form-control" name="u_password"
+                                            id="u_password" placeholder=" " value="{{ old('u_password') }}">
+                                        <label for="u_password">Password <span class="red-text">*</span></label>
+                                        <span class="password-toggle" onclick="togglePasswordVisibility()">
+                                            <i class="fa fa-eye-slash"></i>
+                                        </span>
+                                        @if ($errors->has('u_password'))
+                                            <span class="fl-error">{{ $errors->first('u_password') }}</span>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                {{-- Confirm Password --}}
+                                <div class="col-lg-6 col-md-6 col-sm-6 fl-col">
+                                    <div class="fl-group fl-pw-wrap">
+                                        <input type="password" class="password_confirmation form-control"
+                                            id="password_confirmation" name="password_confirmation"
+                                            placeholder=" " value="{{ old('password_confirmation') }}">
+                                        <label for="password_confirmation">Confirm Password <span class="red-text">*</span></label>
+                                        <span class="password-toggle toggleConfirmPpassword" onclick="toggleConfirmPasswordVisibility()">
+                                            <i class="fa fa-eye-slash"></i>
+                                        </span>
+                                        @if ($errors->has('password_confirmation'))
+                                            <span class="fl-error">{{ $errors->first('password_confirmation') }}</span>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                {{-- First Name --}}
+                                <div class="col-lg-6 col-md-6 col-sm-6 fl-col">
+                                    <div class="fl-group">
+                                        <input type="text" class="form-control" name="f_name" id="f_name"
+                                            placeholder=" " value="{{ old('f_name') }}"
+                                            oninput="this.value=this.value.replace(/[^a-zA-Z\s.]/g,'')">
+                                        <label for="f_name">First Name <span class="red-text">*</span></label>
+                                        @if ($errors->has('f_name'))
+                                            <span class="fl-error">{{ $errors->first('f_name') }}</span>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                {{-- Middle Name --}}
+                                <div class="col-lg-6 col-md-6 col-sm-6 fl-col">
+                                    <div class="fl-group">
+                                        <input type="text" class="form-control" name="m_name" id="m_name"
+                                            placeholder=" " value="{{ old('m_name') }}"
+                                            oninput="this.value=this.value.replace(/[^a-zA-Z\s.]/g,'')">
+                                        <label for="m_name">Middle Name <span class="red-text">*</span></label>
+                                        @if ($errors->has('m_name'))
+                                            <span class="fl-error">{{ $errors->first('m_name') }}</span>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                {{-- Last Name --}}
+                                <div class="col-lg-6 col-md-6 col-sm-6 fl-col">
+                                    <div class="fl-group">
+                                        <input type="text" class="form-control" name="l_name" id="l_name"
+                                            placeholder=" " value="{{ old('l_name') }}"
+                                            oninput="this.value=this.value.replace(/[^a-zA-Z\s.]/g,'')">
+                                        <label for="l_name">Last Name <span class="red-text">*</span></label>
+                                        @if ($errors->has('l_name'))
+                                            <span class="fl-error">{{ $errors->first('l_name') }}</span>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                {{-- Mobile --}}
+                                <div class="col-lg-6 col-md-6 col-sm-6 fl-col">
+                                    <div class="fl-group">
+                                        <input type="text" class="form-control" name="number" id="number"
+                                            placeholder=" " maxlength="10" minlength="10"
+                                            value="{{ old('number') }}"
+                                            oninput="this.value=this.value.replace(/[^0-9]/g,''); addvalidateMobileNumber(this.value)">
+                                        <label for="number">Mobile Number <span class="red-text">*</span></label>
+                                        <span id="validation-message" class="fl-error"></span>
+                                        @if ($errors->has('number'))
+                                            <span class="fl-error">{{ $errors->first('number') }}</span>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                {{-- Designation --}}
+                                <div class="col-lg-6 col-md-6 col-sm-6 fl-col">
+                                    <div class="fl-group">
+                                        <input type="text" class="form-control" name="designation" id="designation"
+                                            placeholder=" " value="{{ old('designation') }}"
+                                            oninput="this.value=this.value.replace(/[^a-zA-Z\s.]/g,'')">
+                                        <label for="designation">Designation <span class="red-text">*</span></label>
+                                        @if ($errors->has('designation'))
+                                            <span class="fl-error">{{ $errors->first('designation') }}</span>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                {{-- Address --}}
+                                <div class="col-lg-6 col-md-6 col-sm-6 fl-col">
+                                    <div class="fl-group">
+                                        <input type="text" class="form-control" name="address" id="address"
+                                            placeholder=" " value="{{ old('address') }}">
+                                        <label for="address">Address <span class="red-text">*</span></label>
+                                        @if ($errors->has('address'))
+                                            <span class="fl-error">{{ $errors->first('address') }}</span>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                {{-- State --}}
+                                <div class="col-lg-6 col-md-6 col-sm-6 fl-col">
+                                    <div class="fl-group">
+                                        <select class="form-control {{ old('state') ? 'has-value' : '' }}"
+                                            id="state" name="state"
+                                            onchange="this.classList.toggle('has-value', this.value !== '')">
+                                            <option value=""></option>
+                                            @foreach ($dynamic_state as $state)
+                                                <option value="{{ $state['location_id'] }}" {{ old('state') == $state['location_id'] ? 'selected' : '' }}>
+                                                    {{ $state['name'] }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        <label for="state">State <span class="red-text">*</span></label>
+                                    </div>
+                                </div>
+
+                                {{-- City --}}
+                                <div class="col-lg-6 col-md-6 col-sm-6 fl-col">
+                                    <div class="fl-group">
+                                        <select class="form-control" name="city" id="city"
+                                            onchange="this.classList.toggle('has-value', this.value !== '')">
+                                            <option value=""></option>
+                                        </select>
+                                        <label for="city">City <span class="red-text">*</span></label>
+                                        @if ($errors->has('city'))
+                                            <span class="fl-error">{{ $errors->first('city') }}</span>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                {{-- Pincode --}}
+                                <div class="col-lg-6 col-md-6 col-sm-6 fl-col">
+                                    <div class="fl-group">
+                                        <input type="text" class="form-control" id="pincode" name="pincode"
+                                            placeholder=" " value="{{ old('pincode') }}"
+                                            oninput="addvalidatePincode(this.value)">
+                                        <label for="pincode">Pincode <span class="red-text">*</span></label>
+                                        <span id="validation-message-pincode" class="fl-error"></span>
+                                        @if ($errors->has('pincode'))
+                                            <span class="fl-error">{{ $errors->first('pincode') }}</span>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-12 col-md-12 col-sm-12 user_tbl">
+                                    <div id="data_for_role"></div>
+                                </div>
+
+                                <div class="col-lg-6 col-md-6 col-sm-6 mt-3">
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input type="checkbox" class="form-check-input"
+                                                name="is_active" id="is_active" value="y"
+                                                {{ old('is_active') ? 'checked' : '' }}>
+                                            Is Active
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 col-sm-12 text-center mt-4">
+                                    <button type="submit" class="btn btn-sm btn-bg-colour" id="submitButton">
+                                        Save &amp; Submit
+                                    </button>
+                                    <a href="{{ route('list-employee') }}" class="btn btn-sm btn-primary ml-2">Back</a>
+                                </div>
+
                             </div>
-                        </div>
+                        </form>
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
     </div>
-   @push('scripts')
-    <script type="text/javascript">
-        function submitRegister() {
-            document.getElementById("frm_register").submit();
-        }
-    </script>
-    <script>
-        function addvalidateMobileNumber(number) {
-            var mobileNumberPattern = /^\d*$/;
-            var validationMessage = document.getElementById("validation-message");
 
-            if (mobileNumberPattern.test(number)) {
-                validationMessage.textContent = "";
-            } else {
-                validationMessage.textContent = "Please enter only numbers.";
-            }
-        }
-    </script>
-    <script>
-        function addvalidatePincode(number) {
-            var pincodePattern = /^\d*$/;
-            var validationMessage = document.getElementById("validation-message-pincode");
+@push('scripts')
+<script>
+    function addvalidateMobileNumber(n) {
+        document.getElementById('validation-message').textContent =
+            /^\d*$/.test(n) ? '' : 'Please enter only numbers.';
+    }
+    function addvalidatePincode(p) {
+        document.getElementById('validation-message-pincode').textContent =
+            /^\d{6}$/.test(p) ? '' : 'Please enter a valid 6-digit number.';
+    }
+    function togglePasswordVisibility() {
+        var inp = document.querySelector('.password.form-control');
+        var ico = document.querySelector('[onclick="togglePasswordVisibility()"] i');
+        if (inp.type === 'password') { inp.type = 'text'; ico && ico.classList.replace('fa-eye-slash','fa-eye'); }
+        else { inp.type = 'password'; ico && ico.classList.replace('fa-eye','fa-eye-slash'); }
+    }
+    function toggleConfirmPasswordVisibility() {
+        var inp = document.querySelector('.password_confirmation.form-control');
+        var ico = document.querySelector('.toggleConfirmPpassword i');
+        if (inp.type === 'password') { inp.type = 'text'; ico && ico.classList.replace('fa-eye-slash','fa-eye'); }
+        else { inp.type = 'password'; ico && ico.classList.replace('fa-eye','fa-eye-slash'); }
+    }
 
-            if (pincodePattern.test(number)) {
-                validationMessage.textContent = "";
-            } else {
-                validationMessage.textContent = "Please enter only numbers.";
-            }
-        }
-    </script>
-
-
-    <script>
-        $(document).ready(function() {
-
-            $('#state').change(function(e) {
-                e.preventDefault();
-                var stateId = $('#state').val();
-                // console.log(stateId);
-                $('#city').html('<option value="">Select City</option>');
-
-                if (stateId !== '') {
-                    $.ajax({
-                        url: '{{ route('cities') }}',
-                        type: 'GET',
-                        data: {
-                            stateId: stateId
-                        },
-                        // headers: {
-                        //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        // },
-                        success: function(response) {
-                            console.log(response);
-                            if (response.city.length > 0) {
-                                $.each(response.city, function(index, city) {
-                                    $('#city').append('<option value="' + city
-                                        .location_id +
-                                        '">' + city.name + '</option>');
-                                });
-                            }
-                        }
-                    });
+    $(document).ready(function() {
+        $('#state').change(function() {
+            var stateId = $(this).val();
+            $('#city').html('<option value=""></option>');
+            if (!stateId) return;
+            $.ajax({
+                url: '{{ route('cities') }}', type: 'GET', data: { stateId: stateId },
+                success: function(r) {
+                    if (r.city && r.city.length) {
+                        $.each(r.city, function(i, c) {
+                            $('#city').append('<option value="'+c.location_id+'">'+c.name+'</option>');
+                        });
+                    }
                 }
             });
         });
-    </script>
-    <script>
-        function togglePasswordVisibility() {
-            var passwordInput = document.getElementsByClassName("password")[0];
-            var toggleIcon = document.querySelector(".togglePpassword i");
 
-            if (passwordInput.type === "password") {
-                passwordInput.type = "text";
-                toggleIcon.classList.remove("fa-eye-slash");
-                toggleIcon.classList.add("fa-eye");
-            } else {
-                passwordInput.type = "password";
-                toggleIcon.classList.remove("fa-eye");
-                toggleIcon.classList.add("fa-eye-slash");
+        $("#regForm").validate({
+            rules: {
+                u_email: { required: true, email: true },
+                role_id: { required: true },
+                u_password: { required: true },
+                password_confirmation: { required: true },
+                f_name: { required: true }, m_name: { required: true }, l_name: { required: true },
+                number: { required: true, minlength: 10, maxlength: 10, digits: true },
+                designation: { required: true }, address: { required: true },
+                state: { required: true }, city: { required: true }, pincode: { required: true },
+            },
+            errorClass: 'fl-error',
+            errorElement: 'span',
+            errorPlacement: function(error, element) {
+                /* append error inside the fl-group, after the input */
+                var group = element.closest('.fl-group');
+                if (group.length) { error.appendTo(group); }
+                else { error.insertAfter(element); }
+            },
+            highlight: function(element) {
+                $(element).css('border-bottom-color', '#e53935');
+            },
+            unhighlight: function(element) {
+                $(element).css('border-bottom-color', '#ced4da');
             }
-        }
-    </script>
-    <script>
-        function toggleConfirmPasswordVisibility() {
-            var passwordInput = document.getElementsByClassName("password_confirmation")[0];
-
-            var toggleIcon = document.querySelector(".toggleConfirmPpassword i");
-
-            if (passwordInput.type === "password") {
-                passwordInput.type = "text";
-                toggleIcon.classList.remove("fa-eye-slash");
-                toggleIcon.classList.add("fa-eye");
-            } else {
-                passwordInput.type = "password";
-                toggleIcon.classList.remove("fa-eye");
-                toggleIcon.classList.add("fa-eye-slash");
-            }
-        }
-    </script>
-    <script>
-        $(document).ready(function() {
-            // Function to check if all input fields are filled with valid data
-            function checkFormValidity() {
-                const u_email = $('#u_email').val();
-                const role_id = $('#role_id').val();
-                const u_password = $('#u_password').val();
-                const password_confirmation = $('#password_confirmation').val();
-                const f_name = $('#f_name').val();
-                const m_name = $('#m_name').val();
-                const l_name = $('#l_name').val();
-                const number = $('#number').val();
-                const designation = $('#designation').val();
-                const address = $('#address').val();
-                const state = $('#state').val();
-                const city = $('#city').val();
-                // const user_profile = $('#user_profile').val();
-                const pincode = $('#pincode').val();
-
-                // Enable the submit button if all fields are valid
-                if (u_email && role_id && u_password && password_confirmation && f_name && m_name && l_name &&
-                    number && designation && address && state && city && pincode) {
-                    $('#submitButton').prop('disabled', false);
-                } else {
-                    $('#submitButton').prop('disabled', true);
-                }
-            }
-
-            // Call the checkFormValidity function on input change
-            // $('input,textarea, select, #user_profile').on('input change',
-            // checkFormValidity);
-
-            $.validator.addMethod("number", function(value, element) {
-                return this.optional(element) || /^[0-9]{10}$/.test(value);
-            }, "Please enter a valid 10-digit number.");
-
-            $.validator.addMethod("u_email", function(value, element) {
-                // Regular expression for email validation
-                const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-                return this.optional(element) || emailRegex.test(value);
-            }, "Please enter a valid email address.");
-
-            // Initialize the form validation
-            $("#regForm").validate({
-                rules: {
-                    u_email: {
-                        required: true,
-                        //     remote: {
-                        //     url: '/web/check-email-exists',
-                        //     type: 'post',
-                        //     data: {
-                        //         u_email: function() {
-                        //             return $('#u_email').val();
-                        //         }
-                        //     }
-                        // },
-                        u_email: true,
-                    },
-                    role_id: {
-                        required: true,
-                    },
-                    u_password: {
-                        required: true,
-                    },
-                    password_confirmation: {
-                        required: true,
-                    },
-                    f_name: {
-                        required: true,
-                    },
-                    m_name: {
-                        required: true,
-                    },
-                    l_name: {
-                        required: true,
-                    },
-                    number: {
-                        required: true,
-                        number: true,
-                    },
-                    designation: {
-                        required: true,
-                    },
-                    address: {
-                        required: true,
-                    },
-                    state: {
-                        required: true,
-                    },
-                    city: {
-                        required: true,
-                    },
-                    // user_profile: {
-                    //     required: true,
-                    // },
-                    pincode: {
-                        required: true,
-                    },
-
-                },
-                messages: {
-                    u_email: {
-                        required: "Please Enter the Eamil",
-                        // remote: "This Email already exists."
-                    },
-                    role_id: {
-                        required: "Please Select Role Name",
-                    },
-                    u_password: {
-                        required: "Please Enter the Password",
-                    },
-                    password_confirmation: {
-                        required: "Please Enter the Confirmation Password",
-                    },
-                    f_name: {
-                        required: "Please Enter the First Name",
-                    },
-                    m_name: {
-                        required: "Please Enter the Middle Name",
-                    },
-                    l_name: {
-                        required: "Please Enter the Last Name",
-                    },
-                    number: {
-                        required: "Please Enter the Number",
-                    },
-                    designation: {
-                        required: "Please Enter the Designation",
-                    },
-                    address: {
-                        required: "Please Enter the Address",
-                    },
-
-                    state: {
-                        required: "Please Select State",
-                    },
-                    city: {
-                        required: "Please Select City",
-                    },
-                    // user_profile: {
-                    //     required: "Upload Media File",
-                    //     accept: "Only png, jpeg, and jpg image files are allowed.", // Update the error message for the accept rule
-                    // },
-                    pincode: {
-                        required: "Please Enter the Pincode",
-                    },
-                },
-
-            });
         });
-    </script>
-    <script>
-        function addvalidatePincode(pincode) {
-            // Regular expression for exactly 6 digits and numbers only
-            var pincodePattern = /^\d{6}$/;
-            var validationMessage = document.getElementById("validation-message-pincode");
-
-            if (pincodePattern.test(pincode)) {
-                validationMessage.textContent = ""; // Clear error message
-            } else {
-                validationMessage.textContent = "Please enter a valid 6-digit number."; // Show error
-            }
-        }
-    </script>
-    @endpush
+    });
+</script>
+@endpush
 @endsection

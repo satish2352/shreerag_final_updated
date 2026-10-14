@@ -29,20 +29,17 @@
             margin-top: 30px !important;
         }
     </style>
-    <div class="">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="sparkline12-list">
-                <div class="sparkline12-hd">
-                    <div class="main-sparkline12-hd">
-                        <center>
-                            <h1>Product Completed Quantity</h1>
-                        </center>
-                    </div>
-                </div>
-                <div class="sparkline12-graph">
-                    <div class="basic-login-form-ad">
-                        <div class="row">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="data-table-area mg-tb-15">
+    <div class="container-fluid">
+    <div class="row justify-content-center">
+    <div class="col-lg-10 col-md-12">
+    <div class="emp-form-card">
+      <div class="emp-form-header">
+        <h4><i class="fa fa-chart-bar mr-2"></i> Edit Quantity Tracking</h4>
+        <a href="{{ route('list-material-received') }}" class="emp-form-close">&times;</a>
+      </div>
+      <div class="emp-form-body">
+
                                 @if (Session::get('status') == 'success')
                                     <div class="col-12 grid-margin">
                                         <div class="alert alert-custom-success" id="success-alert">
@@ -61,96 +58,104 @@
                                     </div>
                                 @endif
 
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="all-form-element-inner">
-                                        <form action="{{ route('update-final-production-completed-status', $id) }}"
-                                            method="POST" id="addProductForm" enctype="multipart/form-data">
-                                            @csrf
-                                            <input type="hidden" name="business_details_id" id="business_details_id"
-                                                value="{{ $id }}">
-                                            <input type="hidden" name="part_item_id" id="part_item_id"
-                                                value="{{ $id }}">
-                                         
-                                                <div class="row">
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="product_name">Name:</label>
-                                                        <input type="text" class="form-control" id="name"
-                                                            name="product_name" value="{{ $productDetails->product_name }}"
-                                                            placeholder="Enter Product Name" readonly>
-                                                    </div>
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="description">Description :</label>
-                                                        <input type="text" class="form-control" id="description"
-                                                            name="description" value="{{ $productDetails->description }}"
-                                                            placeholder="Enter Description" readonly>
-                                                    </div>
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="quantity">Actual Quantity :</label>
-                                                        <input type="text" class="form-control" id="quantity"
-                                                            name="quantity" value="{{ $productDetails->quantity }}"
-                                                            placeholder="Enter Quantity" readonly>
-                                                    </div>
-                                                    @if ($productDetails->completed_quantity == null)
-                                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                            <label for="completed_quantity"> Completed Production :</label>
-                                                            <input type="text" class="form-control"
-                                                                value="0"
-                                                                placeholder="Enter Quantity" readonly>
-                                                        </div>
-                                                    @else
-                                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                            <label for="completed_quantity"> Completed Production :</label>
-                                                            <input type="text" class="form-control"
-                                                                value="{{ $productDetails->completed_quantity }}"
-                                                                placeholder="Enter Quantity" readonly>
-                                                        </div>
-                                                    @endif
+                                <div class="all-form-element-inner">
+                                    <form action="{{ route('update-final-production-completed-status', $id) }}"
+                                        method="POST" id="addProductForm" enctype="multipart/form-data">
+                                        @csrf
+                                        <input type="hidden" name="business_details_id" id="business_details_id"
+                                            value="{{ $id }}">
+                                        <input type="hidden" name="part_item_id" id="part_item_id"
+                                            value="{{ $id }}">
 
-                                                    @if ($productDetails->completed_quantity == null)
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="remaining_quantity"> Balance Quantity :</label>
+                                        <div class="row">
+                                            <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+                                                <div class="fl-group">
+                                                    <input type="text" class="form-control" id="name"
+                                                        name="product_name" placeholder=" "
+                                                        value="{{ $productDetails->product_name }}" readonly>
+                                                    <label for="name">Name</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+                                                <div class="fl-group">
+                                                    <input type="text" class="form-control" id="description"
+                                                        name="description" placeholder=" "
+                                                        value="{{ $productDetails->description }}" readonly>
+                                                    <label for="description">Description</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+                                                <div class="fl-group">
+                                                    <input type="text" class="form-control" id="quantity"
+                                                        name="quantity" placeholder=" "
+                                                        value="{{ $productDetails->quantity }}" readonly>
+                                                    <label for="quantity">Actual Quantity</label>
+                                                </div>
+                                            </div>
+
+                                            @if ($productDetails->completed_quantity == null)
+                                                <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+                                                    <div class="fl-group">
+                                                        <input type="text" class="form-control" placeholder=" "
+                                                            value="0" readonly>
+                                                        <label>Completed Production</label>
+                                                    </div>
+                                                </div>
+                                            @else
+                                                <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+                                                    <div class="fl-group">
+                                                        <input type="text" class="form-control" placeholder=" "
+                                                            value="{{ $productDetails->completed_quantity }}" readonly>
+                                                        <label>Completed Production</label>
+                                                    </div>
+                                                </div>
+                                            @endif
+
+                                            @if ($productDetails->completed_quantity == null)
+                                                <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+                                                    <div class="fl-group">
                                                         <input type="text" class="form-control" id="remaining_quantity"
-                                                            name="remaining_quantity"
-                                                            value="{{ $productDetails->quantity }}"
-                                                            placeholder="Enter Quantity" readonly>
+                                                            name="remaining_quantity" placeholder=" "
+                                                            value="{{ $productDetails->quantity }}" readonly>
+                                                        <label for="remaining_quantity">Balance Quantity</label>
                                                     </div>
-                                                @else
-                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="remaining_quantity"> Balance Quantity :</label>
-                                                    <input type="text" class="form-control" id="remaining_quantity"
-                                                        name="remaining_quantity"
-                                                        value="{{ $productDetails->remaining_quantity }}"
-                                                        placeholder="Enter Quantity" readonly>
                                                 </div>
-                                                @endif
-                                                   
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="completed_quantity">Complete Quantity <span
-                                                                class="red-text">*</span> : </label>
-                                                        <input type="text" class="form-control" id="completed_quantity"
-                                                            name="completed_quantity" value=""
-                                                            placeholder="Enter Completed Quantity">
+                                            @else
+                                                <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+                                                    <div class="fl-group">
+                                                        <input type="text" class="form-control" id="remaining_quantity"
+                                                            name="remaining_quantity" placeholder=" "
+                                                            value="{{ $productDetails->remaining_quantity }}" readonly>
+                                                        <label for="remaining_quantity">Balance Quantity</label>
                                                     </div>
-                                                
                                                 </div>
+                                            @endif
 
-                                                <div class="row d-flex justify-content-center">
-                                                <div class="login-btn-inner marg-top">
-                                                    <a href="{{ route('list-material-received') }}" class="btn btn-white me-2">Cancel</a>
-                                                    <button class="btn btn-sm btn-bg-colour" type="submit">Submit Completed Quantity</button>
+                                            <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+                                                <div class="fl-group">
+                                                    <input type="text" class="form-control" id="completed_quantity"
+                                                        name="completed_quantity" placeholder=" " value="">
+                                                    <label for="completed_quantity">Complete Quantity <span
+                                                            class="red-text">*</span></label>
+                                                    @if($errors->has('completed_quantity'))
+                                                        <span class="fl-error">{{ $errors->first('completed_quantity') }}</span>
+                                                    @endif
                                                 </div>
-                                              </div>
-                                        </form>
+                                            </div>
+                                        </div>
 
-                                    </div>
+                                        <div class="row d-flex justify-content-center">
+                                            <div class="login-btn-inner marg-top">
+                                                <a href="{{ route('list-material-received') }}" class="btn btn-white me-2">Cancel</a>
+                                                <button class="btn btn-sm btn-bg-colour" type="submit">Submit Completed Quantity</button>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
+      </div>
     </div>
+    </div></div></div></div>
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>

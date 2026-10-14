@@ -1,187 +1,120 @@
 @extends('admin.layouts.master')
 
 @section('content')
-<style>
-    .error{
-        color: red !important;
-    }
-    .form-control{
-        color: black !important;
-    }
-  
-    .dropdown-menu {
-        max-height: 300px;
-        overflow-y: auto;
-    }
-    .dropdown-toggle {
-        width: 100%;
-        text-align: left;
-    }
-    .btn-outline-secondary:hover{
-color: #6c757d;
-background-color: #ffff;
-    }
-    .show>.btn-outline-secondary.dropdown-toggle {
-   color: #6c757d;
-background-color: #ffff;
-    border-color: #fff;
-}
-    </style>
-                            <div class="container-fluid">
-                                <div class="row">
-                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <div class="sparkline12-list">
-                                            <div class="sparkline12-hd">
-                                                <div class="main-sparkline12-hd">
-                                                    <center>
-                                                        <h1>Add Notice</h1>
-                                                    </center>
-                                                </div>
-                                            </div>
-                                            <div class="sparkline12-graph">
-                                                <div class="basic-login-form-ad">
-                                                    <div class="row">
-                            
-                            
-                                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                            @if (Session::get('status') == 'success')
-                                                                <div class="col-md-12">
-                                                                    <div class="alert alert-success alert-dismissible" role="alert">
-                                                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                                            <span aria-hidden="true">&times;</span>
-                                                                        </button>
-                                                                        <strong>Success!</strong> {{ Session::get('msg') }}
-                                                                    </div>
-                                                                </div>
-                                                            @endif
-                            
-                                                            @if (Session::get('status') == 'error')
-                                                                <div class="col-md-12">
-                                                                    <div class="alert alert-danger alert-dismissible" role="alert">
-                                                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                                            <span aria-hidden="true">&times;</span>
-                                                                        </button>
-                                                                        <strong>Error!</strong> {!! session('msg') !!}
-                                                                    </div>
-                                                                </div>
-                                                            @endif
-                                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                                <div class="all-form-element-inner">
-                                                                    <div class="row d-flex justify-content-center form-display-center">
-                                                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
-                            <form class="forms-sample" action="{{ route('add-notice') }}" method="POST"
-                                enctype="multipart/form-data" id="regForm">
-                                @csrf
-                                <div class="row">
-                                    <div class="col-lg-6 col-md-6 col-sm-6">
-                                    <div class="form-group">
-                                        <label for="departments">Select Departments</label>
-                                        <div class="dropdown">
-                                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                Select Departments
-                                            </button>
-                                    
-                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="padding: 10px;">
-                                                <div class="form-check">
-                                                    <input type="checkbox" id="selectAll" value="all" class="form-check-input">
-                                                    <label for="selectAll" class="form-check-label"><b>All Departments</b></label>
-                                                </div>
-                                                <hr>
-                                    
-                                                @foreach($departments as $department)
-                                                    <div class="form-check">
-                                                        <input type="checkbox" name="department_id[]" value="{{ $department->id }}" class="form-check-input">
-                                                        <label class="form-check-label">{{ $department->department_name }}</label>
-                                                    </div>
-                                                @endforeach
-                                            </div>
-                                        </div>
-                                    </div>
-                                    </div>
-                                    
-                                    {{-- <div class="col-lg-6 col-md-6 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="company_id">Select Department <span class="text-danger">*</span></label>
-                                            <select class="form-control custom-select-value" name="department_id" id="department_id">
-                                                <ul class="">
-                                                    <option value="">Select Department</option>
-                                                    @foreach($dept as $datas)
-                                                    <option value="{{$datas->id}}">{{ucfirst($datas->department_name)}}</option>
-                                                    @endforeach
-                                            </select>
-                                        </div>
-                                    </div> --}}
-                                    <div class="col-lg-6 col-md-6 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="title">Title <span class="text-danger">*</span></label>
-                                            <input class="form-control mb-2" name="title" id="title"
-                                                placeholder="Enter the Title" name="title"
-                                                value="{{ old('title') }}">
-                                            @if ($errors->has('title'))
-                                                <span class="red-text"><?php echo $errors->first('title', ':message'); ?></span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-                                    <div class="row">
-                                    <div class="col-lg-6 col-md-6 col-sm-6">
-                                        <div class="form-group" id="summernote_id">
-                                            <label for="description">Description <span class="text-danger">*</span></label>
-                                            <textarea class="form-control" name="description" id="descriptionsumernote" placeholder="Enter Description">{{ old('description') }}</textarea>
-                                            @if ($errors->has('description'))
-                                                <span
-                                                    class="red-text">{{ $errors->first('description') }}</span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="image">Upload <span class="text-danger">*</span></label><br>
-                                            {{-- <input type="file" name="image" id="image" accept="/*"
-                                                value="{{ old('image') }}" class="form-control mb-2">
-                                            @if ($errors->has('image'))
-                                                <span class="red-text"><?php //echo $errors->first('image', ':message'); ?></span>
-                                            @endif --}}
+<div class="data-table-area mg-tb-15">
+<div class="container-fluid">
+<div class="row justify-content-center">
+<div class="col-lg-10 col-md-12">
+<div class="emp-form-card">
 
-                                            <input type="file" class="form-control" accept="application/pdf"
-                                            id="image" name="image">
-                                        @if ($errors->has('image'))
-                                            <span class="red-text"><?php echo $errors->first('image', ':message'); ?></span>
-                                        @endif
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12 col-sm-12 text-center">
-                                        <button type="submit" class="btn btn-sm btn-bg-colour" id="submitButton"  >
-                                            Save &amp; Submit
-                                        </button>
-                                        {{-- <button type="reset" class="btn btn-sm btn-danger">Cancel</button> --}}
-                                        <span><a href="{{ route('list-notice') }}"
-                                                class="btn btn-sm btn-primary ">Back</a></span>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+  <div class="emp-form-header">
+    <h4><i class="fa fa-plus mr-2"></i> Add Notice</h4>
+    <a href="{{ route('list-notice') }}" class="emp-form-close" title="Close">&times;</a>
+  </div>
+
+  <div class="emp-form-body">
+
+    @if (Session::get('status') == 'success')
+      <div class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <strong>Success!</strong> {{ Session::get('msg') }}
+      </div>
+    @endif
+
+    @if (Session::get('status') == 'error')
+      <div class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <strong>Error!</strong> {!! session('msg') !!}
+      </div>
+    @endif
+
+    <form class="forms-sample" action="{{ route('add-notice') }}" method="POST"
+        enctype="multipart/form-data" id="regForm">
+      @csrf
+      <div class="row">
+
+        {{-- Department Dropdown (checkbox multi-select) --}}
+        <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+          <div class="fl-group">
+            <label for="departments">Select Departments</label>
+            <div class="dropdown">
+              <button class="btn btn-outline-secondary dropdown-toggle" type="button"
+                  id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Select Departments
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="padding: 10px; max-height: 300px; overflow-y: auto;">
+                <div class="form-check">
+                  <input type="checkbox" id="selectAll" value="all" class="form-check-input">
+                  <label for="selectAll" class="form-check-label"><b>All Departments</b></label>
+                </div>
+                <hr>
+                @foreach($departments as $department)
+                  <div class="form-check">
+                    <input type="checkbox" name="department_id[]" value="{{ $department->id }}" class="form-check-input">
+                    <label class="form-check-label">{{ $department->department_name }}</label>
                   </div>
-               </div>
-    </div>
+                @endforeach
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {{-- Title --}}
+        <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+          <div class="fl-group">
+            <input type="text" class="form-control" name="title" id="title"
+                placeholder=" " value="{{ old('title') }}">
+            <label for="title">Title <span class="red-text">*</span></label>
+            @if ($errors->has('title'))
+              <span class="fl-error">{{ $errors->first('title') }}</span>
+            @endif
+          </div>
+        </div>
+
+        {{-- Description --}}
+        <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+          <div class="fl-group">
+            <textarea class="form-control" name="description" id="descriptionsumernote"
+                placeholder=" ">{{ old('description') }}</textarea>
+            <label for="descriptionsumernote">Description <span class="red-text">*</span></label>
+            @if ($errors->has('description'))
+              <span class="fl-error">{{ $errors->first('description') }}</span>
+            @endif
+          </div>
+        </div>
+
+        {{-- Upload PDF --}}
+        <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+          <div class="fl-group">
+            <input type="file" class="form-control" accept="application/pdf" id="image" name="image">
+            <label for="image">Upload PDF <span class="red-text">*</span></label>
+            @if ($errors->has('image'))
+              <span class="fl-error">{{ $errors->first('image') }}</span>
+            @endif
+          </div>
+        </div>
+
+        <div class="col-md-12 col-sm-12 text-center mt-3">
+          <button type="submit" class="btn btn-sm btn-bg-colour" id="submitButton">Save &amp; Submit</button>
+          <a href="{{ route('list-notice') }}" class="btn btn-sm btn-secondary ml-2">Back</a>
+        </div>
+
+      </div>
+    </form>
+
+  </div>
 </div>
-</div>
-</div>
-</div>
-</div>
-</div>
+</div></div></div></div>
+
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script>
   $(document).ready(function() {
-    // Custom validation rule to ensure at least one department is selected
     $.validator.addMethod("atLeastOneDepartment", function(value, element) {
         return $("input[name='department_id[]']:checked").length > 0;
     }, "Please select at least one department.");
 
-    // Initialize form validation
     $("#regForm").validate({
         rules: {
             "department_id[]": {
@@ -196,16 +129,12 @@ background-color: #ffff;
             image: {
                 required: true,
                 fileExtension: ["pdf"],
-                fileSize: [50, 1048] // Min 50KB, Max 1MB
+                fileSize: [50, 1048]
             }
         },
         messages: {
-            title: {
-                required: "Please select a title."
-            },
-            description: {
-                required: "Please enter a description."
-            },
+            title: { required: "Please select a title." },
+            description: { required: "Please enter a description." },
             image: {
                 required: "Please upload a PDF file.",
                 fileExtension: "Only PDF files are allowed.",
@@ -217,14 +146,13 @@ background-color: #ffff;
         },
         errorPlacement: function(error, element) {
             if (element.attr("name") === "department_id[]") {
-                error.insertAfter($(".dropdown")); // Show error below the dropdown
+                error.insertAfter($(".dropdown"));
             } else {
                 error.insertAfter(element);
             }
         }
     });
 
-    // "Select All" functionality
     $("#selectAll").change(function() {
         $("input[name='department_id[]']").prop("checked", $(this).prop("checked"));
     });
@@ -235,21 +163,17 @@ background-color: #ffff;
         }
     });
 
-    // Ensure dropdown remains open after a click (Bootstrap fix)
     $('.dropdown-menu input').click(function(e) {
         e.stopPropagation();
     });
-});
-
+  });
 </script>
 <script>
-    // "Select All" functionality
     document.getElementById('selectAll').addEventListener('change', function () {
         const checkboxes = document.querySelectorAll('input[name="department_id[]"]');
         checkboxes.forEach(cb => cb.checked = this.checked);
     });
 
-    // Auto-check "Select All" if all departments are manually selected
     const departmentCheckboxes = document.querySelectorAll('input[name="department_id[]"]');
     departmentCheckboxes.forEach(checkbox => {
         checkbox.addEventListener('change', () => {
@@ -258,4 +182,4 @@ background-color: #ffff;
         });
     });
 </script>
-    @endsection
+@endsection

@@ -58,481 +58,275 @@
         }
     </style>
 
-    <div class="">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="sparkline12-list margin-bottom">
-                <div class="sparkline12-hd">
-                    <div class="main-sparkline12-hd">
-                        <center>
-                            <h1>Issue Product Material</h1>
-                        </center>
-                    </div>
-                </div>
-                <div class="sparkline12-graph">
-                    <div class="basic-login-form-ad">
-                        <div class="row">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                {{-- SweetAlert Success --}}
-                                @if (session('status') === 'success')
-                                    <script>
-                                        Swal.fire({
-                                            icon: 'success',
-                                            title: 'Success!',
-                                            text: '{{ session('msg') }}',
-                                            showConfirmButton: false,
-                                            timer: 2000
-                                        });
-                                    </script>
-                                @endif
+    <div class="data-table-area mg-tb-15">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-lg-10 col-md-12">
+                    <div class="emp-form-card">
+                        <div class="emp-form-header">
+                            <h4><i class="fa fa-plus mr-2"></i> Add BOM Requisition</h4>
+                            <a href="{{ route('list-accepted-design-from-prod') }}" class="emp-form-close">&times;</a>
+                        </div>
+                        <div class="emp-form-body">
 
-                                {{-- SweetAlert Error --}}
-                                @if (session('status') === 'error')
-                                    <script>
-                                        Swal.fire({
-                                            icon: 'error',
-                                            title: 'Oops...',
-                                            text: '{{ session('msg') }}',
-                                        });
-                                    </script>
-                                @endif
+                            {{-- SweetAlert Success --}}
+                            @if (session('status') === 'success')
+                                <script>
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Success!',
+                                        text: '{{ session('msg') }}',
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    });
+                                </script>
+                            @endif
+
+                            {{-- SweetAlert Error --}}
+                            @if (session('status') === 'error')
+                                <script>
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: '{{ session('msg') }}',
+                                    });
+                                </script>
+                            @endif
 
 
-                                {{-- @if (isset($productDetails) && isset($dataGroupedById)) --}}
-                                @if (isset($productDetails) && isset($dataOutputByid) && $dataOutputByid->count())
-                                    <!-- Display product details -->
-                                @else
-                                    <div class="alert alert-warning">
-                                        No product details available.
+                            {{-- @if (isset($productDetails) && isset($dataGroupedById)) --}}
+                            @if (isset($productDetails) && isset($dataOutputByid) && $dataOutputByid->count())
+                                <!-- Display product details -->
+                            @else
+                                <div class="alert alert-warning">
+                                    No product details available.
+                                </div>
+                            @endif
+
+                            <form action="{{ route('update-material-list-bom-wise-new-req', $id) }}" method="POST"
+                                id="addProductForm" enctype="multipart/form-data">
+                                @csrf
+                                <input type="hidden" name="business_details_id" id="business_details_id"
+                                    value="{{ $id }}">
+                                <input type="hidden" name="id" id="id"
+                                    value="{{ $productDetails->id ?? '' }}">
+                                <div class="row">
+                                    <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
+                                        <label for="product_name">Product Name:</label>
+                                        <input type="text" class="form-control" id="name" name="product_name"
+                                            value="{{ $productDetails->product_name ?? '' }}"
+                                            placeholder="Enter Product Name" readonly>
                                     </div>
-                                @endif
-
-                                <form action="{{ route('update-material-list-bom-wise-new-req', $id) }}" method="POST"
-                                    id="addProductForm" enctype="multipart/form-data">
-                                    @csrf
-                                    <input type="hidden" name="business_details_id" id="business_details_id"
-                                        value="{{ $id }}">
-                                    <input type="hidden" name="id" id="id"
-                                        value="{{ $productDetails->id ?? '' }}">
-                                    <div class="row">
-                                        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
-                                            <label for="product_name">Product Name:</label>
-                                            <input type="text" class="form-control" id="name" name="product_name"
-                                                value="{{ $productDetails->product_name ?? '' }}"
-                                                placeholder="Enter Product Name" readonly>
-                                        </div>
-                                        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
-                                            <label for="description">Description:</label>
-                                            <input type="text" class="form-control" id="description" name="description"
-                                                value="{{ $productDetails->description ?? '' }}"
-                                                placeholder="Enter Description" readonly>
-                                        </div>
-                                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
-                                            <label for="total_estimation_amount">Estimation Amount :</label>
-                                            <input type="text" class="form-control" id="total_estimation_amount"
-                                                name="total_estimation_amount"
-                                                value="{{ $productDetails->total_estimation_amount ?? '' }}"
-                                                placeholder="Enter Description" readonly>
-                                        </div>
+                                    <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
+                                        <label for="description">Description:</label>
+                                        <input type="text" class="form-control" id="description" name="description"
+                                            value="{{ $productDetails->description ?? '' }}"
+                                            placeholder="Enter Description" readonly>
                                     </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                                        <label for="total_estimation_amount">Estimation Amount :</label>
+                                        <input type="text" class="form-control" id="total_estimation_amount"
+                                            name="total_estimation_amount"
+                                            value="{{ $productDetails->total_estimation_amount ?? '' }}"
+                                            placeholder="Enter Description" readonly>
+                                    </div>
+                                </div>
 
-                                    <div class="table-responsive mt-4">
-                                        <table class="table table-hover table-white repeater" id="purchase_order_table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Sr. No.</th>
-                                                    <th>Date</th>
-                                                    <th>Part Item</th>
-                                                    <th>Basic Rate</th>
-                                                    <th>Quantity</th>
-                                                    <th>Unit</th>
-                                                    <th>Send to Production</th>
-                                                    <th>
-                                                        <button type="button" class="btn btn-sm btn-bg-colour"
-                                                            id="add_more_btn">
-                                                            <i class="fa fa-plus"></i>
-                                                        </button>
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($dataOutputByid as $index => $item)
-                                                    {{-- @foreach ($dataGroupedById as $key => $items)
-                                                    @foreach ($items as $index => $item) --}}
-                                                    <tr class="item-row">
-                                                        <input type="hidden" name="addmore[{{ $index }}][detail_id]"
-                                                            value="{{ $item->id }}">
-                                                        <td>
-                                                            <input type="text" name="addmore[{{ $index }}][id]"
-                                                                class="form-control" readonly
-                                                                value="{{ $dataOutputByid->firstItem() + $index }}">
-                                                        </td>
+                                <div class="table-responsive mt-4">
+                                    <table class="table table-hover table-white repeater" id="purchase_order_table">
+                                        <thead>
+                                            <tr>
+                                                <th>Sr. No.</th>
+                                                <th>Date</th>
+                                                <th>Part Item</th>
+                                                <th>Basic Rate</th>
+                                                <th>Quantity</th>
+                                                <th>Unit</th>
+                                                <th>Send to Production</th>
+                                                <th>
+                                                    <button type="button" class="btn btn-sm btn-bg-colour"
+                                                        id="add_more_btn">
+                                                        <i class="fa fa-plus"></i>
+                                                    </button>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($dataOutputByid as $index => $item)
+                                                {{-- @foreach ($dataGroupedById as $key => $items)
+                                                @foreach ($items as $index => $item) --}}
+                                                <tr class="item-row">
+                                                    <input type="hidden" name="addmore[{{ $index }}][detail_id]"
+                                                        value="{{ $item->id }}">
+                                                    <td>
+                                                        <input type="text" name="addmore[{{ $index }}][id]"
+                                                            class="form-control" readonly
+                                                            value="{{ $dataOutputByid->firstItem() + $index }}">
+                                                    </td>
 
-                                                        {{-- <td>
-                                                                <div class="custom-dropdown">
-                                                                    <input type="hidden"
-                                                                        name="addmore[{{ $loop->parent->index }}][part_item_id]"
-                                                                        class="part_no" value="{{ $item->part_item_id }}">
+                                                    <td>
+                                                        <input class="form-control"
+                                                            name="addmore[{{ $index }}][updated_at]"
+                                                            type="text" step="any" required
+                                                            value="{{ \Carbon\Carbon::parse($item->updated_at)->format('d-m-Y H:i') }}"
+                                                            readonly>
+                                                    </td>
 
-                                                                    @php
-                                                                        $selectedPartItem = $dataOutputPartItem->firstWhere(
-                                                                            'id',
-                                                                            $item->part_item_id,
-                                                                        );
-                                                                    @endphp
+                                                    <td>
+                                                        <div class="custom-dropdown">
+                                                            <input type="hidden"
+                                                                name="addmore[{{ $index }}][part_item_id]"
+                                                                class="part_no" value="{{ $item->part_item_id }}">
 
-                                                                    <input type="text"
-                                                                        class="dropdown-input form-control part-item-name"
-                                                                        placeholder="Select Part Item..."
-                                                                        value="{{ $selectedPartItem ? $selectedPartItem->description : 'Select Part Item' }}"
-                                                                        readonly>
 
-                                                                    <div class="dropdown-options dropdown-height"
-                                                                        style="display:none;">
-                                                                        <input type="text"
-                                                                            class="search-box form-control"
-                                                                            placeholder="Search...">
-                                                                        <div class="options-list">
-                                                                            @foreach ($dataOutputPartItem as $data)
-                                                                                <div class="option"
-                                                                                    data-id="{{ $data->id }}">
-                                                                                    {{ $data->description }}
-                                                                                </div>
-                                                                            @endforeach
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </td> --}}
-                                                        <td>
-                                                            <input class="form-control"
-                                                                name="addmore[{{ $index }}][updated_at]"
-                                                                type="text" step="any" required
-                                                                value="{{ \Carbon\Carbon::parse($item->updated_at)->format('d-m-Y H:i') }}"
+                                                            @php
+                                                                $selected = $dataOutputPartItem->firstWhere(
+                                                                    'id',
+                                                                    $item->part_item_id,
+                                                                );
+                                                            @endphp
+
+                                                            <input type="text" class="dropdown-input form-control"
+                                                                value="{{ $selected ? $selected->description : '' }}"
+                                                                title="{{ $selected ? $selected->description : '' }}"
                                                                 readonly>
-                                                            {{-- <input type="hidden" class="total_amount"
-                                                                
-                                                                    name="addmore[{{ $index }}][total_amount]" 
-                                                                    value="{{ \Carbon\Carbon::parse($item->updated_at)->format('d-m-Y H:i') }}"> --}}
-                                                        </td>
-                                                        {{-- old --}}
-                                                        {{-- <td>
-                                                              
-                                                             <div class="custom-dropdown">
 
-                                                                  
-                                                                    <input type="hidden"
-                                                                        name="addmore[{{ $index }}][part_item_id]"
-                                                                        class="part_no" value="{{ $item->part_item_id }}">
-
-                                                                    @php
-                                                                        $selectedPartItem = $dataOutputPartItem->firstWhere(
-                                                                            'id',
-                                                                            $item->part_item_id,
-                                                                        );
-                                                                    @endphp
-
-                                                                    
-                                                                    <input type="text"
-                                                                        class="dropdown-input form-control part-item-name"
-                                                                        placeholder="Select Part Item..."
-                                                                        value="{{ $selectedPartItem ? $selectedPartItem->description : '' }}"
-                                                                        readonly>
-
-                                                                
-                                                                    <div class="dropdown-options dropdown-height"
-                                                                        style="display:none;">
-                                                                        <input type="text"
-                                                                            class="search-box form-control"
-                                                                            placeholder="Search...">
-
-                                                                        <div class="options-list">
-                                                                            @foreach ($dataOutputPartItem as $data)
-                                                                                <div class="option"
-                                                                                    data-id="{{ $data->id }}">
-                                                                                    {{ $data->description }}
-                                                                                </div>
-                                                                            @endforeach
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </td> --}}
-                                                        <!-- <td>
-                                                                                                                                                                                                                        <div class="custom-dropdown">
-                                                                                                                                                                                                                            <input type="hidden"
-                                                                                                                                                                                                                                name="addmore[{{ $index }}][part_item_id]"
-                                                                                                                                                                                                                                class="part_no" value="{{ $item->part_item_id }}">
-
-                                                                                                                                                                                                                            @php
-                                                                                                                                                                                                                                $selected = $dataOutputPartItem->firstWhere(
-                                                                                                                                                                                                                                    'id',
-                                                                                                                                                                                                                                    $item->part_item_id,
-                                                                                                                                                                                                                                );
-                                                                                                                                                                                                                            @endphp
-                                                                                                                                                                                                                          
-
-                                                                                                                                                                                                                             <input type="text"
-                                                                                                                                                                                                                                class="dropdown-input form-control"
-                                                                                                                                                                                                                                value="{{ $selected ? $selected->description : '' }}"
-                                                                                                                                                                                                                                readonly>
-
-                                                                                                                                                                                                                            <div class="dropdown-options dropdown-height"
-                                                                                                                                                                                                                                style="display:none; width: 750px !important;">
-                                                                                                                                                                                                                                <input type="text"
-                                                                                                                                                                                                                                    class="search-box form-control"
-                                                                                                                                                                                                                                    placeholder="Search...">
-                                                                                                                                                                                                                                <div class="options-list">
-                                                                                                                                                                                                                                    @foreach ($dataOutputPartItem as $data)
-    <div class="option"
-                                                                                                                                                                                                                                            data-id="{{ $data->id }}">
-                                                                                                                                                                                                                                            {{ $data->description }}</div>
-    @endforeach
-                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                    </td> -->
-
-                                                        <td>
-                                                            <div class="custom-dropdown">
-                                                                <input type="hidden"
-                                                                    name="addmore[{{ $index }}][part_item_id]"
-                                                                    class="part_no" value="{{ $item->part_item_id }}">
-
-
-                                                                @php
-                                                                    $selected = $dataOutputPartItem->firstWhere(
-                                                                        'id',
-                                                                        $item->part_item_id,
-                                                                    );
-                                                                @endphp
-
-                                                                <input type="text" class="dropdown-input form-control"
-                                                                    value="{{ $selected ? $selected->description : '' }}"
-                                                                    title="{{ $selected ? $selected->description : '' }}"
-                                                                    readonly>
-
-                                                                <div class="dropdown-options dropdown-height"
-                                                                    style="display:none; width: 750px;">
-                                                                    <input type="text" class="search-box form-control"
-                                                                        placeholder="Search...">
-                                                                    <div class="options-list">
-                                                                        @foreach ($dataOutputPartItem as $data)
-                                                                            <div class="option"
-                                                                                data-id="{{ $data->id }}">
-                                                                                {{ $data->description }}</div>
-                                                                        @endforeach
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-
-
-                                                        {{-- <td>
-                                                                <div class="custom-dropdown"
-                                                                    data-index="{{ $index }}">
-                                                                    <input type="hidden"
-                                                                        name="addmore[{{ $index }}][part_item_id]"
-                                                                        class="part_no" value="{{ $item->part_item_id }}">
-                                                                    @php
-                                                                        $selectedPartItem = $dataOutputPartItem->firstWhere(
-                                                                            'id',
-                                                                            $item->part_item_id,
-                                                                        );
-                                                                    @endphp
-                                                                    <input type="text"
-                                                                        class="dropdown-input form-control part-no"
-                                                                        placeholder="Select Part Item..." readonly
-                                                                        value="{{ $selectedPartItem->description ?? '' }}">
-
-                                                                    <div class="dropdown-options dropdown-height"
-                                                                        style="display: none;">
-                                                                        <input type="text"
-                                                                            class="search-box form-control"
-                                                                            placeholder="Search...">
-                                                                        <div class="options-list">
-                                                                            @foreach ($dataOutputPartItem as $data)
-                                                                                <div class="option"
-                                                                                    data-id="{{ $data->id }}">
-                                                                                    {{ $data->description }}</div>
-                                                                            @endforeach
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </td> --}}
-                                                        <td>
-                                                            <input class="form-control basic_rate"
-                                                                name="addmore[{{ $index }}][basic_rate]"
-                                                                type="number" step="any" required
-                                                                value="{{ $item->basic_rate }}" readonly>
-                                                            <input type="hidden" class="total_amount"
-                                                                {{-- name="addmore[{{ $index }}][total_amount]" --}}
-                                                                name="addmore[{{ $index }}][items_used_total_amount]"
-                                                                value="{{ $item->basic_rate * $item->quantity }}">
-                                                        </td>
-
-                                                        {{-- @php
-    $selectedPart = $dataOutputPartItem->firstWhere('id', $item->part_item_id);
-@endphp
-
-<td>
-    <div class="custom-dropdown" data-index="{{ $index }}">
-        <input type="hidden" name="addmore[{{ $index }}][part_item_id]" class="part_no" value="{{ $item->part_item_id }}">
-        <input type="text" class="dropdown-input form-control part-no" 
-               placeholder="Select Part Item..." 
-               value="{{ $selectedPart ? $selectedPart->description : '' }}" readonly>
-
-        <div class="dropdown-options dropdown-height" style="display: none;">
-            <input type="text" class="search-box form-control" placeholder="Search..."> --}}
-
-
-                                                        {{-- <td>
-                                                                <select class="form-control part-no" name="addmore[{{ $index }}][part_item_id]" required>
-                                                                    <option value="">Select Part Item</option>
-                                                                    @foreach ($dataOutputPartItem as $partItem)
-                                                                        <option value="{{ $partItem->id }}" {{ $partItem->id == $item->part_item_id ? 'selected' : '' }}>
-                                                                            {{ $partItem->description }}
-                                                                        </option>
+                                                            <div class="dropdown-options dropdown-height"
+                                                                style="display:none; width: 750px;">
+                                                                <input type="text" class="search-box form-control"
+                                                                    placeholder="Search...">
+                                                                <div class="options-list">
+                                                                    @foreach ($dataOutputPartItem as $data)
+                                                                        <div class="option"
+                                                                            data-id="{{ $data->id }}">
+                                                                            {{ $data->description }}</div>
                                                                     @endforeach
-                                                                </select>
-                                                            </td> --}}
-                                                        <td>
-                                                            <input class="form-control quantity"
-                                                                name="addmore[{{ $index }}][quantity]"
-                                                                type="number" step="any" required
-                                                                value="{{ $item->quantity }}">
-                                                            <span class="stock-available"></span>
-                                                        </td>
-                                                        <td>
-                                                            <select class="form-control unit"
-                                                                name="addmore[{{ $index }}][unit]" required>
-                                                                <option value="">Select Unit</option>
-                                                                @foreach ($dataOutputUnitMaster as $unitName)
-                                                                    <option value="{{ $unitName->id }}"
-                                                                        {{ $unitName->id == $item->unit ? 'selected' : '' }}>
-                                                                        {{ $unitName->name }}
-                                                                    </option>
-                                                                @endforeach
-                                                            </select>
-                                                        </td>
-                                                        <td>
-                                                            <input type="hidden"
-                                                                name="addmore[{{ $index }}][quantity_minus_status]"
-                                                                value="{{ $item->quantity_minus_status }}">
-                                                            {{-- @if ($productDetails->material_send_production == 1)
-                                                                <input type="hidden" name="addmore[{{ $index }}][material_send_production]" value="1">
-                                                                <input type="checkbox" class="material-send-checkbox" name="addmore[{{ $index }}][material_send_production]" value="1" {{ $item->material_send_production == 1 ? 'checked' : '' }} disabled>
-                                                                
-                                                            @else --}}
-                                                            <input type="hidden"
-                                                                name="addmore[{{ $index }}][material_send_production]"
-                                                                value="0">
-                                                            <div class="checkbox-wrapper">
-                                                                <input type="checkbox" class="material-send-checkbox"
-                                                                    name="addmore[{{ $index }}][material_send_production]"
-                                                                    value="1"
-                                                                    {{ $item->material_send_production == 1 ? 'checked' : '' }}
-                                                                    required>
+                                                                </div>
                                                             </div>
-                                                        </td>
-                                                        <td>
-                                                            @if ($loop->first)
-                                                                <!-- First row: delete disabled -->
-                                                                <button type="button" class="btn btn-danger btn-sm"
+                                                        </div>
+                                                    </td>
+
+                                                    <td>
+                                                        <input class="form-control basic_rate"
+                                                            name="addmore[{{ $index }}][basic_rate]"
+                                                            type="number" step="any" required
+                                                            value="{{ $item->basic_rate }}" readonly>
+                                                        <input type="hidden" class="total_amount"
+                                                            {{-- name="addmore[{{ $index }}][total_amount]" --}}
+                                                            name="addmore[{{ $index }}][items_used_total_amount]"
+                                                            value="{{ $item->basic_rate * $item->quantity }}">
+                                                    </td>
+
+                                                    <td>
+                                                        <input class="form-control quantity"
+                                                            name="addmore[{{ $index }}][quantity]"
+                                                            type="number" step="any" required
+                                                            value="{{ $item->quantity }}">
+                                                        <span class="stock-available"></span>
+                                                    </td>
+                                                    <td>
+                                                        <select class="form-control unit"
+                                                            name="addmore[{{ $index }}][unit]" required>
+                                                            <option value="">Select Unit</option>
+                                                            @foreach ($dataOutputUnitMaster as $unitName)
+                                                                <option value="{{ $unitName->id }}"
+                                                                    {{ $unitName->id == $item->unit ? 'selected' : '' }}>
+                                                                    {{ $unitName->name }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <input type="hidden"
+                                                            name="addmore[{{ $index }}][quantity_minus_status]"
+                                                            value="{{ $item->quantity_minus_status }}">
+                                                        <input type="hidden"
+                                                            name="addmore[{{ $index }}][material_send_production]"
+                                                            value="0">
+                                                        <div class="checkbox-wrapper">
+                                                            <input type="checkbox" class="material-send-checkbox"
+                                                                name="addmore[{{ $index }}][material_send_production]"
+                                                                value="1"
+                                                                {{ $item->material_send_production == 1 ? 'checked' : '' }}
+                                                                required>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        @if ($loop->first)
+                                                            <!-- First row: delete disabled -->
+                                                            <button type="button" class="btn btn-danger btn-sm"
+                                                                disabled>
+                                                                <i class="fa fa-trash"></i>
+                                                            </button>
+                                                        @else
+                                                            @if ($item->material_send_production == 0)
+                                                                <a data-id="{{ $item->id }}" type="button"
+                                                                    class="btn btn-danger btn-sm ajax-delete"
+                                                                    title="Delete">
+                                                                    <i class="fa fa-trash"></i>
+                                                                </a>
+                                                            @else
+                                                                <button type="button"
+                                                                    class="delete-btn btn btn-sm btn-danger remove-row"
                                                                     disabled>
                                                                     <i class="fa fa-trash"></i>
                                                                 </button>
-                                                            @else
-                                                                @if ($item->material_send_production == 0)
-                                                                    <a data-id="{{ $item->id }}" type="button"
-                                                                        class="btn btn-danger btn-sm ajax-delete"
-                                                                        title="Delete">
-                                                                        <i class="fa fa-trash"></i>
-                                                                    </a>
-                                                                @else
-                                                                    <button type="button"
-                                                                        class="delete-btn btn btn-sm btn-danger remove-row"
-                                                                        disabled>
-                                                                        <i class="fa fa-trash"></i>
-                                                                    </button>
-                                                                @endif
                                                             @endif
-                                                        </td>
-
-                                                        {{-- <td>
-                                                                @if ($item->material_send_production == 0)
-                                                                    <a data-id="{{ $item->id }}" type="button"
-                                                                        class="btn btn-danger btn-sm ajax-delete"
-                                                                        title="Delete">
-                                                                        <i class="fa fa-trash"></i>
-                                                                    </a>
-                                                                @else
-                                                                    <button type="button"
-                                                                        class="delete-btn btn btn-sm btn-danger remove-row"
-                                                                        disabled>
-                                                                        <i class="fa fa-trash"></i>
-                                                                    </button>
-                                                                @endif
-                                                            </td> --}}
-                                                    </tr>
-                                                @endforeach
-                                                {{-- @endforeach --}}
-                                            </tbody>
-                                            <tfoot>
-                                                <tr>
-                                                    <td colspan="4" class="text-end"><strong>Total Amount :</strong>
+                                                        @endif
                                                     </td>
-                                                    <td colspan="2">
-                                                        <input type="text" id="grand_total" class="form-control"
-                                                            readonly value="0">
-                                                    </td>
-                                                    <td colspan="2"></td>
                                                 </tr>
-                                            </tfoot>
+                                            @endforeach
+                                            {{-- @endforeach --}}
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="4" class="text-end"><strong>Total Amount :</strong>
+                                                </td>
+                                                <td colspan="2">
+                                                    <input type="text" id="grand_total" class="form-control"
+                                                        readonly value="0">
+                                                </td>
+                                                <td colspan="2"></td>
+                                            </tr>
+                                        </tfoot>
 
-                                        </table>
+                                    </table>
 
-                                        <div class="row mt-3">
-                                            <div class="col-md-6">
-                                                <p>
-                                                    Showing {{ $dataOutputByid->firstItem() }} to
-                                                    {{ $dataOutputByid->lastItem() }}
-                                                    of {{ $dataOutputByid->total() }} rows
-                                                </p>
-                                            </div>
-
-                                            <div class="col-md-6 d-flex justify-content-end mt-3">
-                                                {{ $dataOutputByid->onEachSide(1)->links() }}
-                                            </div>
+                                    <div class="row mt-3">
+                                        <div class="col-md-6">
+                                            <p>
+                                                Showing {{ $dataOutputByid->firstItem() }} to
+                                                {{ $dataOutputByid->lastItem() }}
+                                                of {{ $dataOutputByid->total() }} rows
+                                            </p>
                                         </div>
 
-
-                                        {{-- <div class="d-flex justify-content-center mt-3">
-                                            {{ $dataOutputByid->links('pagination::bootstrap-4') }}
-                                        </div> --}}
+                                        <div class="col-md-6 d-flex justify-content-end mt-3">
+                                            {{ $dataOutputByid->onEachSide(1)->links() }}
+                                        </div>
                                     </div>
 
-                                    <div class="d-flex justify-content-center align-items-center mt-3 mb-5">
-                                        <a href="{{ route('list-accepted-design-from-prod') }}"
-                                            class="btn btn-white me-3">
-                                            Cancel
-                                        </a>
-                                        <button class="btn btn-sm btn-bg-colour" type="submit" id="saveBtn">
-                                            Save Data
-                                        </button>
-                                    </div>
-                                    {{-- <div class="login-btn-inner text-center" >
-                                        <button class="btn btn-sm btn-primary" type="submit" id="saveBtn">Save Data</button>
-                                    </div> --}}
+                                </div>
 
+                                <div class="d-flex justify-content-center align-items-center mt-3 mb-5">
+                                    <a href="{{ route('list-accepted-design-from-prod') }}"
+                                        class="btn btn-white me-3">
+                                        Cancel
+                                    </a>
+                                    <button class="btn btn-sm btn-bg-colour" type="submit" id="saveBtn">
+                                        Save Data
+                                    </button>
+                                </div>
 
-                                </form>
-                            </div>
+                            </form>
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    </div>
-    </div>
+
     <form method="POST" action="{{ route('deleted-addmore-store-material-item') }}" id="deleteform">
         @csrf
         <input type="hidden" name="delete_id" id="delete_id" value="">
@@ -717,15 +511,6 @@
                     calculateGrandTotal();
 
                 });
-                // Select option
-                // $(document).on('click', '.custom-dropdown .option', function () {
-                //     const selectedText = $(this).text();
-                //     const selectedId = $(this).data('id');
-                //     const $dropdown = $(this).closest('.custom-dropdown');
-                //     $dropdown.find('.dropdown-input').val(selectedText);
-                //     $dropdown.find('.part_no').val(selectedId);
-                //     $dropdown.find('.dropdown-options').hide();
-                // });
 
                 function updateTotalAmount($row) {
                     let rate = parseFloat($row.find('.basic_rate').val()) || 0;
@@ -794,17 +579,6 @@
             $(document).ready(function() {
 
                 // 🔁 Calculate all row totals on page load
-                // $('#purchase_order_table tbody tr').each(function() {
-                //     let rate = parseFloat($(this).find('.basic_rate').val()) || 0;
-                //     let qty = parseFloat($(this).find('.quantity').val()) || 0;
-                //     let total = rate * qty;
-
-                //     $(this).find('.total_amount').val(total.toFixed(2));
-                // });
-
-                // 🔢 Then calculate grand total
-                // calculateGrandTotal();
-                // 🔁 Calculate all row totals on page load
                 $('#purchase_order_table tbody tr').each(function() {
                     let rate = parseFloat($(this).find('.basic_rate').val()) || 0;
                     let qty = parseFloat($(this).find('.quantity').val()) || 0;
@@ -814,37 +588,6 @@
                 });
 
                 calculateGrandTotal();
-                // Initialize form validation
-                // $("#addProductForm").validate({
-                //     submitHandler: function(form) {
-                //         // Perform stock validation for each row
-                //         var isValid = true;
-                //         $('#purchase_order_table tbody tr').each(function() {
-                //             // var partItemId = $(this).find('select[name*="[part_item_id]"]').val();
-                //             // var quantity = $(this).find('input[name*="[quantity]"]').val();
-                //             var partItemId = $(this).find('input.part_no').val();
-                //             var quantity = $(this).find('.quantity').val();
-
-                //             // Add your stock validation logic here
-                //             // If stock is insufficient, set isValid to false
-                //         });
-                //         if (isValid) {
-                //             form.submit();
-                //         } else {
-                //             alert('Please ensure all items have sufficient stock.');
-                //         }
-                //     }
-                // });
-
-                // $('#addProductForm').on('submit', function(e) {
-                //     let total = parseFloat($('#grand_total').val()) || 0;
-                //     let estimation = parseFloat($('#total_estimation_amount').val()) || 0;
-
-                //     if (total > estimation) {
-                //         e.preventDefault();
-                //         Swal.fire('Error', 'Total amount exceeds estimation amount', 'error');
-                //     }
-                // });
                 submitHandler: function(form) {
 
                     let total = parseFloat($('#grand_total').val()) || 0;
@@ -969,9 +712,6 @@
                                     stockAvailableMessage.text('Stock is sufficient').css('color', 'green');
                                 }
                             },
-                            // error: function () {
-                            //     stockAvailableMessage.text('Error checking stock').css('color', 'red');
-                            // }
                             error: function(xhr) {
                                 let msg = 'Error checking stock';
                                 if (xhr.responseJSON && xhr.responseJSON.message) {
@@ -1007,7 +747,7 @@
                 <td>
                     <input type="text" name="addmore[${rowCount}][id]" class="form-control" readonly value="${rowCount}">
                 </td>
-        <td class="text-center">-</td>       
+        <td class="text-center">-</td>
 <td>
     <div class="custom-dropdown">
         <input type="hidden" name="addmore[${rowCount}][part_item_id]" class="part_no" value="">
@@ -1060,11 +800,6 @@
                     initializeValidation(addedRow);
                 });
 
-                // Remove row functionality
-                // purchaseOrderTable.on("click", ".remove-row", function() {
-                //     $(this).closest('tr').remove();
-                // });
-
                 // Trigger stock check on quantity input change
                 purchaseOrderTable.on('input', '.quantity', function() {
                     const $row = $(this).closest('tr');
@@ -1111,18 +846,6 @@
                 initializeValidation(purchaseOrderTable.find("tbody tr"));
             });
 
-
-            // Disable dropdown click for existing rows
-            // $(document).on('click', '.disabled-dropdown .dropdown-input', function(e) {
-            //     e.stopImmediatePropagation();
-            //     return false;
-            // });
-
-            // Disable selecting options for disabled dropdown
-            // $(document).on('click', '.disabled-dropdown .option', function(e) {
-            //     e.stopImmediatePropagation();
-            //     return false;
-            // });
         </script>
 
         <script>
@@ -1174,33 +897,6 @@
             });
         </script>
         <script>
-            // function calculateGrandTotal() {
-            //     let grandTotal = 0;
-
-            //     $('.total_amount').each(function() {
-            //         let val = parseFloat($(this).val()) || 0;
-            //         grandTotal += val;
-            //     });
-
-            //     $('#grand_total').val(grandTotal.toFixed(2));
-
-            //     let estimation = parseFloat($('#total_estimation_amount').val()) || 0;
-
-            //     if (grandTotal > estimation) {
-
-            //         $("#saveBtn").prop("disabled", true);
-
-            //         Swal.fire({
-            //             icon: 'error',
-            //             title: 'Estimation Exceeded',
-            //             text: 'Total material amount exceeds estimation amount',
-            //         });
-
-            //     } else {
-
-            //         $("#saveBtn").prop("disabled", false);
-            //     }
-            // }
             function calculateGrandTotal() {
 
                 let grandTotal = 0;
@@ -1222,18 +918,6 @@
 
             }
         </script>
-        {{-- <script>
-            function calculateGrandTotal() {
-                let grandTotal = 0;
-
-                $('.total_amount').each(function() {
-                    let val = parseFloat($(this).val()) || 0;
-                    grandTotal += val;
-                });
-
-                $('#grand_total').val(grandTotal.toFixed(2));
-            }
-        </script> --}}
         <script>
             $(document).on('keyup change', '.quantity', function() {
 

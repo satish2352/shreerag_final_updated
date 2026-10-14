@@ -148,13 +148,13 @@ body {}
 /*  8. Menu collapse Area
 /*----------------------------------------*/
 .all-content-wrapper {
-    margin-left: 205px;
+    margin-left: 210px;
     transition: all 0.3s;
 }
 
 .left-sidebar-pro {
     z-index: 9999;
-    width: 240px;
+    width: 210px;
 }
 
 #sidebar {
@@ -173,6 +173,11 @@ body {}
 
 .mini-navbar .all-content-wrapper {
     margin-left: 80px;
+    transition: all 0.3s;
+}
+
+.mini-navbar .left-sidebar-pro {
+    width: 80px;
     transition: all 0.3s;
 }
 
@@ -335,16 +340,25 @@ body {}
 }
 
 .menu-switcher-pro {
-    transition: all .4s ease 0s;
+    position: fixed;
+    top: 12px;
+    left: 215px;
+    z-index: 10000;
+    transition: left 0.3s ease;
 }
 
 .mini-navbar .menu-switcher-pro {
-    transition: all 0.3s;
+    left: 85px;
+    transition: left 0.3s ease;
 }
 
 .menu-switcher-pro button {
-    background: none;
+    background: #17a2b8;
     border: none;
+    color: #fff;
+    border-radius: 4px;
+    padding: 6px 10px;
+    cursor: pointer;
 }
 
 .menu-switcher-pro button:hover,
@@ -4864,3 +4878,1324 @@ table td {
 #purchase_order_table td {
     white-space: nowrap !important;
 }
+
+/* ============================================================
+   DATATABLE LIST PAGE – Modern Redesign
+   Applies to all .sparkline13-list / .data-table-area pages
+   ============================================================ */
+
+/* Card wrapper */
+.sparkline13-list,
+.sparkline12-list,
+.sparkline14-list,
+.sparkline15-list,
+.sparkline16-list,
+.sparkline11-list,
+.sparkline8-list,
+.sparkline9-list,
+.sparkline7-list,
+.sparkline10-list {
+    padding: 0 !important;
+    background: #fff !important;
+    border-radius: 14px !important;
+    box-shadow: 0 4px 24px rgba(26, 58, 107, 0.10) !important;
+    border: 1px solid #e2eaf5 !important;
+    overflow: hidden !important;
+}
+
+/* Card header strip */
+.sparkline13-hd,
+.sparkline12-hd,
+.sparkline14-hd,
+.sparkline15-hd,
+.sparkline16-hd,
+.sparkline11-hd,
+.sparkline8-hd,
+.sparkline9-hd,
+.sparkline7-hd,
+.sparkline10-hd {
+    background: linear-gradient(135deg, #1a3a6b 0%, #1A5DA0 100%) !important;
+    padding: 16px 22px !important;
+    border-bottom: none !important;
+}
+
+/* Header title */
+.main-sparkline13-hd h1,
+.main-sparkline12-hd h1,
+.main-sparkline14-hd h1,
+.main-sparkline15-hd h1,
+.main-sparkline16-hd h1,
+.main-sparkline11-hd h1,
+.main-sparkline8-hd h1,
+.main-sparkline9-hd h1,
+.main-sparkline7-hd h1,
+.main-sparkline10-hd h1 {
+    font-size: 17px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    margin: 0 !important;
+}
+
+/* "Data Table" span badge in title */
+.table-project-n {
+    background: rgba(255,255,255,0.18) !important;
+    color: #fff !important;
+    padding: 2px 10px !important;
+    border-radius: 20px !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    margin-left: 6px !important;
+    vertical-align: middle !important;
+}
+
+/* Add / action button in header */
+.login-btn-inner .login-submit-cs,
+.login-btn-inner .btn-primary {
+    background: #0bb8b2 !important;
+    border-color: #0bb8b2 !important;
+    border-radius: 8px !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    padding: 6px 16px !important;
+    color: #fff !important;
+    transition: background 0.2s;
+}
+.login-btn-inner .login-submit-cs:hover,
+.login-btn-inner .btn-primary:hover {
+    background: #09a09a !important;
+    border-color: #09a09a !important;
+    color: #fff !important;
+}
+.btn-add-custom {
+    background: #0bb8b2 !important;
+    border-color: #0bb8b2 !important;
+    border-radius: 8px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    padding: 10px 22px !important;
+    color: #fff !important;
+    height: 42px !important;
+    line-height: 1.4 !important;
+    transition: background 0.2s;
+}
+.btn-add-custom:hover {
+    background: #09a09a !important;
+    border-color: #09a09a !important;
+    color: #fff !important;
+}
+
+/* Graph / table body area */
+.sparkline13-graph,
+.sparkline12-graph,
+.sparkline14-graph,
+.sparkline15-graph,
+.sparkline16-graph,
+.sparkline11-graph,
+.sparkline8-graph,
+.sparkline9-graph,
+.sparkline7-graph,
+.sparkline10-graph {
+    padding: 16px !important;
+}
+
+/* Table head – navy background */
+.custom-datatable-overright table thead th,
+.datatable-dashv1-list table thead th,
+.data-table-area table thead th,
+.bootstrap-table .fixed-table-container thead th {
+    background: #1a3a6b !important;
+    color: #fff !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    border-bottom: 2px solid #0bb8b2 !important;
+    border-top: none !important;
+    padding: 3px 12px !important;
+    white-space: nowrap !important;
+    line-height: 1.2 !important;
+    height: 36px !important;
+    vertical-align: middle !important;
+}
+
+/* Table head sort icon color */
+.custom-datatable-overright table thead th .both,
+.custom-datatable-overright table thead th .asc,
+.custom-datatable-overright table thead th .desc {
+    color: rgba(255,255,255,0.7) !important;
+}
+
+/* Table body rows */
+.custom-datatable-overright table tbody tr td,
+.datatable-dashv1-list table tbody tr td {
+    font-size: 13.5px !important;
+    color: #344563 !important;
+    padding: 9px 12px !important;
+    border-top: 1px solid #eef2f8 !important;
+    vertical-align: middle !important;
+}
+
+/* Zebra striping */
+.custom-datatable-overright table tbody tr:nth-child(even) td {
+    background: #f7faff !important;
+}
+
+/* Row hover */
+.custom-datatable-overright table tbody tr:hover td,
+.datatable-dashv1-list table tbody tr:hover td {
+    background: #e6f0fb !important;
+}
+
+/* Action buttons (edit / delete / view) */
+button.pd-setting-ed {
+    background: transparent !important;
+    border: none !important;
+    border-radius: 6px !important;
+    padding: 5px 8px !important;
+    font-size: 14px !important;
+    color: #1A5DA0 !important;
+    transition: background 0.15s, color 0.15s;
+}
+button.pd-setting-ed:hover {
+    background: #e6f0fb !important;
+    color: #1a3a6b !important;
+}
+button.pd-setting-ed .fa-trash,
+button.pd-setting-ed .fa-times {
+    color: #e53935 !important;
+}
+button.pd-setting-ed:hover .fa-trash,
+button.pd-setting-ed:hover .fa-times {
+    color: #c62828 !important;
+}
+
+/* Bootstrap Table toolbar — push everything to the right */
+.fixed-table-toolbar {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 8px 4px !important;
+    flex-wrap: wrap !important;
+}
+.fixed-table-toolbar .columns,
+.fixed-table-toolbar .export,
+.fixed-table-toolbar .toolbar {
+    display: none !important;
+}
+/* Search box – right side, redesigned */
+.fixed-table-toolbar .search {
+    margin-left: auto !important;
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+}
+/* Hide Bootstrap Table's own external clear button */
+.fixed-table-toolbar .search .search-input + button,
+.fixed-table-toolbar .search button.clear-search {
+    display: none !important;
+}
+.fixed-table-toolbar .search::before {
+    content: '\f002';
+    font-family: 'FontAwesome', sans-serif;
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #0bb8b2;
+    font-size: 13px;
+    pointer-events: none;
+    z-index: 2;
+}
+.fixed-table-toolbar .search input,
+.fixed-table-toolbar .search input.form-control {
+    border-radius: 22px !important;
+    border: 1.5px solid #c5d3e8 !important;
+    padding: 7px 16px 7px 34px !important;
+    font-size: 13px !important;
+    width: 240px !important;
+    background: #f8faff !important;
+    height: auto !important;
+    box-shadow: none !important;
+    transition: border-color 0.2s, box-shadow 0.2s !important;
+}
+.fixed-table-toolbar .search input:focus,
+.fixed-table-toolbar .search input.form-control:focus {
+    border-color: #0bb8b2 !important;
+    background: #fff !important;
+    box-shadow: 0 0 0 3px rgba(11,184,178,0.15) !important;
+    outline: none !important;
+}
+
+/* Pagination area */
+.fixed-table-pagination {
+    padding: 8px 16px !important;
+    border-top: 1px solid #eef2f8 !important;
+    background: #fafbff !important;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    gap: 12px !important;
+}
+.fixed-table-pagination .pagination-detail {
+    order: 1 !important;
+    float: none !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    font-size: 13px !important;
+    color: #344563 !important;
+}
+.fixed-table-pagination .float-right.pagination,
+.fixed-table-pagination .pagination {
+    order: 2 !important;
+    float: none !important;
+    margin: 0 !important;
+}
+.fixed-table-pagination .pagination ul.pagination {
+    margin: 0 !important;
+}
+
+/* Rows-per-page dropdown button */
+.fixed-table-pagination .page-list .btn-group button,
+.fixed-table-pagination .page-list .btn,
+.fixed-table-pagination .pagination-detail .btn-group > .btn {
+    background: #0bb8b2 !important;
+    border-color: #0bb8b2 !important;
+    color: #fff !important;
+    border-radius: 6px !important;
+    padding: 3px 10px !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    box-shadow: none !important;
+}
+.fixed-table-pagination .page-list .btn-group button:hover,
+.fixed-table-pagination .page-list .btn:hover {
+    background: #09a09a !important;
+    border-color: #09a09a !important;
+}
+/* Dropdown menu items */
+.fixed-table-pagination .page-list .dropdown-menu li a {
+    font-size: 13px !important;
+    color: #344563 !important;
+}
+.fixed-table-pagination .page-list .dropdown-menu li.active a,
+.fixed-table-pagination .page-list .dropdown-menu li a:hover {
+    background: #0bb8b2 !important;
+    color: #fff !important;
+}
+/* ============================================================
+   GLOBAL FORM DESIGN – Floating Label + Gradient Header
+   Reference: add-employees / edit-employees form design
+   Apply to any form page by using .emp-form-header + .fl-group
+   ============================================================ */
+
+/* Card wrapper */
+.emp-form-card {
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(26,58,107,0.10);
+    overflow: hidden;
+    margin-top: 60px;
+    margin-bottom: 40px;
+}
+
+/* Gradient header */
+.emp-form-header {
+    background: linear-gradient(135deg, #1a3a6b 0%, #1A5DA0 100%);
+    padding: 14px 24px;
+    border-radius: 12px 12px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.emp-form-header h4 {
+    color: #fff;
+    margin: 0;
+    font-size: 17px;
+    font-weight: 600;
+}
+.emp-form-close {
+    color: rgba(255,255,255,0.8);
+    font-size: 26px;
+    line-height: 1;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: 300;
+    transition: color 0.15s;
+}
+.emp-form-close:hover { color: #fff; text-decoration: none; }
+
+/* Form body */
+.emp-form-body {
+    background: #fff;
+    padding: 28px 28px 20px;
+    border-radius: 0 0 12px 12px;
+    border: 1px solid #e2eaf5;
+    border-top: none;
+}
+
+/* Floating label group */
+.fl-group {
+    position: relative;
+    padding-top: 20px;
+    margin-bottom: 10px;
+    min-height: 62px;
+}
+.fl-group input.form-control,
+.fl-group select.form-control,
+.fl-group textarea.form-control {
+    border: none !important;
+    border-bottom: 1px solid #ced4da !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 4px 0 6px 0 !important;
+    height: 38px !important;
+    font-size: 14px !important;
+    color: #333 !important;
+    outline: none !important;
+    transition: border-color 0.2s !important;
+    resize: none;
+}
+.fl-group textarea.form-control {
+    height: auto !important;
+    min-height: 60px !important;
+}
+.fl-group input.form-control:focus,
+.fl-group select.form-control:focus,
+.fl-group textarea.form-control:focus {
+    border-bottom-color: #0bb8b2 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+}
+/* Label — always absolutely positioned, never affects container height */
+.fl-group > label {
+    position: absolute !important;
+    top: 22px !important;
+    left: 0 !important;
+    font-size: 13.5px !important;
+    color: #8898aa !important;
+    pointer-events: none !important;
+    transition: top 0.18s ease, font-size 0.18s ease, color 0.18s ease !important;
+    margin: 0 !important;
+    white-space: nowrap;
+    line-height: 1 !important;
+}
+/* Label floats up on focus / has value / autofill — stays readable, larger than before */
+.fl-group input.form-control:focus ~ label,
+.fl-group input.form-control:not(:placeholder-shown) ~ label,
+.fl-group input.form-control:-webkit-autofill ~ label,
+.fl-group select.form-control:focus ~ label,
+.fl-group select.form-control.has-value ~ label,
+.fl-group textarea.form-control:focus ~ label,
+.fl-group textarea.form-control:not(:placeholder-shown) ~ label {
+    top: 2px !important;
+    font-size: 12px !important;
+    color: #0bb8b2 !important;
+    font-weight: 600 !important;
+}
+/* Validation error inside fl-group */
+.fl-group .fl-error,
+.fl-group label.error {
+    display: block !important;
+    font-size: 11px !important;
+    color: #e53935 !important;
+    margin-top: 3px !important;
+    line-height: 1.4 !important;
+    position: static !important;
+    pointer-events: auto !important;
+}
+/* Column row spacing */
+.fl-col { margin-bottom: 18px; }
+/* Password eye icon inside fl-group */
+.fl-pw-wrap { position: relative; }
+.fl-pw-wrap .password-toggle {
+    position: absolute !important;
+    right: 0 !important;
+    top: 28px !important;
+    cursor: pointer;
+    color: #8898aa;
+    z-index: 1;
+}
+
+/* ============================================================
+   SIDEBAR REVAMP – Modern Enterprise ERP
+   ============================================================ */
+
+/* --- Hide the redundant top-bar logo block on all desktop sizes --- */
+.logo-pro {
+    display: none !important;
+}
+
+/* --- Sidebar shell --- */
+#sidebar {
+    background: #ffffff !important;
+    border-right: 1px solid #e2eaf5 !important;
+    box-shadow: 2px 0 16px rgba(26, 58, 107, 0.09) !important;
+    top: 0 !important;
+    left: 0 !important;
+}
+.left-sidebar-pro {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    z-index: 9999 !important;
+    width: 210px !important;
+    height: 100vh !important;
+}
+.sidebar-nav,
+.sidebar-nav ul,
+.sidebar-nav .metismenu {
+    background: #ffffff !important;
+}
+
+/* --- Logo / header area --- */
+.sidebar-header {
+    background: #1a3a6b !important;
+    width: 100% !important;
+    min-height: 72px !important;
+    margin-top: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 10px 12px !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    border-bottom: 1px solid rgba(255,255,255,0.12) !important;
+    margin: 0 !important;
+    text-align: center !important;
+}
+.sidebar-header img,
+.main-logo1 {
+    display: block !important;
+    max-width: 100% !important;
+    max-height: 52px !important;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important;
+    background-color: transparent !important;
+    margin: 0 auto !important;
+}
+/* Collapsed sidebar: smaller logo */
+#sidebar.active .sidebar-header {
+    min-height: 60px !important;
+    padding: 8px 6px !important;
+}
+#sidebar.active .sidebar-header img,
+#sidebar.active .main-logo1 {
+    max-height: 36px !important;
+    max-width: 60px !important;
+}
+
+/* --- Base link reset --- */
+.sidebar-nav .metismenu a,
+.left-custom-menu-adp-wrap ul.left-sidebar-menu-pro li a {
+    color: #4a5568 !important;
+    font-size: 13px !important;
+    font-weight: 400;
+    padding: 9px 14px !important;
+    margin: 1px 6px !important;
+    border-radius: 7px !important;
+    border-left: 3px solid transparent !important;
+    transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease !important;
+    display: flex;
+    align-items: center;
+}
+
+/* --- Icon inside menu items --- */
+.sidebar-nav .metismenu li .icon-wrap {
+    font-size: 15px !important;
+    margin-right: 9px !important;
+    min-width: 17px;
+    text-align: center;
+    color: #718096;
+    transition: color 0.18s ease;
+}
+
+/* --- Hover state (subtle) --- */
+.sidebar-nav .metismenu a:hover,
+.sidebar-nav .metismenu a:focus,
+.left-custom-menu-adp-wrap ul.left-sidebar-menu-pro li a:hover,
+.left-custom-menu-adp-wrap ul.left-sidebar-menu-pro li a:focus {
+    background: rgba(26, 93, 160, 0.07) !important;
+    color: #1a3a6b !important;
+    border-left-color: transparent !important;
+}
+.sidebar-nav .metismenu a:hover .icon-wrap,
+.sidebar-nav .metismenu a:focus .icon-wrap {
+    color: #1A5DA0 !important;
+}
+
+/* --- Active PARENT menu item --- */
+.nav-item.active > a,
+.sidebar-nav .metismenu .nav-item.active > a {
+    background: rgba(26, 93, 160, 0.10) !important;
+    color: #1a3a6b !important;
+    font-weight: 600 !important;
+    border-left: 3px solid transparent !important;
+}
+.nav-item.active > a .mini-click-non {
+    color: #1a3a6b !important;
+    font-weight: 600 !important;
+}
+.nav-item.active > a .icon-wrap {
+    color: #1A5DA0 !important;
+}
+
+/* --- Active SUBMENU item --- */
+.active-submenu {
+    background: rgba(26, 93, 160, 0.12) !important;
+    color: #1A5DA0 !important;
+    font-weight: 600 !important;
+    border-left: 3px solid transparent !important;
+    border-radius: 7px !important;
+    display: block;
+}
+.active-submenu .icon-wrap,
+.active-submenu .mini-sub-pro {
+    color: #1A5DA0 !important;
+}
+
+/* --- Expanded dropdown background --- */
+.sidebar-nav .metismenu ul,
+.submenu-angle {
+    background: #f3f6fc !important;
+    border-radius: 7px !important;
+    margin: 2px 6px !important;
+    padding: 4px 0 !important;
+    border-left: 2px solid rgba(26, 93, 160, 0.18) !important;
+}
+.sidebar-nav .metismenu ul li a,
+.submenu-angle li a {
+    padding: 8px 10px 8px 28px !important;
+    font-size: 12.5px !important;
+    color: #4a5568 !important;
+    margin: 1px 4px !important;
+    border-radius: 5px !important;
+}
+.sidebar-nav .metismenu ul li a:hover {
+    background: rgba(26, 93, 160, 0.09) !important;
+    color: #1a3a6b !important;
+}
+.sidebar-nav .metismenu ul li a .icon-wrap {
+    font-size: 13px !important;
+}
+.sidebar-nav .metismenu ul li.nav-item.active a {
+    background: rgba(26, 93, 160, 0.12) !important;
+    color: #1A5DA0 !important;
+    font-weight: 600 !important;
+    border-left: 3px solid transparent !important;
+}
+
+/* --- has-arrow chevron --- */
+.sidebar-nav .metismenu li .has-arrow::after {
+    right: 10px;
+    font-size: 10px;
+    color: #a0aec0;
+    transition: transform 0.2s ease;
+}
+
+/* --- Collapsed (icon-only) sidebar --- */
+#sidebar.active .metismenu > li > a,
+#sidebar.active .left-custom-menu-adp-wrap ul.left-sidebar-menu-pro li > a {
+    padding: 13px 8px !important;
+    justify-content: center;
+    border-left: none !important;
+    border-bottom: 2px solid transparent;
+    border-radius: 6px !important;
+    margin: 2px 4px !important;
+}
+#sidebar.active .nav-item.active > a {
+    border-left: none !important;
+    border-bottom: 2px solid #1A5DA0 !important;
+    background: rgba(26, 93, 160, 0.10) !important;
+}
+
+/* --- Spacing --- */
+.sidebar-nav .metismenu li + li {
+    margin-top: 1px !important;
+}
+
+/* --- Badge on menu items --- */
+.metismenu .badge {
+    font-size: 10px !important;
+    padding: 2px 6px !important;
+    border-radius: 10px !important;
+    margin-left: auto;
+}
+
+/* ============================================================ */
+
+/* ============================================================
+   BUTTON DESIGN SYSTEM – Shreerag ERP
+   Applies globally; overrides Bootstrap 4 defaults.
+   No HTML changes needed — existing class names are reused.
+   ============================================================ */
+
+/* --- Design tokens --- */
+:root {
+    --btn-primary-bg:    #1a3a6b;
+    --btn-primary-hover: #12285c;
+    --btn-secondary-bg:  #ffffff;
+    --btn-secondary-border: #c8d4e8;
+    --btn-secondary-text:   #344767;
+    --btn-secondary-hover:  #f0f4fb;
+    --btn-success-bg:    #16a34a;
+    --btn-success-hover: #15803d;
+    --btn-danger-bg:     #dc2626;
+    --btn-danger-hover:  #b91c1c;
+    --btn-warning-bg:    #d97706;
+    --btn-warning-hover: #b45309;
+    --btn-info-bg:       #0ea5e9;
+    --btn-info-hover:    #0284c7;
+    --btn-radius:        7px;
+    --btn-font-size:     13.5px;
+    --btn-font-weight:   500;
+    --btn-transition:    background 0.16s ease, border-color 0.16s ease, color 0.16s ease, box-shadow 0.16s ease;
+}
+
+/* --- Base reset for all .btn --- */
+.btn {
+    border-radius: var(--btn-radius) !important;
+    font-size: var(--btn-font-size) !important;
+    font-weight: var(--btn-font-weight) !important;
+    letter-spacing: 0.01em;
+    transition: var(--btn-transition) !important;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    line-height: 1.5;
+    white-space: nowrap;
+    vertical-align: middle;
+    user-select: none;
+    border-width: 1px;
+    border-style: solid;
+    text-decoration: none !important;
+}
+.btn:focus, .btn:active:focus {
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(26, 58, 107, 0.18) !important;
+}
+.btn:disabled, .btn.disabled {
+    opacity: 0.55 !important;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+}
+
+/* --- Size variants --- */
+.btn-sm {
+    padding: 5px 14px !important;
+    height: 34px !important;
+    font-size: 12.5px !important;
+    border-radius: 6px !important;
+}
+.btn-lg {
+    padding: 10px 22px !important;
+    height: 46px !important;
+    font-size: 15px !important;
+    border-radius: 8px !important;
+}
+/* Standard size (no modifier) */
+.btn:not(.btn-sm):not(.btn-lg) {
+    padding: 7px 18px !important;
+    height: 38px !important;
+}
+
+/* ─── PRIMARY ─────────────────────────────────────── */
+.btn-primary {
+    background-color: var(--btn-primary-bg) !important;
+    border-color: var(--btn-primary-bg) !important;
+    color: #ffffff !important;
+}
+.btn-primary:hover, .btn-primary:focus {
+    background-color: var(--btn-primary-hover) !important;
+    border-color: var(--btn-primary-hover) !important;
+    color: #ffffff !important;
+}
+.btn-primary:active {
+    background-color: #0c1d44 !important;
+    border-color: #0c1d44 !important;
+}
+
+/* ─── SECONDARY ───────────────────────────────────── */
+.btn-secondary, .btn-default {
+    background-color: var(--btn-secondary-bg) !important;
+    border-color: var(--btn-secondary-border) !important;
+    color: var(--btn-secondary-text) !important;
+}
+.btn-secondary:hover, .btn-default:hover,
+.btn-secondary:focus, .btn-default:focus {
+    background-color: var(--btn-secondary-hover) !important;
+    border-color: #a8bedc !important;
+    color: #1a3a6b !important;
+}
+.btn-secondary:active, .btn-default:active {
+    background-color: #e0e8f5 !important;
+}
+.btn-secondary:focus, .btn-default:focus {
+    box-shadow: 0 0 0 3px rgba(26, 58, 107, 0.12) !important;
+}
+
+/* ─── SUCCESS ─────────────────────────────────────── */
+.btn-success {
+    background-color: var(--btn-success-bg) !important;
+    border-color: var(--btn-success-bg) !important;
+    color: #ffffff !important;
+}
+.btn-success:hover, .btn-success:focus {
+    background-color: var(--btn-success-hover) !important;
+    border-color: var(--btn-success-hover) !important;
+    color: #ffffff !important;
+}
+.btn-success:focus {
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.22) !important;
+}
+
+/* ─── DANGER ──────────────────────────────────────── */
+.btn-danger {
+    background-color: var(--btn-danger-bg) !important;
+    border-color: var(--btn-danger-bg) !important;
+    color: #ffffff !important;
+}
+.btn-danger:hover, .btn-danger:focus {
+    background-color: var(--btn-danger-hover) !important;
+    border-color: var(--btn-danger-hover) !important;
+    color: #ffffff !important;
+}
+.btn-danger:focus {
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.22) !important;
+}
+
+/* ─── WARNING ─────────────────────────────────────── */
+.btn-warning {
+    background-color: var(--btn-warning-bg) !important;
+    border-color: var(--btn-warning-bg) !important;
+    color: #ffffff !important;
+}
+.btn-warning:hover, .btn-warning:focus {
+    background-color: var(--btn-warning-hover) !important;
+    border-color: var(--btn-warning-hover) !important;
+    color: #ffffff !important;
+}
+.btn-warning:focus {
+    box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.22) !important;
+}
+
+/* ─── INFO ────────────────────────────────────────── */
+.btn-info {
+    background-color: var(--btn-info-bg) !important;
+    border-color: var(--btn-info-bg) !important;
+    color: #ffffff !important;
+}
+.btn-info:hover, .btn-info:focus {
+    background-color: var(--btn-info-hover) !important;
+    border-color: var(--btn-info-hover) !important;
+    color: #ffffff !important;
+}
+.btn-info:focus {
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.22) !important;
+}
+
+/* ─── OUTLINE VARIANTS ────────────────────────────── */
+.btn-outline-primary {
+    background: transparent !important;
+    border-color: var(--btn-primary-bg) !important;
+    color: var(--btn-primary-bg) !important;
+}
+.btn-outline-primary:hover {
+    background: var(--btn-primary-bg) !important;
+    color: #fff !important;
+}
+.btn-outline-success {
+    background: transparent !important;
+    border-color: var(--btn-success-bg) !important;
+    color: var(--btn-success-bg) !important;
+}
+.btn-outline-success:hover {
+    background: var(--btn-success-bg) !important;
+    color: #fff !important;
+}
+.btn-outline-danger {
+    background: transparent !important;
+    border-color: var(--btn-danger-bg) !important;
+    color: var(--btn-danger-bg) !important;
+}
+.btn-outline-danger:hover {
+    background: var(--btn-danger-bg) !important;
+    color: #fff !important;
+}
+
+/* ─── LIGHT / LINK ────────────────────────────────── */
+.btn-light {
+    background-color: #f0f4fb !important;
+    border-color: #d8e2f0 !important;
+    color: #344767 !important;
+}
+.btn-light:hover {
+    background-color: #dce8f8 !important;
+    color: #1a3a6b !important;
+}
+.btn-link {
+    background: transparent !important;
+    border-color: transparent !important;
+    color: #1a3a6b !important;
+    text-decoration: underline !important;
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+}
+.btn-link:hover {
+    color: var(--btn-primary-hover) !important;
+}
+
+/* ─── CUSTOM FORM PRIMARY (btn-bg-colour) ─────────── */
+.btn-bg-colour {
+    background-color: var(--btn-primary-bg) !important;
+    border-color: var(--btn-primary-bg) !important;
+    color: #ffffff !important;
+    border-radius: var(--btn-radius) !important;
+    font-weight: 500 !important;
+    transition: var(--btn-transition) !important;
+}
+.btn-bg-colour:hover, .btn-bg-colour:focus {
+    background-color: var(--btn-primary-hover) !important;
+    border-color: var(--btn-primary-hover) !important;
+    color: #ffffff !important;
+}
+
+/* ─── TEAL ADD BUTTON (btn-add-custom) ────────────── */
+.btn-add-custom {
+    background: #0bb8b2 !important;
+    border-color: #0bb8b2 !important;
+    border-radius: var(--btn-radius) !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    padding: 6px 16px !important;
+    color: #fff !important;
+    height: auto !important;
+    min-height: 34px !important;
+    line-height: 1.5 !important;
+    transition: var(--btn-transition) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+}
+.btn-add-custom:hover, .btn-add-custom:focus {
+    background: #09a09a !important;
+    border-color: #09a09a !important;
+    color: #fff !important;
+}
+
+/* ─── TABLE ACTION ICON BUTTONS (pd-setting-ed) ───── */
+button.pd-setting-ed, a.pd-setting-ed {
+    background: transparent !important;
+    border: 1px solid transparent !important;
+    border-radius: 6px !important;
+    padding: 4px 7px !important;
+    font-size: 14px !important;
+    color: #1A5DA0 !important;
+    cursor: pointer;
+    transition: var(--btn-transition) !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    min-width: 30px;
+    height: 30px;
+    text-decoration: none !important;
+}
+button.pd-setting-ed:hover, a.pd-setting-ed:hover {
+    background: #e8f0fb !important;
+    border-color: #c8d8f0 !important;
+    color: #1a3a6b !important;
+}
+button.pd-setting-ed .fa-trash, button.pd-setting-ed .fa-times,
+a.pd-setting-ed .fa-trash, a.pd-setting-ed .fa-times {
+    color: #dc2626 !important;
+}
+button.pd-setting-ed:hover .fa-trash, button.pd-setting-ed:hover .fa-times,
+a.pd-setting-ed:hover .fa-trash, a.pd-setting-ed:hover .fa-times {
+    color: #b91c1c !important;
+}
+button.pd-setting-ed .fa-edit, button.pd-setting-ed .fa-pencil-alt,
+a.pd-setting-ed .fa-edit, a.pd-setting-ed .fa-pencil-alt {
+    color: #d97706 !important;
+}
+button.pd-setting-ed .fa-eye,
+a.pd-setting-ed .fa-eye {
+    color: #0ea5e9 !important;
+}
+button.pd-setting-ed .fa-check, button.pd-setting-ed .fa-check-circle,
+a.pd-setting-ed .fa-check, a.pd-setting-ed .fa-check-circle {
+    color: #16a34a !important;
+}
+
+/* ─── LOGIN / HEADER BUTTON OVERRIDE ─────────────── */
+.login-btn-inner .btn-primary,
+.login-btn-inner .btn-primary:hover,
+.login-btn-inner .btn-primary:active,
+.login-btn-inner .btn-primary:focus {
+    background-color: #1a3a6b !important;
+    border-color: #1a3a6b !important;
+    color: #fff !important;
+}
+.login-btn-inner .btn-primary:hover {
+    background-color: #12285c !important;
+}
+
+/* ─── DATATABLE TOOLBAR BUTTONS ───────────────────── */
+.fixed-table-toolbar .btn,
+.fixed-table-toolbar .btn-default {
+    background: #fff !important;
+    border-color: #c8d4e8 !important;
+    color: #344767 !important;
+    border-radius: 6px !important;
+    font-size: 12.5px !important;
+}
+.fixed-table-toolbar .btn:hover {
+    background: #f0f4fb !important;
+    border-color: #a8bedc !important;
+    color: #1a3a6b !important;
+}
+
+/* ─── SWAL CONFIRM BUTTONS ────────────────────────── */
+.swal2-confirm {
+    background-color: var(--btn-primary-bg) !important;
+    border-radius: var(--btn-radius) !important;
+}
+.swal2-cancel {
+    background-color: #6b7280 !important;
+    border-radius: var(--btn-radius) !important;
+}
+.swal2-deny {
+    background-color: var(--btn-danger-bg) !important;
+    border-radius: var(--btn-radius) !important;
+}
+
+/* ─── FORM ALIGNMENT: primary + secondary pair ─────── */
+.form-btn-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* ─── Legacy / scoped overrides that had dark bg ───── */
+.custom-pro-edt-ds .btn-primary {
+    background-color: var(--btn-primary-bg) !important;
+    border-color: var(--btn-primary-bg) !important;
+}
+.custom-pro-edt-ds .btn-warning {
+    background-color: var(--btn-warning-bg) !important;
+    border-color: var(--btn-warning-bg) !important;
+    color: #fff !important;
+}
+.custom-go-button .btn-primary,
+.custom-dropdowns-button .dropdown-toggle {
+    background-color: var(--btn-primary-bg) !important;
+    border-color: var(--btn-primary-bg) !important;
+}
+
+/* ─── btn-small legacy ────────────────────────────── */
+.btn-small {
+    background: #0bb8b2 !important;
+    border-color: #0bb8b2 !important;
+    color: #fff !important;
+    border-radius: 6px !important;
+    padding: 4px 12px !important;
+    font-size: 12.5px !important;
+}
+.btn-small:hover {
+    background: #09a09a !important;
+    border-color: #09a09a !important;
+}
+
+/* ─── Responsive: stack buttons on mobile ─────────── */
+@media (max-width: 576px) {
+    .btn:not(.btn-sm):not(.pd-setting-ed) {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* ============================================================ */
+
+/* ============================================================
+   SEARCH BOX & FILTER REDESIGN — Global, CSS-only
+   ============================================================ */
+
+/* 1. filterbg — primary Search/Filter button */
+.btn.filterbg,
+button.filterbg,
+a.filterbg {
+    background: #1a3a6b !important;
+    border-color: #1a3a6b !important;
+    color: #fff !important;
+    border-radius: 7px !important;
+    height: 42px !important;
+    padding: 0 20px !important;
+    font-size: 13.5px !important;
+    font-weight: 500 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    transition: background 0.18s, box-shadow 0.18s !important;
+    white-space: nowrap !important;
+}
+.btn.filterbg:hover,
+button.filterbg:hover,
+a.filterbg:hover {
+    background: #12285c !important;
+    border-color: #12285c !important;
+    color: #fff !important;
+    box-shadow: 0 3px 10px rgba(26,58,107,0.22) !important;
+}
+
+/* 2. Reset / Clear button beside filterbg */
+.datatable-dashv1-list .btn.btn-secondary,
+.datatable-dashv1-list a.btn.btn-secondary {
+    background: #fff !important;
+    border: 1.5px solid #c5d3e8 !important;
+    color: #344563 !important;
+    border-radius: 7px !important;
+    height: 42px !important;
+    padding: 0 16px !important;
+    font-size: 13.5px !important;
+    font-weight: 500 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    transition: border-color 0.18s, background 0.18s !important;
+    margin-left: 6px !important;
+}
+.datatable-dashv1-list .btn.btn-secondary:hover,
+.datatable-dashv1-list a.btn.btn-secondary:hover {
+    background: #f0f4fb !important;
+    border-color: #1a3a6b !important;
+    color: #1a3a6b !important;
+}
+
+/* 3. Custom page-level search input — with inline SVG search icon */
+.datatable-dashv1-list input[type=text].form-control,
+.datatable-dashv1-list input[type=search].form-control,
+.datatable-dashv1-list input[type=email].form-control {
+    height: 42px !important;
+    border-radius: 7px !important;
+    border: 1.5px solid #d1d9e6 !important;
+    padding: 0 14px 0 38px !important;
+    font-size: 13.5px !important;
+    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 24 24' fill='none' stroke='%231a3a6b' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E") no-repeat 11px center !important;
+    background-size: 15px !important;
+    color: #22334f !important;
+    box-shadow: none !important;
+    transition: border-color 0.18s, box-shadow 0.18s !important;
+}
+.datatable-dashv1-list input[type=text].form-control:focus,
+.datatable-dashv1-list input[type=search].form-control:focus {
+    border-color: #1a3a6b !important;
+    box-shadow: 0 0 0 3px rgba(26,58,107,0.12) !important;
+    background-color: #fff !important;
+    outline: none !important;
+}
+.datatable-dashv1-list input[type=text].form-control::placeholder,
+.datatable-dashv1-list input[type=search].form-control::placeholder {
+    color: #8898aa !important;
+    font-size: 13px !important;
+}
+
+/* 4. Date inputs inside datatable filter areas */
+.datatable-dashv1-list input[type=date].form-control {
+    height: 42px !important;
+    border-radius: 7px !important;
+    border: 1.5px solid #d1d9e6 !important;
+    padding: 0 14px !important;
+    font-size: 13.5px !important;
+    color: #22334f !important;
+    background: #fff !important;
+    transition: border-color 0.18s !important;
+}
+.datatable-dashv1-list input[type=date].form-control:focus {
+    border-color: #1a3a6b !important;
+    box-shadow: 0 0 0 3px rgba(26,58,107,0.12) !important;
+    outline: none !important;
+}
+
+/* 5. Select inside datatable filter areas */
+.datatable-dashv1-list select.form-control:not([data-toggle=table]) {
+    height: 42px !important;
+    border-radius: 7px !important;
+    border: 1.5px solid #d1d9e6 !important;
+    font-size: 13.5px !important;
+    color: #22334f !important;
+    background: #fff !important;
+    transition: border-color 0.18s !important;
+}
+.datatable-dashv1-list select.form-control:not([data-toggle=table]):focus {
+    border-color: #1a3a6b !important;
+    box-shadow: 0 0 0 3px rgba(26,58,107,0.12) !important;
+    outline: none !important;
+}
+
+/* 6. Bootstrap Table built-in search — align icon color to navy */
+.fixed-table-toolbar .search::before {
+    color: #1a3a6b !important;
+}
+.fixed-table-toolbar .search input:focus,
+.fixed-table-toolbar .search input.form-control:focus {
+    border-color: #1a3a6b !important;
+    box-shadow: 0 0 0 3px rgba(26,58,107,0.12) !important;
+}
+
+/* 7. Inline search column gaps */
+.datatable-dashv1-list .d-flex.justify-content-end > [class*=col-] {
+    padding-right: 6px !important;
+    padding-left: 6px !important;
+}
+
+/* 8. Button group spacing inside col-md-2 */
+.datatable-dashv1-list .col-md-2 .btn + .btn,
+.datatable-dashv1-list .col-md-2 .btn + a.btn,
+.datatable-dashv1-list .col-md-2 a.btn + .btn {
+    margin-left: 6px !important;
+}
+
+/* 9. Export dropdown beside search */
+.datatable-dashv1-list .dropdown .btn-outline-secondary {
+    height: 42px !important;
+    border-radius: 7px !important;
+    border: 1.5px solid #d1d9e6 !important;
+    color: #344563 !important;
+    font-size: 13px !important;
+    padding: 0 14px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+}
+.datatable-dashv1-list .dropdown .btn-outline-secondary:hover {
+    border-color: #1a3a6b !important;
+    color: #1a3a6b !important;
+    background: #f0f4fb !important;
+}
+
+/* 10. Responsive: stack search row on mobile */
+@media (max-width: 768px) {
+    .datatable-dashv1-list .d-flex.justify-content-end {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 8px !important;
+    }
+    .datatable-dashv1-list .d-flex.justify-content-end > [class*=col-] {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+    }
+    .datatable-dashv1-list input[type=text].form-control,
+    .datatable-dashv1-list input[type=search].form-control {
+        width: 100% !important;
+    }
+    .datatable-dashv1-list .btn.filterbg,
+    .datatable-dashv1-list .btn.btn-secondary {
+        width: 100% !important;
+        justify-content: center !important;
+        margin-left: 0 !important;
+        margin-bottom: 4px !important;
+    }
+}
+
+/* ============================================================ */
+
+/* ============================================================
+   GLOBAL FONT SIZE +3px
+   Base: Bootstrap default 14px -> 17px
+   All rem/em values scale automatically from html font-size.
+   Component-level overrides listed below for fixed-px rules.
+   ============================================================ */
+html {
+    font-size: 17px !important;
+}
+body {
+    font-size: 17px !important;
+}
+
+/* --- Table & datatable cells --- */
+.table td, .table th,
+.table-bordered td, .table-bordered th,
+.fixed-table-container td, .fixed-table-container th {
+    font-size: 16px !important;
+}
+
+/* --- Sidebar nav links --- */
+.sidebar-nav .metismenu a {
+    font-size: 16px !important;
+}
+.sidebar-nav .metismenu ul li a,
+.submenu-angle li a {
+    font-size: 15px !important;
+}
+
+/* --- Form controls --- */
+.form-control, .custom-select {
+    font-size: 16px !important;
+}
+
+/* --- Buttons --- */
+.btn {
+    font-size: 15.5px !important;
+}
+.btn.btn-sm, .btn-sm {
+    font-size: 14px !important;
+}
+
+/* --- Labels & small text --- */
+label { font-size: 15px !important; }
+small, .small { font-size: 13px !important; }
+
+/* --- Floating label floated state (was 12px -> 13px) --- */
+.fl-group input.form-control:focus ~ label,
+.fl-group input.form-control:not(:placeholder-shown) ~ label,
+.fl-group input.form-control:-webkit-autofill ~ label,
+.fl-group select.form-control:focus ~ label,
+.fl-group select.form-control.has-value ~ label,
+.fl-group textarea.form-control:focus ~ label,
+.fl-group textarea.form-control:not(:placeholder-shown) ~ label {
+    font-size: 13px !important;
+}
+/* Resting label (was 13.5px -> 16px, already inherits, but pin it) */
+.fl-group > label {
+    font-size: 16px !important;
+}
+
+/* --- DataTable toolbar & search --- */
+.fixed-table-toolbar .search input,
+.fixed-table-toolbar .search input.form-control {
+    font-size: 15px !important;
+}
+.datatable-dashv1-list input[type=text].form-control,
+.datatable-dashv1-list input[type=search].form-control {
+    font-size: 15.5px !important;
+}
+
+/* --- Pagination --- */
+.fixed-table-pagination { font-size: 15px !important; }
+.pagination li a, .pagination li span { font-size: 14px !important; }
+
+/* --- Headings (scale up consistently) --- */
+h1 { font-size: 2rem !important; }
+h2 { font-size: 1.75rem !important; }
+h3 { font-size: 1.5rem !important; }
+h4 { font-size: 1.25rem !important; }
+h5 { font-size: 1.1rem !important; }
+h6 { font-size: 1rem !important; }
+
+/* --- Badges & tags --- */
+.badge { font-size: 13px !important; }
+
+/* --- Alerts & cards --- */
+.alert, .card-body { font-size: 16px !important; }
+
+/* --- Dropdown menus --- */
+.dropdown-item { font-size: 15px !important; }
+
+/* ============================================================ */
+

@@ -1,234 +1,212 @@
 @extends('admin.layouts.master')
 @section('content')
-    <style>
-        label {
-            margin-top: 20px;
-        }
+    <div class="data-table-area mg-tb-15">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-lg-10 col-md-12">
+                    <div class="emp-form-card">
+                        <div class="emp-form-header">
+                            <h4><i class="fa fa-ban mr-2"></i> Add Rejected Challan</h4>
+                            <a href="{{ route('list-rejected-chalan') }}" class="emp-form-close">&times;</a>
+                        </div>
+                        <div class="emp-form-body">
 
-        label.error {
-            color: red;
-            /* Change 'red' to your desired text color */
-            font-size: 12px;
-            /* Adjust font size if needed */
-            /* Add any other styling as per your design */
-        }
-    </style>
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="sparkline12-list">
-                <div class="sparkline12-hd">
-                    <div class="main-sparkline12-hd">
-                        <center>
-                            <h1>Add Rejected Chalan Data</h1>
-                        </center>
-                    </div>
-                </div>
-                <div class="sparkline12-graph">
-                    <div class="basic-login-form-ad">
-                        <div class="row">
                             @if (session('msg'))
                                 <div class="alert alert-{{ session('status') }}">
                                     {{ session('msg') }}
                                 </div>
                             @endif
 
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                @if (Session::get('status') == 'success')
-                                    <div class="col-md-12">
-                                        <div class="alert alert-success alert-dismissible" role="alert">
-                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                            <strong>Success!</strong> {{ Session::get('msg') }}
-                                        </div>
-                                    </div>
-                                @endif
-
-                                @if (Session::get('status') == 'error')
-                                    <div class="col-md-12">
-                                        <div class="alert alert-danger alert-dismissible" role="alert">
-                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                            <strong>Error!</strong> {!! session('msg') !!}
-                                        </div>
-                                    </div>
-                                @endif
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="all-form-element-inner">
-                                        <form action="{{ route('store-rejected-chalan') }}" method="POST" id="addDesignsForm"
-                                            enctype="multipart/form-data">
-                                            @csrf
-
-                                            <input type="hidden" name="id" id=""
-                                            class="form-control" value="{{ $gatepass_data->id }}"
-                                            placeholder="">
-                                            <div class="form-group-inner">
-
-                                                {{-- ========================== --}}
-                                                <div class="container-fluid">
-                                                    {{-- <form 
-                                                action="{{ route('addmorePost') }}"
-                                                method="POST"> --}}
-
-                                                    {{-- @csrf --}}
-
-                                                    @if ($errors->any())
-                                                        <div class="alert alert-danger">
-
-                                                            <ul>
-
-                                                                @foreach ($errors->all() as $error)
-                                                                    <li>{{ $error }}</li>
-                                                                @endforeach
-
-                                                            </ul>
-
-                                                        </div>
-                                                    @endif
-
-                                                    @if (Session::has('success'))
-                                                        <div class="alert alert-success text-center">
-
-                                                            <a href="#" class="close" data-dismiss="alert"
-                                                                aria-label="close">×</a>
-
-                                                            <p>{{ Session::get('success') }}</p>
-
-                                                        </div>
-                                                    @endif
-
-                                                    {{-- <button type="submit" class="btn btn-success">Save</button> --}}
-
-                                                    {{-- </form> --}}
-
-                                                </div>
-
-                                                {{-- =================== --}}
-                                                <div class="row">
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="purchase_orders_id">PO No.:</label>
-                                                        <input type="text" class="form-control" id="purchase_orders_id"
-                                                            name="purchase_orders_id" placeholder="Enter Purchase No."
-                                                            value="{{ $purchase_order_data->purchase_orders_id }}" readonly>
-                                                    </div>
-
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="po_date">PO Date :</label>
-                                                        <!-- <input type="date" class="form-control" id="po_date"
-                                                                name="po_date" placeholder="Enter PO Date"> -->
-                                                        <input type="text" class="form-control" id="po_date"
-                                                            name="po_date" placeholder="Enter PO Date"
-                                                            value="{{ $purchase_order_data->created_at->format('d-m-Y') }}"
-                                                            readonly>
-                                                    </div>
-
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="gatepass_name">Customer Name :</label>
-                                                        <input type="text" class="form-control" id="gatepass_name"
-                                                            name="gatepass_name" placeholder="Enter Customer Name"
-                                                            value="{{ $gatepass_data->gatepass_name }}"
-                                                            readonly>
-                                                    </div>
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="grn_date">GRN Date:</label>
-                                                        <input type="date" class="form-control" id="grn_date"
-                                                            name="grn_date" placeholder="Enter GRN Date"
-                                                            value="{{ $gatepass_data->grn_date }}" readonly>
-
-                                                    </div>
-                                                </div>
-
-                                                <div style="margin-top:20px">
-                                                    <table class="table table-bordered" id="dynamicTable">
-                                                        <tr>
-                                                            <th>Description</th>
-                                                            <th>Chalan Quantity</th>
-                                                            <th>Actual Quantity</th>
-                                                            <th>Accepted Quantity</th>
-                                                            <th>Rejected Quantity</th>
-                                                            {{-- <th>Action</th> --}}
-                                                        </tr>
-                                                        @foreach ($purchase_order_details_data as $item)
-                                                            <tr>
-                                                                <input type="hidden" name="addmore[0][edit_id]"
-                                                                    placeholder="Enter Description" class="form-control"
-                                                                    value="{{ $item->id }}" readonly />
-                                                                <td><input type="text" name="addmore[0][description]"
-                                                                        placeholder="Enter Description"
-                                                                        class="form-control"
-                                                                        value="{{ $item->part_description }}" readonly />
-                                                                </td>
-                                                                <td><input type="text"
-                                                                        name="addmore[0][chalan_quantity]"
-                                                                        placeholder="Enter Chalan Qty"
-                                                                        class="form-control"
-                                                                        value="{{ $item->quantity }}" readonly />
-                                                                </td>
-                                                                <td><input type="text"
-                                                                        name="addmore[0][actual_quantity]"
-                                                                        placeholder="Enter Actual Qty"
-                                                                        
-                                                                        class="form-control actual_quantity"
-                                                                        value="{{ $item->actual_quantity }}" readonly />
-                                                                </td>
-                                                                <td><input type="text"
-                                                                        name="addmore[0][accepted_quantity]"
-                                                                        placeholder="Enter Accepted Qty"
-                                                                        class="form-control accepted_quantity"
-                                                                        value="{{ $item->accepted_quantity }}" readonly/>
-                                                                </td>
-                                                                <td><input type="text"
-                                                                        name="addmore[0][rejected_quantity]"
-                                                                        placeholder="Enter Rejected Qty"
-                                                                        class="form-control rejected_quantity" 
-                                                                        value="{{ $item->rejected_quantity }}" readonly />
-                                                                </td>
-                                                                {{-- <td><button type="button" name="add" id="add"
-                                                                        class="btn btn-success">Add More</button></td> --}}
-                                                            </tr>
-                                                        @endforeach
-                                                    </table>
-                                                </div>
-
-                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="chalan_no">Chalan No. :</label>
-                                                    <input type="text" class="form-control" id="chalan_no"
-                                                        name="chalan_no" placeholder="Enter Chalan No">
-                                                </div>
-
-                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="reference_no">Your reference no. :</label>
-                                                    <input type="text" class="form-control" id="reference_no"
-                                                        name="reference_no" placeholder="Enter Reference No">
-                                                </div> 
-                                                <div class="row">
-                                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                        <label for="remark">Remark:</label>
-                                                        <textarea class="form-control" rows="3" type="text" class="form-control" id="remark" name="remark"
-                                                            placeholder="Enter Remark"></textarea>
-                                                    </div>
-                                                </div>
-
-                                                <div class="login-btn-inner">
-                                                    <div class="row">
-                                                        <div class="col-lg-5"></div>
-                                                        <div class="col-lg-7">
-                                                            <div class="login-horizental cancel-wp pull-left">
-                                                                <a href="{{ route('list-rejected-chalan') }}" class="btn btn-white"
-                                                                    style="margin-bottom:50px">Cancel</a>
-                                                                <button class="btn btn-sm btn-primary login-submit-cs"
-                                                                    type="submit" style="margin-bottom:50px">Save
-                                                                    Data</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </form>
+                            @if (Session::get('status') == 'success')
+                                <div class="col-md-12">
+                                    <div class="alert alert-success alert-dismissible" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <strong>Success!</strong> {{ Session::get('msg') }}
                                     </div>
                                 </div>
-                            </div>
+                            @endif
+
+                            @if (Session::get('status') == 'error')
+                                <div class="col-md-12">
+                                    <div class="alert alert-danger alert-dismissible" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <strong>Error!</strong> {!! session('msg') !!}
+                                    </div>
+                                </div>
+                            @endif
+
+                            <form action="{{ route('store-rejected-chalan') }}" method="POST" id="addDesignsForm"
+                                enctype="multipart/form-data">
+                                @csrf
+
+                                <input type="hidden" name="id" id=""
+                                class="form-control" value="{{ $gatepass_data->id }}"
+                                placeholder="">
+                                <div class="form-group-inner">
+
+                                    <div class="container-fluid">
+                                        @if ($errors->any())
+                                            <div class="alert alert-danger">
+                                                <ul>
+                                                    @foreach ($errors->all() as $error)
+                                                        <li>{{ $error }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        @endif
+
+                                        @if (Session::has('success'))
+                                            <div class="alert alert-success text-center">
+                                                <a href="#" class="close" data-dismiss="alert"
+                                                    aria-label="close">×</a>
+                                                <p>{{ Session::get('success') }}</p>
+                                            </div>
+                                        @endif
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+                                            <div class="fl-group">
+                                                <input type="text" class="form-control" id="purchase_orders_id"
+                                                    name="purchase_orders_id" placeholder=" "
+                                                    value="{{ $purchase_order_data->purchase_orders_id }}" readonly>
+                                                <label for="purchase_orders_id">PO No.</label>
+                                                @if($errors->has('purchase_orders_id'))<span class="fl-error">{{ $errors->first('purchase_orders_id') }}</span>@endif
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+                                            <div class="fl-group">
+                                                <input type="text" class="form-control" id="po_date"
+                                                    name="po_date" placeholder=" "
+                                                    value="{{ $purchase_order_data->created_at->format('d-m-Y') }}"
+                                                    readonly>
+                                                <label for="po_date">PO Date</label>
+                                                @if($errors->has('po_date'))<span class="fl-error">{{ $errors->first('po_date') }}</span>@endif
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+                                            <div class="fl-group">
+                                                <input type="text" class="form-control" id="gatepass_name"
+                                                    name="gatepass_name" placeholder=" "
+                                                    value="{{ $gatepass_data->gatepass_name }}"
+                                                    readonly>
+                                                <label for="gatepass_name">Customer Name</label>
+                                                @if($errors->has('gatepass_name'))<span class="fl-error">{{ $errors->first('gatepass_name') }}</span>@endif
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+                                            <div class="fl-group">
+                                                <input type="date" class="form-control" id="grn_date"
+                                                    name="grn_date" placeholder=" "
+                                                    value="{{ $gatepass_data->grn_date }}" readonly>
+                                                <label for="grn_date">GRN Date</label>
+                                                @if($errors->has('grn_date'))<span class="fl-error">{{ $errors->first('grn_date') }}</span>@endif
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div style="margin-top:20px">
+                                        <table class="table table-bordered" id="dynamicTable">
+                                            <tr>
+                                                <th>Description</th>
+                                                <th>Chalan Quantity</th>
+                                                <th>Actual Quantity</th>
+                                                <th>Accepted Quantity</th>
+                                                <th>Rejected Quantity</th>
+                                            </tr>
+                                            @foreach ($purchase_order_details_data as $item)
+                                                <tr>
+                                                    <input type="hidden" name="addmore[0][edit_id]"
+                                                        placeholder="Enter Description" class="form-control"
+                                                        value="{{ $item->id }}" readonly />
+                                                    <td><input type="text" name="addmore[0][description]"
+                                                            placeholder="Enter Description"
+                                                            class="form-control"
+                                                            value="{{ $item->part_description }}" readonly />
+                                                    </td>
+                                                    <td><input type="text"
+                                                            name="addmore[0][chalan_quantity]"
+                                                            placeholder="Enter Chalan Qty"
+                                                            class="form-control"
+                                                            value="{{ $item->quantity }}" readonly />
+                                                    </td>
+                                                    <td><input type="text"
+                                                            name="addmore[0][actual_quantity]"
+                                                            placeholder="Enter Actual Qty"
+
+                                                            class="form-control actual_quantity"
+                                                            value="{{ $item->actual_quantity }}" readonly />
+                                                    </td>
+                                                    <td><input type="text"
+                                                            name="addmore[0][accepted_quantity]"
+                                                            placeholder="Enter Accepted Qty"
+                                                            class="form-control accepted_quantity"
+                                                            value="{{ $item->accepted_quantity }}" readonly/>
+                                                    </td>
+                                                    <td><input type="text"
+                                                            name="addmore[0][rejected_quantity]"
+                                                            placeholder="Enter Rejected Qty"
+                                                            class="form-control rejected_quantity"
+                                                            value="{{ $item->rejected_quantity }}" readonly />
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </table>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+                                            <div class="fl-group">
+                                                <input type="text" class="form-control" id="chalan_no"
+                                                    name="chalan_no" placeholder=" ">
+                                                <label for="chalan_no">Chalan No.</label>
+                                                @if($errors->has('chalan_no'))<span class="fl-error">{{ $errors->first('chalan_no') }}</span>@endif
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+                                            <div class="fl-group">
+                                                <input type="text" class="form-control" id="reference_no"
+                                                    name="reference_no" placeholder=" ">
+                                                <label for="reference_no">Your Reference No.</label>
+                                                @if($errors->has('reference_no'))<span class="fl-error">{{ $errors->first('reference_no') }}</span>@endif
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-12 col-md-12 col-sm-12 fl-col">
+                                            <div class="fl-group">
+                                                <textarea class="form-control" rows="3" id="remark" name="remark"
+                                                    placeholder=" "></textarea>
+                                                <label for="remark">Remark</label>
+                                                @if($errors->has('remark'))<span class="fl-error">{{ $errors->first('remark') }}</span>@endif
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="login-btn-inner">
+                                        <div class="row">
+                                            <div class="col-lg-5"></div>
+                                            <div class="col-lg-7">
+                                                <div class="login-horizental cancel-wp pull-left">
+                                                    <a href="{{ route('list-rejected-chalan') }}" class="btn btn-white"
+                                                        style="margin-bottom:50px">Cancel</a>
+                                                    <button class="btn btn-sm btn-primary login-submit-cs"
+                                                        type="submit" style="margin-bottom:50px">Save
+                                                        Data</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+
                         </div>
                     </div>
                 </div>
@@ -285,9 +263,6 @@
         jQuery(document).ready(function($) {
             $("#addDesignsForm").validate({
                 rules: {
-                    // grn_number: {
-                    //     required: true,
-                    // },
                     grn_date: {
                         required: true,
                     },
@@ -313,9 +288,6 @@
                     'addmore[0][description]': {
                         required: true,
                     },
-                    // 'addmore[0][qc_check_remark]': {
-                    //     required: true,
-                    // },
                     'addmore[0][chalan_quantity]': {
                         required: true,
                     },
@@ -330,9 +302,6 @@
                     },
                 },
                 messages: {
-                    // grn_number: {
-                    //     required: "Please Enter GRN Number.",
-                    // },
                     grn_date: {
                         required: "Please Select GRN Date.",
                     },
@@ -351,13 +320,10 @@
                     remark: {
                         required: "Please enter Remark.",
                     },
-                  
+
                     'addmore[0][description]': {
                         required: "Please enter Description.",
                     },
-                    // 'addmore[0][qc_check_remark]': {
-                    //     required: "Please enter QC Check.",
-                    // },
                     'addmore[0][chalan_quantity]': {
                         required: "Please enter Chalan Qty.",
                     },
@@ -374,9 +340,5 @@
             });
         });
     </script>
-
-
-
-
 
 @endsection

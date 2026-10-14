@@ -5,12 +5,6 @@
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="sparkline13-list">
-                    <div class="sparkline13-hd">
-                        <div class="main-sparkline13-hd">
-                            <h1>Search By <span class="table-project-n">PO Number</span></h1>
-                        </div>
-                    </div>
-
                     @if (Session::get('status') == 'success')
                         <div class="alert alert-success alert-dismissible" role="alert">
                             <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
@@ -25,6 +19,9 @@
                     @endif
 
                     <div class="sparkline13-graph">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 style="margin:0; font-weight:600; color:#1a3a6b;">Search By PO Number</h5>
+                        </div>
                         {{-- Search Form --}}
                         <form method="GET" action="{{ route('search-by-po-no') }}" id="poSearchForm">
                             <div class="d-flex justify-content-end mb-3">

@@ -1,141 +1,92 @@
 @extends('admin.layouts.master')
 @section('content')
-<style>
-    label {
-        margin-top: 20px;
-    }
-</style>
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <div class="sparkline12-list">
-            <div class="sparkline12-hd">
-                <div class="main-sparkline12-hd">
-                    <center><h1>Update Gatepass Data</h1></center>
-                </div>
-            </div>
-            <div class="sparkline12-graph">
-                <div class="basic-login-form-ad">
-                    <div class="row">
-                        @if(session('msg'))
-                            <div class="alert alert-{{ session('status') }}">
-                                {{ session('msg') }}
-                            </div>
-                        @endif
 
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="all-form-element-inner">
-                              
-                                <form action="{{ route('update-gatepass') }}" method="POST" enctype="multipart/form-data" id="regForm" autocomplete="off">
-                                    @csrf
-                                    <div class="form-group-inner">
-                                        <input type="hidden" class="form-control" value="@if (old('id')) {{ old('id') }}@else{{ $editData->id }} @endif" id="id" name="id">
-                                        <input type="hidden" class="form-control" value="@if (old('business_details_id')) {{ old('business_details_id') }}@else{{ $editData->business_details_id }} @endif" id="business_details_id" name="business_details_id">
-                                        <div class="row">
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="purchase_orders_id">PO:</label>
-                                                <input type="text" class="form-control" id="purchase_orders_id"
-                                                    name="purchase_orders_id" placeholder="Enter PO No" value="{{$editData->purchase_orders_id}}" readonly>
-                                            </div>                                               
-
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="gatepass_name">Name:</label>
-                                                <input type="text" class="form-control" id="gatepass_name"
-                                                    name="gatepass_name" placeholder="Enter Name"  value="{{$editData->gatepass_name}}">
-                                            </div>
-
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="gatepass_date">Date :</label>
-                                                <input type="date" class="form-control" id="gatepass_date"
-                                                    name="gatepass_date" placeholder="Select Date"  value="{{$editData->gatepass_date}}">
-                                            </div>
-
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="gatepass_time">Time:</label>
-                                                <input type="time" class="form-control" id="gatepass_time"
-                                                    name="gatepass_time" placeholder="Select Time"  value="{{$editData->gatepass_time}}">
-                                            </div>
-                                               
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="remark">Remark:</label>
-                                                <input type="text" class="form-control" id="remark"
-                                                    name="remark" placeholder="Enter Remark"  value="{{$editData->remark}}">
-                                            </div>  
-                                           
-                                        </div>
-
-                                      
-                                    <div class="login-btn-inner">
-                                        <div class="row">
-                                            <div class="col-lg-5"></div>
-                                            <div class="col-lg-7">
-                                                <div class="login-horizental cancel-wp pull-left">
-                                                   <button type="button" 
-        onclick="window.location='{{ route('list-gatepass') }}'" 
-        class="btn btn-white" 
-        style="margin-bottom:50px">
-    Cancel
-</button>
-
-                                                    <button class="btn btn-sm btn-primary login-submit-cs" type="submit" style="margin-bottom:50px">Update Data</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<div class="data-table-area mg-tb-15">
+<div class="container-fluid">
+<div class="row justify-content-center">
+<div class="col-lg-10 col-md-12">
+<div class="emp-form-card">
+  <div class="emp-form-header">
+    <h4><i class="fa fa-edit mr-2"></i> Edit Gatepass</h4>
+    <a href="{{ route('list-gatepass') }}" class="emp-form-close" title="Close">&times;</a>
+  </div>
+  <div class="emp-form-body">
+    @if(session('msg'))
+      <div class="alert alert-{{ session('status') }}">{{ session('msg') }}</div>
+    @endif
+    <form action="{{ route('update-gatepass') }}" method="POST" enctype="multipart/form-data" id="regForm" autocomplete="off">
+      @csrf
+      <input type="hidden" class="form-control" value="@if(old('id')){{ old('id') }}@else{{ $editData->id }}@endif" id="id" name="id">
+      <input type="hidden" class="form-control" value="@if(old('business_details_id')){{ old('business_details_id') }}@else{{ $editData->business_details_id }}@endif" id="business_details_id" name="business_details_id">
+      <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+          <div class="fl-group">
+            <input type="text" class="form-control" id="purchase_orders_id" name="purchase_orders_id" placeholder=" "
+              value="{{ $editData->purchase_orders_id }}" readonly>
+            <label for="purchase_orders_id">PO <span class="red-text">*</span></label>
+          </div>
         </div>
-    </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+          <div class="fl-group">
+            <input type="text" class="form-control" id="gatepass_name" name="gatepass_name" placeholder=" "
+              value="{{ $editData->gatepass_name }}">
+            <label for="gatepass_name">Name <span class="red-text">*</span></label>
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+          <div class="fl-group">
+            <input type="date" class="form-control" id="gatepass_date" name="gatepass_date" placeholder=" "
+              value="{{ $editData->gatepass_date }}">
+            <label for="gatepass_date">Date <span class="red-text">*</span></label>
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+          <div class="fl-group">
+            <input type="time" class="form-control" id="gatepass_time" name="gatepass_time" placeholder=" "
+              value="{{ $editData->gatepass_time }}">
+            <label for="gatepass_time">Time <span class="red-text">*</span></label>
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+          <div class="fl-group">
+            <input type="text" class="form-control" id="remark" name="remark" placeholder=" "
+              value="{{ $editData->remark }}">
+            <label for="remark">Remark</label>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12 col-sm-12 text-center mt-4">
+        <button type="button" onclick="window.location='{{ route('list-gatepass') }}'" class="btn btn-sm btn-secondary mr-2">Cancel</button>
+        <button type="submit" class="btn btn-sm btn-bg-colour">Update Data</button>
+      </div>
+    </form>
+  </div>
 </div>
+</div></div></div></div>
+
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script>
     $(document).ready(function() {
-        // Custom validation rule for spaces
         $.validator.addMethod("spcenotallow", function(value, element) {
             return this.optional(element) || value.trim().length > 0;
         }, "Enter some valid text");
 
-        // Initialize form validation
         $("#regForm").validate({
             rules: {
-                gatepass_name: {
-                    required: true,
-                    spcenotallow: true,
-                },
-                gatepass_date: {
-                    required: true,
-                    date: true,
-                },
-                gatepass_time: {
-                    required: true,
-                },
-                remark: {
-                    spcenotallow: true,
-                },
+                gatepass_name: { required: true, spcenotallow: true },
+                gatepass_date: { required: true, date: true },
+                gatepass_time: { required: true },
+                remark: { spcenotallow: true },
             },
             messages: {
-                gatepass_name: {
-                    required: "Please enter the name.",
-                    spcenotallow: "Name cannot contain only spaces.",
-                },
-                gatepass_date: {
-                    required: "Please select a date.",
-                    date: "Enter a valid date.",
-                },
-                gatepass_time: {
-                    required: "Please select a time.",
-                },
-                remark: {
-                    spcenotallow: "Remark cannot contain only spaces.",
-                },
+                gatepass_name: { required: "Please enter the name.", spcenotallow: "Name cannot contain only spaces." },
+                gatepass_date: { required: "Please select a date.", date: "Enter a valid date." },
+                gatepass_time: { required: "Please select a time." },
+                remark: { spcenotallow: "Remark cannot contain only spaces." },
             },
             submitHandler: function(form) {
-                // Confirmation dialog before submitting the form
                 Swal.fire({
                     title: "Are you sure?",
                     text: "Gatepass Updated successfully?",
@@ -153,6 +104,5 @@
         });
     });
 </script>
-        
 
 @endsection

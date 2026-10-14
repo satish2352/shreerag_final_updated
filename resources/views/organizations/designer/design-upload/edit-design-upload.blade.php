@@ -1,184 +1,134 @@
 @extends('admin.layouts.master')
 @section('content')
-    <style>
-        label {
-            margin-top: 20px;
-        }
-
-        label.error {
-            color: red;
-            /* Change 'red' to your desired text color */
-            font-size: 12px;
-            /* Adjust font size if needed */
-            /* Add any other styling as per your design */
-        }
-    </style>
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="sparkline12-list">
-                <div class="sparkline12-hd">
-                    <div class="main-sparkline12-hd">
-                        <center>
-                            <h1>Edit Production Data</h1>
-                        </center>
-                    </div>
+    <div class="data-table-area mg-tb-15">
+    <div class="container-fluid">
+    <div class="row justify-content-center">
+    <div class="col-lg-10 col-md-12">
+    <div class="emp-form-card">
+        <div class="emp-form-header">
+            <h4><i class="fa fa-edit mr-2"></i> Edit Design Upload</h4>
+            <a href="{{ route('list-products') }}" class="emp-form-close">&times;</a>
+        </div>
+        <div class="emp-form-body">
+            @if (session('msg'))
+                <div class="alert alert-{{ session('status') }}">
+                    {{ session('msg') }}
                 </div>
-                <div class="sparkline12-graph">
-                    <div class="basic-login-form-ad">
-                        <div class="row">
-                            @if (session('msg'))
-                                <div class="alert alert-{{ session('status') }}">
-                                    {{ session('msg') }}
-                                </div>
-                            @endif
+            @endif
+            @if (Session::has('status'))
+                <div class="alert alert-{{ Session::get('status') }} alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <strong>{{ ucfirst(Session::get('status')) }}!</strong>
+                    {{ Session::get('msg') }}
+                </div>
+            @endif
 
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                @if (Session::has('status'))
-                                    <div class="col-md-12">
-                                        <div class="alert alert-{{ Session::get('status') }} alert-dismissible"
-                                            role="alert">
-                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                            <strong>{{ ucfirst(Session::get('status')) }}!</strong>
-                                            {{ Session::get('msg') }}
-                                        </div>
-                                    </div>
+            <form action="{{ route('update-products') }}" method="POST" id="editDesignsForm" enctype="multipart/form-data">
+                @csrf
+
+                <a class="btn btn-sm btn-primary ml-3"> <button
+                        type="button" name="add" id="add" class="btn btn-success">Add
+                        More</button></a>
+
+                <div class="container-fluid">
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    <table class="table table-bordered" id="dynamicTable">
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Product Qty</th>
+                            <th>Product Price</th>
+                            <th>Product Unit</th>
+                            <th>Action</th>
+                        </tr>
+                        {{-- @foreach ($editData as $key => $editDataNew) --}}
+                        <tr>
+                            <input type="hidden" name="" id=""
+                                class="form-control" value="" placeholder="">
+                            <td>
+                                <input type="text" name="" value=""
+                                    placeholder="Enter Product Name" class="form-control" />
+                            </td>
+                            <td><input type="text" name="" value=""
+                                    placeholder="Enter Product Quantity" class="form-control" />
+                            </td>
+                            <td><input type="text" name="" value=""
+                                    placeholder="Enter Product Price" class="form-control" />
+                            </td>
+                            <td><input type="text" name="" value=""
+                                    placeholder="Enter Product Unit" class="form-control" />
+                            </td>
+                            {{-- <td><button type="button" class="btn btn-danger remove-tr">Remove</button></td> --}}
+                            <td>
+                                <a data-id="" class="delete-btn btn btn-danger m-1"
+                                    title="Delete Tender"><i class="fas fa-archive"></i></a>
+                            </td>
+                        </tr>
+                        {{-- @endforeach --}}
+                    </table>
+                    {{-- @foreach ($editData as $key => $editDataNew)
+                    @if ($key == 0) --}}
+                    <div class="row mt-3">
+                        <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+                            <div class="fl-group">
+                                <input type="file" name="english_image"
+                                    class="form-control" id="english_image" accept="image/*">
+                                <label for="english_image">Image</label>
+                                @if ($errors->has('english_image'))
+                                    <span class="fl-error">{{ $errors->first('english_image') }}</span>
                                 @endif
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="all-form-element-inner">
-                                        <form
-                                            action="{{ route('update-products') }}"
-                                            method="POST" id="editDesignsForm" enctype="multipart/form-data">
-                                            @csrf
-
-                                            <a {{-- href="{{ route('add-more-data') }}" --}} class="btn btn-sm btn-primary ml-3"> <button
-                                                    type="button" name="add" id="add" class="btn btn-success">Add
-                                                    More</button></a>
-
-                                            <div class="container-fluid">
-                                                @if ($errors->any())
-                                                    <div class="alert alert-danger">
-                                                        <ul>
-                                                            @foreach ($errors->all() as $error)
-                                                                <li>{{ $error }}</li>
-                                                            @endforeach
-                                                        </ul>
-                                                    </div>
-                                                @endif
-
-                                                <table class="table table-bordered" id="dynamicTable">
-                                                    <tr>
-                                                        <th>Product Name</th>
-                                                        <th>Product Qty</th>
-                                                        <th>Product Price</th>
-                                                        <th>Product Unit</th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                    {{-- @foreach ($editData as $key => $editDataNew) --}}
-                                                    <tr>
-                                                        <input type="hidden" name="" id=""
-                                                            class="form-control" value="" placeholder="">
-                                                        <td>
-                                                            <input type="text" name="" value=""
-                                                                placeholder="Enter Product Name" class="form-control" />
-                                                        </td>
-                                                        <td><input type="text" name="" value=""
-                                                                placeholder="Enter Product Quantity" class="form-control" />
-                                                        </td>
-                                                        <td><input type="text" name="" value=""
-                                                                placeholder="Enter Product Price" class="form-control" />
-                                                        </td>
-                                                        <td><input type="text" name="" value=""
-                                                                placeholder="Enter Product Unit" class="form-control" />
-                                                        </td>
-                                                        {{-- <td><button type="button" class="btn btn-danger remove-tr">Remove</button></td> --}}
-                                                        <td>
-
-                                                            <a data-id="" class="delete-btn btn btn-danger m-1"
-                                                                title="Delete Tender"><i class="fas fa-archive"></i></a>
-
-
-
-                                                            {{-- <button type="button" class="btn btn-danger remove-tr " data-row-id="{{ $editDataNew->designs_details_id }}">Remove</button> --}}
-                                                        </td>
-                                                    </tr>
-                                                    {{-- @endforeach --}}
-                                                </table>
-                                                {{-- @foreach ($editData as $key => $editDataNew)
-                                                @if ($key == 0) --}}
-                                                <div class="form-group-inner">
-                                                    <div class="row">
-                                                        <div class="col-lg-6 col-md-6 col-sm-6">
-                                                            <div class="form-group">
-                                                                <label for="english_image"> Image</label>
-                                                                <input type="file" name="english_image"
-                                                                    class="form-control" id="english_image" accept="image/*"
-                                                                    placeholder="image">
-                                                                @if ($errors->has('english_image'))
-                                                                    <div class="red-text"><?php echo $errors->first('english_image', ':message'); ?>
-                                                                    </div>
-                                                                @endif
-                                                            </div>
-                                                            <img id="english"
-                                                                src="{{ Config::get('DocumentConstant.SLIDER_VIEW') }}{{ $slider->english_image }}"
-                                                                class="img-fluid img-thumbnail" width="150">
-                                                            <img id="english_imgPreview" src="#" alt="pic"
-                                                                class="img-fluid img-thumbnail" width="150"
-                                                                style="display:none">
-                                                        </div>
-
-                                                        <div class="col-lg-6 col-md-6 col-sm-6">
-                                                            <div class="form-group">
-                                                                <label for="marathi_image">छायाचित्र </label>
-                                                                <input type="file" name="marathi_image"
-                                                                    id="marathi_image" accept="image/*"
-                                                                    class="form-control">
-                                                                @if ($errors->has('marathi_image'))
-                                                                    <div class="red-text"><?php echo $errors->first('marathi_image', ':message'); ?>
-                                                                    </div>
-                                                                @endif
-                                                            </div>
-
-                                                            <img id="marathi"
-                                                                src="{{ Config::get('DocumentConstant.SLIDER_VIEW') }}{{ $slider->marathi_image }}"
-                                                                class="img-fluid img-thumbnail" width="150">
-                                                            <img id="marathi_imgPreview" src="#" alt="pic"
-                                                                class="img-fluid img-thumbnail" width="150"
-                                                                style="display:none">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                {{-- @endif --}}
-                                                {{-- @endforeach --}}
-                                                <div class="login-btn-inner">
-                                                    <div class="row">
-                                                        <div class="col-lg-5"></div>
-                                                        <div class="col-lg-7">
-                                                            <div class="login-horizental cancel-wp pull-left">
-                                                                <a href="{{ route('list-products') }}"
-                                                                    class="btn btn-white"
-                                                                    style="margin-bottom:50px">Cancel</a>
-                                                                <button class="btn btn-sm btn-primary login-submit-cs"
-                                                                    type="submit" style="margin-bottom:50px">Update
-                                                                    Data</button>
-
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                    </div>
-                                    </form>
-                                </div>
                             </div>
+                            <img id="english"
+                                src="{{ Config::get('DocumentConstant.SLIDER_VIEW') }}{{ $slider->english_image }}"
+                                class="img-fluid img-thumbnail" width="150">
+                            <img id="english_imgPreview" src="#" alt="pic"
+                                class="img-fluid img-thumbnail" width="150"
+                                style="display:none">
+                        </div>
+
+                        <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+                            <div class="fl-group">
+                                <input type="file" name="marathi_image"
+                                    id="marathi_image" accept="image/*"
+                                    class="form-control">
+                                <label for="marathi_image">&#2459;&#2366;&#2479;&#2494;&#2458;&#2367;&#2468;&#2381;&#2352;</label>
+                                @if ($errors->has('marathi_image'))
+                                    <span class="fl-error">{{ $errors->first('marathi_image') }}</span>
+                                @endif
+                            </div>
+                            <img id="marathi"
+                                src="{{ Config::get('DocumentConstant.SLIDER_VIEW') }}{{ $slider->marathi_image }}"
+                                class="img-fluid img-thumbnail" width="150">
+                            <img id="marathi_imgPreview" src="#" alt="pic"
+                                class="img-fluid img-thumbnail" width="150"
+                                style="display:none">
                         </div>
                     </div>
+                    {{-- @endif --}}
+                    {{-- @endforeach --}}
                 </div>
-            </div>
+
+                <div class="row mt-4">
+                    <div class="col-12 d-flex justify-content-end">
+                        <a href="{{ route('list-products') }}" class="btn btn-white mr-2">Cancel</a>
+                        <button class="btn btn-sm btn-primary login-submit-cs" type="submit">Update Data</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
-    </div>
+    </div></div></div></div>
+
     <form method="POST" action="{{ route('delete-addmore') }}" id="deleteform">
         @csrf
         <input type="hidden" name="delete_id" id="delete_id" value="">
@@ -254,7 +204,6 @@
 
         });
     </script>
-
 
 
 

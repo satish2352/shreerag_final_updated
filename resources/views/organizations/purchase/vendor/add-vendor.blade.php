@@ -1,132 +1,116 @@
 @extends('admin.layouts.master')
 @section('content')
-<div class="">
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <div class="sparkline12-list">
-            <div class="sparkline12-hd">
-                <div class="main-sparkline12-hd">
-                    <center>
-                        <h1>Vendor Registration Form</h1>
-                    </center>
+<div class="data-table-area mg-tb-15">
+<div class="container-fluid">
+<div class="row justify-content-center">
+<div class="col-lg-10 col-md-12">
+<div class="emp-form-card">
+  <div class="emp-form-header">
+    <h4><i class="fa fa-plus mr-2"></i> Add Vendor</h4>
+    <a href="{{ route('list-vendor') }}" class="emp-form-close" title="Close">&times;</a>
+  </div>
+  <div class="emp-form-body">
+    @if (session('msg'))
+    <div class="alert alert-{{ session('status') }} mb-3">{{ session('msg') }}</div>
+    @endif
+
+    @if ($errors->any())
+    <div class="alert alert-danger mb-3">
+        <ul class="mb-0">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+
+    @if (Session::has('success'))
+    <div class="alert alert-success mb-3">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <p>{{ Session::get('success') }}</p>
+    </div>
+    @endif
+
+    <form action="{{ route('store-vendor') }}" method="POST" id="addDesignsForm" enctype="multipart/form-data">
+        @csrf
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+                <div class="fl-group">
+                    <input type="text" class="form-control" name="vendor_name" id="vendor_name" placeholder=" ">
+                    <label for="vendor_name">Vendor Name <span class="red-text">*</span></label>
+                    @if($errors->has('vendor_name'))<span class="fl-error">{{ $errors->first('vendor_name') }}</span>@endif
                 </div>
             </div>
-            <div class="sparkline12-graph">
-                <div class="basic-login-form-ad">
-                    <div class="row">
-                        @if (session('msg'))
-                        <div class="alert alert-{{ session('status') }}">
-                            {{ session('msg') }}
-                        </div>
-                        @endif
-
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <div class="all-form-element-inner">
-                                    <form action="{{ route('store-vendor') }}" method="POST" id="addDesignsForm"
-                                        enctype="multipart/form-data">
-                                        @csrf
-                                        <div class="form-group-inner">
-                                            <div class="container-fluid">
-                                                @if ($errors->any())
-                                                <div class="alert alert-danger">
-                                                    <ul>
-                                                        @foreach ($errors->all() as $error)
-                                                        <li>{{ $error }}</li>
-                                                        @endforeach
-                                                    </ul>
-                                                </div>
-                                                @endif
-                                                @if (Session::has('success'))
-                                                <div class="alert alert-success text-center">
-                                                    <a href="#" class="close" data-dismiss="alert"
-                                                        aria-label="close">×</a>
-                                                    <p>{{ Session::get('success') }}</p>
-                                                </div>
-                                                @endif
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="vendor_name">Vendor Name:</label>
-                                                        <input type="text" class="form-control" id="vendor_name"
-                                                            name="vendor_name" placeholder="Enter your name">
-                                                </div>   
-                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="vendor_company_name">Company Name:</label>
-                                                    <input type="text" class="form-control" id="vendor_company_name"
-                                                        name="vendor_company_name" placeholder="Enter company name">
-                                                </div>
-                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="vendor_email">Email:</label>
-                                                    <input type="email" class="form-control" id="vendor_email"
-                                                        name="vendor_email" placeholder="Enter your email">
-                                                </div>
-
-                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="contact_no">Contact No. :</label>
-                                                    <input type="text" class="form-control" id="contact_no"
-                                                        name="contact_no" placeholder="Enter your contact No.">
-                                                </div>
-
-                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="gst_no">Vendor GST No:</label>
-                                                    <input type="text" class="form-control" id="gst_no"
-                                                        name="gst_no" placeholder="Enter GST number">
-                                                </div>
-
-                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="quote_no">Vendor Quote No:</label>
-                                                    <input type="text" class="form-control" id="quote_no"
-                                                        name="quote_no" placeholder="Enter your quote no">
-                                                </div>
-
-                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="payment_terms">Payment Terms:</label>
-                                                    <input type="text" class="form-control" id="payment_terms"
-                                                        name="payment_terms" placeholder="Enter your payment terms">
-                                                </div>
-
-                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="vendor_address">Address :</label>
-                                                    <input type="text" class="form-control" id="vendor_address"
-                                                        name="vendor_address" placeholder="Enter your vendor address">
-                                                </div>    
-                                                
-                                                {{-- <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label class="form-check-label">
-                                                <input type="checkbox" class="form-check-input" name="is_active"
-                                                    id="is_active" value="y" data-parsley-multiple="is_active"
-                                                    {{ old('is_active') ? 'checked' : '' }}>
-                                                Is Active
-                                                <i class="input-helper"></i><i class="input-helper"></i></label>
-                                                </div> --}}
-                                            </div>
-                                            <div class="login-btn-inner">
-                                                <div class="row">
-                                                    <div class="col-lg-5"></div>
-                                                    <div class="col-lg-7">
-                                                        <div class="login-horizental cancel-wp pull-left">
-                                                            <a href="{{ route('list-vendor') }}" class="btn btn-white"
-                                                                style="margin-bottom:50px">Cancel</a>
-                                                            <button class="btn btn-sm btn-primary login-submit-cs"
-                                                                type="submit" style="margin-bottom:50px">Save
-                                                                Data</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+                <div class="fl-group">
+                    <input type="text" class="form-control" name="vendor_company_name" id="vendor_company_name" placeholder=" ">
+                    <label for="vendor_company_name">Company Name <span class="red-text">*</span></label>
+                    @if($errors->has('vendor_company_name'))<span class="fl-error">{{ $errors->first('vendor_company_name') }}</span>@endif
                 </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+                <div class="fl-group">
+                    <input type="email" class="form-control" name="vendor_email" id="vendor_email" placeholder=" ">
+                    <label for="vendor_email">Email <span class="red-text">*</span></label>
+                    @if($errors->has('vendor_email'))<span class="fl-error">{{ $errors->first('vendor_email') }}</span>@endif
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+                <div class="fl-group">
+                    <input type="text" class="form-control" name="contact_no" id="contact_no" placeholder=" ">
+                    <label for="contact_no">Contact No. <span class="red-text">*</span></label>
+                    @if($errors->has('contact_no'))<span class="fl-error">{{ $errors->first('contact_no') }}</span>@endif
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+                <div class="fl-group">
+                    <input type="text" class="form-control" name="gst_no" id="gst_no" placeholder=" ">
+                    <label for="gst_no">Vendor GST No <span class="red-text">*</span></label>
+                    @if($errors->has('gst_no'))<span class="fl-error">{{ $errors->first('gst_no') }}</span>@endif
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+                <div class="fl-group">
+                    <input type="text" class="form-control" name="quote_no" id="quote_no" placeholder=" ">
+                    <label for="quote_no">Vendor Quote No <span class="red-text">*</span></label>
+                    @if($errors->has('quote_no'))<span class="fl-error">{{ $errors->first('quote_no') }}</span>@endif
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+                <div class="fl-group">
+                    <input type="text" class="form-control" name="payment_terms" id="payment_terms" placeholder=" ">
+                    <label for="payment_terms">Payment Terms <span class="red-text">*</span></label>
+                    @if($errors->has('payment_terms'))<span class="fl-error">{{ $errors->first('payment_terms') }}</span>@endif
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+                <div class="fl-group">
+                    <input type="text" class="form-control" name="vendor_address" id="vendor_address" placeholder=" ">
+                    <label for="vendor_address">Address <span class="red-text">*</span></label>
+                    @if($errors->has('vendor_address'))<span class="fl-error">{{ $errors->first('vendor_address') }}</span>@endif
+                </div>
+            </div>
+            {{-- <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <label class="form-check-label">
+            <input type="checkbox" class="form-check-input" name="is_active"
+                id="is_active" value="y" data-parsley-multiple="is_active"
+                {{ old('is_active') ? 'checked' : '' }}>
+            Is Active
+            <i class="input-helper"></i><i class="input-helper"></i></label>
+            </div> --}}
+        </div>
+        <div class="row mt-3">
+            <div class="col-12 text-right">
+                <a href="{{ route('list-vendor') }}" class="btn btn-secondary mr-2">Cancel</a>
+                <button type="submit" class="btn btn-primary">Save Data</button>
             </div>
         </div>
-    </div>
+    </form>
+  </div>
 </div>
+</div></div></div></div>
 
-@push('scripts')  
+@push('scripts')
 <script>
    jQuery.noConflict();
    jQuery(document).ready(function($) {
@@ -155,7 +139,7 @@
             },
             contact_no: {
                 required: true,
-                regex: /^[0-9]{10}$/ 
+                regex: /^[0-9]{10}$/
             },
             vendor_email: {
                 required: true,
@@ -163,7 +147,7 @@
             },
             quote_no: {
                 required: true,
-                regex: /^[A-Z0-9]+$/ 
+                regex: /^[A-Z0-9]+$/
             },
             payment_terms: {
                 required: true,
@@ -197,8 +181,8 @@
             },
             payment_terms: {
                 required: "Please enter your payment terms.",
-            },  
-           
+            },
+
         },
         submitHandler: function(form) {
             // Use SweetAlert to show a success message

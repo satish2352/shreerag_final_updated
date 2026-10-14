@@ -38,29 +38,6 @@
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="sparkline13-list">
-                        <div class="sparkline13-hd">
-                            <div class="main-sparkline13-hd">
-                                <h1>Purchase Order<span class="table-project-n">Data</span> Table</h1>
-                                <div class="form-group-inner login-btn-inner row">
-                                    <div class="col-lg-2">
-                                        <div class="login-horizental cancel-wp pull-left">
-                                            <form action="{{ route('add-purchase-order') }}" method="POST">
-                                                @csrf
-                                                <input type="hidden" name="business_details_id" id="business_details_id"
-                                                    value="{{ $business_details_id }}">
-                                                <input type="hidden" name="requistition_id" id="requistition_id"
-                                                    value="{{ $requistition_id }}">
-                                                <button class="btn btn-sm btn-primary login-submit-cs" type="submit">Add
-                                                    Purchase</button>
-
-                                            </form>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-10"></div>
-                                </div>
-                            </div>
-                        </div>
-
                         @if (Session::get('status') == 'success')
                             <div class="alert alert-success alert-success-style1">
                                 <button type="button" class="close sucess-op" data-dismiss="alert" aria-label="Close">
@@ -81,6 +58,17 @@
                         @endif
 
                         <div class="sparkline13-graph">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 style="margin:0; font-weight:600; color:#1a3a6b;">Purchase Orders</h5>
+                                <form action="{{ route('add-purchase-order') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="business_details_id" id="business_details_id" value="{{ $business_details_id }}">
+                                    <input type="hidden" name="requistition_id" id="requistition_id" value="{{ $requistition_id }}">
+                                    <button class="btn btn-sm btn-add-custom" type="submit">
+                                        <i class="fa fa-plus mr-1"></i> Add Purchase
+                                    </button>
+                                </form>
+                            </div>
                             <div class="datatable-dashv1-list custom-datatable-overright">
                                 <div class="table-responsive">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"

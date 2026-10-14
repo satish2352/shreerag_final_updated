@@ -64,300 +64,171 @@
         }
     </style>
 
-    <div class="container-fluid">
+<div class="data-table-area mg-tb-15">
+<div class="container-fluid">
+<div class="row justify-content-center">
+<div class="col-lg-10 col-md-12">
+<div class="emp-form-card">
+  <div class="emp-form-header">
+    <h4><i class="fa fa-shipping-fast mr-2"></i> Add Delivery Challan</h4>
+    <a href="{{ route('list-delivery-chalan') }}" class="emp-form-close">&times;</a>
+  </div>
+  <div class="emp-form-body">
+
+    @if (Session::get('status') == 'success')
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Success!</strong> {{ Session::get('msg') }}
+        </div>
+    @endif
+    @if (Session::get('status') == 'error')
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Error!</strong> {!! session('msg') !!}
+        </div>
+    @endif
+
+    <form action="{{ route('store-delivery-chalan') }}" method="POST" id="addEmployeeForm" enctype="multipart/form-data">
+        @csrf
         <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="sparkline12-list">
-                    <div class="sparkline12-hd">
-                        <div class="main-sparkline12-hd">
-                            <center>
-                                <h1>Add Delivery Challan</h1>
-                            </center>
-                        </div>
-                    </div>
-                    <div class="sparkline12-graph">
-                        <div class="basic-login-form-ad">
-                            <div class="row">
+            <div class="col-lg-4 col-md-4 col-sm-12 fl-col">
+                <div class="fl-group">
+                    <select class="form-control mb-2 select2{{ old('vendor_id') ? ' has-value' : '' }}" name="vendor_id" id="vendor_id" onchange="this.classList.toggle('has-value', this.value !== '')">
+                        <option value="" default>Vendor Company Name</option>
+                        @foreach ($dataOutputVendor as $data)
+                            <option value="{{ $data['id'] }}">{{ $data['vendor_company_name'] }}</option>
+                        @endforeach
+                    </select>
+                    <label for="vendor_id">Vendor Company Name <span class="text-danger">*</span></label>
+                    @if($errors->has('vendor_id'))<span class="fl-error">{{ $errors->first('vendor_id') }}</span>@endif
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-12 fl-col">
+                <div class="fl-group">
+                    <select class="form-control mb-2{{ old('business_id') ? ' has-value' : '' }}" name="business_id" id="business_id" onchange="this.classList.toggle('has-value', this.value !== '')">
+                        <option value="" default>Select PO Number</option>
+                        @foreach ($dataOutputBusiness as $data)
+                            <option value="{{ $data['id'] }}">{{ $data['customer_po_number'] }}</option>
+                        @endforeach
+                    </select>
+                    <label for="business_id">PO Number (Optional)</label>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-12 fl-col">
+                <div class="fl-group">
+                    <input type="text" class="form-control" id="customer_po_no" value="{{ old('customer_po_no') }}" name="customer_po_no" placeholder=" ">
+                    <label for="customer_po_no">Customer PO Number (optional)</label>
+                    @if($errors->has('customer_po_no'))<span class="fl-error">{{ $errors->first('customer_po_no') }}</span>@endif
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-12 fl-col">
+                <div class="fl-group">
+                    <select class="form-control mb-2{{ old('transport_id') ? ' has-value' : '' }}" name="transport_id" id="transport_id" onchange="this.classList.toggle('has-value', this.value !== '')">
+                        <option value="" default>Select Transport Name</option>
+                        @foreach ($dataOutputTransportName as $data)
+                            <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
+                        @endforeach
+                    </select>
+                    <label for="transport_id">Transport Name (Optional)</label>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-12 fl-col">
+                <div class="fl-group">
+                    <select class="form-control mb-2{{ old('vehicle_id') ? ' has-value' : '' }}" name="vehicle_id" id="vehicle_id" onchange="this.classList.toggle('has-value', this.value !== '')">
+                        <option value="" default>Select Vehicle Type</option>
+                        @foreach ($dataOutputVehicleType as $data)
+                            <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
+                        @endforeach
+                    </select>
+                    <label for="vehicle_id">Vehicle Type <span class="text-danger">*</span></label>
+                    @if($errors->has('vehicle_id'))<span class="fl-error">{{ $errors->first('vehicle_id') }}</span>@endif
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-12 fl-col">
+                <div class="fl-group">
+                    <input type="text" class="form-control" id="plant_id" value="{{ old('plant_id') }}" name="plant_id" placeholder=" ">
+                    <label for="plant_id">Plant Name <span class="text-danger">*</span></label>
+                    @if($errors->has('plant_id'))<span class="fl-error">{{ $errors->first('plant_id') }}</span>@endif
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-md-4 col-sm-12 fl-col">
+                <div class="fl-group">
+                    <select name="tax_type" class="form-control{{ old('tax_type') ? ' has-value' : '' }}" title="select tax" id="tax_type" onchange="this.classList.toggle('has-value', this.value !== '')">
+                        <option value="">Select Tax Type</option>
+                        <option value="GST">GST</option>
+                        <option value="SGST">SGST</option>
+                        <option value="CGST">CGST</option>
+                        <option value="SGST+CGST">SGST+CGST</option>
+                        <option value="IGST">IGST</option>
+                    </select>
+                    <label for="tax_type">Tax Type <span class="text-danger">*</span></label>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-12 fl-col">
+                <div class="fl-group">
+                    <select class="form-control mb-2{{ old('tax_id') ? ' has-value' : '' }}" name="tax_id" id="tax_id" onchange="this.classList.toggle('has-value', this.value !== '')">
+                        <option value="" default>Tax</option>
+                        @foreach ($dataOutputTax as $data)
+                            <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
+                        @endforeach
+                    </select>
+                    <label for="tax_id">Tax <span class="text-danger">*</span></label>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-12 fl-col">
+                <div class="fl-group">
+                    <input type="text" class="form-control" id="vehicle_number" value="{{ old('vehicle_number') }}" name="vehicle_number" placeholder=" ">
+                    <label for="vehicle_number">Vehicle Number (Optional)</label>
+                    @if($errors->has('vehicle_number'))<span class="fl-error">{{ $errors->first('vehicle_number') }}</span>@endif
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-md-4 col-sm-12 fl-col">
+                <div class="fl-group">
+                    <input type="date" class="form-control" id="po_date" value="{{ old('po_date') }}" name="po_date">
+                    <label for="po_date">Delivery Chalan Date <span class="text-danger">*</span></label>
+                    @if($errors->has('po_date'))<span class="fl-error">{{ $errors->first('po_date') }}</span>@endif
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-12 fl-col">
+                <div class="fl-group">
+                    <input type="text" class="form-control" id="lr_number" value="{{ old('lr_number') }}" name="lr_number" placeholder=" ">
+                    <label for="lr_number">LR Number (Optional)</label>
+                    @if($errors->has('lr_number'))<span class="fl-error">{{ $errors->first('lr_number') }}</span>@endif
+                </div>
+            </div>
+        </div>
 
-
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    @if (Session::get('status') == 'success')
-                                        <div class="col-md-12">
-                                            <div class="alert alert-success alert-dismissible" role="alert">
-                                                <button type="button" class="close" data-dismiss="alert"
-                                                    aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                                <strong>Success!</strong> {{ Session::get('msg') }}
-                                            </div>
-                                        </div>
-                                    @endif
-
-                                    @if (Session::get('status') == 'error')
-                                        <div class="col-md-12">
-                                            <div class="alert alert-danger alert-dismissible" role="alert">
-                                                <button type="button" class="close" data-dismiss="alert"
-                                                    aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                                <strong>Error!</strong> {!! session('msg') !!}
-                                            </div>
-                                        </div>
-                                    @endif
-                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <div class="all-form-element-inner">
-                                            <div class="row d-flex justify-content-center form-display-center">
-                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
-                                                    <form action="{{ route('store-delivery-chalan') }}" method="POST"
-                                                        id="addEmployeeForm" enctype="multipart/form-data">
-                                                        @csrf
-                                                        <div class="form-group-inner">
-                                                            <div class="row">
-                                                                <div class="col-lg-4 col-md-4 col-sm-4">
-                                                                    <div class="form-group">
-                                                                        <label for="vendor_id">Vendor Company Name <span
-                                                                                class="text-danger">*</span></label>
-                                                                        <select class="form-control mb-2 select2" name="vendor_id"
-                                                                            id="vendor_id">
-                                                                            <option value="" default>Vendor Company
-                                                                                Name</option>
-                                                                            @foreach ($dataOutputVendor as $data)
-                                                                                <option value="{{ $data['id'] }}">
-                                                                                    {{ $data['vendor_company_name'] }}
-                                                                                </option>
-                                                                            @endforeach
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-4 col-md-4 col-sm-4">
-                                                                    <div class="form-group">
-                                                                        <label for="business_id">PO Number
-                                                                            (Optional)</label>
-                                                                        <select class="form-control mb-2" name="business_id"
-                                                                            id="business_id">
-                                                                            <option value="" default>Select PO Number
-                                                                            </option>
-                                                                            @foreach ($dataOutputBusiness as $data)
-                                                                                <option value="{{ $data['id'] }}">
-                                                                                    {{ $data['customer_po_number'] }}
-                                                                                </option>
-                                                                            @endforeach
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-4 col-md-4 col-sm-4">
-                                                                    <div class="form-group">
-                                                                        <label for="customer_po_no">Customer PO Number
-                                                                            (optional)</label>
-                                                                        <input type="text" class="form-control"
-                                                                            id="customer_po_no"
-                                                                            value="{{ old('customer_po_no') }}"
-                                                                            name="customer_po_no"
-                                                                            placeholder="Enter Customer PO Number">
-                                                                        @if ($errors->has('customer_po_no'))
-                                                                            <span
-                                                                                class="red-text"><?php echo $errors->first('customer_po_no', ':message'); ?></span>
-                                                                        @endif
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-4 col-md-4 col-sm-4">
-                                                                    <div class="form-group">
-                                                                        <label for="transport_id">Transport Name
-                                                                            (Optional)</label>
-                                                                        <select class="form-control mb-2"
-                                                                            name="transport_id" id="transport_id">
-                                                                            <option value="" default>Select Transport
-                                                                                Name</option>
-                                                                            @foreach ($dataOutputTransportName as $data)
-                                                                                <option value="{{ $data['id'] }}">
-                                                                                    {{ $data['name'] }}</option>
-                                                                            @endforeach
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-4 col-md-4 col-sm-4">
-                                                                    <div class="form-group">
-                                                                        <label for="vehicle_id">Vehicle Type <span
-                                                                                class="text-danger">*</span></label>
-                                                                        <select class="form-control mb-2" name="vehicle_id"
-                                                                            id="vehicle_id">
-                                                                            <option value="" default>Select Vehicle
-                                                                                Type</option>
-                                                                            @foreach ($dataOutputVehicleType as $data)
-                                                                                <option value="{{ $data['id'] }}">
-                                                                                    {{ $data['name'] }}</option>
-                                                                            @endforeach
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-4 col-md-4 col-sm-4">
-                                                                    <label for="plant_id">Plant Name <span
-                                                                            class="text-danger">*</span></label>
-                                                                    <input type="text" class="form-control"
-                                                                        id="plant_id" value="{{ old('plant_id') }}"
-                                                                        name="plant_id" placeholder="Enter Plant Name">
-                                                                    @if ($errors->has('plant_id'))
-                                                                        <span class="red-text"><?php echo $errors->first('plant_id', ':message'); ?></span>
-                                                                    @endif
-                                                                </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-lg-4 col-md-4 col-sm-4">
-                                                                    <div class="form-group">
-                                                                        <label>Tax Type<span
-                                                                                class="text-danger">*</span></label>
-                                                                        <select name="tax_type" class="form-control"
-                                                                            title="select tax" id="tax_type">
-                                                                            <option value="">Select Tax Type</option>
-                                                                            <option value="GST">GST</option>
-                                                                            <option value="SGST">SGST</option>
-                                                                            <option value="CGST">CGST</option>
-                                                                            <option value="SGST+CGST">SGST+CGST</option>
-                                                                            <option value="IGST">IGST</option>
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-4 col-md-4 col-sm-4">
-                                                                    <div class="form-group">
-                                                                        <label for="tax_id">Tax<span
-                                                                                class="text-danger">*</span></label>
-                                                                        <select class="form-control mb-2" name="tax_id"
-                                                                            id="tax_id">
-                                                                            <option value="" default>Tax</option>
-                                                                            @foreach ($dataOutputTax as $data)
-                                                                                <option value="{{ $data['id'] }}">
-                                                                                    {{ $data['name'] }}</option>
-                                                                            @endforeach
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-4 col-md-4 col-sm-4">
-                                                                    <label for="vehicle_number">Vehicle Number
-                                                                        (Optional)</label>
-                                                                    <input type="text" class="form-control"
-                                                                        id="vehicle_number"
-                                                                        value="{{ old('vehicle_number') }}"
-                                                                        name="vehicle_number"
-                                                                        placeholder="Enter Vehicle Number">
-                                                                    @if ($errors->has('vehicle_number'))
-                                                                        <span class="red-text"><?php echo $errors->first('vehicle_number', ':message'); ?></span>
-                                                                    @endif
-                                                                </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-lg-4 col-md-4 col-sm-4">
-                                                                    <label for="po_date">Delivery Chalan Date <span
-                                                                            class="text-danger">*</span></label>
-                                                                    <input type="date" class="form-control"
-                                                                        id="po_date" value="{{ old('po_date') }}"
-                                                                        name="po_date"
-                                                                        placeholder="Enter Delivery Chalan Date">
-                                                                    @if ($errors->has('po_date'))
-                                                                        <span class="red-text"><?php echo $errors->first('po_date', ':message'); ?></span>
-                                                                    @endif
-                                                                </div>
-                                                                <div class="col-lg-4 col-md-4 col-sm-4">
-                                                                    <label for="lr_number">LR Number (Optional)</label>
-                                                                    <input type="text" class="form-control"
-                                                                        id="lr_number" value="{{ old('lr_number') }}"
-                                                                        name="lr_number" placeholder="Enter LR Number">
-                                                                    @if ($errors->has('lr_number'))
-                                                                        <span class="red-text"><?php echo $errors->first('lr_number', ':message'); ?></span>
-                                                                    @endif
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="row">
-                                                                <div class="col-md-12 col-sm-12">
-                                                                    <div class="table-responsive">
-                                                                        <table
-                                                                            class="table table-hover table-white repeater"
-                                                                            id="purchase_order_table">
-                                                                            <thead>
-                                                                                <tr>
-                                                                                    <th class="col-serial">#</th>
-                                                                                    <th class="col-sm-2 col-part-item">Product Name
-                                                                                    </th>
-                                                                                    <th class="col-md-1">HSN</th>
-                                                                                    <th class="col-md-1">Unit</th>
-                                                                                    <th class="col-md-2">process</th>
-                                                                                    <th class="col-md-2">Quantity</th>
-                                                                                    <th class="col-md-1">Rate</th>
-                                                                                    <th class="col-md-1">Size</th>
-                                                                                    <th class="col-md-1">Amount</th>
-                                                                                    <th>
-                                                                                        <button type="button"
-                                                                                            class="btn btn-sm btn-bg-colour font-18 mr-1"
-                                                                                            id="add_more_btn"
-                                                                                            title="Add"
-                                                                                            data-repeater-create>
-                                                                                            <i class="fa fa-plus"></i>
-                                                                                        </button>
-                                                                                    </th>
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td class="col-serial">
-                                                                                        {{-- <input type="text"
-                                                                                            name="id"
-                                                                                            class="form-control"
-                                                                                            style="min-width:50px" readonly
-                                                                                            value="1">
-                                                                                        <input type="hidden"
-                                                                                            id="i_id"
-                                                                                            class="form-control"
-                                                                                            style="min-width:50px" readonly
-                                                                                            value="0"> --}}
-                                                                                             1<input type="hidden" id="i_id" value="1">
-                                                                                    </td>
-                                                                                    {{-- <td>
-                                                                                        <select
-                                                                                            class="form-control part_item_id mb-2"
-                                                                                            name="addmore[0][part_item_id]"
-                                                                                            id="part_item_id_0">
-                                                                                            <option value="" default>
-                                                                                                Select Part Item
-                                                                                            </option>
-                                                                                            @foreach ($dataOutputPartItem as $data)
-                                                                                                <option
-                                                                                                    value="{{ $data['id'] }}">
-                                                                                                    {{ $data['description'] }}
-                                                                                                </option>
-                                                                                            @endforeach
-                                                                                        </select>
-
-                                                                                    </td> --}}
-                                                                                    {{-- <td class="col-part-item">
-                                                                                        <div class="custom-dropdown"
-                                                                                            data-index="0">
-                                                                                            <input type="hidden"
-                                                                                                name="addmore[0][part_item_id]"
-                                                                                                class="part_no"
-                                                                                                value="">
-                                                                                            <input type="text"
-                                                                                                class="dropdown-input form-control part-no"
-                                                                                                placeholder="Select Part Item..."
-                                                                                                readonly>
-
-                                                                                            <div class="dropdown-options dropdown-height"
-                                                                                                style="display: none; position: absolute; background: white; border: 1px solid #ccc; z-index: 1000; width: 100%;">
-                                                                                                <input type="text"
-                                                                                                    class="search-box form-control"
-                                                                                                    placeholder="Search..."
-                                                                                                    style="margin-bottom: 5px;">
-                                                                                                <div class="options-list"
-                                                                                                    style="max-height: 200px; overflow-y: auto;">
-                                                                                                    @foreach ($dataOutputPartItem as $data)
-                                                                                                        <div class="option"
-                                                                                                            data-id="{{ $data['id'] }}">
-                                                                                                            {{ $data['description'] }}
-                                                                                                        </div>
-                                                                                                    @endforeach
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </td> --}}
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                <div class="table-responsive">
+                    <table class="table table-hover table-white repeater" id="purchase_order_table">
+                        <thead>
+                            <tr>
+                                <th class="col-serial">#</th>
+                                <th class="col-sm-2 col-part-item">Product Name</th>
+                                <th class="col-md-1">HSN</th>
+                                <th class="col-md-1">Unit</th>
+                                <th class="col-md-2">process</th>
+                                <th class="col-md-2">Quantity</th>
+                                <th class="col-md-1">Rate</th>
+                                <th class="col-md-1">Size</th>
+                                <th class="col-md-1">Amount</th>
+                                <th>
+                                    <button type="button" class="btn btn-sm btn-bg-colour font-18 mr-1" id="add_more_btn" title="Add" data-repeater-create>
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="col-serial">
+                                     1<input type="hidden" id="i_id" value="1">
+                                </td>
  <td class="col-part-item">
                     <!-- Custom dropdown example -->
                     <div class="custom-dropdown">
@@ -373,157 +244,68 @@
                         </div>
                     </div>
                 </td>
-                                                                                    <td>
-                                                                                        <input
-                                                                                            class="form-control hsn_name"
-                                                                                            name="addmore[0][hsn_id]"
-                                                                                            type="text"
-                                                                                            style="min-width:100px"
-                                                                                            disabled>
-
-                                                                                        <input type="hidden"
-                                                                                            class="form-control hsn_id"
-                                                                                            name="addmore[0][hsn_id]"
-                                                                                            type="text"
-                                                                                            style="min-width:100px">
-                                                                                        {{-- <select class="form-control mb-2" name="addmore[0][hsn_id]"
-                                                                                            id="" style="min-width:100px">
-                                                                                            <option value="" default>Select HSN</option>
-                                                                                            @foreach ($dataOutputHSNMaster as $data)
-                                                                                                <option value="{{ $data['id'] }}">
-                                                                                                    {{ $data['name'] }}</option>
-                                                                                            @endforeach
-                                                                                        </select> --}}
-                                                                                        {{-- <input class="form-control quantity" name="addmore[0][quantity]" type="text"> --}}
-                                                                                    </td>
-                                                                                    <td>
-                                                                                        <select class="form-control mb-2"
-                                                                                            name="addmore[0][unit_id]"
-                                                                                            id="">
-                                                                                            <option value="" default>
-                                                                                                Select Unit
-                                                                                            </option>
-                                                                                            @foreach ($dataOutputUnitMaster as $data)
-                                                                                                <option
-                                                                                                    value="{{ $data['id'] }}">
-                                                                                                    {{ $data['name'] }}
-                                                                                                </option>
-                                                                                            @endforeach
-                                                                                        </select>
-                                                                                        {{-- <input class="form-control description" name="addmore[0][description]" type="text" style="min-width:150px"> --}}
-                                                                                    </td>
-                                                                                    {{-- <td>
-                                                                                        <select class="form-control mb-2"
-                                                                                            name="addmore[0][hsn_id]"
-                                                                                            id="">
-                                                                                            <option value="" default>
-                                                                                                Select HSN
-                                                                                            </option>
-                                                                                            @foreach ($dataOutputHSNMaster as $data)
-                                                                                                <option
-                                                                                                    value="{{ $data['id'] }}">
-                                                                                                    {{ $data['name'] }}
-                                                                                                </option>
-                                                                                            @endforeach
-                                                                                        </select>
-                                                                                    </td> --}}
-                                                                                    {{-- <td>
-                                                                                <input class="form-control unit" name="addmore[0][unit]"  type="text">
-                                                                            </td> --}}
-                                                                                    <td>
-                                                                                        <select class="form-control mb-2"
-                                                                                            name="addmore[0][process_id]"
-                                                                                            id="">
-                                                                                            <option value="" default>
-                                                                                                Select Process
-                                                                                            </option>
-                                                                                            @foreach ($dataOutputProcessMaster as $data)
-                                                                                                <option
-                                                                                                    value="{{ $data['id'] }}">
-                                                                                                    {{ $data['name'] }}
-                                                                                                </option>
-                                                                                            @endforeach
-                                                                                        </select>
-                                                                                        {{-- <input class="form-control rate" name="addmore[0][rate]" type="text"> --}}
-                                                                                    </td>
-                                                                                    <td><input
-                                                                                            class="form-control quantity"
-                                                                                            name="addmore[0][quantity]"
-                                                                                            type="text">
-                                                                                        <span
-                                                                                            class="stock-available"></span>
-                                                                                    </td>
-                                                                                    <td><input class="form-control rate"
-                                                                                            name="addmore[0][rate]"
-                                                                                            type="text"> </td>
-                                                                                    <td><input class="form-control rate"
-                                                                                            name="addmore[0][size]"
-                                                                                            type="text"> </td>
-                                                                                    <td>
-                                                                                        <input
-                                                                                            class="form-control total_amount"
-                                                                                            name="addmore[0][amount]"
-                                                                                            readonly style="width:120px"
-                                                                                            type="text">
-                                                                                    </td>
-                                                                                    <td>
-                                                                                        <button type="button"
-                                                                                            class="btn btn-sm btn-danger font-18 ml-2 remove-row"
-                                                                                            title="Delete"
-                                                                                            data-repeater-delete>
-                                                                                            <i class="fa fa-trash"></i>
-                                                                                        </button>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                                <div class="sparkline12-graph">
-                                                                    <div id="pwd-container1">
-                                                                        <div class="form-group">
-                                                                            <label for="remark">Remark <span
-                                                                                    class="text-danger">*</span></label>
-                                                                            <textarea class="form-control" rows="3" type="text" class="form-control" id="remark" name="remark"
-                                                                                placeholder="Enter Remark">{{ old('remark') }}</textarea>
-                                                                        </div>
-                                                                        <div class="form-group">
-                                                                            <div class="pwstrength_viewport_progress">
-                                                                                </span></div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-
-                                                        <div class="col-lg-12 mb-4"
-                                                            style="display: flex; justify-content: center;">
-                                                            <div class="login-horizental cancel-wp pull-left">
-                                                                <a href="{{ route('list-delivery-chalan') }}"
-                                                                    class="btn btn-white"
-                                                                    style="margin-bottom:50px">Cancel</a>
-                                                                <button class="btn btn-sm btn-primary btn-bg-colour"
-                                                                    type="submit" style="margin-bottom:50px">Save
-                                                                    Data</button>
-                                                            </div>
-                                                        </div>
-
-
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                                <td>
+                                    <input class="form-control hsn_name" name="addmore[0][hsn_id]" type="text" style="min-width:100px" disabled>
+                                    <input type="hidden" class="form-control hsn_id" name="addmore[0][hsn_id]" type="text" style="min-width:100px">
+                                </td>
+                                <td>
+                                    <select class="form-control mb-2" name="addmore[0][unit_id]" id="">
+                                        <option value="" default>Select Unit</option>
+                                        @foreach ($dataOutputUnitMaster as $data)
+                                            <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-control mb-2" name="addmore[0][process_id]" id="">
+                                        <option value="" default>Select Process</option>
+                                        @foreach ($dataOutputProcessMaster as $data)
+                                            <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td><input class="form-control quantity" name="addmore[0][quantity]" type="text">
+                                    <span class="stock-available"></span>
+                                </td>
+                                <td><input class="form-control rate" name="addmore[0][rate]" type="text"> </td>
+                                <td><input class="form-control rate" name="addmore[0][size]" type="text"> </td>
+                                <td>
+                                    <input class="form-control total_amount" name="addmore[0][amount]" readonly style="width:120px" type="text">
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-danger font-18 ml-2 remove-row" title="Delete" data-repeater-delete>
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                    <label for="remark">Remark <span class="text-danger">*</span></label>
+                    <textarea class="form-control" rows="3" id="remark" name="remark" placeholder="Enter Remark">{{ old('remark') }}</textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-3">
+            <div class="col-auto">
+                <div class="login-horizental cancel-wp">
+                    <a href="{{ route('list-delivery-chalan') }}" class="btn btn-white" style="margin-bottom:50px">Cancel</a>
+                    <button class="btn btn-sm btn-primary btn-bg-colour" type="submit" style="margin-bottom:50px">Save Data</button>
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+  </div>
+</div>
+</div></div></div></div>
 
         @push('scripts')
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->

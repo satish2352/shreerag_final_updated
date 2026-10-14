@@ -1,83 +1,70 @@
 @extends('admin.layouts.master')
 @section('content')
-<style>
-    .form-control {
-      border: 2px solid #ced4da;
-      border-radius: 4px;
-    }
-    .error {
-      color: red !important;
-    }
-</style>
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <div class="sparkline12-list">
-            <div class="sparkline12-hd">
-                <div class="main-sparkline12-hd">
-                    <center><h1>Update Item Data</h1></center>
-                </div>
-            </div>
-            <div class="sparkline12-graph">
-                <div class="basic-login-form-ad">
-                    <div class="row">
+<div class="data-table-area mg-tb-15">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-md-12">
+                <div class="emp-form-card">
+                    <div class="emp-form-header">
+                        <h4><i class="fa fa-edit mr-2"></i> Edit Stock</h4>
+                        <a href="{{ route('list-part-item') }}" class="emp-form-close">&times;</a>
+                    </div>
+                    <div class="emp-form-body">
+
                         @if(session('msg'))
                             <div class="alert alert-{{ session('status') }}">
                                 {{ session('msg') }}
                             </div>
                         @endif
 
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="all-form-element-inner">
-                                <form action="{{ route('update-product-stock') }}" method="POST" enctype="multipart/form-data" id="regForm" autocomplete="off">
-                                    @csrf
-                                    <div class="form-group-inner">
-                                        <input type="hidden" class="form-control" value="@if (old('id')) {{ old('id') }}@else{{ $editData->id }} @endif" id="id" name="id">
-                                        <div class="row">
-                                           
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <div class="form-group">
-                                                    <label for="part_item_id">Item Name:</label> &nbsp;<span
-                                                        class="red-text">*</span>
-                                                    <select class="form-control mb-2"
-                                                        name="part_item_id" id="part_item_id" disabled>
-                                                        <option value="" default>Select Item Name</option>
-                                                        @foreach ($dataOutputPartItem as $service)
-                                                            <option value="{{ $service['id'] }}"
-                                                                {{ old('part_item_id', $editData->part_item_id) == $service->id ? 'selected' : '' }}>
-                                                                {{ $service->description }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                    @if ($errors->has('part_item_id'))
-                                                        <span
-                                                            class="red-text">{{ $errors->first('part_item_id') }}</span>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                          
-                                          
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <label for="quantity">Quantity:</label>
-                                                <input type="text" class="form-control" value="@if (old('quantity')) {{ old('quantity') }}@else{{ $editData->quantity }} @endif" id="quantity" name="quantity" placeholder="Enter open stock">
-                                            </div>
-                                        </div>
+                        <form action="{{ route('update-product-stock') }}" method="POST" enctype="multipart/form-data" id="regForm" autocomplete="off">
+                            @csrf
+                            <input type="hidden" class="form-control" value="@if (old('id')) {{ old('id') }}@else{{ $editData->id }} @endif" id="id" name="id">
 
-                                    <div class="login-btn-inner">
-                                        <div class="row">
-                                            <div class="col-lg-5"></div>
-                                            <div class="col-lg-7">
-                                                <div class="login-horizental cancel-wp pull-left">
-                                                    <a href="{{ route('list-part-item') }}">
-                                                        <button class="btn btn-white" style="margin-bottom:50px">Cancel</button>
-                                                    </a>
-                                                    <button class="btn btn-sm btn-primary login-submit-cs" type="submit" style="margin-bottom:50px">Update Data</button>
-                                                </div>
-                                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+                                    <div class="fl-group">
+                                        <select class="form-control mb-2 {{ old('part_item_id', $editData->part_item_id) ? 'has-value' : '' }}"
+                                            name="part_item_id" id="part_item_id" disabled
+                                            onchange="this.classList.toggle('has-value', this.value !== '')">
+                                            <option value="" default>Select Item Name</option>
+                                            @foreach ($dataOutputPartItem as $service)
+                                                <option value="{{ $service['id'] }}"
+                                                    {{ old('part_item_id', $editData->part_item_id) == $service->id ? 'selected' : '' }}>
+                                                    {{ $service->description }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        <label for="part_item_id">Item Name <span class="text-danger">*</span></label>
+                                        @if ($errors->has('part_item_id'))
+                                            <span class="fl-error">{{ $errors->first('part_item_id') }}</span>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+                                    <div class="fl-group">
+                                        <input type="text" class="form-control" value="@if (old('quantity')) {{ old('quantity') }}@else{{ $editData->quantity }} @endif" id="quantity" name="quantity" placeholder=" ">
+                                        <label for="quantity">Quantity</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="login-btn-inner">
+                                <div class="row">
+                                    <div class="col-lg-5"></div>
+                                    <div class="col-lg-7">
+                                        <div class="login-horizental cancel-wp pull-left">
+                                            <a href="{{ route('list-part-item') }}">
+                                                <button class="btn btn-white" style="margin-bottom:50px">Cancel</button>
+                                            </a>
+                                            <button class="btn btn-sm btn-primary login-submit-cs" type="submit" style="margin-bottom:50px">Update Data</button>
                                         </div>
                                     </div>
-                                </form>
+                                </div>
                             </div>
-                        </div>
+                        </form>
+
                     </div>
                 </div>
             </div>

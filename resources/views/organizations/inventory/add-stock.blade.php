@@ -1,147 +1,82 @@
 @extends('admin.layouts.master')
 @section('content')
-    <style>
-        .form-control {
-            border: 2px solid #ced4da;
-            border-radius: 4px;
-            background-color: #fff !important;
-        }
+    <div class="data-table-area mg-tb-15">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-lg-10 col-md-12">
+                    <div class="emp-form-card">
+                        <div class="emp-form-header">
+                            <h4><i class="fa fa-boxes mr-2"></i> Add Stock</h4>
+                            <a href="{{ route('list-inventory-material') }}" class="emp-form-close">&times;</a>
+                        </div>
+                        <div class="emp-form-body">
 
-        .error {
-            color: red !important;
-        }
+                            <form action="{{ route('store-product-stock') }}" method="POST"
+                                enctype="multipart/form-data" id="regForm">
+                                @csrf
+                                <div class="row">
 
-        .red-text {
-            color: red !important;
-        }
-
-        .custom-dropdown {
-            position: relative;
-            width: 100%;
-        }
-
-        .dropdown-height {
-            height: 280px !important;
-        }
-
-        .custom-dropdown .dropdown-options {
-            position: absolute;
-            width: 100%;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: white;
-            border: 1px solid #ccc;
-            z-index: 999;
-            overflow-y: auto;
-        }
-
-        .custom-dropdown .option {
-            padding: 6px 10px;
-            cursor: pointer;
-        }
-
-        .custom-dropdown .option:hover {
-            background: #f0f0f0;
-        }
-
-        .custom-dropdown .search-box {
-            border-bottom: 1px solid #ccc;
-            margin-bottom: 5px;
-        }
-    </style>
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="sparkline12-list">
-                <div class="sparkline12-hd">
-                    <div class="main-sparkline12-hd">
-                        <center>
-                            <h1>Add Stock Data</h1>
-                        </center>
-                    </div>
-                </div>
-                <div class="sparkline12-graph">
-                    <div class="basic-login-form-ad">
-                        <div class="row">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <div class="all-form-element-inner">
-                                    <form action="{{ route('store-product-stock') }}" method="POST"
-                                        enctype="multipart/form-data" id="regForm">
-                                        @csrf
-                                        <div class="form-group-inner">
-                                            <div class="row">
-                                                <!-- <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                            <label for="part_item_id">Item Name <span class="text-danger">*</span></label>
-                                                            <select class="form-control" name="part_item_id" id="part_item_id">
-                                                                <option value="">Select Item Name</option>
-                                                                @foreach ($dataOutputPartItem as $data)
-    <option value="{{ $data['id'] }}">{{ $data['description'] }}</option>
-    @endforeach
-                                                            </select>
-                                                            @if ($errors->has('part_item_id'))
-    <span class="red-text">{{ $errors->first('part_item_id') }}</span>
-    @endif
-                                                        </div> -->
-
-                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="part_item_id">Item Name <span
-                                                            class="text-danger">*</span></label>
-                                                    <div class="custom-dropdown">
-                                                        <input type="hidden" name="part_item_id" class="part_no"
-                                                            value="{{ old('part_item_id') }}">
-                                                        @php
-                                                            $selectedItem = $dataOutputPartItem->firstWhere(
-                                                                'id',
-                                                                old('part_item_id'),
-                                                            );
-                                                        @endphp
-                                                        <input type="text" class="dropdown-input form-control part-no"
-                                                            placeholder="Select Item..." readonly
-                                                            value="{{ $selectedItem->description ?? '' }}">
-                                                        <div class="dropdown-options dropdown-height"
-                                                            style="display: none;">
-                                                            <input type="text" class="search-box form-control"
-                                                                placeholder="Search...">
-                                                            <div class="options-list">
-                                                                @foreach ($dataOutputPartItem as $data)
-                                                                    <div class="option" data-id="{{ $data->id }}">
-                                                                        {{ $data->description }}</div>
-                                                                @endforeach
-                                                            </div>
-                                                        </div>
+                                    <!-- custom dropdown for Item Name -->
+                                    <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+                                        <div class="fl-group">
+                                            <div class="custom-dropdown" style="position:relative;width:100%;">
+                                                <input type="hidden" name="part_item_id" class="part_no"
+                                                    value="{{ old('part_item_id') }}">
+                                                @php
+                                                    $selectedItem = $dataOutputPartItem->firstWhere(
+                                                        'id',
+                                                        old('part_item_id'),
+                                                    );
+                                                @endphp
+                                                <input type="text" class="dropdown-input form-control part-no"
+                                                    placeholder=" " readonly
+                                                    value="{{ $selectedItem->description ?? '' }}">
+                                                <div class="dropdown-options" style="position:absolute;width:100%;top:100%;left:0;right:0;background:white;border:1px solid #ccc;z-index:999;overflow-y:auto;height:280px;display:none;">
+                                                    <input type="text" class="search-box form-control"
+                                                        placeholder="Search..." style="border-bottom:1px solid #ccc;margin-bottom:5px;">
+                                                    <div class="options-list">
+                                                        @foreach ($dataOutputPartItem as $data)
+                                                            <div class="option" data-id="{{ $data->id }}" style="padding:6px 10px;cursor:pointer;">
+                                                                {{ $data->description }}</div>
+                                                        @endforeach
                                                     </div>
-                                                    @if ($errors->has('part_item_id'))
-                                                        <span class="red-text">{{ $errors->first('part_item_id') }}</span>
-                                                    @endif
-                                                </div>
-
-                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <label for="quantity">Quantity:</label>
-                                                    <input type="text" class="form-control" id="quantity"
-                                                        name="quantity" placeholder="Enter stock quantity">
-                                                    @if ($errors->has('quantity'))
-                                                        <span class="red-text">{{ $errors->first('quantity') }}</span>
-                                                    @endif
                                                 </div>
                                             </div>
+                                            <label for="part_item_id">Item Name <span class="text-danger">*</span></label>
+                                            @if ($errors->has('part_item_id'))
+                                                <span class="fl-error">{{ $errors->first('part_item_id') }}</span>
+                                            @endif
+                                        </div>
+                                    </div>
 
-                                            <div class="login-btn-inner">
-                                                <div class="row">
-                                                    <div class="col-lg-5"></div>
-                                                    <div class="col-lg-7">
-                                                        <div class="login-horizental cancel-wp pull-left">
-                                                            <a href="{{ route('list-inventory-material') }}"
-                                                                class="btn btn-white" style="margin-bottom:50px">Cancel</a>
-                                                            <button class="btn btn-sm btn-primary login-submit-cs"
-                                                                type="submit" style="margin-bottom:50px">Save Data</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+                                        <div class="fl-group">
+                                            <input type="text" class="form-control" id="quantity"
+                                                name="quantity" placeholder=" ">
+                                            <label for="quantity">Quantity</label>
+                                            @if ($errors->has('quantity'))
+                                                <span class="fl-error">{{ $errors->first('quantity') }}</span>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="login-btn-inner">
+                                    <div class="row">
+                                        <div class="col-lg-5"></div>
+                                        <div class="col-lg-7">
+                                            <div class="login-horizental cancel-wp pull-left">
+                                                <a href="{{ route('list-inventory-material') }}"
+                                                    class="btn btn-white" style="margin-bottom:50px">Cancel</a>
+                                                <button class="btn btn-sm btn-primary login-submit-cs"
+                                                    type="submit" style="margin-bottom:50px">Save Data</button>
                                             </div>
                                         </div>
-                                    </form>
+                                    </div>
                                 </div>
-                            </div>
+                            </form>
+
                         </div>
                     </div>
                 </div>

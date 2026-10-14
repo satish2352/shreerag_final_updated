@@ -1,14 +1,5 @@
-@extends('admin.layouts.master')
+﻿@extends('admin.layouts.master')
 @section('content')
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous">
-    </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
     <style>
         @import url("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.4.0/font/bootstrap-icons.min.css");
@@ -197,6 +188,7 @@
 
         .sparkline12-hd {
             padding-top: 85px !important;
+            background: transparent !important;
         }
     </style>
 
@@ -221,6 +213,30 @@
                             config('constants.ROLE_ID.EMPOLYEE'),
                         ];
                     @endphp
+                    @php
+                        $hour = (int) now()->format('H');
+                        $greeting = $hour < 12 ? 'Good Morning' : ($hour < 17 ? 'Good Afternoon' : 'Good Evening');
+                        $userName = session('name', 'User');
+                        $roleLabels = [
+                            config('constants.ROLE_ID.HR')               => 'HR Department',
+                            config('constants.ROLE_ID.DESIGNER')          => 'Design Department',
+                            config('constants.ROLE_ID.PRODUCTION')        => 'Production Department',
+                            config('constants.ROLE_ID.STORE')             => 'Store Department',
+                            config('constants.ROLE_ID.PURCHASE')          => 'Purchase Department',
+                            config('constants.ROLE_ID.SECURITY')          => 'Security Department',
+                            config('constants.ROLE_ID.QUALITY')           => 'Quality Department',
+                            config('constants.ROLE_ID.LOGISTICS')         => 'Logistics Department',
+                            config('constants.ROLE_ID.FINANCE')           => 'Finance Department',
+                            config('constants.ROLE_ID.DISPATCH')          => 'Dispatch Department',
+                            config('constants.ROLE_ID.EMPOLYEE')          => 'Employee',
+                            config('constants.ROLE_ID.CMS')               => 'CMS Department',
+                            config('constants.ROLE_ID.INVENTORY')         => 'Inventory Department',
+                            config('constants.ROLE_ID.SUPER')             => 'Super Admin',
+                            config('constants.ROLE_ID.ESTIMATION')        => 'Estimation Department',
+                            config('constants.ROLE_ID.HIGHER_AUTHORITY')  => 'Owner',
+                        ];
+                        $roleLabel = $roleLabels[$role] ?? 'Dashboard';
+                    @endphp
                     @if ($role == config('constants.ROLE_ID.HR'))
                         @include('admin.pages.dashboard.hr-dashboard')
                     @elseif ($role == config('constants.ROLE_ID.SUPER'))
@@ -237,7 +253,7 @@
                             </div>
 
                             {{-- ROW 1: Pipeline status cards --}}
-                            <div class="row g-3 mb-3">
+                            <div class="row mb-3">
 
                                 {{-- 1. New For Design --}}
                                 <div class="col-xl-2 col-md-4 col-6">
@@ -246,7 +262,7 @@
                                         <div class="card-body text-center py-3">
                                             <div class="icon icon-shape text-white rounded-circle mx-auto mb-2"
                                                 style="background:#6c757d; width:2.5rem; height:2.5rem;">
-                                                <i class="fa-solid fa-inbox"></i>
+                                                <i class="fas fa-inbox"></i>
                                             </div>
                                             <div class="h4 font-bold mb-1">
                                                 {{ $design_dept_counts['business_received_for_designs'] ?? 0 }}</div>
@@ -267,7 +283,7 @@
                                         <div class="card-body text-center py-3">
                                             <div class="icon icon-shape text-white rounded-circle mx-auto mb-2"
                                                 style="background:#1a3a6b; width:2.5rem; height:2.5rem;">
-                                                <i class="fa-solid fa-paper-plane"></i>
+                                                <i class="fas fa-paper-plane"></i>
                                             </div>
                                             <div class="h4 font-bold mb-1">
                                                 {{ $design_dept_counts['designs_sent_to_estimation'] ?? 0 }}</div>
@@ -288,7 +304,7 @@
                                         <div class="card-body text-center py-3">
                                             <div class="icon icon-shape text-white rounded-circle mx-auto mb-2"
                                                 style="background:#17a2b8; width:2.5rem; height:2.5rem;">
-                                                <i class="fa-solid fa-industry"></i>
+                                                <i class="fas fa-industry"></i>
                                             </div>
                                             <div class="h4 font-bold mb-1">
                                                 {{ $design_dept_counts['design_sent_for_production'] ?? 0 }}</div>
@@ -309,7 +325,7 @@
                                         <div class="card-body text-center py-3">
                                             <div class="icon icon-shape text-white rounded-circle mx-auto mb-2"
                                                 style="background:#28a745; width:2.5rem; height:2.5rem;">
-                                                <i class="fa-solid fa-circle-check"></i>
+                                                <i class="fas fa-check-circle"></i>
                                             </div>
                                             <div class="h4 font-bold mb-1">
                                                 {{ $design_dept_counts['accepted_design_production_dept'] ?? 0 }}</div>
@@ -330,7 +346,7 @@
                                         <div class="card-body text-center py-3">
                                             <div class="icon icon-shape text-white rounded-circle mx-auto mb-2"
                                                 style="background:#dc3545; width:2.5rem; height:2.5rem;">
-                                                <i class="fa-solid fa-circle-xmark"></i>
+                                                <i class="fas fa-times-circle"></i>
                                             </div>
                                             <div class="h4 font-bold mb-1"
                                                 style="{{ ($design_dept_counts['rejected_design_production_dept'] ?? 0) > 0 ? 'color:#dc3545;' : '' }}">
@@ -353,7 +369,7 @@
                                         <div class="card-body text-center py-3">
                                             <div class="icon icon-shape text-white rounded-circle mx-auto mb-2"
                                                 style="background:#20a38e; width:2.5rem; height:2.5rem;">
-                                                <i class="fa-solid fa-rotate"></i>
+                                                <i class="fas fa-rotate"></i>
                                             </div>
                                             <div class="h4 font-bold mb-1">
                                                 {{ $design_dept_counts['corrected_design_sent'] ?? 0 }}</div>
@@ -388,7 +404,7 @@
                             </div>
 
                             {{-- Row 1: New Design / Accepted / Rejected --}}
-                            <div class="row g-3 mb-3">
+                            <div class="row mb-3">
 
                                 <div class="col-xl-4 col-sm-6 col-12">
                                     <div class="card shadow border-0" style="border-left:4px solid #6c757d !important;">
@@ -403,15 +419,15 @@
                                                 <div class="col-auto">
                                                     <div class="icon icon-shape text-white text-lg rounded-circle"
                                                         style="background:#6c757d;">
-                                                        <i class="fa-solid fa-file-import"></i>
+                                                        <i class="fas fa-file-import"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-1 text-sm">
                                                 <a
                                                     href="{{ route('list-new-requirements-received-for-production-business-wise') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i
-                                                            class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2"><i
+                                                            class="fas fa-arrow-right"></i></span>
                                                     <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
@@ -432,14 +448,14 @@
                                                 <div class="col-auto">
                                                     <div class="icon icon-shape text-white text-lg rounded-circle"
                                                         style="background:#28a745;">
-                                                        <i class="fa-solid fa-circle-check"></i>
+                                                        <i class="fas fa-check-circle"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-1 text-sm">
                                                 <a href="{{ route('list-accept-design') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i
-                                                            class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2"><i
+                                                            class="fas fa-arrow-right"></i></span>
                                                     <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
@@ -461,14 +477,14 @@
                                                 <div class="col-auto">
                                                     <div class="icon icon-shape text-white text-lg rounded-circle"
                                                         style="background:#dc3545;">
-                                                        <i class="fa-solid fa-circle-xmark"></i>
+                                                        <i class="fas fa-times-circle"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-1 text-sm">
                                                 <a href="{{ route('list-reject-design') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i
-                                                            class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2"><i
+                                                            class="fas fa-arrow-right"></i></span>
                                                     <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
@@ -479,7 +495,7 @@
                             </div>
 
                             {{-- Row 2: Revised / Material / Completed --}}
-                            <div class="row g-3 mb-3">
+                            <div class="row mb-3">
 
                                 <div class="col-xl-4 col-sm-6 col-12">
                                     <div class="card shadow border-0" style="border-left:4px solid #e6a817 !important;">
@@ -494,14 +510,14 @@
                                                 <div class="col-auto">
                                                     <div class="icon icon-shape text-white text-lg rounded-circle"
                                                         style="background:#e6a817;">
-                                                        <i class="fa-solid fa-rotate"></i>
+                                                        <i class="fas fa-rotate"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-1 text-sm">
                                                 <a href="{{ route('list-revislist-material-reciveded-design') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i
-                                                            class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2"><i
+                                                            class="fas fa-arrow-right"></i></span>
                                                     <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
@@ -522,14 +538,14 @@
                                                 <div class="col-auto">
                                                     <div class="icon icon-shape text-white text-lg rounded-circle"
                                                         style="background:#17a2b8;">
-                                                        <i class="fa-solid fa-boxes-stacked"></i>
+                                                        <i class="fas fa-boxes"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-1 text-sm">
                                                 <a href="{{ route('list-material-received') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i
-                                                            class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2"><i
+                                                            class="fas fa-arrow-right"></i></span>
                                                     <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
@@ -551,14 +567,14 @@
                                                 <div class="col-auto">
                                                     <div class="icon icon-shape text-white text-lg rounded-circle"
                                                         style="background:#1a3a6b;">
-                                                        <i class="fa-solid fa-flag-checkered"></i>
+                                                        <i class="fas fa-flag-checkered"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-1 text-sm">
                                                 <a href="{{ route('list-final-production-completed') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i
-                                                            class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2"><i
+                                                            class="fas fa-arrow-right"></i></span>
                                                     <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
@@ -579,7 +595,7 @@
                         <div class="analysis-progrebar-area mg-b-15">
 
                             {{-- ROW 1: Inventory & Chalan KPIs --}}
-                            <div class="row g-3 mb-3">
+                            <div class="row mb-3">
 
                                 <div class="col-xl-3 col-md-6 col-12">
                                     <div class="card shadow border-0 h-100"
@@ -597,7 +613,7 @@
                                                 <div class="col-auto">
                                                     <div class="icon icon-shape text-white text-lg rounded-circle"
                                                         style="background:#1a3a6b;">
-                                                        <i class="fa-solid fa-warehouse"></i>
+                                                        <i class="fas fa-warehouse"></i>
                                                     </div>
                                                 </div>
                                             </div>
@@ -621,7 +637,7 @@
                                                 <div class="col-auto">
                                                     <div class="icon icon-shape text-white text-lg rounded-circle"
                                                         style="background:#20a38e;">
-                                                        <i class="fa-solid fa-boxes-stacked"></i>
+                                                        <i class="fas fa-boxes"></i>
                                                     </div>
                                                 </div>
                                             </div>
@@ -643,14 +659,14 @@
                                                 <div class="col-auto">
                                                     <div class="icon icon-shape text-white text-lg rounded-circle"
                                                         style="background:#17a2b8;">
-                                                        <i class="fa-solid fa-truck-ramp-box"></i>
+                                                        <i class="fas fa-truck-ramp-box"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-2 text-sm">
                                                 <a href="{{ route('list-delivery-chalan') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i
-                                                            class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2"><i
+                                                            class="fas fa-arrow-right"></i></span>
                                                     <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
@@ -672,14 +688,14 @@
                                                 <div class="col-auto">
                                                     <div class="icon icon-shape text-white text-lg rounded-circle"
                                                         style="background:#6c757d;">
-                                                        <i class="fa-solid fa-rotate-left"></i>
+                                                        <i class="fas fa-rotate-left"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-2 text-sm">
                                                 <a href="{{ route('list-returnable-chalan') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i
-                                                            class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2"><i
+                                                            class="fas fa-arrow-right"></i></span>
                                                     <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
@@ -690,7 +706,7 @@
                             </div>
 
                             {{-- ROW 2: Material Pipeline (6 small cards) --}}
-                            <div class="row g-3 mb-3">
+                            <div class="row mb-3">
 
                                 <div class="col-xl-2 col-md-4 col-6">
                                     <div class="card shadow border-0 h-100"
@@ -698,7 +714,7 @@
                                         <div class="card-body text-center py-3">
                                             <div class="icon icon-shape text-white rounded-circle mx-auto mb-2"
                                                 style="background:#e6a817; width:2.5rem; height:2.5rem;">
-                                                <i class="fa-solid fa-inbox"></i>
+                                                <i class="fas fa-inbox"></i>
                                             </div>
                                             <div class="h4 font-bold mb-1">
                                                 {{ $store_dept_counts['material_need_to_sent_to_production'] }}</div>
@@ -718,7 +734,7 @@
                                         <div class="card-body text-center py-3">
                                             <div class="icon icon-shape text-white rounded-circle mx-auto mb-2"
                                                 style="background:#20a38e; width:2.5rem; height:2.5rem;">
-                                                <i class="fa-solid fa-dolly"></i>
+                                                <i class="fas fa-dolly"></i>
                                             </div>
                                             <div class="h4 font-bold mb-1">
                                                 {{ $store_dept_counts['material_sent_to_production'] }}</div>
@@ -738,7 +754,7 @@
                                         <div class="card-body text-center py-3">
                                             <div class="icon icon-shape text-white rounded-circle mx-auto mb-2"
                                                 style="background:#1a3a6b; width:2.5rem; height:2.5rem;">
-                                                <i class="fa-solid fa-cart-shopping"></i>
+                                                <i class="fas fa-cart-shopping"></i>
                                             </div>
                                             <div class="h4 font-bold mb-1">
                                                 {{ $store_dept_counts['material_for_purchase'] }}</div>
@@ -758,7 +774,7 @@
                                         <div class="card-body text-center py-3">
                                             <div class="icon icon-shape text-white rounded-circle mx-auto mb-2"
                                                 style="background:#28a745; width:2.5rem; height:2.5rem;">
-                                                <i class="fa-solid fa-clipboard-check"></i>
+                                                <i class="fas fa-clipboard-check"></i>
                                             </div>
                                             <div class="h4 font-bold mb-1">
                                                 {{ $store_dept_counts['material_received_from_quality'] }}</div>
@@ -778,7 +794,7 @@
                                         <div class="card-body text-center py-3">
                                             <div class="icon icon-shape text-white rounded-circle mx-auto mb-2"
                                                 style="background:#dc3545; width:2.5rem; height:2.5rem;">
-                                                <i class="fa-solid fa-circle-xmark"></i>
+                                                <i class="fas fa-times-circle"></i>
                                             </div>
                                             <div class="h4 font-bold mb-1">{{ $store_dept_counts['rejected_chalan'] }}
                                             </div>
@@ -798,7 +814,7 @@
                                         <div class="card-body text-center py-3">
                                             <div class="icon icon-shape text-white rounded-circle mx-auto mb-2"
                                                 style="background:#6c757d; width:2.5rem; height:2.5rem;">
-                                                <i class="fa-solid fa-file-lines"></i>
+                                                <i class="fas fa-file-alt"></i>
                                             </div>
                                             <div class="h4 font-bold mb-1">
                                                 {{ $store_dept_counts['returnable_chalan'] + $store_dept_counts['delivery_chalan'] }}
@@ -821,7 +837,7 @@
                         <div class="analysis-progrebar-area mg-b-15">
 
                             {{-- ======= ROW 1: Financial KPIs ======= --}}
-                            <div class="row g-3 mb-3">
+                            <div class="row mb-3">
                                 <div class="col-xl-3 col-md-6 col-12">
                                     <div class="card shadow border-0 h-100"
                                         style="border-left:4px solid #1a3a6b !important;">
@@ -836,7 +852,7 @@
                                                 <div class="col-auto">
                                                     <div class="icon icon-shape text-white text-lg rounded-circle"
                                                         style="background:#1a3a6b;">
-                                                        <i class="fa-solid fa-indian-rupee-sign"></i>
+                                                        <i class="fas fa-indian-rupee-sign"></i>
                                                     </div>
                                                 </div>
                                             </div>
@@ -857,7 +873,7 @@
                                                 <div class="col-auto">
                                                     <div class="icon icon-shape text-white text-lg rounded-circle"
                                                         style="background:#20a38e;">
-                                                        <i class="fa-solid fa-boxes-stacked"></i>
+                                                        <i class="fas fa-boxes"></i>
                                                     </div>
                                                 </div>
                                             </div>
@@ -878,14 +894,14 @@
                                                 <div class="col-auto">
                                                     <div class="icon icon-shape text-white text-lg rounded-circle"
                                                         style="background:#6c757d;">
-                                                        <i class="fa-solid fa-truck"></i>
+                                                        <i class="fas fa-truck"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-2 text-sm">
                                                 <a href="{{ route('list-vendor') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i
-                                                            class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2"><i
+                                                            class="fas fa-arrow-right"></i></span>
                                                     <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
@@ -906,14 +922,14 @@
                                                 <div class="col-auto">
                                                     <div class="icon icon-shape text-white text-lg rounded-circle"
                                                         style="background:#6c757d;">
-                                                        <i class="fa-solid fa-gears"></i>
+                                                        <i class="fas fa-gears"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-2 text-sm">
                                                 <a href="{{ route('list-part-item') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i
-                                                            class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2"><i
+                                                            class="fas fa-arrow-right"></i></span>
                                                     <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
@@ -923,7 +939,7 @@
                             </div>
 
                             {{-- ======= ROW 2: Pipeline Status ======= --}}
-                            <div class="row g-3 mb-3">
+                            <div class="row mb-3">
 
                                 {{-- Requisitions Pending --}}
                                 <div class="col-xl-2 col-md-4 col-6">
@@ -932,7 +948,7 @@
                                         <div class="card-body text-center py-3">
                                             <div class="icon icon-shape text-white text-lg rounded-circle mx-auto mb-2"
                                                 style="background:#6c757d; width:2.5rem; height:2.5rem;">
-                                                <i class="fa-solid fa-inbox"></i>
+                                                <i class="fas fa-inbox"></i>
                                             </div>
                                             <div class="h4 font-bold mb-1">
                                                 {{ $purchase_dept_counts['requisitions_pending'] }}</div>
@@ -953,7 +969,7 @@
                                         <div class="card-body text-center py-3">
                                             <div class="icon icon-shape text-white text-lg rounded-circle mx-auto mb-2"
                                                 style="background:#e6a817; width:2.5rem; height:2.5rem;">
-                                                <i class="fa-solid fa-clock"></i>
+                                                <i class="fas fa-clock"></i>
                                             </div>
                                             <div class="h4 font-bold mb-1">{{ $purchase_dept_counts['po_pending_owner'] }}
                                             </div>
@@ -974,7 +990,7 @@
                                         <div class="card-body text-center py-3">
                                             <div class="icon icon-shape text-white text-lg rounded-circle mx-auto mb-2"
                                                 style="background:#20a38e; width:2.5rem; height:2.5rem;">
-                                                <i class="fa-solid fa-circle-check"></i>
+                                                <i class="fas fa-check-circle"></i>
                                             </div>
                                             <div class="h4 font-bold mb-1">
                                                 {{ $purchase_dept_counts['po_approved_pending_send'] }}</div>
@@ -995,7 +1011,7 @@
                                         <div class="card-body text-center py-3">
                                             <div class="icon icon-shape text-white text-lg rounded-circle mx-auto mb-2"
                                                 style="background:#1a3a6b; width:2.5rem; height:2.5rem;">
-                                                <i class="fa-solid fa-paper-plane"></i>
+                                                <i class="fas fa-paper-plane"></i>
                                             </div>
                                             <div class="h4 font-bold mb-1">
                                                 {{ $purchase_dept_counts['po_sent_to_vendor'] }}</div>
@@ -1016,7 +1032,7 @@
                                         <div class="card-body text-center py-3">
                                             <div class="icon icon-shape text-white text-lg rounded-circle mx-auto mb-2"
                                                 style="background:#17a2b8; width:2.5rem; height:2.5rem;">
-                                                <i class="fa-solid fa-id-card"></i>
+                                                <i class="fas fa-id-card"></i>
                                             </div>
                                             <div class="h4 font-bold mb-1">{{ $purchase_dept_counts['gatepasses_count'] }}
                                             </div>
@@ -1033,7 +1049,7 @@
                                         <div class="card-body text-center py-3">
                                             <div class="icon icon-shape text-white text-lg rounded-circle mx-auto mb-2"
                                                 style="background:#28a745; width:2.5rem; height:2.5rem;">
-                                                <i class="fa-solid fa-clipboard-check"></i>
+                                                <i class="fas fa-clipboard-check"></i>
                                             </div>
                                             <div class="h4 font-bold mb-1">{{ $purchase_dept_counts['grn_count'] }}</div>
                                             <div class="text-muted" style="font-size:11px; font-weight:600;">
@@ -1046,7 +1062,7 @@
 
                             {{-- PO Rejected (show only if > 0) --}}
                             @if ($purchase_dept_counts['po_rejected'] > 0)
-                                <div class="row g-3 mb-3">
+                                <div class="row mb-3">
                                     <div class="col-xl-3 col-md-6 col-12">
                                         <div class="card shadow border-0"
                                             style="border-left:4px solid #dc3545 !important; background:#fff8f8;">
@@ -1061,14 +1077,14 @@
                                                     <div class="col-auto">
                                                         <div class="icon icon-shape text-white text-lg rounded-circle"
                                                             style="background:#dc3545;">
-                                                            <i class="fa-solid fa-circle-xmark"></i>
+                                                            <i class="fas fa-times-circle"></i>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="mt-2 text-sm">
                                                     <a href="{{ route('list-purchase-order-rejected') }}"
                                                         style="color:#dc3545; font-size:12px;">
-                                                        <i class="fa-solid fa-arrow-right"></i> Review &amp; Resubmit
+                                                        <i class="fas fa-arrow-right"></i> Review &amp; Resubmit
                                                     </a>
                                                 </div>
                                             </div>
@@ -1085,31 +1101,27 @@
                         </div>
                     @elseif ($role == config('constants.ROLE_ID.SECURITY'))
                         <div class="analysis-progrebar-area mg-b-15">
-                            <div class="row">
+                            <div class="row mb-3">
                                 <div class="col-xl-4 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
+                                    <div class="card shadow border-0 h-100" style="border-left:4px solid #1a3a6b !important;">
                                         <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-2">Gate
-                                                        Pass</span>
-                                                    <span
-                                                        class="h5 font-bold mb-0">{{ $secuirty_dept_counts['get_pass'] }}</span>
+                                            <div class="row border-bottom align-items-center pb-2 mb-2">
+                                                <div class="col">
+                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-1">Gate Pass</span>
+                                                    <span class="h5 font-bold mb-0">{{ $secuirty_dept_counts['get_pass'] }}</span>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle" style="background:#1a3a6b;">
+                                                        <i class="fas fa-id-card"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-2 mb-0 text-sm">
                                                 <a href="{{ route('list-gatepass') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2">
+                                                        <i class="fas fa-arrow-right"></i>
+                                                    </span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
                                         </div>
@@ -1134,7 +1146,7 @@
                             </div>
 
                             {{-- Single row: 4 cards --}}
-                            <div class="row g-3 mb-3">
+                            <div class="row mb-3">
 
                                 <div class="col-xl-3 col-sm-6 col-12">
                                     <div class="card shadow border-0" style="border-left:4px solid #6c757d !important;">
@@ -1149,14 +1161,14 @@
                                                 <div class="col-auto">
                                                     <div class="icon icon-shape text-white text-lg rounded-circle"
                                                         style="background:#6c757d;">
-                                                        <i class="fa-solid fa-shield-halved"></i>
+                                                        <i class="fas fa-shield-halved"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-1 text-sm">
                                                 <a href="{{ route('list-grn') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i
-                                                            class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2"><i
+                                                            class="fas fa-arrow-right"></i></span>
                                                     <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
@@ -1177,14 +1189,14 @@
                                                 <div class="col-auto">
                                                     <div class="icon icon-shape text-white text-lg rounded-circle"
                                                         style="background:#28a745;">
-                                                        <i class="fa-solid fa-file-circle-check"></i>
+                                                        <i class="fas fa-file-circle-check"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-1 text-sm">
                                                 <a href="{{ route('list-material-sent-to-quality') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i
-                                                            class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2"><i
+                                                            class="fas fa-arrow-right"></i></span>
                                                     <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
@@ -1205,14 +1217,14 @@
                                                 <div class="col-auto">
                                                     <div class="icon icon-shape text-white text-lg rounded-circle"
                                                         style="background:#17a2b8;">
-                                                        <i class="fa-solid fa-boxes-stacked"></i>
+                                                        <i class="fas fa-boxes"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-1 text-sm">
                                                 <a href="{{ route('list-material-sent-to-quality') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i
-                                                            class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2"><i
+                                                            class="fas fa-arrow-right"></i></span>
                                                     <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
@@ -1234,14 +1246,14 @@
                                                 <div class="col-auto">
                                                     <div class="icon icon-shape text-white text-lg rounded-circle"
                                                         style="background:#fd7e14;">
-                                                        <i class="fa-solid fa-file-circle-xmark"></i>
+                                                        <i class="fas fa-file-circle-xmark"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-1 text-sm">
                                                 <a href="{{ route('list-rejected-chalan-updated') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i
-                                                            class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2"><i
+                                                            class="fas fa-arrow-right"></i></span>
                                                     <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
@@ -1269,7 +1281,7 @@
                             </div>
 
                             {{-- Row 1: Pipeline stages --}}
-                            <div class="row g-3 mb-3">
+                            <div class="row mb-3">
 
                                 <div class="col-xl-4 col-sm-6 col-12">
                                     <div class="card shadow border-0" style="border-left:4px solid #6c757d !important;">
@@ -1281,13 +1293,13 @@
                                                 </div>
                                                 <div class="col-auto">
                                                     <div class="icon icon-shape text-white text-lg rounded-circle" style="background:#6c757d;">
-                                                        <i class="fa-solid fa-industry"></i>
+                                                        <i class="fas fa-industry"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-1 text-sm">
                                                 <a href="{{ route('list-final-production-completed-recive-to-logistics') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2"><i class="fas fa-arrow-right"></i></span>
                                                     <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
@@ -1305,13 +1317,13 @@
                                                 </div>
                                                 <div class="col-auto">
                                                     <div class="icon icon-shape text-white text-lg rounded-circle" style="background:#e6a817;">
-                                                        <i class="fa-solid fa-truck-moving"></i>
+                                                        <i class="fas fa-truck-moving"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-1 text-sm">
                                                 <a href="{{ route('list-logistics') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2"><i class="fas fa-arrow-right"></i></span>
                                                     <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
@@ -1329,13 +1341,13 @@
                                                 </div>
                                                 <div class="col-auto">
                                                     <div class="icon icon-shape text-white text-lg rounded-circle" style="background:#17a2b8;">
-                                                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                                                        <i class="fas fa-file-invoice-dollar"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-1 text-sm">
                                                 <a href="{{ route('list-send-to-fianance-by-logistics') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2"><i class="fas fa-arrow-right"></i></span>
                                                     <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
@@ -1346,7 +1358,7 @@
                             </div>
 
                             {{-- Row 2: Master data --}}
-                            <div class="row g-3 mb-3">
+                            <div class="row mb-3">
 
                                 <div class="col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="card shadow border-0" style="border-left:4px solid #1a3a6b !important;">
@@ -1359,13 +1371,13 @@
                                                 </div>
                                                 <div class="col-auto">
                                                     <div class="icon icon-shape text-white text-lg rounded-circle" style="background:#1a3a6b;">
-                                                        <i class="fa-solid fa-truck"></i>
+                                                        <i class="fas fa-truck"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-1 text-sm">
                                                 <a href="{{ route('list-vehicle-type') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2"><i class="fas fa-arrow-right"></i></span>
                                                     <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
@@ -1384,13 +1396,13 @@
                                                 </div>
                                                 <div class="col-auto">
                                                     <div class="icon icon-shape text-white text-lg rounded-circle" style="background:#1a3a6b;">
-                                                        <i class="fa-solid fa-building-user"></i>
+                                                        <i class="fas fa-building-user"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-1 text-sm">
                                                 <a href="{{ route('list-transport-name') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2"><i class="fas fa-arrow-right"></i></span>
                                                     <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
@@ -1409,148 +1421,132 @@
                         </div>
                     @elseif ($role == config('constants.ROLE_ID.FINANCE'))
                         <div class="analysis-progrebar-area mg-b-15">
-                            <div class="row">
+                            <div class="mb-3">
+                                <small class="text-muted font-semibold" style="font-size:12px; letter-spacing:0.5px;">
+                                    FINANCE PIPELINE &rarr; Check Payment &rarr; Sanction &rarr; Release Payment &rarr; Dispatch
+                                </small>
+                            </div>
+                            <div class="row mb-3">
                                 <div class="col-xl-4 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
+                                    <div class="card shadow border-0 h-100" style="border-left:4px solid #e6a817 !important;">
                                         <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-2">Need
-                                                        to check for Payment</span>
-                                                    <span
-                                                        class="h5 font-bold mb-0">{{ $logistics_counts['need_to_check_for_payment'] }}</span>
+                                            <div class="row border-bottom align-items-center pb-2 mb-2">
+                                                <div class="col">
+                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-1">Need to check for Payment</span>
+                                                    <span class="h5 font-bold mb-0">{{ $logistics_counts['need_to_check_for_payment'] }}</span>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle" style="background:#e6a817;">
+                                                        <i class="fas fa-clock"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-2 mb-0 text-sm">
                                                 <a href="{{ route('list-sr-and-gr-genrated-business') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2">
+                                                        <i class="fas fa-arrow-right"></i>
+                                                    </span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
+                                    <div class="card shadow border-0 h-100" style="border-left:4px solid #17a2b8 !important;">
                                         <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-2">PO
-                                                        Submited For Sanction For Payment</span>
-                                                    <span
-                                                        class="h5 font-bold mb-0">{{ $logistics_counts['production_completed_prod_dept_logisitics'] }}</span>
+                                            <div class="row border-bottom align-items-center pb-2 mb-2">
+                                                <div class="col">
+                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-1">PO Submited For Sanction For Payment</span>
+                                                    <span class="h5 font-bold mb-0">{{ $logistics_counts['production_completed_prod_dept_logisitics'] }}</span>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle" style="background:#17a2b8;">
+                                                        <i class="fas fa-file-invoice-dollar"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-2 mb-0 text-sm">
                                                 <a href="{{ route('list-po-sent-for-approval') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2">
+                                                        <i class="fas fa-arrow-right"></i>
+                                                    </span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
+                                    <div class="card shadow border-0 h-100" style="border-left:4px solid #28a745 !important;">
                                         <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-2">PO
-                                                        Payment Release to Vendor
-                                                        By Fianance</span>
-                                                    <span
-                                                        class="h5 font-bold mb-0">{{ $logistics_counts['po_pyament_need_to_release'] }}</span>
+                                            <div class="row border-bottom align-items-center pb-2 mb-2">
+                                                <div class="col">
+                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-1">PO Payment Release to Vendor By Finance</span>
+                                                    <span class="h5 font-bold mb-0">{{ $logistics_counts['po_pyament_need_to_release'] }}</span>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle" style="background:#28a745;">
+                                                        <i class="fas fa-money-bill-wave"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-2 mb-0 text-sm">
                                                 <a href="{{ route('list-release-approval-payment-by-vendor') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2">
+                                                        <i class="fas fa-arrow-right"></i>
+                                                    </span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-xl-4 col-sm-6 col-12 mt-4">
-                                    <div class="card shadow border-0">
+                                <div class="col-xl-4 col-sm-6 col-12">
+                                    <div class="card shadow border-0 h-100" style="border-left:4px solid #1a3a6b !important;">
                                         <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-2">Recive
-                                                        Logistics List</span>
-                                                    <span
-                                                        class="h5 font-bold mb-0">{{ $fianance_counts['logistics_send_by_finance_received_fianance_count'] }}</span>
+                                            <div class="row border-bottom align-items-center pb-2 mb-2">
+                                                <div class="col">
+                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-1">Recive Logistics List</span>
+                                                    <span class="h5 font-bold mb-0">{{ $fianance_counts['logistics_send_by_finance_received_fianance_count'] }}</span>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle" style="background:#1a3a6b;">
+                                                        <i class="fas fa-truck-ramp-box"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-2 mb-0 text-sm">
                                                 <a href="{{ route('recive-logistics-list') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2">
+                                                        <i class="fas fa-arrow-right"></i>
+                                                    </span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-xl-4 col-sm-6 col-12 mt-4">
-                                    <div class="card shadow border-0">
+                                <div class="col-xl-4 col-sm-6 col-12">
+                                    <div class="card shadow border-0 h-100" style="border-left:4px solid #20a38e !important;">
                                         <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-2">Product
-                                                        Submited to Dispatch</span>
-                                                    <span
-                                                        class="h5 font-bold mb-0">{{ $fianance_counts['fianance_send_to_dispatch_count'] }}</span>
+                                            <div class="row border-bottom align-items-center pb-2 mb-2">
+                                                <div class="col">
+                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-1">Product Submited to Dispatch</span>
+                                                    <span class="h5 font-bold mb-0">{{ $fianance_counts['fianance_send_to_dispatch_count'] }}</span>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle" style="background:#20a38e;">
+                                                        <i class="fas fa-dolly"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-2 mb-0 text-sm">
                                                 <a href="{{ route('list-send-to-dispatch') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2">
+                                                        <i class="fas fa-arrow-right"></i>
+                                                    </span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
                                         </div>
@@ -1565,61 +1561,52 @@
                         </div>
                     @elseif ($role == config('constants.ROLE_ID.INVENTORY'))
                         <div class="analysis-progrebar-area mg-b-15">
-                            <div class="row">
+                            <div class="row mb-3">
                                 <div class="col-xl-4 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
+                                    <div class="card shadow border-0 h-100" style="border-left:4px solid #6c757d !important;">
                                         <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-2"> All
-                                                        New Requirements</span>
-                                                    <span
-                                                        class="h5 font-bold mb-0">{{ $inventory_dept_counts['material_need_to_sent_to_production_inventory'] }}</span>
+                                            <div class="row border-bottom align-items-center pb-2 mb-2">
+                                                <div class="col">
+                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-1">All New Requirements</span>
+                                                    <span class="h5 font-bold mb-0">{{ $inventory_dept_counts['material_need_to_sent_to_production_inventory'] }}</span>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle" style="background:#6c757d;">
+                                                        <i class="fas fa-inbox"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-2 mb-0 text-sm">
                                                 <a href="{{ route('list-accepted-design-from-prod') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2">
+                                                        <i class="fas fa-arrow-right"></i>
+                                                    </span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
+                                    <div class="card shadow border-0 h-100" style="border-left:4px solid #1a3a6b !important;">
                                         <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span
-                                                        class="h6 font-semibold text-muted text-sm d-block mb-2">Inventory
-                                                        Material List</span>
-                                                    <span
-                                                        class="h5 font-bold mb-0">{{ $inventory_dept_counts['part_item_inventory'] }}</span>
+                                            <div class="row border-bottom align-items-center pb-2 mb-2">
+                                                <div class="col">
+                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-1">Inventory Material List</span>
+                                                    <span class="h5 font-bold mb-0">{{ $inventory_dept_counts['part_item_inventory'] }}</span>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle" style="background:#1a3a6b;">
+                                                        <i class="fas fa-boxes"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-2 mb-0 text-sm">
                                                 <a href="{{ route('list-inventory-material') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2">
+                                                        <i class="fas fa-arrow-right"></i>
+                                                    </span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
                                         </div>
@@ -1638,7 +1625,7 @@
                             </div>
 
                             {{-- Row 1: Pipeline stages (3 cards) --}}
-                            <div class="row g-3 mb-3">
+                            <div class="row mb-3">
 
                                 <div class="col-xl-4 col-sm-6 col-12">
                                     <div class="card shadow border-0" style="border-left:4px solid #6c757d !important;">
@@ -1650,13 +1637,13 @@
                                                 </div>
                                                 <div class="col-auto">
                                                     <div class="icon icon-shape text-white text-lg rounded-circle" style="background:#6c757d;">
-                                                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                                                        <i class="fas fa-file-invoice-dollar"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-1 text-sm">
                                                 <a href="{{ route('list-final-production-completed-received-from-fianance') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2"><i class="fas fa-arrow-right"></i></span>
                                                     <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
@@ -1674,13 +1661,13 @@
                                                 </div>
                                                 <div class="col-auto">
                                                     <div class="icon icon-shape text-white text-lg rounded-circle" style="background:#e6a817;">
-                                                        <i class="fa-solid fa-dolly"></i>
+                                                        <i class="fas fa-dolly"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-1 text-sm">
                                                 <a href="{{ route('list-dispatch') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2"><i class="fas fa-arrow-right"></i></span>
                                                     <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
@@ -1698,13 +1685,13 @@
                                                 </div>
                                                 <div class="col-auto">
                                                     <div class="icon icon-shape text-white text-lg rounded-circle" style="background:#28a745;">
-                                                        <i class="fa-solid fa-truck-ramp-box"></i>
+                                                        <i class="fas fa-truck-ramp-box"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-1 text-sm">
                                                 <a href="{{ route('list-dispatch') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2"><i class="fas fa-arrow-right"></i></span>
                                                     <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
@@ -1715,7 +1702,7 @@
                             </div>
 
                             {{-- Row 2: Final closure --}}
-                            <div class="row g-3 mb-3">
+                            <div class="row mb-3">
 
                                 <div class="col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="card shadow border-0" style="border-left:4px solid #1a3a6b !important;">
@@ -1727,13 +1714,13 @@
                                                 </div>
                                                 <div class="col-auto">
                                                     <div class="icon icon-shape text-white text-lg rounded-circle" style="background:#1a3a6b;">
-                                                        <i class="fa-solid fa-flag-checkered"></i>
+                                                        <i class="fas fa-flag-checkered"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-1 text-sm">
                                                 <a href="{{ route('list-dispatch-final-product-close') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2"><i class="fa-solid fa-arrow-right"></i></span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2"><i class="fas fa-arrow-right"></i></span>
                                                     <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
@@ -1752,101 +1739,84 @@
                         </div>
                     @elseif ($role == config('constants.ROLE_ID.EMPOLYEE'))
                         <div class="analysis-progrebar-area mg-b-15">
-                            <div class="row">
+                            <div class="row mb-3">
                                 <div class="col-xl-6 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
+                                    <div class="card shadow border-0 h-100" style="border-left:4px solid #6c757d !important;">
                                         <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-2">Total
-                                                        Leave Request</span>
-                                                    <span
-                                                        class="h5 font-bold mb-0">{{ $employee_counts['employee_leave_request'] }}</span>
+                                            <div class="row border-bottom align-items-center pb-2 mb-2">
+                                                <div class="col">
+                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-1">Total Leave Request</span>
+                                                    <span class="h5 font-bold mb-0">{{ $employee_counts['employee_leave_request'] }}</span>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle" style="background:#6c757d;">
+                                                        <i class="fas fa-file-alt"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-2 mb-0 text-sm">
                                                 <a href="{{ route('list-leaves') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2">
+                                                        <i class="fas fa-arrow-right"></i>
+                                                    </span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-xl-6 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
+                                    <div class="card shadow border-0 h-100" style="border-left:4px solid #28a745 !important;">
                                         <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-2">accept
-                                                        Leave Request</span>
-                                                    <span
-                                                        class="h5 font-bold mb-0">{{ $employee_counts['employee_accepted_leave_request'] }}</span>
+                                            <div class="row border-bottom align-items-center pb-2 mb-2">
+                                                <div class="col">
+                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-1">Leave Approved</span>
+                                                    <span class="h5 font-bold mb-0">{{ $employee_counts['employee_accepted_leave_request'] }}</span>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle" style="background:#28a745;">
+                                                        <i class="fas fa-check-circle"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-2 mb-0 text-sm">
                                                 <a href="{{ route('list-leaves') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2">
+                                                        <i class="fas fa-arrow-right"></i>
+                                                    </span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row mt-3">
+                            <div class="row mb-3">
                                 <div class="col-xl-6 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
+                                    <div class="card shadow border-0 h-100" style="border-left:4px solid #dc3545 !important;">
                                         <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-2">Rejected
-                                                        Leave Request</span>
-                                                    <span
-                                                        class="h5 font-bold mb-0">{{ $employee_counts['employee_rejected_leave_request'] }}</span>
+                                            <div class="row border-bottom align-items-center pb-2 mb-2">
+                                                <div class="col">
+                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-1">Rejected Leave Request</span>
+                                                    <span class="h5 font-bold mb-0">{{ $employee_counts['employee_rejected_leave_request'] }}</span>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa-solid fa-paint-brush"></i>
-
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle" style="background:#dc3545;">
+                                                        <i class="fas fa-times-circle"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-2 mb-0 text-sm">
                                                 <a href="{{ route('list-leaves') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">View
-                                                        Details</span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2">
+                                                        <i class="fas fa-arrow-right"></i>
+                                                    </span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                {{-- <div class="col-lg-6 col-md-6 mb-4"  >
-                                        <div class="col-lg-9 col-md-9">
-                                        <canvas id="leaveStatusChart" width="500" height="500"></canvas>
-                                        </div>
-                                    </div> --}}
                                 @if (!empty($employee_counts['user_leaves_status']))
                                     @include('admin.pages.dashboard.leave-chart', [
                                         'leaveData' => $employee_counts['user_leaves_status'],
@@ -1913,206 +1883,191 @@
                             </script> --}}
                     @elseif ($role == config('constants.ROLE_ID.CMS'))
                         <div class="analysis-progrebar-area mg-b-15">
-                            <div class="row">
+                            <div class="row mb-3">
                                 <div class="col-xl-4 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
+                                    <div class="card shadow border-0 h-100" style="border-left:4px solid #1a3a6b !important;">
                                         <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span
-                                                        class="h6 font-semibold text-muted text-sm d-block mb-2">Product</span>
+                                            <div class="row border-bottom align-items-center pb-2 mb-2">
+                                                <div class="col">
+                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-1">Product</span>
                                                     <span class="h5 font-bold mb-0">
                                                         {{ $cms_counts['product_count'] }}
                                                     </span>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa big-icon fa-cube icon-wrap"></i>
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle" style="background:#1a3a6b;">
+                                                        <i class="fas fa-cube"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-2 mb-0 text-sm">
                                                 <a href="{{ route('list-product') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">view
-                                                        details</span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2">
+                                                        <i class="fas fa-arrow-right"></i>
+                                                    </span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
+                                    <div class="card shadow border-0 h-100" style="border-left:4px solid #20a38e !important;">
                                         <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span
-                                                        class="h6 font-semibold text-muted text-sm d-block mb-2">Services</span>
+                                            <div class="row border-bottom align-items-center pb-2 mb-2">
+                                                <div class="col">
+                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-1">Services</span>
                                                     <span class="h5 font-bold mb-0">
                                                         {{ $cms_counts['product_services_count'] }}
                                                     </span>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa big-icon fa-tools icon-wrap"></i>
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle" style="background:#20a38e;">
+                                                        <i class="fas fa-screwdriver-wrench"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-2 mb-0 text-sm">
                                                 <a href="{{ route('list-services') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">view
-                                                        details</span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2">
+                                                        <i class="fas fa-arrow-right"></i>
+                                                    </span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-sm-6 col-12">
-                                    <div class="card shadow border-0">
+                                    <div class="card shadow border-0 h-100" style="border-left:4px solid #e6a817 !important;">
                                         <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span
-                                                        class="h6 font-semibold text-muted text-sm d-block mb-2">Testimonial</span>
+                                            <div class="row border-bottom align-items-center pb-2 mb-2">
+                                                <div class="col">
+                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-1">Testimonial</span>
                                                     <span class="h5 font-bold mb-0">
                                                         {{ $cms_counts['testimonial_count'] }}
                                                     </span>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa big-icon fa-quote-right icon-wrap"></i>
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle" style="background:#e6a817;">
+                                                        <i class="fas fa-quote-right"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-2 mb-0 text-sm">
                                                 <a href="{{ route('list-testimonial') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">view
-                                                        details</span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2">
+                                                        <i class="fas fa-arrow-right"></i>
+                                                    </span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-xl-4 col-sm-6 col-12 mt-2">
-                                    <div class="card shadow border-0">
+                                <div class="col-xl-4 col-sm-6 col-12">
+                                    <div class="card shadow border-0 h-100" style="border-left:4px solid #6c757d !important;">
                                         <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-2">Director
-                                                        Desk</span>
+                                            <div class="row border-bottom align-items-center pb-2 mb-2">
+                                                <div class="col">
+                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-1">Director Desk</span>
                                                     <span class="h5 font-bold mb-0">
                                                         {{-- {{ $cms_counts['progressPercentage'] }} --}}
                                                     </span>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa big-icon fa-briefcase icon-wrap"></i>
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle" style="background:#6c757d;">
+                                                        <i class="fas fa-briefcase"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-2 mb-0 text-sm">
                                                 <a href="{{ route('list-director-desk') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">view
-                                                        details</span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2">
+                                                        <i class="fas fa-arrow-right"></i>
+                                                    </span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-xl-4 col-sm-6 col-12 mt-2">
-                                    <div class="card shadow border-0">
+                                <div class="col-xl-4 col-sm-6 col-12">
+                                    <div class="card shadow border-0 h-100" style="border-left:4px solid #17a2b8 !important;">
                                         <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-2">Vision
-                                                        Mission</span>
+                                            <div class="row border-bottom align-items-center pb-2 mb-2">
+                                                <div class="col">
+                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-1">Vision Mission</span>
                                                     <span class="h5 font-bold mb-0">
                                                         {{ $cms_counts['vision_mission_count'] }}
                                                     </span>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa big-icon fa-bullseye icon-wrap"></i>
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle" style="background:#17a2b8;">
+                                                        <i class="fas fa-bullseye"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-2 mb-0 text-sm">
                                                 <a href="{{ route('list-vision-mission') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">view
-                                                        details</span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2">
+                                                        <i class="fas fa-arrow-right"></i>
+                                                    </span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-xl-4 col-sm-6 col-12 mt-2">
-                                    <div class="card shadow border-0">
+                                <div class="col-xl-4 col-sm-6 col-12">
+                                    <div class="card shadow border-0 h-100" style="border-left:4px solid #28a745 !important;">
                                         <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span
-                                                        class="h6 font-semibold text-muted text-sm d-block mb-2">Team</span>
+                                            <div class="row border-bottom align-items-center pb-2 mb-2">
+                                                <div class="col">
+                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-1">Team</span>
                                                     <span class="h5 font-bold mb-0">
                                                         {{ $cms_counts['team_count'] }}
                                                     </span>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa big-icon fa-user-friends icon-wrap"></i>
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle" style="background:#28a745;">
+                                                        <i class="fas fa-users"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-2 mb-0 text-sm">
                                                 <a href="{{ route('list-team') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">view
-                                                        details</span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2">
+                                                        <i class="fas fa-arrow-right"></i>
+                                                    </span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-xl-4 col-sm-6 col-12 mt-2">
-                                    <div class="card shadow border-0">
+                                <div class="col-xl-4 col-sm-6 col-12">
+                                    <div class="card shadow border-0 h-100" style="border-left:4px solid #6c757d !important;">
                                         <div class="card-body">
-                                            <div class="row border-bottom">
-                                                <div class="col mb-2">
-                                                    <span
-                                                        class="h6 font-semibold text-muted text-sm d-block mb-2">Contactus
-                                                        Form</span>
+                                            <div class="row border-bottom align-items-center pb-2 mb-2">
+                                                <div class="col">
+                                                    <span class="h6 font-semibold text-muted text-sm d-block mb-1">Contactus Form</span>
                                                     <span class="h5 font-bold mb-0">
                                                         {{ $cms_counts['contact_us_count'] }}
                                                     </span>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <div
-                                                        class="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                                        <i class="fa big-icon fa-edit icon-wrap"></i>
+                                                    <div class="icon icon-shape text-white text-lg rounded-circle" style="background:#6c757d;">
+                                                        <i class="fas fa-envelope"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="mt-2 mb-0 text-sm">
                                                 <a href="{{ route('list-contactus-form') }}">
-                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                        <i class="fa-solid fa-arrow-right"></i> </span>
-                                                    <span class="text-nowrap text-xs text-muted">view
-                                                        details</span>
+                                                    <span class="badge badge-pill bg-soft-success text-success mr-2">
+                                                        <i class="fas fa-arrow-right"></i>
+                                                    </span>
+                                                    <span class="text-nowrap text-xs text-muted">View Details</span>
                                                 </a>
                                             </div>
                                         </div>

@@ -5,14 +5,6 @@
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="sparkline13-list">
-                        <div class="sparkline13-hd">
-                            <div class="main-sparkline13-hd">
-                                <h1>All <span class="table-project-n">Business</span></h1>
-                                <div class="form-group-inner login-btn-inner row">
-                                    <div class="col-lg-10"></div>
-                                </div>
-                            </div>
-                        </div>
                         @if (Session::get('status') == 'success')
                             <div class="alert alert-success alert-success-style1">
                                 <button type="button" class="close sucess-op" data-dismiss="alert" aria-label="Close">
@@ -32,21 +24,30 @@
                         @endif
                         <div class="sparkline13-graph">
                             <div class="datatable-dashv1-list custom-datatable-overright">
-                                <div class="table-responsive">
-                                    <input type="hidden" class="form-control" id="business_id" name="business_id">
-                                    <form method="GET" action="{{ url()->current() }}">
-                                        <div class="d-flex justify-content-end mb-3">
-                                            <div class="col-md-4">
-                                                <input type="text" name="search" value="{{ request('search') }}"
-                                                    class="form-control"
-                                                    placeholder="Search Project Name / Product Name  / PO No.">
-                                            </div>
-                                            <div class="col-md-2 ">
-                                                <button class="btn btn-primary filterbg">Search</button>
-                                                <a href="{{ url()->current() }}" class="btn btn-secondary">Reset</a>
-                                            </div>
+                                {{-- Page header --}}
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h5 style="margin:0; font-weight:600; color:#1a3a6b;">Business Sent For Design</h5>
+                                </div>
+
+                                {{-- Search bar --}}
+                                <form method="GET" action="{{ url()->current() }}">
+                                    <input type="hidden" id="business_id" name="business_id">
+                                    <div class="d-flex justify-content-end align-items-center mb-3" style="gap:8px;">
+                                        <div style="flex:0 0 340px; max-width:100%;">
+                                            <input type="text" name="search" value="{{ request('search') }}"
+                                                class="form-control"
+                                                placeholder="Search Project Name / Product Name / PO No.">
                                         </div>
-                                    </form>
+                                        <button type="submit" class="btn btn-primary filterbg">
+                                            <i class="fas fa-search mr-1"></i> Search
+                                        </button>
+                                        <a href="{{ url()->current() }}" class="btn btn-secondary">
+                                            <i class="fas fa-times mr-1"></i> Reset
+                                        </a>
+                                    </div>
+                                </form>
+
+                                <div class="table-responsive">
                                     <table class="table table-bordered table-striped">
                                         {{-- <table id="table" data-toggle="table" data-pagination="true" data-search="true"
                                         data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="false"
@@ -115,7 +116,7 @@
                                         </div>
 
                                         <div class="col-md-6 d-flex justify-content-end mt-3">
-                                            {{ $data_output->onEachSide(1)->links() }}
+                                            {{ $data_output->appends(request()->query())->onEachSide(1)->links() }}
                                         </div>
                                     </div>
                                 </div>

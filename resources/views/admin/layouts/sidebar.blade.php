@@ -1,4 +1,5 @@
 <style>
+    /* ===== Notification / Dropdown CSS (preserved) ===== */
     .dropdown-menu {
         list-style: none !important;
         padding-left: 0 !important;
@@ -30,35 +31,27 @@
         border-radius: 50%;
         padding: 2px 6px;
         font-size: 12px;
-
-
-        /* .notification-count { */
-        background-color: red;
-        color: white;
-        border-radius: 50%;
-        padding: 2px 6px;
-        font-size: 12px;
-        /* } */
     }
 
     .nav-item.active>a,
     .nav-item.active>a .mini-click-non {
-        background-color: #1A5DA0 !important;
-        color: #fff !important;
-
+        background: rgba(26, 93, 160, 0.10) !important;
+        color: #1a3a6b !important;
+        font-weight: 600 !important;
+        border-left: 3px solid transparent !important;
     }
 
     .active-submenu {
-        background-color: #1A5DA0 !important;
-        /* or any color that matches your theme */
-        color: #fff !important;
+        background: rgba(26, 93, 160, 0.12) !important;
+        color: #1A5DA0 !important;
+        font-weight: 600 !important;
+        border-left: 3px solid transparent !important;
         display: block;
     }
 
     /* Notification Badge */
     #notification-count {
         background: #8baadd;
-        /* blue */
         color: white;
         font-size: 16px !important;
         border-radius: 50%;
@@ -94,7 +87,6 @@
 
     /* Header */
     .dropdown-menu[aria-labelledby="notifyDropdown"] .dropdown-header {
-
         color: #000 !important;
         text-align: center;
         padding: 6px;
@@ -124,7 +116,6 @@
         height: 45px;
         border-radius: 50%;
         background: #1A4FA7;
-        /* blue */
         display: flex;
         align-items: center;
         justify-content: center;
@@ -163,27 +154,20 @@
         text-decoration: none;
     }
 
-    . {
-        left: 125px !important;
-    }
-
     .logout-dropdown {
         position: absolute;
         transform: translate3d(0px, 24px, 0px);
         top: 10px !important;
-        /* left: 95px !important; */
         will-change: transform;
     }
+
 </style>
 
 <div class="left-sidebar-pro">
     <nav id="sidebar" class="">
         <div class="sidebar-header">
             <img class="main-logo1" src="{{ asset('website/assets/img/logo/LANSCAPE LOG.png') }}"
-                style="height: 3.9rem!important;" alt="">
-            <a href="{{ route('login') }}"><img class="main-logo"
-                    src="{{ asset('website/assets/img/logo/LANSCAPE LOG.png') }}" alt=""></a>
-            <!-- <strong><img src="{{ asset('img/logo/logo_updated.png') }}" alt="" ></strong> -->
+                alt="Shreerag">
         </div>
         <div class="left-custom-menu-adp-wrap comment-scrollbar">
             <nav class="sidebar-nav left-sidebar-menu-pro">
@@ -255,11 +239,12 @@
                                 $isReportActive = in_array(Route::currentRouteName(), $reportRoutes);
                             @endphp
 
-                            <li>
-                                <a class="has-arrow" href="javascript:void(0);" aria-expanded="false"><i
+                            <li class="{{ $isReportActive ? 'active' : '' }}">
+                                <a class="has-arrow" href="javascript:void(0);" aria-expanded="{{ $isReportActive ? 'true' : 'false' }}"><i
                                         class="fa fa-chart-bar icon-wrap"></i><span class="mini-click-non">Report
                                     </span></a>
-                                <ul class="submenu-angle" aria-expanded="false">
+                                <ul class="submenu-angle" aria-expanded="{{ $isReportActive ? 'true' : 'false' }}"
+                                    style="{{ $isReportActive ? 'display:block;' : '' }}">
                                     <li>
                                         <a title="Product Completed Report"
                                             href="{{ route('list-product-completed-report') }}"
@@ -1582,12 +1567,12 @@
                         <div class="header-top-wraper">
                             <div class="row">
                                 <div class="col-lg-1 col-md-0 col-sm-1 col-xs-12">
-                                    {{-- <div class="menu-switcher-pro">
+                                    <div class="menu-switcher-pro">
                                         <button type="button" id="sidebarCollapse"
                                             class="btn bar-button-pro header-drl-controller-btn btn-info navbar-btn navbar-btn-wb">
                                             <i class="fa fa-bars"></i>
                                         </button>
-                                    </div> --}}
+                                    </div>
                                 </div>
                                 <div class="col-lg-6 col-md-7 col-sm-6 col-xs-12">
                                     <div class="header-top-menu tabl-d-n">
@@ -1649,7 +1634,6 @@
                                                     <i class="fa fa-user adminpro-user-rounded header-riht-inf"
                                                         aria-hidden="true"></i>
                                                     {{ ucwords(config('constants.ROLE_ID_NAME.' . Session::get('role_id'))) }}
-                                                    Department
                                                 </a>
 
                                                 <div class="dropdown-menu shadow-lg rounded zoomIn logout-dropdown"
@@ -1678,3 +1662,38 @@
             </div>
         </div>
     </div>
+
+<script>
+/* Sidebar: auto-expand parent when a child submenu is active */
+(function() {
+    function expandActiveParents() {
+        document.querySelectorAll('.metismenu .submenu-angle a.active-submenu').forEach(function(el) {
+            var ul = el.closest('.submenu-angle');
+            var parentLi = ul ? ul.closest('li') : null;
+            if (ul && parentLi) {
+                ul.style.display = 'block';
+                ul.setAttribute('aria-expanded', 'true');
+                var parentA = parentLi.querySelector(':scope > a');
+                if (parentA) parentA.setAttribute('aria-expanded', 'true');
+                parentLi.classList.add('mm-active');
+            }
+        });
+        document.querySelectorAll('.metismenu .submenu-angle li.active').forEach(function(li) {
+            var ul = li.closest('.submenu-angle');
+            var parentLi = ul ? ul.closest('li') : null;
+            if (ul && parentLi) {
+                ul.style.display = 'block';
+                ul.setAttribute('aria-expanded', 'true');
+                var parentA = parentLi.querySelector(':scope > a');
+                if (parentA) parentA.setAttribute('aria-expanded', 'true');
+                parentLi.classList.add('mm-active');
+            }
+        });
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', expandActiveParents);
+    } else {
+        expandActiveParents();
+    }
+})();
+</script>

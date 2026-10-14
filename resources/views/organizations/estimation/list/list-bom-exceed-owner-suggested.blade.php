@@ -5,11 +5,6 @@
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="sparkline13-list">
-                        <div class="sparkline13-hd">
-                            <div class="main-sparkline13-hd">
-                                <h1>Owner Updated Amounts — Pending Your Review</h1>
-                            </div>
-                        </div>
                         @if (isset($data_output) && count($data_output) > 0)
                             {{-- Use a custom class instead of Bootstrap's .alert so the global
                                  footer timer ($(".alert").alert('close') after 1s) does NOT
@@ -22,6 +17,9 @@
                             </div>
                         @endif
                         <div class="sparkline13-graph">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 style="margin:0; font-weight:600; color:#1a3a6b;">Owner Updated Amounts — Pending Your Review</h5>
+                            </div>
                             @if (session('msg'))
                                 <div class="alert alert-{{ session('status') }}">
                                     {{ session('msg') }}

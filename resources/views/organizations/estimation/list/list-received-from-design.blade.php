@@ -32,21 +32,6 @@ button.pd-setting-ed {
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="sparkline13-list">
-                    <div class="sparkline13-hd">
-                        <div class="main-sparkline13-hd">
-                            <h1>New Design Received  For Estimation <span class="table-project-n"></span></h1>
-                            <div class="form-group-inner login-btn-inner row">
-                                <div class="col-lg-2" >
-                                    {{-- <div class="login-horizental cancel-wp pull-left">
-                                            <a href="{{ route('add-design-upload') }}" ><button class="btn btn-sm btn-primary login-submit-cs" type="submit" >Add Design</button></a>
-                                    </div> --}}
-                                </div>
-                                <div class="col-lg-10">
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
                       @if (Session::get('status') == 'success')
                            <div class="alert alert-success alert-success-style1">
@@ -68,6 +53,9 @@ button.pd-setting-ed {
                             @endif
 
                     <div class="sparkline13-graph">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 style="margin:0; font-weight:600; color:#1a3a6b;">New Design Received For Estimation</h5>
+                        </div>
                         <div class="datatable-dashv1-list custom-datatable-overright">
                           
                            

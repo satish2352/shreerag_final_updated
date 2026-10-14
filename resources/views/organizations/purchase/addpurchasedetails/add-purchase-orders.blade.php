@@ -1,18 +1,15 @@
 @extends('admin.layouts.master')
 @section('content')
-    <style>
-
-
-    </style>
     <div class="data-table-area mg-tb-15">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <div class="sparkline13-list">
-                        <div class="sparkline13-hd">
-                            <div class="main-sparkline13-hd">
-                                <h1>Purchase Order <span class="table-project-n">Form</span> </h1>
-                            </div><br>
+    <div class="container-fluid">
+    <div class="row justify-content-center">
+    <div class="col-lg-10 col-md-12">
+    <div class="emp-form-card">
+      <div class="emp-form-header">
+        <h4><i class="fa fa-file-alt mr-2"></i> Add Purchase Order</h4>
+        <a href="{{ route('list-purchase') }}" class="emp-form-close">&times;</a>
+      </div>
+      <div class="emp-form-body">
 
                             <div class="row mb-3">
                                 <div class="col-md-6">
@@ -539,14 +536,15 @@
                                     </div>
                                 </div>
                             </form>
-                        </div>
-                    </div>
 
+      </div>
+    </div>
+    </div></div></div></div>
 
-                    @push('scripts')
-                        <!-- ========== 1) TAX CALCULATION SCRIPT ========== -->
-                        {{-- <script>
-                        $(document).ready(function() {
+    @push('scripts')
+        <!-- ========== 1) TAX CALCULATION SCRIPT ========== -->
+        {{-- <script>
+        $(document).ready(function() {
  $(".select2").select2({ width: '100%' });
                             $('#tax_id').on('change', function() {
 
@@ -603,232 +601,232 @@
 
                         });
                     </script> --}}
-                        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-                        <script>
-                            $(document).ready(function() {
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+        <script>
+            $(document).ready(function() {
 
-                                $(document).on('keyup change', '.quantity, .rate, .discount, #tax_id', function() {
-                                    calculateGrandTotal();
-                                });
+                $(document).on('keyup change', '.quantity, .rate, .discount, #tax_id', function() {
+                    calculateGrandTotal();
+                });
 
-                                function calculateGrandTotal() {
+                function calculateGrandTotal() {
 
-                                    let totalWithoutTax = 0;
+                    let totalWithoutTax = 0;
 
-                                    $('#purchase_order_table tbody tr').each(function() {
+                    $('#purchase_order_table tbody tr').each(function() {
 
-                                        let qty = parseFloat($(this).find('.quantity').val()) || 0;
-                                        let rate = parseFloat($(this).find('.rate').val()) || 0;
-                                        let discount = parseFloat($(this).find('.discount').val()) || 0;
+                        let qty = parseFloat($(this).find('.quantity').val()) || 0;
+                        let rate = parseFloat($(this).find('.rate').val()) || 0;
+                        let discount = parseFloat($(this).find('.discount').val()) || 0;
 
-                                        let baseAmount = qty * rate;
-                                        let discountAmount = (baseAmount * discount) / 100;
-                                        let afterDiscount = baseAmount - discountAmount;
+                        let baseAmount = qty * rate;
+                        let discountAmount = (baseAmount * discount) / 100;
+                        let afterDiscount = baseAmount - discountAmount;
 
-                                        $(this).find('.total_amount').val(afterDiscount.toFixed(2));
+                        $(this).find('.total_amount').val(afterDiscount.toFixed(2));
 
-                                        totalWithoutTax += afterDiscount;
-                                    });
+                        totalWithoutTax += afterDiscount;
+                    });
 
-                                    let taxRate = parseFloat($('#tax_id option:selected').data('tax-rate')) || 0;
-                                    let taxAmount = (totalWithoutTax * taxRate) / 100;
-                                    let finalTotal = totalWithoutTax + taxAmount;
+                    let taxRate = parseFloat($('#tax_id option:selected').data('tax-rate')) || 0;
+                    let taxAmount = (totalWithoutTax * taxRate) / 100;
+                    let finalTotal = totalWithoutTax + taxAmount;
 
-                                    $('#po_grand_total_amount').val(finalTotal.toFixed(2));
-
-
-                                    let remaining = parseFloat($('#remaining_amount').val()) || 0;
-
-                                    if (finalTotal > remaining) {
-                                        Swal.fire({
-                                            icon: 'error',
-                                            title: 'Error!',
-                                            text: 'PO amount exceeds remaining estimation amount!',
-                                            confirmButtonText: 'OK'
-                                        });
-
-                                        $('.login-submit-cs').prop('disabled', true);
-                                    } else {
-                                        $('.login-submit-cs').prop('disabled', false);
-                                    }
-
-                                    // if (finalTotal > remaining) {
-                                    //     alert("PO amount exceeds remaining estimation amount!");
-                                    //     $('.login-submit-cs').prop('disabled', true);
-                                    // } else {
-                                    //     $('.login-submit-cs').prop('disabled', false);
-                                    // }
-                                }
-                            });
-                        </script>
+                    $('#po_grand_total_amount').val(finalTotal.toFixed(2));
 
 
-                        <!-- ========== 2) NO CONFLICT SCRIPT ========== -->
+                    let remaining = parseFloat($('#remaining_amount').val()) || 0;
+
+                    if (finalTotal > remaining) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'PO amount exceeds remaining estimation amount!',
+                            confirmButtonText: 'OK'
+                        });
+
+                        $('.login-submit-cs').prop('disabled', true);
+                    } else {
+                        $('.login-submit-cs').prop('disabled', false);
+                    }
+
+                    // if (finalTotal > remaining) {
+                    //     alert("PO amount exceeds remaining estimation amount!");
+                    //     $('.login-submit-cs').prop('disabled', true);
+                    // } else {
+                    //     $('.login-submit-cs').prop('disabled', false);
+                    // }
+                }
+            });
+        </script>
 
 
-                        <!-- ========== 3) FORM VALIDATION & ADD ROW SCRIPT ========== -->
-                        <script>
-                            $(document).ready(function() {
+        <!-- ========== 2) NO CONFLICT SCRIPT ========== -->
 
-                                var validator = $("#forms").validate({
 
-                                    ignore: [],
-                                    rules: {
+        <!-- ========== 3) FORM VALIDATION & ADD ROW SCRIPT ========== -->
+        <script>
+            $(document).ready(function() {
 
-                                        vendor_type_id: {
-                                            required: true
-                                        },
-                                        contact_person_name: {
-                                            required: true
-                                        },
-                                        contact_person_number: {
-                                            required: true
-                                        },
-                                        tax_type: {
-                                            required: true
-                                        },
-                                        tax_id: {
-                                            required: true
-                                        },
-                                        invoice_date: {
-                                            required: true
-                                        },
-                                        payment_terms: {
-                                            required: true
-                                        },
-                                        transport_dispatch: {
-                                            required: true
-                                        },
-                                        note: {
-                                            required: true
-                                        },
+                var validator = $("#forms").validate({
 
-                                        'addmore[0][part_no_id]': {
-                                            required: true
-                                        },
-                                        'addmore[0][discount]': {
-                                            required: true
-                                        },
-                                        'addmore[0][quantity]': {
-                                            required: true
-                                        },
-                                        'addmore[0][hsn_id]': {
-                                            required: true,
-                                            number: true
-                                        },
-                                        'addmore[0][rate]': {
-                                            required: true,
-                                            number: true
-                                        },
-                                        'addmore[0][amount]': {
-                                            required: true
-                                        },
-                                    },
+                    ignore: [],
+                    rules: {
 
-                                    messages: {
-                                        vendor_type_id: {
-                                            required: "Please select Vendor Type"
-                                        },
-                                        contact_person_name: {
-                                            required: "Enter Contact Person Name"
-                                        },
-                                        contact_person_number: {
-                                            required: "Enter Contact Person Number"
-                                        },
-                                        tax_type: {
-                                            required: "Select Tax Type"
-                                        },
-                                        tax_id: {
-                                            required: "Select Tax"
-                                        },
-                                        invoice_date: {
-                                            required: "Please select Purchase Order Date"
-                                        },
-                                        payment_terms: {
-                                            required: "Enter Payment Terms"
-                                        },
-                                        transport_dispatch: {
-                                            required: "Enter Transport/Dispatch field"
-                                        },
-                                        note: {
-                                            required: "Enter Remark"
-                                        },
+                        vendor_type_id: {
+                            required: true
+                        },
+                        contact_person_name: {
+                            required: true
+                        },
+                        contact_person_number: {
+                            required: true
+                        },
+                        tax_type: {
+                            required: true
+                        },
+                        tax_id: {
+                            required: true
+                        },
+                        invoice_date: {
+                            required: true
+                        },
+                        payment_terms: {
+                            required: true
+                        },
+                        transport_dispatch: {
+                            required: true
+                        },
+                        note: {
+                            required: true
+                        },
 
-                                        'addmore[0][part_no_id]': {
-                                            required: "Please Enter the Part Number"
-                                        },
-                                        'addmore[0][discount]': {
-                                            required: "Please Enter the Discount"
-                                        },
-                                        'addmore[0][quantity]': {
-                                            required: "Please Enter the Quantity"
-                                        },
-                                        'addmore[0][rate]': {
-                                            required: "Please Enter the Rate"
-                                        },
-                                        'addmore[0][amount]': {
-                                            required: "Please Enter the Amount"
-                                        },
-                                    },
+                        'addmore[0][part_no_id]': {
+                            required: true
+                        },
+                        'addmore[0][discount]': {
+                            required: true
+                        },
+                        'addmore[0][quantity]': {
+                            required: true
+                        },
+                        'addmore[0][hsn_id]': {
+                            required: true,
+                            number: true
+                        },
+                        'addmore[0][rate]': {
+                            required: true,
+                            number: true
+                        },
+                        'addmore[0][amount]': {
+                            required: true
+                        },
+                    },
 
-                                    errorPlacement: function(error, element) {
+                    messages: {
+                        vendor_type_id: {
+                            required: "Please select Vendor Type"
+                        },
+                        contact_person_name: {
+                            required: "Enter Contact Person Name"
+                        },
+                        contact_person_number: {
+                            required: "Enter Contact Person Number"
+                        },
+                        tax_type: {
+                            required: "Select Tax Type"
+                        },
+                        tax_id: {
+                            required: "Select Tax"
+                        },
+                        invoice_date: {
+                            required: "Please select Purchase Order Date"
+                        },
+                        payment_terms: {
+                            required: "Enter Payment Terms"
+                        },
+                        transport_dispatch: {
+                            required: "Enter Transport/Dispatch field"
+                        },
+                        note: {
+                            required: "Enter Remark"
+                        },
 
-                                        if (element.hasClass("select2-hidden-accessible")) {
-                                            var select2Container = element.next('.select2');
-                                            error.insertAfter(select2Container);
-                                        } else if (
-                                            element.hasClass("part_no_id") ||
-                                            element.hasClass("discount") ||
-                                            element.hasClass("quantity") ||
-                                            element.hasClass("unit") ||
-                                            element.hasClass("rate") ||
-                                            element.hasClass("total_amount")
-                                        ) {
-                                            error.insertAfter(element);
-                                        } else {
-                                            error.insertAfter(element);
-                                        }
-                                    }
+                        'addmore[0][part_no_id]': {
+                            required: "Please Enter the Part Number"
+                        },
+                        'addmore[0][discount]': {
+                            required: "Please Enter the Discount"
+                        },
+                        'addmore[0][quantity]': {
+                            required: "Please Enter the Quantity"
+                        },
+                        'addmore[0][rate]': {
+                            required: "Please Enter the Rate"
+                        },
+                        'addmore[0][amount]': {
+                            required: "Please Enter the Amount"
+                        },
+                    },
 
-                                });
+                    errorPlacement: function(error, element) {
 
-                                $(document).on('change', '.part_no_id', function() {
-                                    if ($(this).val()) $(this).valid();
-                                });
+                        if (element.hasClass("select2-hidden-accessible")) {
+                            var select2Container = element.next('.select2');
+                            error.insertAfter(select2Container);
+                        } else if (
+                            element.hasClass("part_no_id") ||
+                            element.hasClass("discount") ||
+                            element.hasClass("quantity") ||
+                            element.hasClass("unit") ||
+                            element.hasClass("rate") ||
+                            element.hasClass("total_amount")
+                        ) {
+                            error.insertAfter(element);
+                        } else {
+                            error.insertAfter(element);
+                        }
+                    }
 
-                                function initializeValidation(context) {
-                                    $(context).find('.part_no_id').rules("add", {
-                                        required: true
-                                    });
-                                    $(context).find('.discount').rules("add", {
-                                        required: true
-                                    });
-                                    $(context).find('.quantity').rules("add", {
-                                        required: true,
-                                        number: true,
-                                        min: 0.001
-                                    });
-                                    $(context).find('.unit').rules("add", {
-                                        required: true
-                                    });
-                                    $(context).find('.rate').rules("add", {
-                                        required: true,
-                                        number: true
-                                    });
-                                    $(context).find('.total_amount').rules("add", {
-                                        required: true
-                                    });
-                                }
-                                $('.part_no_id').select2({
-                                    width: '100%'
-                                });
-                                $("#add_more_btn").click(function() {
+                });
 
-                                    var i_count = parseInt($('#i_id').val()) || 0;
-                                    var i = i_count + 1;
-                                    $('#i_id').val(i);
+                $(document).on('change', '.part_no_id', function() {
+                    if ($(this).val()) $(this).valid();
+                });
 
-                                    var newRow = `
+                function initializeValidation(context) {
+                    $(context).find('.part_no_id').rules("add", {
+                        required: true
+                    });
+                    $(context).find('.discount').rules("add", {
+                        required: true
+                    });
+                    $(context).find('.quantity').rules("add", {
+                        required: true,
+                        number: true,
+                        min: 0.001
+                    });
+                    $(context).find('.unit').rules("add", {
+                        required: true
+                    });
+                    $(context).find('.rate').rules("add", {
+                        required: true,
+                        number: true
+                    });
+                    $(context).find('.total_amount').rules("add", {
+                        required: true
+                    });
+                }
+                $('.part_no_id').select2({
+                    width: '100%'
+                });
+                $("#add_more_btn").click(function() {
+
+                    var i_count = parseInt($('#i_id').val()) || 0;
+                    var i = i_count + 1;
+                    $('#i_id').val(i);
+
+                    var newRow = `
                 <tr>
                     <td>
                 <input type="text" name="id" class="form-control" style="min-width:15px" readonly value="${i + 1}"> <!-- This will start numbering from 2 -->
@@ -848,11 +846,11 @@
                     <td>
                         <input class="form-control description" name="addmore[${i}][description]" type="text" style="min-width:80px">
                     </td>
-                    
+
                     <td>
                         <input class="form-control quantity" name="addmore[${i}][quantity]" style="width:100%" type="text" required>
                     </td>
-                  
+
                    <td>
                              <select class="form-control mb-2 unit" name="addmore[${i}][unit]" required style="width:100%">
                                 <option value="" default>Select Unit</option>
@@ -861,7 +859,7 @@
                                 @endforeach
                             </select>
                         </td>
-                    
+
 
                     <td>
                         <input class="form-control rate" name="addmore[${i}][rate]" style="min-width:100px" type="text" required>
@@ -932,88 +930,88 @@
                 </tr>
             `;
 
-                                    $("#purchase_order_table tbody").append(newRow);
+                    $("#purchase_order_table tbody").append(newRow);
 
-                                    $("#purchase_order_table tbody tr:last .select2").select2({
-                                        width: '100%'
-                                    });
+                    $("#purchase_order_table tbody tr:last .select2").select2({
+                        width: '100%'
+                    });
 
-                                    validator.resetForm();
-                                    initializeValidation($("#purchase_order_table tbody tr:last"));
-                                });
-                                $("#purchase_order_table tbody tr:last .select2").select2({
-                                    width: '100%'
-                                });
-                                $(document).on("click", ".remove-row", function() {
+                    validator.resetForm();
+                    initializeValidation($("#purchase_order_table tbody tr:last"));
+                });
+                $("#purchase_order_table tbody tr:last .select2").select2({
+                    width: '100%'
+                });
+                $(document).on("click", ".remove-row", function() {
 
-                                    var i = parseInt($('#i_id').val()) - 1;
-                                    $('#i_id').val(i);
+                    var i = parseInt($('#i_id').val()) - 1;
+                    $('#i_id').val(i);
 
-                                    $(this).closest("tr").remove();
-                                    validator.resetForm();
-                                    calculateGrandTotal();
-                                });
+                    $(this).closest("tr").remove();
+                    validator.resetForm();
+                    calculateGrandTotal();
+                });
 
-                                initializeValidation($("#purchase_order_table"));
+                initializeValidation($("#purchase_order_table"));
 
-                            });
-                        </script>
-                        <!-- ========== 5) HSN FETCH SCRIPT ========== -->
-                        <script>
-                            $(document).ready(function() {
+            });
+        </script>
+        <!-- ========== 5) HSN FETCH SCRIPT ========== -->
+        <script>
+            $(document).ready(function() {
 
-                                function fetchHsn(partNoId, row) {
-                                    if (!partNoId) return;
-                                    $.ajax({
-                                        url: '{{ route('get-hsn-for-part') }}',
-                                        type: 'GET',
-                                        data: { part_no_id: partNoId },
-                                        success: function(response) {
-                                            if (response.part && response.part.length > 0) {
-                                                row.find('.hsn_name').val(response.part[0].name);
-                                                row.find('.hsn_id').val(response.part[0].id);
-                                            }
-                                        }
-                                    });
-                                }
+                function fetchHsn(partNoId, row) {
+                    if (!partNoId) return;
+                    $.ajax({
+                        url: '{{ route('get-hsn-for-part') }}',
+                        type: 'GET',
+                        data: { part_no_id: partNoId },
+                        success: function(response) {
+                            if (response.part && response.part.length > 0) {
+                                row.find('.hsn_name').val(response.part[0].name);
+                                row.find('.hsn_id').val(response.part[0].id);
+                            }
+                        }
+                    });
+                }
 
-                                // When the user picks a part from the Description dropdown, push
-                                // the matching part_number (data-part-number on the option) into
-                                // the Part No. cell (.description input) of the same row.
-                                function fillPartNumber($select) {
-                                    var partNumber = $select.find('option:selected').data('part-number') || '';
-                                    $select.closest('tr').find('.description').val(partNumber);
-                                }
+                // When the user picks a part from the Description dropdown, push
+                // the matching part_number (data-part-number on the option) into
+                // the Part No. cell (.description input) of the same row.
+                function fillPartNumber($select) {
+                    var partNumber = $select.find('option:selected').data('part-number') || '';
+                    $select.closest('tr').find('.description').val(partNumber);
+                }
 
-                                $(document).on('change', '.part_no_id', function(e) {
-                                    var $select = $(this);
-                                    fetchHsn($select.val(), $select.closest('tr'));
-                                    fillPartNumber($select);
-                                });
+                $(document).on('change', '.part_no_id', function(e) {
+                    var $select = $(this);
+                    fetchHsn($select.val(), $select.closest('tr'));
+                    fillPartNumber($select);
+                });
 
-                                // Auto-fetch HSN + Part No. for pre-filled rows on page load
-                                $('#purchase_order_table tbody tr').each(function() {
-                                    var $row = $(this);
-                                    var $select = $row.find('.part_no_id');
-                                    var partId = $select.val();
-                                    if (partId) {
-                                        fetchHsn(partId, $row);
-                                        // Only overwrite the Part No. cell when it's empty,
-                                        // so any value loaded server-side wins on first paint.
-                                        if (!$row.find('.description').val()) {
-                                            fillPartNumber($select);
-                                        }
-                                    }
-                                });
+                // Auto-fetch HSN + Part No. for pre-filled rows on page load
+                $('#purchase_order_table tbody tr').each(function() {
+                    var $row = $(this);
+                    var $select = $row.find('.part_no_id');
+                    var partId = $select.val();
+                    if (partId) {
+                        fetchHsn(partId, $row);
+                        // Only overwrite the Part No. cell when it's empty,
+                        // so any value loaded server-side wins on first paint.
+                        if (!$row.find('.description').val()) {
+                            fillPartNumber($select);
+                        }
+                    }
+                });
 
-                                // Trigger initial amount calculation for pre-filled rows.
-                                // Triggering 'keyup' on $(document) doesn't fire the delegated
-                                // handler bound to '.quantity, .rate, .discount' because the
-                                // event target wouldn't match. Trigger 'change' on the actual
-                                // .quantity inputs so the bubbled event reaches the handler.
-                                $('#purchase_order_table tbody tr .quantity').trigger('change');
+                // Trigger initial amount calculation for pre-filled rows.
+                // Triggering 'keyup' on $(document) doesn't fire the delegated
+                // handler bound to '.quantity, .rate, .discount' because the
+                // event target wouldn't match. Trigger 'change' on the actual
+                // .quantity inputs so the bubbled event reaches the handler.
+                $('#purchase_order_table tbody tr .quantity').trigger('change');
 
-                            });
-                        </script>
-                    @endpush
-                @endsection
+            });
+        </script>
+    @endpush
+@endsection

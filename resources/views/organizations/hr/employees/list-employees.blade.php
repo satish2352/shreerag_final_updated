@@ -6,21 +6,6 @@
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="sparkline13-list" style="padding-bottom: 100px">
-                        <div class="sparkline13-hd">
-                            <div class="main-sparkline13-hd">
-                                <h1>Employee <span class="table-project-n">Data</span> Table</h1>
-                                <div class="form-group-inner login-btn-inner row">
-                                    <div class="col-lg-2">
-                                        <div class="login-horizental cancel-wp pull-left">
-                                            <a href="{{ route('add-employee') }}"><button
-                                                    class="btn btn-sm btn-primary login-submit-cs" type="submit">Add
-                                                    Employee</button></a>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-10"></div>
-                                </div>
-                            </div>
-                        </div>
 
                         @if (Session::get('status') == 'success')
                             <div class="alert alert-success alert-success-style1">
@@ -42,13 +27,22 @@
                         @endif
 
                         <div class="sparkline13-graph">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 style="margin:0; font-weight:600; color:#1a3a6b;">Employee List</h5>
+                                <a href="{{ route('add-employee') }}">
+                                    <button class="btn btn-sm btn-add-custom" type="button">
+                                        <i class="fa fa-plus mr-1"></i> Add Employee
+                                    </button>
+                                </a>
+                            </div>
                             <div class="datatable-dashv1-list custom-datatable-overright">
                                 <div class="table-responsive">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"
-                                        data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="false"
-                                        data-key-events="true" data-show-toggle="true" data-resizable="true"
-                                        data-cookie="true" data-cookie-id-table="saveId" data-show-export="true"
-                                        data-click-to-select="true" data-toolbar="#toolbar">
+                                        data-search-align="right"
+                                        data-show-columns="false" data-show-pagination-switch="false" data-show-refresh="false"
+                                        data-key-events="true" data-show-toggle="false" data-resizable="false"
+                                        data-cookie="true" data-cookie-id-table="saveId" data-show-export="false"
+                                        data-click-to-select="false">
 
                                         <thead>
                                             <tr>
@@ -129,6 +123,49 @@
      @push('scripts')
     <script>
         $(document).ready(function() {
+            /* ── Search clear (×) button inside Bootstrap Table search ── */
+            function initSearchClear() {
+                var $search = $('.fixed-table-toolbar .search');
+                if (!$search.length) return;
+
+                // inject clear button once
+                if (!$search.find('.bs-search-clear').length) {
+                    $search.css('position', 'relative');
+                    $search.append(
+                        '<span class="bs-search-clear" title="Clear search" ' +
+                        'style="position:absolute;right:12px;top:50%;transform:translateY(-50%);' +
+                        'cursor:pointer;color:#e53935;font-size:16px;line-height:1;display:none;z-index:5;">' +
+                        '&times;</span>'
+                    );
+                }
+
+                var $input = $search.find('input');
+                var $btn   = $search.find('.bs-search-clear');
+
+                // adjust input padding so text doesn't go under ×
+                $input.css('padding-right', '34px');
+
+                $input.on('input keyup', function() {
+                    $btn.toggle($(this).val().length > 0);
+                });
+
+                $btn.on('click', function() {
+                    $input.val('').trigger('input').trigger('keyup').focus();
+                    $('#table').bootstrapTable('resetSearch', '');
+                    $btn.hide();
+                });
+
+                // show if already has value (e.g. after page re-render)
+                $btn.toggle($input.val().length > 0);
+            }
+
+            // Bootstrap Table fires 'load.bs.table' after it renders its toolbar
+            $('#table').on('load.bs.table post-body.bs.table', function() {
+                initSearchClear();
+            });
+            // also try immediately after a short delay (some versions render synchronously)
+            setTimeout(initSearchClear, 400);
+
             $(".delete-btn").click(function(e) {
                 e.preventDefault();
                 var deleteUrl = "{{ route('delete-employee', ':id') }}";

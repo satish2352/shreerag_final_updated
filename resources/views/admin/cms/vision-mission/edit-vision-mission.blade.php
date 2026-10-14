@@ -1,18 +1,16 @@
 @extends('admin.layouts.master')
 @section('content')
-    <div class="">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="sparkline12-list">
-                <div class="sparkline12-hd">
-                    <div class="main-sparkline12-hd">
-                        <center>
-                            <h1>Update Vision Mission</h1>
-                        </center>
-                    </div>
-                </div>
-                <div class="sparkline12-graph">
-                    <div class="basic-login-form-ad">
-                        <div class="row">
+    <div class="data-table-area mg-tb-15">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-lg-10 col-md-12">
+                    <div class="emp-form-card">
+                        <div class="emp-form-header">
+                            <h4><i class="fa fa-edit mr-2"></i> Edit Vision &amp; Mission</h4>
+                            <a href="{{ route('list-vision-mission') }}" class="emp-form-close">&times;</a>
+                        </div>
+                        <div class="emp-form-body">
+
                             @if (Session::get('status') == 'success')
                                 <div class="col-md-12">
                                     <div class="alert alert-success alert-dismissible" role="alert">
@@ -34,98 +32,96 @@
                                     </div>
                                 </div>
                             @endif
-                            <div class="all-form-element-inner">
-                                <form class="forms-sample" action="{{ route('update-vision-mission') }}" method="post"
-                                    id="regForm" enctype="multipart/form-data">
-                                    @csrf
-                                    <div class="row">
-                                        <div class="col-lg-6 col-md-6 col-sm-6">
-                                            <div class="form-group" id="summernote_id">
-                                                <label for="vision_description">Vision Description</label>&nbsp<span
-                                                    class="red-text">*</span>
-                                                <span class="summernote1">
-                                                    <textarea class="form-control" name="vision_description" id="description" placeholder="Enter the Vision Description">
+
+                            <form class="forms-sample" action="{{ route('update-vision-mission') }}" method="post"
+                                id="regForm" enctype="multipart/form-data">
+                                @csrf
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+                                        <div class="fl-group" id="summernote_id">
+                                            <span class="summernote1">
+                                                <textarea class="form-control" name="vision_description" id="description" placeholder="Enter the Vision Description">
                                                 @if (old('vision_description'))
 {{ old('vision_description') }}@else{{ $editData->vision_description }}
 @endif
                                         </textarea>
-                                                </span>
-                                                @if ($errors->has('vision_description'))
-                                                    <span class="red-text"><?php echo $errors->first('vision_description', ':message'); ?></span>
-                                                @endif
-                                            </div>
+                                            </span>
+                                            <label for="description">Vision Description <span class="red-text">*</span></label>
+                                            @if ($errors->has('vision_description'))
+                                                <span class="fl-error"><?php echo $errors->first('vision_description', ':message'); ?></span>
+                                            @endif
                                         </div>
-                                        <div class="col-lg-6 col-md-6 col-sm-6">
-                                            <div class="form-group" id="summernote_id1">
-                                                <label for="mission_description">Mission Description</label>&nbsp<span
-                                                    class="red-text">*</span>
-                                                <span class="summernote1">
-                                                    <textarea class="form-control" name="mission_description" id="description1" placeholder="Enter the Mission Description">
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+                                        <div class="fl-group" id="summernote_id1">
+                                            <span class="summernote1">
+                                                <textarea class="form-control" name="mission_description" id="description1" placeholder="Enter the Mission Description">
                                                 @if (old('mission_description'))
 {{ old('mission_description') }}@else{{ $editData->mission_description }}
 @endif
                                         </textarea>
-                                                </span>
-                                                @if ($errors->has('mission_description'))
-                                                    <span class="red-text"><?php echo $errors->first('mission_description', ':message'); ?></span>
-                                                @endif
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 col-sm-6">
-                                            <div class="form-group">
-                                                <label for="vision_image">Vision Image</label>
-                                                <input type="file" name="vision_image" class="form-control mb-2"
-                                                    id="english_image" accept="image/*" placeholder="image">
-                                                @if ($errors->has('vision_image'))
-                                                    <span class="red-text"><?php echo $errors->first('vision_image', ':message'); ?></span>
-                                                @endif
-                                            </div>
-                                            <img id="english"
-                                                src="{{ Config::get('DocumentConstant.VISION_MISSION_VIEW') }}{{ $editData->vision_image }}"
-                                                class="img-fluid img-thumbnail" width="150"
-                                                style="background-color: aliceblue;">
-                                            <img id="english_imgPreview" src="#" alt="Vision Image"
-                                                class="img-fluid img-thumbnail" width="150" style="display:none">
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 col-sm-6">
-                                            <div class="form-group">
-                                                <label for="mission_image">Mission Image</label>
-                                                <input type="file" name="mission_image" class="form-control mb-2"
-                                                    id="english_image_new" accept="image/*" placeholder="image">
-                                                @if ($errors->has('mission_image'))
-                                                    <span class="red-text"><?php echo $errors->first('mission_image', ':message'); ?></span>
-                                                @endif
-                                            </div>
-                                            <img id="english1"
-                                                src="{{ Config::get('DocumentConstant.VISION_MISSION_VIEW') }}{{ $editData->mission_image }}"
-                                                class="img-fluid img-thumbnail" width="150"
-                                                style="background-color: aliceblue;">
-                                            <img id="english_imgPreview1" src="#" alt="Mission Image"
-                                                class="img-fluid img-thumbnail" width="150" style="display:none">
-                                        </div>
-
-                                        <div class="col-md-12 col-sm-12 text-center">
-                                            <button type="submit" class="btn btn-sm btn-bg-colour" id="submitButton">
-                                                Save &amp; Update
-                                            </button>
-                                            {{-- <button type="reset" class="btn btn-sm btn-danger">Cancel</button> --}}
-                                            <span><a href="{{ route('list-vision-mission') }}"
-                                                    class="btn btn-sm btn-primary ">Back</a></span>
+                                            </span>
+                                            <label for="description1">Mission Description <span class="red-text">*</span></label>
+                                            @if ($errors->has('mission_description'))
+                                                <span class="fl-error"><?php echo $errors->first('mission_description', ':message'); ?></span>
+                                            @endif
                                         </div>
                                     </div>
-                                    <input type="hidden" name="id" id="id" class="form-control"
-                                        value="{{ $editData->id }}" placeholder="">
-                                    {{-- <input type="text" name="currentMarathiImage" id="currentMarathiImage"
+                                    <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+                                        <div class="fl-group">
+                                            <input type="file" name="vision_image" class="form-control mb-2"
+                                                id="english_image" accept="image/*" placeholder="image">
+                                            <label for="english_image">Vision Image</label>
+                                            @if ($errors->has('vision_image'))
+                                                <span class="fl-error"><?php echo $errors->first('vision_image', ':message'); ?></span>
+                                            @endif
+                                        </div>
+                                        <img id="english"
+                                            src="{{ Config::get('DocumentConstant.VISION_MISSION_VIEW') }}{{ $editData->vision_image }}"
+                                            class="img-fluid img-thumbnail" width="150"
+                                            style="background-color: aliceblue;">
+                                        <img id="english_imgPreview" src="#" alt="Vision Image"
+                                            class="img-fluid img-thumbnail" width="150" style="display:none">
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+                                        <div class="fl-group">
+                                            <input type="file" name="mission_image" class="form-control mb-2"
+                                                id="english_image_new" accept="image/*" placeholder="image">
+                                            <label for="english_image_new">Mission Image</label>
+                                            @if ($errors->has('mission_image'))
+                                                <span class="fl-error"><?php echo $errors->first('mission_image', ':message'); ?></span>
+                                            @endif
+                                        </div>
+                                        <img id="english1"
+                                            src="{{ Config::get('DocumentConstant.VISION_MISSION_VIEW') }}{{ $editData->mission_image }}"
+                                            class="img-fluid img-thumbnail" width="150"
+                                            style="background-color: aliceblue;">
+                                        <img id="english_imgPreview1" src="#" alt="Mission Image"
+                                            class="img-fluid img-thumbnail" width="150" style="display:none">
+                                    </div>
+
+                                    <div class="col-md-12 col-sm-12 text-center">
+                                        <button type="submit" class="btn btn-sm btn-bg-colour" id="submitButton">
+                                            Save &amp; Update
+                                        </button>
+                                        {{-- <button type="reset" class="btn btn-sm btn-danger">Cancel</button> --}}
+                                        <span><a href="{{ route('list-vision-mission') }}"
+                                                class="btn btn-sm btn-primary ">Back</a></span>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="id" id="id" class="form-control"
+                                    value="{{ $editData->id }}" placeholder="">
+                                {{-- <input type="text" name="currentMarathiImage" id="currentMarathiImage"
                                     class="form-control" value="" placeholder=""> --}}
-                                </form>
-                            </div>
+                            </form>
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-  @push('scripts')  
+    @push('scripts')
     <script>
         $(document).ready(function() {
             // Function to check if all input fields are filled with valid data

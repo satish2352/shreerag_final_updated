@@ -5,10 +5,10 @@
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="sparkline13-list">
-                        <div class="sparkline13-hd">
-                            <div class="main-sparkline13-hd">
-                                <h1>Purchase Order <span class="table-project-n">Details</span></h1>
-                            </div><br>
+                        <div class="sparkline13-graph">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 style="margin:0; font-weight:600; color:#1a3a6b;">Purchase Order Details</h5>
+                            </div>
                             @include('organizations.common-pages.purchase-order-view')
                         </div>
                     </div>

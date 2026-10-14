@@ -1,18 +1,16 @@
 @extends('admin.layouts.master')
 @section('content')
+    <div class="data-table-area mg-tb-15">
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="sparkline12-list">
-                    <div class="sparkline12-hd">
-                        <div class="main-sparkline12-hd">
-                            <center>
-                                <h1>Edit Purchase Order Data</h1>
-                            </center>
-                        </div>
-                    </div>
-                    <div class="sparkline12-graph">
-                        <div class="basic-login-form-ad">
+    <div class="row justify-content-center">
+    <div class="col-lg-10 col-md-12">
+    <div class="emp-form-card">
+      <div class="emp-form-header">
+        <h4><i class="fa fa-edit mr-2"></i> Edit Purchase Order</h4>
+        <a href="{{ route('list-purchase') }}" class="emp-form-close">&times;</a>
+      </div>
+      <div class="emp-form-body">
+
                             <div class="row">
                                 @if (session('msg'))
                                     <div class="alert alert-{{ session('status') }}">
@@ -669,12 +667,10 @@
 
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
+      </div>
     </div>
+    </div></div></div></div>
 
 
     <form method="POST" action="{{ route('delete-addmore') }}" id="deleteform">

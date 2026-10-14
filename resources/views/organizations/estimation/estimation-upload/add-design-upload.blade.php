@@ -1,146 +1,100 @@
 @extends('admin.layouts.master')
 @section('content')
-    <style>
-        label {
-            margin-top: 20px;
-        }
 
-        label.error {
-            color: red;
-            font-size: 12px;
-        }
+    <div class="data-table-area mg-tb-15">
+    <div class="container-fluid">
+    <div class="row justify-content-center">
+    <div class="col-lg-10 col-md-12">
+    <div class="emp-form-card">
+      <div class="emp-form-header">
+        <h4><i class="fa fa-plus mr-2"></i> Upload Estimation Design</h4>
+        <a href="{{ route('list-design-upload') }}" class="emp-form-close" title="Close">&times;</a>
+      </div>
+      <div class="emp-form-body">
 
-        .red-text {
-            color: red;
-        }
-    </style>
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="sparkline12-list">
-                <div class="sparkline12-hd">
-                    <div class="main-sparkline12-hd">
-                        <center>
-                            <h1>Add Design Data</h1>
-                        </center>
+        @if (session('msg'))
+            <div class="alert alert-{{ session('status') }}">
+                {{ session('msg') }}
+            </div>
+        @endif
+        @if (Session::get('status') == 'success')
+            <div class="col-md-12">
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <strong>Success!</strong> {{ Session::get('msg') }}
+                </div>
+            </div>
+        @endif
+        @if (Session::get('status') == 'error')
+            <div class="col-md-12">
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <strong>Error!</strong> {!! session('msg') !!}
+                </div>
+            </div>
+        @endif
+
+        <form action="{{ route('update-design-upload') }}" method="POST"
+            id="addDesignsForm" enctype="multipart/form-data">
+            @csrf
+            <input type="hidden" class="form-control"
+                value="{{ $business_details_data->id }}" id="business_id"
+                name="business_id">
+
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-12 fl-col">
+                    <div class="fl-group">
+                        <input type="text" class="form-control" id="product_name"
+                            name="product_name"
+                            value="{{ old('product_name', $business_details_data->product_name) }}"
+                            placeholder=" " readonly>
+                        <label for="product_name">Product Name</label>
                     </div>
                 </div>
-                <div class="sparkline12-graph">
-                    <div class="basic-login-form-ad">
-                        <div class="row">
-                            @if (session('msg'))
-                                <div class="alert alert-{{ session('status') }}">
-                                    {{ session('msg') }}
-                                </div>
-                            @endif
-
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                @if (Session::get('status') == 'success')
-                                    <div class="col-md-12">
-                                        <div class="alert alert-success alert-dismissible" role="alert">
-                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                            <strong>Success!</strong> {{ Session::get('msg') }}
-                                        </div>
-                                    </div>
-                                @endif
-
-                                @if (Session::get('status') == 'error')
-                                    <div class="col-md-12">
-                                        <div class="alert alert-danger alert-dismissible" role="alert">
-                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                            <strong>Error!</strong> {!! session('msg') !!}
-                                        </div>
-                                    </div>
-                                @endif
-
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="all-form-element-inner">
-                                        <form action="{{ route('update-design-upload') }}" method="POST"
-                                            id="addDesignsForm" enctype="multipart/form-data">
-                                            @csrf
-                                            <input type="hidden" class="form-control"
-                                                value="{{ $business_details_data->id }}" id="business_id"
-                                                name="business_id">
-
-                                            <div class="form-group-inner">
-                                                <div class="row">
-                                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                                        <label for="product_name">Product Name</label>
-                                                        <input type="text" class="form-control" id="product_name"
-                                                            name="product_name"
-                                                            value="{{ old('product_name', $business_details_data->product_name) }}"
-                                                            readonly>
-                                                    </div>
-                                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                                        <label for="quantity">Quantity</label>
-                                                        <input type="text" class="form-control" id="quantity"
-                                                            name="quantity"
-                                                            value="{{ old('quantity', $business_details_data->quantity) }}"
-                                                            readonly>
-                                                    </div>
-                                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                                        <label for="description">Description</label>
-                                                        <input type="text" class="form-control" id="description"
-                                                            name="description"
-                                                            value="{{ old('description', $business_details_data->description) }}"
-                                                            readonly>
-                                                    </div>
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="design_image">Upload Design Layout (PDF, 1KB - 5MB)
-                                                            <span class="text-danger">*</span></label>
-                                                        {{-- <input type="file" class="form-control" accept="application/pdf" name="design_image"> --}}
-                                                        <input type="file" class="form-control" accept="application/pdf"
-                                                            name="design_image"> <!-- 5MB -->
-
-                                                        @if ($errors->has('design_image'))
-                                                            <span
-                                                                class="red-text">{{ $errors->first('design_image') }}</span>
-                                                        @endif
-                                                    </div>
-                                                    {{-- T-2026-003: BOM Excel upload disabled — BOM is now captured via the structured BOM Material Items modal (T-2026-002). Uncomment to restore.
-                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                        <label for="bom_image">Upload BOM (Excel, 1KB - 5MB) <span
-                                                                class="text-danger">*</span></label>
-                                                        <input type="file" class="form-control" accept=".xls,.xlsx"
-                                                            name="bom_image"> <!-- 5MB -->
-
-                                                        @if ($errors->has('bom_image'))
-                                                            <span class="red-text">{{ $errors->first('bom_image') }}</span>
-                                                        @endif
-                                                    </div>
-                                                    --}}
-
-                                                </div>
-                                                <div class="login-btn-inner">
-                                                    <div class="row">
-                                                        <div class="col-lg-5"></div>
-                                                        <div class="col-lg-7">
-                                                            <div class="login-horizental cancel-wp pull-left">
-                                                                <a href="{{ route('list-design-upload') }}"
-                                                                    class="btn btn-white"
-                                                                    style="margin-bottom:50px">Cancel</a>
-                                                                <button class="btn btn-sm btn-primary login-submit-cs"
-                                                                    type="submit" style="margin-bottom:50px">Save
-                                                                    Data</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </form>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                <div class="col-lg-4 col-md-4 col-sm-12 fl-col">
+                    <div class="fl-group">
+                        <input type="text" class="form-control" id="quantity"
+                            name="quantity"
+                            value="{{ old('quantity', $business_details_data->quantity) }}"
+                            placeholder=" " readonly>
+                        <label for="quantity">Quantity</label>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-12 fl-col">
+                    <div class="fl-group">
+                        <input type="text" class="form-control" id="description"
+                            name="description"
+                            value="{{ old('description', $business_details_data->description) }}"
+                            placeholder=" " readonly>
+                        <label for="description">Description</label>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+                    <div class="fl-group">
+                        <input type="file" class="form-control" accept="application/pdf"
+                            name="design_image">
+                        <label for="design_image">Upload Design Layout (PDF, 1KB - 5MB) <span class="red-text">*</span></label>
+                        {{-- <input type="file" class="form-control" accept="application/pdf" name="design_image"> --}}
+                        {{-- T-2026-003: BOM Excel upload disabled — BOM is now captured via the structured BOM Material Items modal (T-2026-002). Uncomment to restore. --}}
+                        @if ($errors->has('design_image'))
+                            <span class="fl-error">{{ $errors->first('design_image') }}</span>
+                        @endif
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+
+            <div class="text-center mt-3 mb-4">
+                <button class="btn btn-sm btn-primary login-submit-cs" type="submit">Save Data</button>
+            </div>
+        </form>
+
+      </div>{{-- emp-form-body --}}
+    </div>{{-- emp-form-card --}}
+    </div></div></div></div>
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>

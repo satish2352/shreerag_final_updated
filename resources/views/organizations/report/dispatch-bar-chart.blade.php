@@ -15,7 +15,9 @@
                 <div class="col-lg-12">
                     <div class="sparkline13-list">
                         <div class="main-sparkline13-hd">
-                            <h1 class="mb-4">Product-wise Dispatch Status</h1>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 style="margin:0; font-weight:600; color:#1a3a6b;">Product-wise Dispatch Status</h5>
+                            </div>
                             <form method="GET" action="{{ url()->current() }}">
                                 <div class="row mb-4">
                                     <div class="col-md-4">

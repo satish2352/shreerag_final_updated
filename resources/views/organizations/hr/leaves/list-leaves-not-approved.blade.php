@@ -5,15 +5,6 @@
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="sparkline13-list">
-                    <div class="sparkline13-hd">
-                        <div class="main-sparkline13-hd">
-                            <h1>Not Approved Leave <span class="table-project-n">Data</span> Table</h1>
-                            <div class="form-group-inner login-btn-inner row">
-                                <div class="col-lg-10"></div>
-                            </div>
-                        </div>
-                    </div>
-
                     @if (Session::get('status') == 'success')
                         <div class="alert alert-success alert-success-style1">
                             <button type="button" class="close sucess-op" data-dismiss="alert" aria-label="Close">
@@ -34,13 +25,16 @@
                     @endif
 
                     <div class="sparkline13-graph">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 style="margin:0; font-weight:600; color:#1a3a6b;">Not Approved Leaves</h5>
+                        </div>
                         <div class="datatable-dashv1-list custom-datatable-overright">
                             <div class="table-responsive">
                                 <table id="table" data-toggle="table" data-pagination="true" data-search="true"
-                                    data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="false"
-                                    data-key-events="true" data-show-toggle="true" data-resizable="true" data-cookie="true"
-                                    data-cookie-id-table="saveId" data-show-export="true" data-click-to-select="true"
-                                    data-toolbar="#toolbar">
+                                    data-search-align="right"
+                                    data-show-columns="false" data-show-pagination-switch="false" data-show-refresh="false"
+                                    data-key-events="true" data-show-toggle="false" data-resizable="false" data-cookie="true"
+                                    data-cookie-id-table="saveId" data-show-export="false" data-click-to-select="false">
                                     <thead>
                                         <tr>
                                             <th data-field="id">ID</th>

@@ -1,85 +1,73 @@
 @extends('admin.layouts.master')
 
 @section('content')
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="sparkline12-list">
-                <div class="sparkline12-hd">
-                    <div class="main-sparkline12-hd">
-                        <center>
-                            <h1>Add Vision Mission</h1>
-                        </center>
-                    </div>
-                </div>
-                <div class="sparkline12-graph">
-                    <div class="basic-login-form-ad">
-                        <div class="row">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <div class="all-form-element-inner">
+    <div class="data-table-area mg-tb-15">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-lg-10 col-md-12">
+                    <div class="emp-form-card">
+                        <div class="emp-form-header">
+                            <h4><i class="fa fa-eye mr-2"></i> Add Vision &amp; Mission</h4>
+                            <a href="{{ route('list-vision-mission') }}" class="emp-form-close">&times;</a>
+                        </div>
+                        <div class="emp-form-body">
 
-                                    <form class="forms-sample" action="{{ route('add-vision-mission') }}" method="POST"
-                                        enctype="multipart/form-data" id="regForm">
-                                        @csrf
-                                        <div class="row">
-                                            <div class="col-lg-6 col-md-6 col-sm-6">
-                                                <div class="form-group" id="summernote_id">
-                                                    <label for="vision_description">Vision Description <span
-                                                            class="red-text">*</span></label>
-                                                    <textarea class="form-control" name="vision_description" id="description" placeholder="Enter Page Content">{{ old('vision_description') }}</textarea>
-                                                    @if ($errors->has('vision_description'))
-                                                        <span
-                                                            class="red-text">{{ $errors->first('vision_description') }}</span>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6 col-md-6 col-sm-6">
-                                                <div class="form-group" id="summernote_id1">
-                                                    <label for="mission_description">Mission Description <span
-                                                            class="red-text">*</span></label>
-                                                    <textarea class="form-control" name="mission_description" id="description1" placeholder="Enter Page Content">{{ old('mission_description') }}</textarea>
-                                                    @if ($errors->has('mission_description'))
-                                                        <span
-                                                            class="red-text">{{ $errors->first('mission_description') }}</span>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6 col-md-6 col-sm-6">
-                                                <div class="form-group">
-                                                    <label for="vision_image">Vision Image </label>&nbsp<span
-                                                        class="red-text">*</span><br>
-                                                    <input type="file" name="vision_image" id="english_image"
-                                                        accept="image/*" value="{{ old('vision_image') }}"
-                                                        class="form-control mb-2">
-                                                    @if ($errors->has('vision_image'))
-                                                        <span class="red-text"><?php echo $errors->first('vision_image', ':message'); ?></span>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6 col-md-6 col-sm-6">
-                                                <div class="form-group">
-                                                    <label for="mission_image"> Mission Image </label>&nbsp<span
-                                                        class="red-text">*</span><br>
-                                                    <input type="file" name="mission_image" id="english_image_new"
-                                                        accept="image/*" value="{{ old('mission_image') }}"
-                                                        class="form-control mb-2">
-                                                    @if ($errors->has('mission_image'))
-                                                        <span class="red-text"><?php echo $errors->first('mission_image', ':message'); ?></span>
-                                                    @endif
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-12 col-sm-12 text-center">
-                                                <button type="submit" class="btn btn-sm btn-bg-colour" id="submitButton">
-                                                    Save &amp; Submit
-                                                </button>
-                                                {{-- <button type="reset" class="btn btn-sm btn-danger">Cancel</button> --}}
-                                                <span><a href="{{ route('list-vision-mission') }}"
-                                                        class="btn btn-sm btn-primary ">Back</a></span>
-                                            </div>
+                            <form class="forms-sample" action="{{ route('add-vision-mission') }}" method="POST"
+                                enctype="multipart/form-data" id="regForm">
+                                @csrf
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+                                        <div class="fl-group" id="summernote_id">
+                                            <textarea class="form-control" name="vision_description" id="description" placeholder="Enter Page Content">{{ old('vision_description') }}</textarea>
+                                            <label for="description">Vision Description <span class="red-text">*</span></label>
+                                            @if ($errors->has('vision_description'))
+                                                <span class="fl-error">{{ $errors->first('vision_description') }}</span>
+                                            @endif
                                         </div>
-                                    </form>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+                                        <div class="fl-group" id="summernote_id1">
+                                            <textarea class="form-control" name="mission_description" id="description1" placeholder="Enter Page Content">{{ old('mission_description') }}</textarea>
+                                            <label for="description1">Mission Description <span class="red-text">*</span></label>
+                                            @if ($errors->has('mission_description'))
+                                                <span class="fl-error">{{ $errors->first('mission_description') }}</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+                                        <div class="fl-group">
+                                            <input type="file" name="vision_image" id="english_image"
+                                                accept="image/*" value="{{ old('vision_image') }}"
+                                                class="form-control mb-2">
+                                            <label for="english_image">Vision Image <span class="red-text">*</span></label>
+                                            @if ($errors->has('vision_image'))
+                                                <span class="fl-error"><?php echo $errors->first('vision_image', ':message'); ?></span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 fl-col">
+                                        <div class="fl-group">
+                                            <input type="file" name="mission_image" id="english_image_new"
+                                                accept="image/*" value="{{ old('mission_image') }}"
+                                                class="form-control mb-2">
+                                            <label for="english_image_new">Mission Image <span class="red-text">*</span></label>
+                                            @if ($errors->has('mission_image'))
+                                                <span class="fl-error"><?php echo $errors->first('mission_image', ':message'); ?></span>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12 col-sm-12 text-center">
+                                        <button type="submit" class="btn btn-sm btn-bg-colour" id="submitButton">
+                                            Save &amp; Submit
+                                        </button>
+                                        {{-- <button type="reset" class="btn btn-sm btn-danger">Cancel</button> --}}
+                                        <span><a href="{{ route('list-vision-mission') }}"
+                                                class="btn btn-sm btn-primary ">Back</a></span>
+                                    </div>
                                 </div>
-                            </div>
+                            </form>
+
                         </div>
                     </div>
                 </div>

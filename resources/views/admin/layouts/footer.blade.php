@@ -69,6 +69,16 @@
 
 <!-- ========================= FOOTER END ========================= -->
 
+<!-- Sidebar Toggle -->
+<script>
+$(document).ready(function () {
+    $('#sidebarCollapse').on('click', function () {
+        $('#sidebar').toggleClass('active');
+        $('body').toggleClass('mini-navbar');
+    });
+});
+</script>
+
 <!-- Sidebar Active State Fix -->
 <script>
 (function () {
@@ -371,6 +381,43 @@
             focus: true
         });
     });
+</script>
+
+<!-- Floating label: ensure placeholder=" " so :not(:placeholder-shown) fires on filled inputs -->
+<script>
+(function () {
+    function initFloatingLabels() {
+        /* inputs & textareas: set placeholder to space so CSS :not(:placeholder-shown) works */
+        document.querySelectorAll('.fl-group input.form-control, .fl-group textarea.form-control').forEach(function (el) {
+            if (!el.getAttribute('placeholder')) {
+                el.setAttribute('placeholder', ' ');
+            }
+        });
+
+        /* selects: :placeholder-shown doesn't apply — use has-value class instead */
+        document.querySelectorAll('.fl-group select.form-control').forEach(function (sel) {
+            function syncClass() {
+                if (sel.value && sel.value !== '') {
+                    sel.classList.add('has-value');
+                } else {
+                    sel.classList.remove('has-value');
+                }
+            }
+            syncClass();
+            sel.addEventListener('change', syncClass);
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initFloatingLabels);
+    } else {
+        initFloatingLabels();
+    }
+
+    /* Also run after any dynamic content (modals, ajax forms) */
+    document.addEventListener('shown.bs.modal', initFloatingLabels);
+    $(document).on('shown.bs.modal', initFloatingLabels);
+})();
 </script>
 
 @stack('scripts')

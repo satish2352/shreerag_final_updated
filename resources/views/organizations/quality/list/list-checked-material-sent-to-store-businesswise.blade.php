@@ -14,11 +14,6 @@
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="sparkline13-list-product">
-                        <div class="sparkline13-hd">
-                            <div class="main-sparkline13-hd">
-                                <h1>Material Need To Sent To<span class="table-project-n"> Production</span> Department Business Wise</h1>
-                            </div>
-                        </div>
                         <form method="GET" action="{{ route('list-material-sent-to-quality-businesswise', ['id' => $id]) }}">
                             <div class="row">
                                 <div class="col-md-3">
@@ -58,6 +53,9 @@
                             </div>
                         </form>
                         <div class="sparkline13-graph">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 style="margin:0; font-weight:600; color:#1a3a6b;">Material Need To Sent To Production Department Business Wise</h5>
+                            </div>
                             <div class="datatable-dashv1-list custom-datatable-overright">
                                 <div class="table-responsive">
                                     <table id="table" data-toggle="table" data-pagination="true" data-search="true"

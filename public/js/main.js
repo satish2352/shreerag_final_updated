@@ -29,24 +29,20 @@
 	$('[data-toggle="tooltip"]').tooltip(); 
 	
 	$('#sidebarCollapse').on('click', function () {
-                     $('#sidebar').toggleClass('active');
-                     
-                 });
+		$('#sidebar').toggleClass('active');
+		$('body').toggleClass('mini-navbar');
+		$('.all-content-wrapper').toggleClass('sidebar-collapsed');
+	});
 		// Collapse ibox function
 			$('#sidebar ul li').on('click', function () {
 				var button = $(this).find('i.fa.indicator-mn');
 				button.toggleClass('fa-plus').toggleClass('fa-minus');
-				
+
 			});
 	/*-----------------------------
 			Menu Stick
 		---------------------------------*/
 		$(".sicker-menu").sticky({topSpacing:0});
-			
-		$('#sidebarCollapse').on('click', function () {
-			$("body").toggleClass("mini-navbar");
-			SmoothlyMenu();
-		});
 		$(document).on('click', '.header-right-menu .dropdown-menu', function (e) {
 			  e.stopPropagation();
 			});
