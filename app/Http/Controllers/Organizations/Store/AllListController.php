@@ -279,7 +279,10 @@ class AllListController extends Controller
             $business_details = $business_details_id;
             $idtoedit = base64_decode($purchase_orders_id);
             $grn_id = base64_decode($id);
-            $purchase_order_data = PurchaseOrdersModel::where('purchase_orders_id', '=', $idtoedit)->first();
+            $purchase_order_data = PurchaseOrdersModel::leftJoin('vendors', 'purchase_orders.vendor_id', '=', 'vendors.id')
+                ->where('purchase_orders.purchase_orders_id', '=', $idtoedit)
+                ->select('purchase_orders.*', 'vendors.vendor_name')
+                ->first();
             $grn_data = GRNModel::leftJoin('gatepass', function ($join) {
                 $join->on('grn_tbl.gatepass_id', '=', 'gatepass.id');
             })
