@@ -96,6 +96,12 @@
                                                             value="{{ $grn_data->grn_date }}" readonly>
                                                     </div>
                                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                        <label for="vendor_name">Vendor Name :</label>
+                                                        <input type="text" class="form-control" id="vendor_name"
+                                                            name="vendor_name" placeholder=""
+                                                            value="{{ $purchase_order_data->vendor_name ?? '-' }}" readonly>
+                                                    </div>
+                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <label for="purchase_orders_id">PO No.:</label>
                                                         <input type="text" class="form-control" id="purchase_orders_id"
                                                             name="purchase_orders_id" placeholder="Enter Purchase No."
@@ -359,6 +365,7 @@
         <div class="header-grid">
             <div><strong>GRN No. :</strong> ${document.getElementById('grn_no').value}</div>
             <div><strong>GRN Date :</strong> ${document.getElementById('grn_date').value}</div>
+            <div><strong>Vendor Name :</strong> ${document.getElementById('vendor_name').value}</div>
             <div><strong>PO No. :</strong> ${document.getElementById('purchase_orders_id').value}</div>
             <div><strong>PO Date :</strong> ${document.getElementById('po_date').value}</div>
             <div><strong>Bill No. :</strong> ${document.getElementById('bill_no').value}</div>
