@@ -130,37 +130,29 @@ class OwnerDashboardRepository
             ->groupBy('customer_po_number');
 
 
-        // $total_revenue = EstimationModel::sum('total_estimation_amount');
-        $total_revenue = EstimationModel::join(
-            'business_application_processes',
-            'estimation.business_details_id',
-            '=',
-            'business_application_processes.business_details_id'
-        )
-            ->where('business_application_processes.dispatch_status_id', 1154)
-            ->sum('estimation.total_estimation_amount');
+        // Realized Profit = customer sale value − material actually issued,
+        // for fully dispatched products only (dispatch_status_id = 1154).
+        // whereIn (not join) so a product is counted once even if it has
+        // more than one business_application_processes row.
+        $dispatchedProductIds = BusinessApplicationProcesses::where('dispatch_status_id', 1154)
+            ->select('business_details_id');
 
-        // Total Material Amount
-        $total_material_amount = ProductionDetails::join(
-            'business_application_processes',
-            'production_details.business_details_id',
-            '=',
-            'business_application_processes.business_details_id'
-        )
-            ->where('business_application_processes.dispatch_status_id', 1154)
-            ->sum('production_details.items_used_total_amount');
+        // Revenue: customer sale value (quantity × rate) of dispatched products.
+        $total_revenue = (float) BusinessDetails::whereIn('id', $dispatchedProductIds)
+            ->where('is_deleted', 0)
+            ->sum('total_amount');
 
-        // Profit
-        if ($total_revenue > 0) {
-            $profit = $total_revenue - $total_material_amount;
-        } else {
-            $profit = 0; // ✅ no negative profit
-        }
+        // Cost: only material really issued from store to production —
+        // same predicate as the stock reports. Pending (planned, not issued)
+        // and deleted lines are excluded.
+        $total_material_amount = (float) ProductionDetails::whereIn('business_details_id', $dispatchedProductIds)
+            ->where('is_deleted', 0)
+            ->where('quantity_minus_status', 'done')
+            ->where('material_send_production', 1)
+            ->sum('items_used_total_amount');
 
-
-        // $total_material_amount = ProductionDetails::sum('items_used_total_amount');
-
-        // $profit = $total_revenue - $total_material_amount;
+        // A negative value is a real loss and is shown as such on the dashboard.
+        $profit = $total_revenue - $total_material_amount;
 
 
         $department_count = RolesModel::where('is_active', 1)->where('is_deleted', 0)->count();

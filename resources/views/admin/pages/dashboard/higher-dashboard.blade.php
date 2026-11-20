@@ -294,27 +294,31 @@
                         </div>
                     </div>
 
-                    {{-- Realized Profit (dispatched products only) --}}
+                    {{-- Realized Profit / Loss (dispatched products only): sale value − issued material --}}
+                    @php
+                        $realizedProfit = (float) ($business_total_amount['profit'] ?? 0);
+                        $isLoss = $realizedProfit < 0;
+                    @endphp
                     <div class="col-xl-4 col-md-4 col-12">
                         <div class="card shadow border-0 h-100">
                             <div class="card-body">
                                 <div class="row align-items-center border-bottom pb-2">
                                     <div class="col font-size-dashboard">
                                         <span class="font-semibold text-muted text-sm d-block mb-2">
-                                            <i class="fa-solid fa-chart-line me-1 text-success"></i>Realized Profit
+                                            <i class="fa-solid {{ $isLoss ? 'fa-arrow-trend-down text-danger' : 'fa-chart-line text-success' }} me-1"></i>{{ $isLoss ? 'Realized Loss' : 'Realized Profit' }}
                                         </span>
-                                        <span class="h5 font-bold mb-0">
-                                            &#8377;&nbsp;{{ number_format($business_total_amount['profit'], 2) }}
+                                        <span class="h5 font-bold mb-0 {{ $isLoss ? 'text-danger' : '' }}">
+                                            {{ $isLoss ? '-' : '' }}&#8377;&nbsp;{{ number_format(abs($realizedProfit), 2) }}
                                         </span>
                                     </div>
                                     <div class="col-auto">
-                                        <div class="icon icon-shape bg-success text-white text-lg rounded-circle">
-                                            <i class="fa-solid fa-chart-line"></i>
+                                        <div class="icon icon-shape {{ $isLoss ? 'bg-danger' : 'bg-success' }} text-white text-lg rounded-circle">
+                                            <i class="fa-solid {{ $isLoss ? 'fa-arrow-trend-down' : 'fa-chart-line' }}"></i>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="mt-2 text-sm">
-                                    <span class="text-nowrap text-xs text-muted">From fully dispatched products</span>
+                                    <span class="text-nowrap text-xs text-muted">Sale value − issued material, fully dispatched products</span>
                                 </div>
                             </div>
                         </div>
