@@ -45,6 +45,31 @@ class PurchaseOrderController extends Controller
         $this->serviceCommon = new CommanController();
     }
 
+    /**
+     * PO amount already committed against a business's estimation budget.
+     *
+     * Counts approved and pending POs. Rejected POs (owner status 1201) and
+     * deleted POs are NOT counted, so their amount is free again for a new PO.
+     * A rejected PO that is edited and resubmitted gets its owner status reset
+     * to NULL (pending) and is counted again.
+     *
+     * @param  int|null  $businessId
+     * @param  int|null  $excludePoId  purchase_orders.id to leave out (the PO being edited)
+     */
+    private function getUsedPoAmount($businessId, $excludePoId = null)
+    {
+        return (float) PurchaseOrdersModel::where('business_id', $businessId)
+            ->where('is_deleted', 0)
+            ->where(function ($query) {
+                $query->whereNull('purchase_status_from_owner')
+                    ->orWhere('purchase_status_from_owner', '!=', config('constants.HIGHER_AUTHORITY.REJECTED_PO_FROM_OWNER'));
+            })
+            ->when($excludePoId, function ($query) use ($excludePoId) {
+                $query->where('id', '!=', $excludePoId);
+            })
+            ->sum('po_grand_total_amount');
+    }
+
     public function index($requistition_id, $business_details_id)
     {
         $getOutput = PurchaseOrdersModel::join('vendors', 'vendors.id', '=', 'purchase_orders.vendor_id')
@@ -204,10 +229,9 @@ class PurchaseOrderController extends Controller
             ->sum('total_estimation_amount');
 
         // ============================
-        // USED PO AMOUNT — same scope (business-wide).
+        // USED PO AMOUNT — same scope (business-wide). Rejected POs excluded.
         // ============================
-        $used_po_amount = PurchaseOrdersModel::where('business_id', $business_id)
-            ->sum('po_grand_total_amount');
+        $used_po_amount = $this->getUsedPoAmount($business_id);
 
         // ============================
         // REMAINING
@@ -391,9 +415,9 @@ class PurchaseOrderController extends Controller
 
         // ============================
         // USED PO AMOUNT — business-wide so the cap math matches the form.
+        // Rejected POs excluded.
         // ============================
-        $used_po_amount = PurchaseOrdersModel::where('business_id', $business_id)
-            ->sum('po_grand_total_amount');
+        $used_po_amount = $this->getUsedPoAmount($business_id);
 
         // ============================
         // REMAINING
@@ -664,19 +688,13 @@ class PurchaseOrderController extends Controller
         // CURRENT PO
         $currentPO = PurchaseOrdersModel::where('purchase_orders_id', $edit_data_id)->firstOrFail();
 
-        $businessDetailsId = $currentPO->business_details_id;
-        $requisitionId     = $currentPO->requisition_id;
-        $currentPoAmount   = $currentPO->po_grand_total_amount;
+        // ESTIMATION — business-wide, same scope as the Add PO form and store().
+        $grand_total_amount = EstimationModel::where('business_id', $currentPO->business_id)
+            ->sum('total_estimation_amount');
 
-        // ESTIMATION
-        $estimation = EstimationModel::where('business_details_id', $businessDetailsId)->first();
-
-        $grand_total_amount = $estimation ? $estimation->total_estimation_amount : 0;
-
-        $used_po_amount = PurchaseOrdersModel::where('requisition_id', $requisitionId)
-            ->where('id', '<=', $currentPoAmount)
-            ->sum('po_grand_total_amount');
-
+        // USED — other non-rejected POs of this business; the PO being edited
+        // is left out so Remaining is what this PO may use.
+        $used_po_amount = $this->getUsedPoAmount($currentPO->business_id, $currentPO->id);
 
         $remaining_amount = $grand_total_amount - $used_po_amount;
 
@@ -741,19 +759,12 @@ class PurchaseOrderController extends Controller
 
         // Current PO amount (before edit)
         $currentPO = PurchaseOrdersModel::findOrFail($purchaseMainId);
-        $oldAmount = $currentPO->po_grand_total_amount;
+        // Business-wide estimation, same scope as edit() and store().
+        $estimation_amount = EstimationModel::where('business_id', $currentPO->business_id)
+            ->sum('total_estimation_amount');
 
-        $businessDetailsId = $currentPO->business_details_id;
-        $requisitionId     = $currentPO->requisition_id;
-
-        $estimation = EstimationModel::where('business_details_id', $businessDetailsId)->first();
-
-        $estimation_amount = $estimation ? $estimation->total_estimation_amount : 0;
-
-        // Used amount EXCEPT current PO
-        $used_po_amount = PurchaseOrdersModel::where('requisition_id', $requisitionId)
-            ->where('id', '!=', $purchaseMainId)
-            ->sum('po_grand_total_amount');
+        // Used amount EXCEPT current PO (rejected POs excluded)
+        $used_po_amount = $this->getUsedPoAmount($currentPO->business_id, $currentPO->id);
 
         $remaining_amount = $estimation_amount - $used_po_amount;
 
